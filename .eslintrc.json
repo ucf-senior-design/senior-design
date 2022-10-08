@@ -1,3 +1,12 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next", "next/core-web-vitals", "eslint:recommended"],
+
+  // React will be defined without having to import
+  "globals": {
+    "React": "readonly"
+  },
+  // Allows prefixing of unused variables with an underscore
+  "rules": {
+    "no-unused-vars": [1, { "args": "after-used", "argsIgnorePattern": "^_" }]
+  }
 }
