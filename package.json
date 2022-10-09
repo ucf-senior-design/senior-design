@@ -10,7 +10,7 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "dev": "next dev",
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -25,6 +25,7 @@
     "@types/node": "18.8.3",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
+    "cross-env": "^7.0.3",
     "eslint": "8.25.0",
     "eslint-config-next": "12.3.1",
     "husky": "^8.0.1",
