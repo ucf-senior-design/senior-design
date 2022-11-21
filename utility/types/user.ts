@@ -11,17 +11,14 @@ export type MedicalInfoField =
 
 export interface User {
   uid: string;
-  profilePicture: string;
-  firstName: string;
-  lastName: string;
-  userName: string;
   email: string;
+  name: string;
+  profilePic: string;
+  userName: string;
   medicalInfo: Array<MedicalInfoField>;
   allergies: Array<string>;
 }
-// Object.entries(enums).forEach(([key, value]) =>
-//   enumArray.push({ number: key, word: value })
-// );
+
 export type valueType = 'stringValue' | 'booleanValue';
 
 export type UserField =
@@ -33,7 +30,7 @@ export type UserField =
   | 'medicalInfo'
   | 'allergies';
 
-interface UserRegistration extends Omit<User, 'uid'> {
+export interface UserRegistration extends Omit<User, 'uid'> {
   password: string;
 }
 

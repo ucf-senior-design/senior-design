@@ -1,36 +1,27 @@
-import { NextApiResponse } from 'next';
-import fetch, { RequestInfo, RequestInit } from 'node-fetch';
-
-type HTTPMethod = 'POST' | 'GET' | 'PUT' | 'DELETE';
-
-export function createFetchOptions(method: HTTPMethod, body: string = '') {
-  if (body.length > 0) {
-    return {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: body,
-    };
-  }
-  return {
-    method: method,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-}
+import axios, { AxiosResponse } from 'axios';
+import auth from 'firebase/auth';
 
 export async function doFetch<T>(
-  url: RequestInfo,
-  res: NextApiResponse,
-  options: RequestInit = {}
-): Promise<T> {
-  const response = await fetch(url, options);
-  const results = (await response.json()) as any as T;
-  if (!response.ok) {
-    if (!res.headersSent) res.status(response.status).send(results);
+  url: string,
+  data: any = {}
+): Promise<{ result: T; errorMessage: string; errorCode: number }> {
+  var result = {} as any as T;
+  var errorMessage = '';
+  var errorCode = 0;
+  try {
+    const response: AxiosResponse = await axios.post(url, data, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    result = response.data as any as T;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      errorMessage = err.message;
+      errorCode = err.status ?? 400;
+    } else {
+      let error = err as any as auth.AuthError;
+      errorMessage = error.message;
+      errorCode = 400;
+    }
   }
-
-  return results;
+  return { result, errorMessage, errorCode };
 }

@@ -1,4 +1,3 @@
-import { UserRecord } from 'firebase-admin/lib/auth/user-record';
 import auth from 'firebase/auth';
 import type { NextApiResponse } from 'next';
 import firebaseAdmin from '../../../utility/firebaseAdmin';
@@ -8,25 +7,32 @@ export default async function handler(
   req: RegistrationRequest,
   res: NextApiResponse<User | string>
 ) {
-  try {
-    await firebaseAdmin
-      .auth()
-      .createUser({
-        email: req.body.email,
-        password: req.body.password,
-        photoURL: req.body.profilePicture,
-      })
-      .then(async (authUser: UserRecord) => {
+  await firebaseAdmin
+    .auth()
+    .createUser({
+      email: req.body.email,
+      password: req.body.password,
+    })
+    .catch((error: auth.AuthError) => {
+      res.status(400).send(error.message);
+    })
+    .then(async (authUser: { uid: string } | void) => {
+      if (authUser && authUser.uid) {
         const user: User = {
           uid: authUser.uid,
-          ...req.body,
+          email: req.body.email,
+          profilePic: req.body.profilePic,
+          name: req.body.name,
+          userName: req.body.userName,
+          medicalInfo: req.body.medicalInfo,
+          allergies: req.body.allergies,
         };
 
         try {
           await firebaseAdmin
             .firestore()
             .collection('Users')
-            .doc(authUser.uid)
+            .doc(user.uid)
             .set(user);
 
           res.status(200).send(user);
@@ -34,9 +40,8 @@ export default async function handler(
           let authError = error as auth.AuthError;
           res.status(400).send(authError.message);
         }
-      });
-  } catch (error) {
-    let authError = error as auth.AuthError;
-    res.status(400).send(authError.message);
-  }
+      } else {
+        res.status(400).send('Try again Later.');
+      }
+    });
 }
