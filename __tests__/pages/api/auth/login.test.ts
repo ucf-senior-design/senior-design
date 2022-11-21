@@ -1,6 +1,6 @@
 import handler from '../../../../pages/api/auth/login';
+import firebaseAdmin from '../../../../utility/firebaseAdmin';
 import { testHandler } from '../../../../__mocks__/fetch';
-
 
 describe('Test Login Endpoints', () => {
   test('[Status 400]: Incorrect Credentials', async () => {
