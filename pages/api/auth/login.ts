@@ -1,6 +1,6 @@
 import auth from 'firebase/auth';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { doFetch } from '../../../utility/fetch';
+import { handleFetch } from '../../../utility/fetch';
 import firebaseAdmin from '../../../utility/firebaseAdmin';
 import { User } from '../../../utility/types/user';
 
@@ -8,11 +8,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string | User>
 ) {
-  const { result, errorMessage, errorCode } = await doFetch<{
+  const { result, errorMessage, errorCode } = await handleFetch<{
     localId: string;
   }>(
+    'POST',
     `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=
     ${process.env.REACT_APP_FIREBASE_API_KEY}`,
+    'Firebase/Auth',
     JSON.stringify({
       email: req.body.email,
       password: req.body.password,

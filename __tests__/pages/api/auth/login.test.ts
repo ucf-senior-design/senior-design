@@ -1,8 +1,10 @@
 import handler from '../../../../pages/api/auth/login';
-import firebaseAdmin from '../../../../utility/firebaseAdmin';
 import { testHandler } from '../../../../__mocks__/fetch';
 
 describe('Test Login Endpoints', () => {
+  beforeEach(() => {
+   jest.resetAllMocks();
+  });
   test('[Status 400]: Incorrect Credentials', async () => {
     const res = await testHandler(handler, {
       body: {
