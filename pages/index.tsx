@@ -23,6 +23,7 @@ const Home: NextPage = () => {
             <SignUpButton />
         </Grid>
         <img src='./people.png' alt="Group of People" className={styles.people} />
+        <img src='./plane.png' alt="Plane" className={styles.plane} />
         <Cloud />
         <BlueFooter />
       </main>
