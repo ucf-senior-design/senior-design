@@ -129,3 +129,12 @@
     filter: invert(1);
   }
 }
+
+.people {
+  position:absolute;
+  bottom:-14px;
+  left:400px;
+  width:600px;
+  display:block;
+  overflow-x:hidden;
+}
