@@ -1,26 +1,52 @@
 import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
-import { AppBar, Button, IconButton, Stack, ThemeProvider, Toolbar, Typography } from '@mui/material';
+import MenuIcon from "@mui/icons-material/Menu";
+import { AppBar, Box, Button, Drawer, IconButton, Stack, ThemeProvider, Toolbar, Typography } from '@mui/material';
+import * as React from 'react';
 import theme from '../../styles/theme/theme';
+import LoggedOutDrawer from './loggedoutdrawer';
 
 export const Navbar = () => {
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+
+    const handleDrawerToggle = () => {
+        setMobileOpen((prevState) => !prevState);
+    }
+
+    const drawer = (
+        <Box onClick={handleDrawerToggle} sx={{m: 2}}>
+            <LoggedOutDrawer />
+        </Box>
+    )
+
     return (
         <ThemeProvider theme={theme}>
-            <AppBar position='static' color="primary">
-                <Toolbar>
-                    <IconButton size='large' edge='start' color='inherit' aria-label='logo'>
-                        <AirportShuttleIcon />
-                    </IconButton>
-                    <Typography variant='h6' component='div' sx={{ flexGrow:1 }}>
-                        complanion
-                    </Typography>
-                    <Stack direction='row' spacing={2}>
-                        <Button color='lace' variant='text' aria-label="home page button">home</Button>
-                        <Button color='lace' variant='text' aria-label="about page button">about</Button>
-                        <Button color='lace' variant='text' aria-label="login button">login</Button>
-                        <Button color='lace' variant='contained' sx={{borderRadius: 8}} aria-label="register button">new user</Button>
-                    </Stack>
-                </Toolbar>
-            </AppBar>
+            <nav aria-label='navigational bar'>
+                <AppBar position='static' color="primary">
+                    <Toolbar>
+                        <IconButton onClick={handleDrawerToggle} edge='start' aria-label="menu toggle" sx={{display: {sm: 'none'}}} color='inherit'>
+                            <MenuIcon />
+                        </IconButton>
+                        <IconButton size='large' edge='start' color='inherit'
+                        aria-label='logo' sx={{ display: { xs: 'none', sm: 'block' } }}>
+                            <AirportShuttleIcon />
+                        </IconButton>
+                        <Typography variant='h6' component='div' sx={{ flexGrow:1, display: { xs: 'none', sm: 'block' } }}>
+                            complanion
+                        </Typography>
+                        <Stack direction='row' spacing={2} sx={{ display: { xs: 'none', sm: 'block' } }}>
+                            <Button href='/' color='lace' variant='text' aria-label="home page button">home</Button>
+                            <Button color='lace' variant='text' aria-label="about page button">about</Button>
+                            <Button color='lace' variant='text' aria-label="login button">login</Button>
+                            <Button color='lace' variant='contained' sx={{borderRadius: 8}} aria-label="register button">new user</Button>
+                        </Stack>
+                    </Toolbar>
+                </AppBar>
+                <Box>
+                    <Drawer variant='temporary' PaperProps={{sx: {backgroundColor: "lace.main", color: "primary.main", }}} open={mobileOpen} onClose={handleDrawerToggle} ModalProps={{keepMounted:true}}>
+                        {drawer}
+                    </Drawer>
+                </Box>
+            </nav>
         </ThemeProvider>
     )
 }
