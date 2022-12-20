@@ -133,15 +133,15 @@
 .people {
   position:absolute;
   bottom:0px;
-  left:400px;
-  width:600px;
+  left:23%;
+  width:33%;
   display:block;
   overflow-x:hidden;
 }
 
 .plane {
   position:absolute;
-  right: 120px;
-  top: 230px;
-  width:800px;
+  right: 10%;
+  top: 20%;
+  width:40%;
 }
