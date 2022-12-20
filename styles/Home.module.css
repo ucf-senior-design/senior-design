@@ -132,7 +132,7 @@
 
 .people {
   position:absolute;
-  bottom:-14px;
+  bottom:0px;
   left:400px;
   width:600px;
   display:block;
