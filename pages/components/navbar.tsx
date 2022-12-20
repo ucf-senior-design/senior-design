@@ -14,10 +14,10 @@ export const Navbar = () => {
                         complanion
                     </Typography>
                     <Stack direction='row' spacing={2}>
-                        <Button color='lace' variant='text'>home</Button>
-                        <Button color='lace' variant='text'>about</Button>
-                        <Button color='lace' variant='text'>login</Button>
-                        <Button color='lace' variant='contained' sx={{borderRadius: 8}}>new user</Button>
+                        <Button color='lace' variant='text' aria-label="home page button">home</Button>
+                        <Button color='lace' variant='text' aria-label="about page button">about</Button>
+                        <Button color='lace' variant='text' aria-label="login button">login</Button>
+                        <Button color='lace' variant='contained' sx={{borderRadius: 8}} aria-label="register button">new user</Button>
                     </Stack>
                 </Toolbar>
             </AppBar>
