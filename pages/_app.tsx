@@ -3,7 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import type { AppProps } from 'next/app';
 import * as React from 'react';
-import Navbar from './components/NavBar';
+import Navbar from '../components/NavBar';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';

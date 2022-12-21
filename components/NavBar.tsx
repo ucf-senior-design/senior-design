@@ -3,7 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Box, Button, Drawer, IconButton, Stack, ThemeProvider, Toolbar, Typography } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
-import theme from '../../styles/theme/Theme';
+import theme from '../styles/theme/Theme';
 import LoggedOutDrawer from './LoggedOutDrawer';
 
 export const Navbar = () => {

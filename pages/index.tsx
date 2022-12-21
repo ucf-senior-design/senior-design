@@ -3,8 +3,8 @@ import { useTheme } from "@mui/material/styles";
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
+import SignUpButton from '../components/LandingComponents/SignUpButton';
 import styles from '../styles/Home.module.css';
-import SignUpButton from './components/SignUpButton';
 
 const Home: NextPage = () => {
   const theme = useTheme();
