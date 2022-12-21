@@ -18,7 +18,7 @@ const Home: NextPage = () => {
 
       <main className={styles.main} style={{background:theme.palette.primary.light}}>
         <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start" sx={{p:3}}>
-            <Typography variant='h2' style={{fontWeight:500, color:theme.palette.lace.main}} sx={{mb:2}}>welcome to your personal trip planner.</Typography>
+            <Typography variant='h2' style={{fontWeight:500, color:theme.palette.secondary.main}} sx={{mb:2}}>welcome to your personal trip planner.</Typography>
             <SignUpButton />
         </Grid>
         <div className={[styles.elementToHide, styles.cloud].join(" ")}>

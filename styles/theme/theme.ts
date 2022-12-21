@@ -7,6 +7,7 @@ const theme = createTheme({
         }
     },
     palette: {
+        mode: 'light',
         background: {
             default: '#FFF7E9'
         },
@@ -15,15 +16,15 @@ const theme = createTheme({
             main: '#1746A2',
         },
         secondary: {
-            main: '#FF731D'
-        },
-        lace: {
             main: '#FFF7E9',
             contrastText: '#1746A2'
         },
-        independence: {
+        tertiary: {
             main: '#424155',
             contrastText: '#FFF7E9'
+        },
+        highlight: {
+            main: '#FF731D',
         }
     }
 })

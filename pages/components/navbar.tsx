@@ -36,18 +36,18 @@ export const Navbar = () => {
                         </Typography>
                         <Stack direction='row' spacing={2} sx={{ display: { xs: 'none', sm: 'block' } }}>
                             <Link href='/' passHref>
-                                <Button color='lace' variant='text' aria-label="home page button">home</Button>   
+                                <Button color='secondary' variant='text' aria-label="home page button">home</Button>   
                             </Link>
                             <Link href='/about' passHref>
-                                <Button color='lace' variant='text' aria-label="about page button">about</Button>
+                                <Button color='secondary' variant='text' aria-label="about page button">about</Button>
                             </Link>
-                            <Button color='lace' variant='text' aria-label="login button">login</Button>
-                            <Button color='lace' variant='contained' sx={{borderRadius: 8}} aria-label="register button">new user</Button>
+                            <Button color='secondary' variant='text' aria-label="login button">login</Button>
+                            <Button color='secondary' variant='contained' sx={{borderRadius: 8}} aria-label="register button">new user</Button>
                         </Stack>
                     </Toolbar>
                 </AppBar>
                 <Box>
-                    <Drawer variant='temporary' PaperProps={{sx: {backgroundColor: "lace.main", color: "primary.main", }}} open={mobileOpen} onClose={handleDrawerToggle} ModalProps={{keepMounted:true}}>
+                    <Drawer variant='temporary' PaperProps={{sx: {backgroundColor: "secondary.main", color: "primary.main", }}} open={mobileOpen} onClose={handleDrawerToggle} ModalProps={{keepMounted:true}}>
                         {drawer}
                     </Drawer>
                 </Box>
