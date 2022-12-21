@@ -1,6 +1,6 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Button, ThemeProvider } from '@mui/material';
-import theme from '../../styles/theme/theme';
+import theme from '../../styles/theme/Theme';
 
 export const SignUpButton = () => {
     return (

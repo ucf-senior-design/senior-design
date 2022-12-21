@@ -3,8 +3,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Box, Button, Drawer, IconButton, Stack, ThemeProvider, Toolbar, Typography } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
-import theme from '../../styles/theme/theme';
-import LoggedOutDrawer from './loggedoutdrawer';
+import theme from '../../styles/theme/Theme';
+import LoggedOutDrawer from './LoggedOutDrawer';
 
 export const Navbar = () => {
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -38,7 +38,7 @@ export const Navbar = () => {
                             <Link href='/' passHref>
                                 <Button color='secondary' variant='text' aria-label="home page button">home</Button>   
                             </Link>
-                            <Link href='/about' passHref>
+                            <Link href='/About' passHref>
                                 <Button color='secondary' variant='text' aria-label="about page button">about</Button>
                             </Link>
                             <Button color='secondary' variant='text' aria-label="login button">login</Button>

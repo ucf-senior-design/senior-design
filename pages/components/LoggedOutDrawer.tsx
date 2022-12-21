@@ -1,7 +1,7 @@
 import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
 import { Divider, Grid, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ThemeProvider, Typography } from '@mui/material';
 import Link from 'next/link';
-import theme from '../../styles/theme/theme';
+import theme from '../../styles/theme/Theme';
 
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
@@ -18,7 +18,7 @@ const navItem1 = {
 }
 const navItem2 = {
     id: 2,
-    link: "/about",
+    link: "/About",
     name: "about",
     buttonLabel: "about button",
     icon: InfoIcon,
