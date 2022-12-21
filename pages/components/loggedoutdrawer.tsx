@@ -18,7 +18,7 @@ const navItem1 = {
 }
 const navItem2 = {
     id: 2,
-    link: "/",
+    link: "/about",
     name: "about",
     buttonLabel: "about button",
     icon: InfoIcon,

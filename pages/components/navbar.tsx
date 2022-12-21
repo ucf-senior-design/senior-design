@@ -38,7 +38,9 @@ export const Navbar = () => {
                             <Link href='/' passHref>
                                 <Button color='lace' variant='text' aria-label="home page button">home</Button>   
                             </Link>
-                            <Button color='lace' variant='text' aria-label="about page button">about</Button>
+                            <Link href='/about' passHref>
+                                <Button color='lace' variant='text' aria-label="about page button">about</Button>
+                            </Link>
                             <Button color='lace' variant='text' aria-label="login button">login</Button>
                             <Button color='lace' variant='contained' sx={{borderRadius: 8}} aria-label="register button">new user</Button>
                         </Stack>
