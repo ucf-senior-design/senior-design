@@ -1,5 +1,6 @@
 import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
 import { Divider, Grid, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ThemeProvider, Typography } from '@mui/material';
+import Link from 'next/link';
 import theme from '../../styles/theme/theme';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -21,14 +22,16 @@ export const LoggedOutDrawer = () => {
             </Grid>
             <Divider />
             <List>
-                <ListItem component="a" href='/' disablePadding>
-                    <ListItemButton aria-label='home button'>
-                        <ListItemIcon aria-label='home icon'>
-                            <HomeIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="home" />
-                    </ListItemButton>
-                </ListItem>
+                <Link href='/' passHref>
+                    <ListItem component="a" disablePadding>
+                        <ListItemButton aria-label='home button'>
+                            <ListItemIcon aria-label='home icon'>
+                                <HomeIcon />
+                            </ListItemIcon>
+                            <ListItemText primary='home' />
+                        </ListItemButton>
+                    </ListItem>
+                </Link>
                 <ListItem disablePadding>
                     <ListItemButton aria-label='information button'>
                         <ListItemIcon aria-label='information icon'>

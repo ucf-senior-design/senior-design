@@ -1,6 +1,7 @@
 import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
 import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Box, Button, Drawer, IconButton, Stack, ThemeProvider, Toolbar, Typography } from '@mui/material';
+import Link from 'next/link';
 import * as React from 'react';
 import theme from '../../styles/theme/theme';
 import LoggedOutDrawer from './loggedoutdrawer';
@@ -34,7 +35,9 @@ export const Navbar = () => {
                             complanion
                         </Typography>
                         <Stack direction='row' spacing={2} sx={{ display: { xs: 'none', sm: 'block' } }}>
-                            <Button href='/' color='lace' variant='text' aria-label="home page button">home</Button>
+                            <Link href='/' passHref>
+                                <Button color='lace' variant='text' aria-label="home page button">home</Button>   
+                            </Link>
                             <Button color='lace' variant='text' aria-label="about page button">about</Button>
                             <Button color='lace' variant='text' aria-label="login button">login</Button>
                             <Button color='lace' variant='contained' sx={{borderRadius: 8}} aria-label="register button">new user</Button>
