@@ -8,7 +8,42 @@ import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import LoginIcon from '@mui/icons-material/Login';
 
+const navItem1 = {
+    id: 1,
+    link: "/",
+    name: "home",
+    buttonLabel: "home button",
+    icon: HomeIcon,
+    iconLabel: "home icon"
+}
+const navItem2 = {
+    id: 2,
+    link: "/",
+    name: "about",
+    buttonLabel: "about button",
+    icon: InfoIcon,
+    iconLabel: "about icon"
+}
+const navItem3 = {
+    id: 3,
+    link: "/",
+    name: "login",
+    buttonLabel: "login button",
+    icon: LoginIcon,
+    iconLabel: "login icon"
+}
+const navItem4 = {
+    id: 4,
+    link: "/",
+    name: "new user",
+    buttonLabel: "register button",
+    icon: AddIcon,
+    iconLabel: "register icon"
+}
+
 export const LoggedOutDrawer = () => {
+
+    const navItems = [navItem1, navItem2, navItem3, navItem4];
 
     return (
         <ThemeProvider theme={theme}>
@@ -22,40 +57,18 @@ export const LoggedOutDrawer = () => {
             </Grid>
             <Divider />
             <List>
-                <Link href='/' passHref>
-                    <ListItem component="a" disablePadding>
-                        <ListItemButton aria-label='home button'>
-                            <ListItemIcon aria-label='home icon'>
-                                <HomeIcon />
-                            </ListItemIcon>
-                            <ListItemText primary='home' />
-                        </ListItemButton>
-                    </ListItem>
-                </Link>
-                <ListItem disablePadding>
-                    <ListItemButton aria-label='information button'>
-                        <ListItemIcon aria-label='information icon'>
-                            <InfoIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="about" />
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton aria-label='login button'>
-                        <ListItemIcon aria-label='login icon'>
-                            <LoginIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="login" />
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton aria-label='register button'>
-                        <ListItemIcon aria-label='register icon'>
-                            <AddIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="new user" />
-                    </ListItemButton>
-                </ListItem>
+                {navItems.map(item => (
+                    <Link href={item.link} key={item.id} passHref>
+                        <ListItem component="a" disablePadding>
+                            <ListItemButton aria-label={item.buttonLabel}>
+                                <ListItemIcon aria-label={item.iconLabel}>
+                                    < item.icon/>
+                                </ListItemIcon>
+                                <ListItemText primary={item.name}/>
+                            </ListItemButton>
+                        </ListItem>
+                    </Link>
+                ))}
             </List>
         </ThemeProvider>
     )
