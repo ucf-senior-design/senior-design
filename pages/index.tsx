@@ -2,8 +2,7 @@ import { Grid, Typography } from '@mui/material';
 import { useTheme } from "@mui/material/styles";
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import BlueFooter from '../src/assets/blueFooter';
-import Cloud from '../src/assets/cloud';
+import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import SignUpButton from './components/SignUpButton';
 
@@ -22,10 +21,18 @@ const Home: NextPage = () => {
             <Typography variant='h2' style={{fontWeight:500, color:theme.palette.lace.main}} sx={{mb:2}}>welcome to your personal trip planner.</Typography>
             <SignUpButton />
         </Grid>
-        <img src='./people.png' alt="Group of People" className={styles.people} />
-        <img src='./plane.png' alt="Plane" className={styles.plane} />
-        <Cloud />
-        <BlueFooter />
+        <div className={[styles.elementToHide, styles.cloud].join(" ")}>
+          <Image src='/cloud.svg' alt="Cloud" layout='fill' />
+        </div>
+        <div className={[styles.elementToHide, styles.blueRectangle].join(" ")}>
+          <Image src='/blueRectangle.svg' alt="Blue Rectangle" layout='fill' />
+        </div>
+        <div className={styles.people}>
+          <Image src='/people.svg' alt="Group of people" height={380} width={700} />
+        </div>
+        <div className={[styles.elementToHide, styles.plane].join(" ")}>
+          <Image src='/plane.svg' alt="Plane" height={400} width={850} />
+        </div>
       </main>
     </div>
   );
