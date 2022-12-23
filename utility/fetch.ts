@@ -24,18 +24,23 @@ export async function handleFetch<T>(
         const response: AxiosResponse = await axios.post(url, data, {
           headers: { 'Content-Type': 'application/json' },
         });
+
+        console.log('RESPONSE', response);
         result = response.data as any as T;
         break;
       }
     }
-  } catch (err) {
+  } catch (err: any) {
+    console.log('HERE', err);
     switch (err) {
       case axios.isAxiosError(err): {
+        console.log(err);
         errorMessage = 'Try again Later. ';
         errorCode = 400;
         break;
       }
       case type === 'Firebase/Auth': {
+        console.log(err);
         let error = err as any as auth.AuthError;
         errorMessage = error.message;
         errorCode = 400;
