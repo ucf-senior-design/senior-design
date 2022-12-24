@@ -171,3 +171,8 @@
   height:75vh;
 }
 
+.mountains {
+  position:absolute;
+  bottom:0px;
+  min-width: 50%;
+}
