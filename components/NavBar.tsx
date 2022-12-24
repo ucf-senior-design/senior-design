@@ -41,8 +41,12 @@ export const Navbar = () => {
                             <Link href='/About' passHref>
                                 <Button color='secondary' variant='text' aria-label="about page button">about</Button>
                             </Link>
-                            <Button color='secondary' variant='text' aria-label="login button">login</Button>
-                            <Button color='secondary' variant='contained' sx={{borderRadius: 8}} aria-label="register button">new user</Button>
+                            <Link href='/Login' passHref>
+                                <Button color='secondary' variant='text' aria-label="login button">login</Button>
+                            </Link>
+                            <Link href='/Register' passHref>
+                                <Button color='secondary' variant='contained' sx={{borderRadius: 8}} aria-label="register button">new user</Button>
+                            </Link>
                         </Stack>
                     </Toolbar>
                 </AppBar>
