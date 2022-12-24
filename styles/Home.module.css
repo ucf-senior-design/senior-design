@@ -175,4 +175,6 @@
   position:absolute;
   bottom:0px;
   min-width: 50%;
+  width:100%;
+  height:36vh;
 }
