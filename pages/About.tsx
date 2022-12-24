@@ -62,7 +62,7 @@ export default function About() {
                 </Grid>
 
                 <div className={[styles.elementToHide, styles.mountains].join(" ")}>
-                    <Image src='/Mountains.svg' layout="fill" />
+                    <Image src='/Mountains.svg' alt="Image of Mountains" layout="fill" />
                 </div>
                 
             </main>
