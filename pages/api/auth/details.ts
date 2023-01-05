@@ -1,13 +1,14 @@
 import auth from 'firebase/auth';
-import type { NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { firebaseAuth } from '../../../utility/firebase';
 import firebaseAdmin from '../../../utility/firebaseAdmin';
-import { RegistrationRequest, User } from '../../../utility/types/user';
+import { User } from '../../../utility/types/user';
 
 export default async function handler(
-  req: RegistrationRequest,
+  req: NextApiRequest,
   res: NextApiResponse<User | string>
 ) {
-  const user: User = {
+  let user: User = {
     uid: req.body.uid,
     email: req.body.email,
     profilePic: req.body.profilePic,
@@ -16,6 +17,7 @@ export default async function handler(
     medicalInfo: req.body.medicalInfo,
     allergies: req.body.allergies,
   };
+
 
   try {
     const usersWithUsername = await firebaseAdmin
@@ -29,6 +31,10 @@ export default async function handler(
       return;
     }
     await firebaseAdmin.firestore().collection('Users').doc(user.uid).set(user);
+    if (firebaseAuth.currentUser?.emailVerified) {
+      res.status(201).send(user);
+      return;
+    }
     res.status(200).send(user);
   } catch (error) {
     let authError = error as auth.AuthError;

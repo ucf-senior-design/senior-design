@@ -3,7 +3,7 @@ import auth, {
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import type { NextApiResponse } from 'next';
-import { getAuthentication } from '../../../utility/firebaseApp';
+import { firebaseAuth} from '../../../utility/firebase';
 import { RegistrationRequest } from '../../../utility/types/user';
 
 export default async function handler(
@@ -11,7 +11,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   await createUserWithEmailAndPassword(
-    getAuthentication(),
+    firebaseAuth,
     req.body.email,
     req.body.password
   )

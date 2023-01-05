@@ -1,18 +1,22 @@
-import { sendEmailVerification } from 'firebase/auth';
+import { sendEmailVerification, sendPasswordResetEmail } from 'firebase/auth';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getAuthentication } from '../../../utility/firebaseApp';
+import { firebaseAuth } from '../../../utility/firebase';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string | boolean>
 ) {
-  if (req.method === 'POST') {
-    const user = getAuthentication().currentUser;
+  const user = firebaseAuth.currentUser;
 
+  if (req.body.purpose === 'email') {
     if (user !== null) {
+      if (user.emailVerified || user.providerId !== 'password') {
+        res.status(201).send('Email is Verified');
+        return;
+      }
       await sendEmailVerification(user)
         .then(() => {
-          res.status(200).send('Success');
+          res.status(200).send('Success.');
         })
         .catch((error) => {
           res.status(400).send('Try again later.');
@@ -20,5 +24,17 @@ export default async function handler(
     } else {
       res.status(400).send('Try again later.');
     }
+  } else if (req.body.purpose === 'password') {
+    if (user?.providerId !== 'password' || user.email === undefined) {
+      res.status(400).send('Password cannot be reset.');
+      return;
+    }
+    await sendPasswordResetEmail(firebaseAuth, user.email ?? '')
+      .then(() => {
+        res.status(200).send('Success.');
+      })
+      .catch((error) => {
+        res.status(400).send('Try again Later.');
+      });
   }
 }

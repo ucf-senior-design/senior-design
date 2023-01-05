@@ -3,18 +3,14 @@ import auth, {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { firebaseAuth } from '../../../utility/firebase';
 import firebaseAdmin from '../../../utility/firebaseAdmin';
-import { getAuthentication } from '../../../utility/firebaseApp';
 import { User } from '../../../utility/types/user';
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  signInWithEmailAndPassword(
-    getAuthentication(),
-    req.body.email,
-    req.body.password
-  )
+  signInWithEmailAndPassword(firebaseAuth, req.body.email, req.body.password)
     .then(async (result) => {
       try {
         const maybeUser = await (

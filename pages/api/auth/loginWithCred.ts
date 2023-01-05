@@ -1,12 +1,14 @@
 import auth, {
   AuthErrorCodes,
+  FacebookAuthProvider,
   GoogleAuthProvider,
   OAuthCredential,
   signInWithCredential,
+  TwitterAuthProvider,
 } from 'firebase/auth';
 import type { NextApiResponse } from 'next';
+import { firebaseAuth } from '../../../utility/firebase';
 import firebaseAdmin from '../../../utility/firebaseAdmin';
-import { getAuthentication } from '../../../utility/firebaseApp';
 import { ProviderLoginRequest, User } from '../../../utility/types/user';
 
 export default async function handler(
@@ -17,12 +19,23 @@ export default async function handler(
     case 'google':
       doLogin(GoogleAuthProvider.credential(req.body.idToken));
       break;
+    case 'twitter':
+      doLogin(
+        TwitterAuthProvider.credential(
+          req.body.idToken,
+          process.env.REACT_APP_TWITTER_SECRET ?? ''
+        )
+      );
+      break
+    case 'facebook':
+      doLogin(FacebookAuthProvider.credential(req.body.idToken));
+      break
     default:
       res.status(400).send('Cannot login at this time');
   }
 
   async function doLogin(credential: OAuthCredential) {
-    await signInWithCredential(getAuthentication(), credential)
+    await signInWithCredential(firebaseAuth, credential)
       .then(async (result) => {
         const maybeUser = await (
           await firebaseAdmin
