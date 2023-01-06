@@ -184,7 +184,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function doFacebookLogin() {
     doThirdPartyLogin('facebook', new FacebookAuthProvider(), (isSuccess) => {
       // TODO: Handle Success and Errors
-      console.log('Facebook Login:', isSuccess);
+      alert('Facebook Login Succesful?: ' + isSuccess);
     });
   }
 
@@ -217,8 +217,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function doGoogleLogin() {
     doThirdPartyLogin('google', new GoogleAuthProvider(), (isSuccess) => {
-      // TODO: Handle Success and Errors
-      console.log('Google Login:', isSuccess);
+      alert('Facebook Login Succesful?: ' + isSuccess);
     });
   }
 
@@ -238,6 +237,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const response = await fetch(`${API_URL}auth/email`, options);
     if (response.ok) {
       if (response.status === EMAIL_VERIFIED) {
+        // TODO: Handle accounts That have a verified email already
         console.log('Email Already Verrified');
       }
       callback({ isSuccess: response.ok });

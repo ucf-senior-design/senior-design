@@ -26,10 +26,10 @@ export default async function handler(
           process.env.REACT_APP_TWITTER_SECRET ?? ''
         )
       );
-      break
+      break;
     case 'facebook':
       doLogin(FacebookAuthProvider.credential(req.body.idToken));
-      break
+      break;
     default:
       res.status(400).send('Cannot login at this time');
   }
@@ -67,7 +67,6 @@ export default async function handler(
             res.status(400).send('Invalid Password.');
             break;
           default:
-            console.log(error.code);
             res.status(400).send('Try again later.');
         }
       });
