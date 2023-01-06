@@ -24,23 +24,18 @@ export async function handleFetch<T>(
         const response: AxiosResponse = await axios.post(url, data, {
           headers: { 'Content-Type': 'application/json' },
         });
-
-        console.log('RESPONSE', response);
         result = response.data as any as T;
         break;
       }
     }
   } catch (err: any) {
-    console.log('HERE', err);
     switch (err) {
       case axios.isAxiosError(err): {
-        console.log(err);
         errorMessage = 'Try again Later. ';
         errorCode = 400;
         break;
       }
       case type === 'Firebase/Auth': {
-        console.log(err);
         let error = err as any as auth.AuthError;
         errorMessage = error.message;
         errorCode = 400;
@@ -48,4 +43,21 @@ export async function handleFetch<T>(
     }
   }
   return { result, errorMessage, errorCode };
+}
+
+export function createFetchRequestOptions(
+  body: string,
+  method: 'POST' | 'GET' | 'DELETE'
+) {
+  const myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'application/json');
+
+  const requestOptions: RequestInit = {
+    method,
+    headers: myHeaders,
+    body,
+    redirect: 'follow',
+  };
+
+  return requestOptions;
 }

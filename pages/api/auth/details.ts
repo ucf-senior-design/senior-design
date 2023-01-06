@@ -4,6 +4,13 @@ import { firebaseAuth } from '../../../utility/firebase';
 import firebaseAdmin from '../../../utility/firebaseAdmin';
 import { User } from '../../../utility/types/user';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '4mb',
+    },
+  },
+};
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<User | string>
@@ -11,13 +18,12 @@ export default async function handler(
   let user: User = {
     uid: req.body.uid,
     email: req.body.email,
-    profilePic: req.body.profilePic,
+    profilePic: '',
     name: req.body.name,
     username: req.body.username,
     medicalInfo: req.body.medicalInfo,
     allergies: req.body.allergies,
   };
-
 
   try {
     const usersWithUsername = await firebaseAdmin
