@@ -11,7 +11,6 @@ import Navbar from '../components/NavBar';
 import '../styles/globals.css';
 import theme from '../styles/theme/Theme';
 import createEmotionCache from '../utility/createEmotionCache';
-import { AuthProvider } from '../utility/hooks';
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -26,13 +25,11 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
 
   return (
     <CacheProvider value={emotionCache}>
-      <AuthProvider>
-        <ThemeProvider theme={defaultTheme}>
-          <CssBaseline />
-          <Navbar />
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </AuthProvider>
+      <ThemeProvider theme={defaultTheme}>
+        <CssBaseline />
+        <Navbar />
+        <Component {...pageProps} />
+      </ThemeProvider>
     </CacheProvider>
   );
 };
