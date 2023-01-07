@@ -28,7 +28,7 @@ export async function handleFetch<T>(
         break;
       }
     }
-  } catch (err) {
+  } catch (err: any) {
     switch (err) {
       case axios.isAxiosError(err): {
         errorMessage = 'Try again Later. ';
@@ -43,4 +43,21 @@ export async function handleFetch<T>(
     }
   }
   return { result, errorMessage, errorCode };
+}
+
+export function createFetchRequestOptions(
+  body: string,
+  method: 'POST' | 'GET' | 'DELETE'
+) {
+  const myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'application/json');
+
+  const requestOptions: RequestInit = {
+    method,
+    headers: myHeaders,
+    body,
+    redirect: 'follow',
+  };
+
+  return requestOptions;
 }
