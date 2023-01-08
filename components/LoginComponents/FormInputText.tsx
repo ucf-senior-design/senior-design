@@ -1,6 +1,6 @@
 
 
-export const LoginForm = () => {
+export const FprmInputText = () => {
     return (
         <p>formformform</p>
     )
