@@ -1,6 +1,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import React, { useContext, useEffect, useState } from "react";
+import { firebaseAuth } from "../firebase";
 
 interface User {
     uid: string
@@ -24,13 +25,20 @@ interface AuthenticationResponse {
 
 interface ContextInterface {
     user?: firebase.User | null
+    firebaseLogin: (email: string, password: string) => Promise<any>
+    signup: any
+    logout: any
 }
 
-const AuthContext = React.createContext<ContextInterface>({} as ContextInterface)
-const auth = firebase.auth();
+const AuthContext = React.createContext<ContextInterface>({user: null} as ContextInterface)
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw Error("useAuth must be used within an AuthProvider")
+  }
+  return context
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -38,19 +46,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState(true);
 
   function signup(email: string, password: string) {
-    return auth.createUserWithEmailAndPassword(email, password);
+    return firebaseAuth.createUserWithEmailAndPassword(email, password);
   }
 
-  function login(email: string, password: string) {
-    return auth.signInWithEmailAndPassword(email, password);
+  function firebaseLogin(email: string, password: string) {
+    return firebaseAuth.signInWithEmailAndPassword(email, password);
   }
 
   function logout() {
-    return auth.signOut();
+    return firebaseAuth.signOut();
   }
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
+    const unsubscribe = firebaseAuth.onAuthStateChanged(user => {
       setUser(user);
       setLoading(false);
     })
@@ -58,15 +66,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, [])
 
-  const value = {
-    user,
-    login,
-    signup,
-    logout,
-  }
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{
+      user,
+      firebaseLogin,
+      signup,
+      logout,
+    }}>
       {!loading && children}
     </AuthContext.Provider>
   )
