@@ -1,8 +1,8 @@
-import { Divider, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from "@mui/material";
+import { Button, Divider, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import theme from "../../styles/theme/Theme";
+import { useAuth } from "../../utility/context/AuthContext";
 import LinkButton from "./LinkButton";
-import LoginButton from "./LoginButton";
 import ThirdPartyAuth from "./ThirdPartyAuth";
 
 import Visibility from "@mui/icons-material/Visibility";
@@ -13,6 +13,25 @@ export const LoginForm = () => {
         email:"",
         password:"",
     });
+    const { firebaseLogin, user } = useAuth();
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    // const history = useNavigate();
+
+    async function handleSubmit() {
+        try {
+            setError("");
+            setLoading(true);
+            // await login(emailRef.current.value, passwordRef.current.value);
+            await firebaseLogin(loginInfo.email, loginInfo.password);
+            // history("/");
+            console.log(user?.email)
+          } catch(e) {
+            console.log(e);
+            setError("Failed to log in");
+        }
+        setLoading(false);
+    }
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -110,7 +129,10 @@ export const LoginForm = () => {
                             >
                             <LinkButton link="/" text="forgot your password?"/>
                         </Grid>
-                            <LoginButton email={loginInfo.email} password={loginInfo.password}/>
+                            
+                            <Button variant='contained' color='tertiary' sx={{borderRadius: 1}} aria-label="Sign in button" onClick={() => handleSubmit()}>
+                                sign in
+                            </Button>
                         </Grid>
                     </form>
                     <p>
