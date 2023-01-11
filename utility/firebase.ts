@@ -13,6 +13,6 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig, "tripplanner");
 export const firebaseAuth = app.auth();
 export const firebaseStorage = getStorage(app);
