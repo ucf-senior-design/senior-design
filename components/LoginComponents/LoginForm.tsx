@@ -7,6 +7,7 @@ import ThirdPartyAuth from "./ThirdPartyAuth";
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Router from "next/router";
 
 export const LoginForm = () => {
     const [loginInfo, sLoginInfo] = useState({
@@ -22,11 +23,11 @@ export const LoginForm = () => {
         try {
             setError("");
             setLoading(true);
-            // await login(emailRef.current.value, passwordRef.current.value);
             await firebaseLogin(loginInfo.email, loginInfo.password);
-            // history("/");
+            Router.push("/");
             console.log(user?.email)
           } catch(e) {
+            // TODO: CHANGE THIS TO RED TEXT AND UPDATE USER
             console.log(e);
             setError("Failed to log in");
         }
