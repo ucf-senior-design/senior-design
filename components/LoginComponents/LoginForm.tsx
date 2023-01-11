@@ -1,8 +1,9 @@
-import { Grid, IconButton, InputAdornment, Paper, TextField, Typography } from "@mui/material";
+import { Divider, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import theme from "../../styles/theme/Theme";
 import LinkButton from "./LinkButton";
 import LoginButton from "./LoginButton";
+import ThirdPartyAuth from "./ThirdPartyAuth";
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -117,6 +118,11 @@ export const LoginForm = () => {
                         <LinkButton link="/" text="sign up" />
                     </p>
                 </Grid>
+                <Divider role="log in with google or facebook accounts">
+                    <Typography variant='caption'>or log in with the following</Typography>
+                </Divider>
+                <ThirdPartyAuth />
+
             </Paper>
         </Grid>
     )
