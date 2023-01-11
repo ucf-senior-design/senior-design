@@ -110,7 +110,7 @@ export const LoginForm = () => {
                             >
                             <LinkButton link="/" text="forgot your password?"/>
                         </Grid>
-                            <LoginButton />
+                            <LoginButton email={loginInfo.email} password={loginInfo.password}/>
                         </Grid>
                     </form>
                     <p>
