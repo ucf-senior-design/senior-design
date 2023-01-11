@@ -9,7 +9,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 export const LoginForm = () => {
-    const [user, sUser] = useState({
+    const [loginInfo, sLoginInfo] = useState({
         email:"",
         password:"",
     });
@@ -61,12 +61,12 @@ export const LoginForm = () => {
                         <TextField
                             required
                             id="email-input"
-                            value={user.email}
+                            value={loginInfo.email}
                             label="email"
                             placeholder="email@domain.com"
                             onChange={(e) =>
-                                sUser((user) => ({
-                                ...user,
+                                sLoginInfo((loginInfo) => ({
+                                ...loginInfo,
                                 email: e.target.value,
                                 }))
                             }
@@ -76,13 +76,13 @@ export const LoginForm = () => {
                         <TextField
                             required
                             id="password-input"
-                            value={user.password}
+                            value={loginInfo.password}
                             label="password"
                             type={showPassword ? "text" : "password"}
                             placeholder="password"
                             onChange={(e) =>
-                                sUser((user) => ({
-                                ...user,
+                                sLoginInfo((loginInfo) => ({
+                                ...loginInfo,
                                 password: e.target.value,
                                 }))
                             }
