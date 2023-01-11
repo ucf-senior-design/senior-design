@@ -130,9 +130,7 @@ export const LoginForm = () => {
                             >
                             <LinkButton link="/" text="forgot your password?"/>
                         </Grid>
-                            {error.length > 0 && (
-                                <Typography variant='caption' color='red' sx={{textAlign:"center", margin:0}}>{error}</Typography>
-                            )}
+                            <Typography variant='caption' color='red' sx={{textAlign:"center"}}>{error}</Typography>
                             <Button variant='contained' color='tertiary' sx={{borderRadius: 1}} aria-label="Sign in button" onClick={() => handleSubmit()}>
                                 sign in
                             </Button>
