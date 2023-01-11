@@ -3,7 +3,7 @@ import { Button, ThemeProvider } from '@mui/material';
 import Link from 'next/link';
 import theme from '../../styles/theme/Theme';
 
-export const LoginButton = () => {
+export const LoginButton = ({email, password} : {email:any, password:any}) => {
     return (
         <ThemeProvider theme={theme}>
             <Link href='/' passHref>
