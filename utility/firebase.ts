@@ -2,14 +2,11 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { getStorage } from 'firebase/storage';
 
-
-
-
 const firebaseConfig =
-  // Next.js requires NEXT_PUBLIC prefix for env variables
-  // See :https://nextjs.org/docs/basic-features/environment-variables
   process.env.REACT_APP_FIREBASE_API_KEY !== undefined
-    ? {
+    ? // React.js requires REACT_APP prefix for env variables
+      // See: https://create-react-app.dev/docs/adding-custom-environment-variables/
+      {
         apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
         authDomain: process.env.REACT_APP_AUTH_DOMAIN,
         databaseURL: process.env.REACT_APP_DATABASE_URL,
@@ -18,8 +15,9 @@ const firebaseConfig =
         messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
         appId: process.env.REACT_APP_APP_ID,
       }
-    : // React.js requires REACT_APP prefix for env variables
-      // See: https://create-react-app.dev/docs/adding-custom-environment-variables/
+    : // Next.js requires NEXT_PUBLIC prefix for env variables
+      // See :https://nextjs.org/docs/basic-features/environment-variables
+
       {
         apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
         authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
