@@ -12,7 +12,6 @@ const serviceAccount = {
   projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
 };
 
-// Prevent Reinitialization
 if (!firebaseAdmin.apps.length) {
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(serviceAccount),
