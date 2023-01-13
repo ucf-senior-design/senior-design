@@ -17,7 +17,6 @@ export default async function handler(
         .collection(`Trips/${tripID}/events`)
         .add(req.body)
         .then(async (value) => {
-          console.log(await value.get());
           const id = (await value.get()).id;
           const data = (await value.get()).data();
           res.status(200).send({ uid: id, ...data });
@@ -84,7 +83,6 @@ export default async function handler(
             res.status(200).send({});
           })
           .catch((e) => {
-            console.log(e);
             res.status(400).send('Could not create event.');
           });
       }
@@ -105,7 +103,6 @@ export default async function handler(
             res.status(200).send({});
           })
           .catch((e) => {
-            console.log(e);
             res.status(400).send('Could not create event.');
           });
       }

@@ -15,7 +15,6 @@ const serviceAccount = {
 if (!firebaseAdmin.apps.length) {
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(serviceAccount),
-    databaseURL: 'https://sd1-trip-planner-default-rtdb.firebaseio.com',
   });
 }
 
