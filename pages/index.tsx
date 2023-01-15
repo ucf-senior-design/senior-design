@@ -1,13 +1,13 @@
-import { Grid, Typography } from '@mui/material';
-import { useTheme } from "@mui/material/styles";
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import Image from 'next/image';
-import SignUpButton from '../components/LandingComponents/SignUpButton';
-import styles from '../styles/Home.module.css';
+import { Grid, Stack, Typography } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
+import type { NextPage } from "next"
+import Head from "next/head"
+import Image from "next/image"
+import SignUpButton from "../components/LandingComponents/SignUpButton"
+import styles from "../styles/Home.module.css"
 
 const Home: NextPage = () => {
-  const theme = useTheme();
+  const theme = useTheme()
   return (
     <div>
       <Head>
@@ -16,26 +16,57 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main} style={{background:theme.palette.primary.light}}>
-        <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start" sx={{p:3}}>
-            <Typography variant='h2' style={{fontWeight:500, color:theme.palette.secondary.main}} sx={{mb:2}}>welcome to your personal trip planner.</Typography>
-            <SignUpButton />
+      <main>
+        <Grid
+          container
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          style={{ zIndex: 5, height: "100vh", position: "relative" }}
+          sx={{ p: 3 }}
+        >
+          <Typography
+            variant="h2"
+            style={{ fontWeight: 500, color: "white" }}
+            sx={{ mb: 2, fontSize: { xs: "42px", md: "72px" } }}
+          >
+            welcome to your personal trip planner
+          </Typography>
+          <Typography
+            variant="h2"
+            style={{ fontWeight: 400, color: "white" }}
+            sx={{ mb: 4, fontSize: { xs: "24px", md: "30px" } }}
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua.
+          </Typography>
+          <SignUpButton />
         </Grid>
-        <div className={[styles.elementToHide, styles.cloud].join(" ")}>
-          <Image src='/cloud.svg' alt="Cloud" layout='fill' />
-        </div>
-        <div className={[styles.elementToHide, styles.blueRectangle].join(" ")}>
-          <Image src='/blueRectangle.svg' alt="Blue Rectangle" layout='fill' />
-        </div>
-        <div className={styles.people}>
-          <Image src='/people.svg' alt="Group of people" height={380} width={700} />
-        </div>
-        <div className={[styles.elementToHide, styles.plane].join(" ")}>
-          <Image src='/plane.svg' alt="Plane" height={400} width={850} />
-        </div>
       </main>
+      <Stack
+        sx={{ display: { sm: "none" } }}
+        style={{
+          height: "100vw",
+          width: "100vh",
+          display: "absolute",
+          zIndex: 1,
+        }}
+      >
+        <Image src="/landingMobile.svg" alt="Landing" layout={"fill"} objectFit={"cover"} />
+      </Stack>
+      <Stack
+        sx={{ display: { xs: "none", sm: "block" } }}
+        style={{
+          height: "100vw",
+          width: "100vh",
+          display: "absolute",
+          zIndex: 1,
+        }}
+      >
+        <Image src="/landing.svg" alt="Landing" layout={"fill"} objectFit={"cover"} />
+      </Stack>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

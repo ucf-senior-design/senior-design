@@ -1,18 +1,24 @@
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Button, ThemeProvider } from '@mui/material';
-import Link from 'next/link';
-import theme from '../../styles/theme/Theme';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
+import { Button, ThemeProvider } from "@mui/material"
+import Link from "next/link"
+import theme from "../../styles/theme/Theme"
 
 export const SignUpButton = () => {
-    return (
-        <ThemeProvider theme={theme}>
-            <Link href='/Register' passHref>
-                <Button variant='contained' endIcon={<ArrowForwardIcon />} color='secondary' sx={{borderRadius: 8}} aria-label="Sign up button">
-                    get started now
-                </Button>
-            </Link>
-        </ThemeProvider>
-    )
+  return (
+    <ThemeProvider theme={theme}>
+      <Link href="/Register" passHref>
+        <Button
+          variant="outlined"
+          endIcon={<ArrowForwardIcon />}
+          color="secondary"
+          aria-label="Sign up button"
+          sx={{ fontSize: "18px", color: "white", borderColor: "white" }}
+        >
+          get started
+        </Button>
+      </Link>
+    </ThemeProvider>
+  )
 }
 
-export default SignUpButton;
+export default SignUpButton

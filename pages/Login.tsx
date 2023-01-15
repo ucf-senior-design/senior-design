@@ -1,6 +1,6 @@
-import { LoginForm } from '../components/LoginComponents/LoginForm';
+import { LoginForm } from "../components/LoginComponents/LoginForm"
 
-const label = { inputProps: { 'aria-label': 'Switch demo' } };
+const label = { inputProps: { "aria-label": "Switch demo" } }
 
 export default function Login() {
   return (
@@ -8,5 +8,5 @@ export default function Login() {
     <div>
       <LoginForm />
     </div>
-  );
+  )
 }
