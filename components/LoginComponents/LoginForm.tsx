@@ -16,12 +16,12 @@ export const LoginForm = () => {
     });
     const { firebaseLogin, user } = useAuth();
     const [error, setError] = useState("");
+    const [isError, setIsError] = useState(false);
     const [loading, setLoading] = useState(false);
     // const history = useNavigate();
 
     async function handleSubmit() {
         try {
-            setError("");
             setLoading(true);
             await firebaseLogin(loginInfo.email, loginInfo.password);
             Router.push("/");
@@ -29,7 +29,8 @@ export const LoginForm = () => {
           } catch(e) {
             // TODO: CHANGE THIS TO RED TEXT AND UPDATE USER
             console.log(e);
-            setError("Failed to log in");
+            setIsError(true);
+            setError("Incorrect username or password");
         }
         setLoading(false);
     }
@@ -80,6 +81,8 @@ export const LoginForm = () => {
 
                         <TextField
                             required
+                            error={isError}
+                            helperText={error}
                             id="email-input"
                             value={loginInfo.email}
                             label="email"
@@ -90,11 +93,13 @@ export const LoginForm = () => {
                                 email: e.target.value,
                                 }))
                             }
-                            sx={{marginBottom:3}}
+                            sx={{marginBottom:2}}
                         />
 
                         <TextField
                             required
+                            error={isError}
+                            helperText={error}
                             id="password-input"
                             value={loginInfo.password}
                             label="password"
@@ -130,7 +135,6 @@ export const LoginForm = () => {
                             >
                             <LinkButton link="/" text="forgot your password?"/>
                         </Grid>
-                            <Typography variant='caption' color='red' sx={{textAlign:"center"}}>{error}</Typography>
                             <Button variant='contained' color='tertiary' sx={{borderRadius: 1}} aria-label="Sign in button" onClick={() => handleSubmit()}>
                                 sign in
                             </Button>
