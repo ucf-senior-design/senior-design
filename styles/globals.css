@@ -19,8 +19,11 @@ a {
   html {
     color-scheme: dark;
   }
+  /*
+  TODO: Make this dynamic for dark mode light mode
+  */
   body {
-    color: white;
-    background: black;
+    color: black;
+    background: white;
   }
 }
