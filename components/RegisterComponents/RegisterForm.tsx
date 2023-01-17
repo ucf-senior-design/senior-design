@@ -5,20 +5,20 @@ import {
   InputAdornment,
   Paper,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material';
 import React, { useState } from 'react';
 import theme from '../../styles/theme/Theme';
-import LinkButton from './LinkButton';
+import LinkButton from '../LinkButton';
 import LoginButton from './RegisterButton';
-import ThirdPartyAuth from './ThirdPartyAuth';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export const RegisterForm = () => {
-  const [loginInfo, sLoginInfo] = useState({
+  const [registerInfo, sRegisterInfo] = useState({
     email: '',
+    username: '',
     password: '',
   });
 
@@ -36,7 +36,7 @@ export const RegisterForm = () => {
       direction="column"
       justifyContent="space-evenly"
       alignItems="stretch"
-      xs={4}
+      xs={3}
       style={{ color: theme.palette.tertiary.main }}
     >
       <Paper
@@ -78,12 +78,26 @@ export const RegisterForm = () => {
               <TextField
                 required
                 id="email-input"
-                value={loginInfo.email}
+                value={registerInfo.email}
                 label="email"
                 placeholder="email@domain.com"
                 onChange={(e) =>
-                  sLoginInfo((loginInfo) => ({
-                    ...loginInfo,
+                  sRegisterInfo((registerInfo) => ({
+                    ...registerInfo,
+                    email: e.target.value,
+                  }))
+                }
+                sx={{ marginBottom: 3 }}
+              />
+              <TextField
+                required
+                id="username-input"
+                value={registerInfo.username}
+                label="username"
+                placeholder="johnsmith"
+                onChange={(e) =>
+                  sRegisterInfo((registerInfo) => ({
+                    ...registerInfo,
                     email: e.target.value,
                   }))
                 }
@@ -93,16 +107,17 @@ export const RegisterForm = () => {
               <TextField
                 required
                 id="password-input"
-                value={loginInfo.password}
+                value={registerInfo.password}
                 label="password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="password"
                 onChange={(e) =>
-                  sLoginInfo((loginInfo) => ({
-                    ...loginInfo,
+                  sRegisterInfo((registerInfo) => ({
+                    ...registerInfo,
                     password: e.target.value,
                   }))
                 }
+                sx={{mb:3}}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -122,13 +137,13 @@ export const RegisterForm = () => {
               <TextField
                 required
                 id="password-input"
-                value={loginInfo.password}
+                value={registerInfo.password}
                 label="confirm password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="password"
                 onChange={(e) =>
-                  sLoginInfo((loginInfo) => ({
-                    ...loginInfo,
+                  sRegisterInfo((registerInfo) => ({
+                    ...registerInfo,
                     password: e.target.value,
                   }))
                 }
@@ -158,8 +173,8 @@ export const RegisterForm = () => {
               >
               </Grid>
               <LoginButton
-                email={loginInfo.email}
-                password={loginInfo.password}
+                email={registerInfo.email}
+                password={registerInfo.password}
               />
             </Grid>
           </form>
@@ -167,13 +182,16 @@ export const RegisterForm = () => {
             <a style={{ paddingRight: 5 }}>don&apos;t have an account?</a>
             <LinkButton link="/" text="sign up" />
           </p> */}
+            <p>
+              <a style={{paddingRight:5}}>already have an account?</a>
+              <LinkButton link="/Login" text="log in instead" />
+            </p>
         </Grid>
         <Divider role="log in with google or facebook accounts">
           <Typography variant="caption">
             or sign up with the following
           </Typography>
         </Divider>
-        <ThirdPartyAuth />
       </Paper>
     </Grid>
   );
