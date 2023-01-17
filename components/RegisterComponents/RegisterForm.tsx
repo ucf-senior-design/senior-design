@@ -18,8 +18,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 export const RegisterForm = () => {
   const [registerInfo, sRegisterInfo] = useState({
     email: '',
-    username: '',
     password: '',
+    confirmPassword: '',
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -89,20 +89,6 @@ export const RegisterForm = () => {
                 }
                 sx={{ marginBottom: 3 }}
               />
-              <TextField
-                required
-                id="username-input"
-                value={registerInfo.username}
-                label="username"
-                placeholder="johnsmith"
-                onChange={(e) =>
-                  sRegisterInfo((registerInfo) => ({
-                    ...registerInfo,
-                    email: e.target.value,
-                  }))
-                }
-                sx={{ marginBottom: 3 }}
-              />
 
               <TextField
                 required
@@ -136,15 +122,15 @@ export const RegisterForm = () => {
 
               <TextField
                 required
-                id="password-input"
-                value={registerInfo.password}
+                id="confirm-password-input"
+                value={registerInfo.confirmPassword}
                 label="confirm password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="password"
+                placeholder="confirm password"
                 onChange={(e) =>
                   sRegisterInfo((registerInfo) => ({
                     ...registerInfo,
-                    password: e.target.value,
+                    confirmPassword: e.target.value,
                   }))
                 }
                 sx={{ marginBottom: 3 }}
