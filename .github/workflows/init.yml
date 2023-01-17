@@ -36,7 +36,8 @@ jobs:
       - name: Create env file
         run: |
           touch .env.local
-          echo "API_KEY=THIS" >> .env.local
+          echo "API_KEY=THIS" > .env.local
+          echo "API_KEY2=${{secrets.API_KEY}}" > .env.local
           cat .env.local
 
       # Runs a set of commands using the runners shell
