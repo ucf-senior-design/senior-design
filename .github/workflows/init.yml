@@ -35,7 +35,7 @@ jobs:
       # Creates .env file
       - name: Create env file
         run: |
-          echo "${{ secrets.API_KEY }}" > .env
+          echo "API_KEY=THIS" > .env
           cat .env
 
       # Runs a set of commands using the runners shell
