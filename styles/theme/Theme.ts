@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, Shadows } from '@mui/material/styles';
 
 const theme = createTheme({
   shadows: Array(25).fill('none') as Shadows,
@@ -10,20 +10,27 @@ const theme = createTheme({
   palette: {
     mode: 'light',
     background: {
-      default: '#FFF', // white
+      default: '#EFEFEF', // white
     },
     primary: {
-      light: '#5F9DF7',
-      main: '#1746A2',
+      contrastText: '#3F3D56',
+      main: '#FFF',
+      light: '#545270',
     },
     secondary: {
-      main: '#FFF',
-      light: '#FFF',
-      contrastText: '#3F3D56', // gray-ish blue
+      main: '#3F3D56',
+      light: '#DEDBFF',
+      contrastText: '#FFF',
     },
     tertiary: {
-      main: '#424155',
-      contrastText: '#FFF7E9',
+      main: '#FF731D',
+      contrastText: '#FFF',
+      light: '#FF9250',
+    },
+    landing: {
+      main: '#5F9DF7',
+      contrastText: '#FFF',
+      light: '#A9CCFF',
     },
 
     highlight: {
@@ -31,6 +38,20 @@ const theme = createTheme({
     },
   },
   components: {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          textTransform: 'lowercase',
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          textTransform: 'lowercase',
+        },
+      },
+    },
     MuiButton: {
       defaultProps: {
         // The props to change the default for.
@@ -41,26 +62,37 @@ const theme = createTheme({
           boxShadow: 'none',
           ...(ownerState.variant === 'contained' &&
             (ownerState.color === 'primary' ||
-              ownerState.color === 'secondary') && {
+              ownerState.color === 'secondary' ||
+              ownerState.color === 'tertiary' ||
+              ownerState.color === 'landing') && {
               backgroundColor: theme.palette[ownerState.color].contrastText,
               color: theme.palette[ownerState.color].main,
+              ':hover': {
+                boxShadow: 'none',
+                backgroundColor: theme.palette[ownerState.color].light,
+              },
             }),
           ...(ownerState.variant === 'text' &&
             (ownerState.color === 'primary' ||
-              ownerState.color === 'secondary') && {
+              ownerState.color === 'secondary' ||
+              ownerState.color === 'tertiary' ||
+              ownerState.color === 'landing') && {
               backgroundColor: 'none',
               color: theme.palette[ownerState.color].contrastText,
+              ':hover': {
+                boxShadow: 'none',
+                opacity: 0.75,
+              },
             }),
           ...(ownerState.variant === 'outlined' &&
             (ownerState.color === 'primary' ||
-              ownerState.color === 'secondary') && {
+              ownerState.color === 'secondary' ||
+              ownerState.color === 'tertiary' ||
+              ownerState.color === 'landing') && {
               backgroundColor: 'none',
               color: theme.palette[ownerState.color].contrastText,
               borderColor: theme.palette[ownerState.color].contrastText,
             }),
-          ':hover': {
-            boxShadow: 'none',
-          },
         }),
       },
     },

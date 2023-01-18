@@ -3,15 +3,11 @@ import { useTheme } from '@mui/material/styles';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import Hero from '../components/LandingComponents/Hero';
-import Info from '../components/LandingComponents/Info';
 import SignUpButton from '../components/LandingComponents/SignUpButton';
-import styles from '../styles/Home.module.css';
 
 const Home: NextPage = () => {
-  const theme = useTheme();
   return (
-    <div>
+    <div style={{ overflow: 'hidden', height: '100%' }}>
       <Head>
         <title>Complanion</title>
         <meta
@@ -21,33 +17,69 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div
+        <Grid
+          container
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          style={{
+            overflow: 'hidden',
+            zIndex: 5,
+            height: '100%',
+            position: 'relative',
+          }}
+          sx={{ p: 3 }}
+        >
+          <Typography
+            variant="h2"
+            style={{ fontWeight: 500, color: 'white' }}
+            sx={{ mb: 2, fontSize: { xs: '42px', md: '72px' } }}
+          >
+            welcome to your personal trip planner
+          </Typography>
+          <Typography
+            variant="h2"
+            style={{ fontWeight: 400, color: 'white' }}
+            sx={{ mb: 4, fontSize: { xs: '24px', md: '30px' } }}
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </Typography>
+          <SignUpButton />
+        </Grid>
+        <Stack
+          sx={{ display: { sm: 'none' } }}
           style={{
             height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            width: '100vw',
-            padding: 0,
-            zIndex: 5,
-            gap: 0,
-            position: 'absolute',
-            left: 0,
+            width: '100%',
+            display: 'absolute',
+            zIndex: 1,
           }}
         >
-          <div style={{ height: '100vh' }}>
-            <Hero />
-          </div>
-          <div>
-            <Info />
-          </div>
-          <div style={{ position: 'absolute', zIndex: 5, bottom: 0 }}>
-            <Image
-              src="/Mountains.svg"
-              alt="Image of Mountains"
-              layout="fill"
-            />
-          </div>
-        </div>
+          <Image
+            src="/landingMobile.svg"
+            alt="Landing"
+            layout={'fill'}
+            objectFit={'cover'}
+          />
+        </Stack>
+        <Stack
+          sx={{ display: { xs: 'none', sm: 'block' } }}
+          style={{
+            height: '100%',
+            width: '100%',
+            display: 'absolute',
+            zIndex: 1,
+            overflow: 'hidden',
+          }}
+        >
+          <Image
+            src="/landing.svg"
+            alt="Landing"
+            layout={'fill'}
+            objectFit={'cover'}
+          />
+        </Stack>
       </main>
     </div>
   );

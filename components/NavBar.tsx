@@ -40,28 +40,27 @@ export const Navbar = () => {
     text: string;
     variant: 'text' | 'outlined' | 'contained';
   }) {
-    const extraStyles = isLanding
-      ? {
-          backgroundColor:
-            variant === 'text'
-              ? landingBackgroundColor
-              : variant !== 'outlined'
-              ? landingTextColor
-              : undefined,
-          color:
-            variant === 'text' || variant === 'outlined'
-              ? landingTextColor
-              : landingBackgroundColor,
-          borderColor: variant === 'outlined' ? landingTextColor : undefined,
-        }
-      : {};
+    // const extraStyles = isLanding
+    //   ? {
+    //       backgroundColor:
+    //         variant === 'text'
+    //           ? landingBackgroundColor
+    //           : variant !== 'outlined'
+    //           ? landingTextColor
+    //           : undefined,
+    //       color:
+    //         variant === 'text' || variant === 'outlined'
+    //           ? landingTextColor
+    //           : landingBackgroundColor,
+    //       borderColor: variant === 'outlined' ? landingTextColor : undefined,
+    //     }
+    //   : {};
     return (
       <Link href={path} passHref>
         <Button
-          color="secondary"
+          color={isLanding ? 'landing' : 'secondary'}
           variant={variant}
           aria-label={`${text}-button`}
-          sx={extraStyles}
         >
           {text}
         </Button>
