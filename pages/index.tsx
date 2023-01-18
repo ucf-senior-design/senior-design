@@ -42,7 +42,7 @@ const Home: NextPage = () => {
             style={{ fontWeight: 400, color: 'white' }}
             sx={{ mb: 4, fontSize: { xs: '24px', md: '30px' } }}
           >
-            a new collaborative approach to group planning
+            a collaborative approach to group planning.
           </Typography>
           <SignUpButton />
         </Grid>
