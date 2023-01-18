@@ -14,14 +14,6 @@ export const RegisterForm = () => {
     confirmPassword: '',
   });
 
-  const strengthCheck = {
-    length: false,
-    hasUpperCase: false,
-    hasLowerCase: false,
-    hasDigit: false,
-    hasSpecialChar: false,
-  };
-
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
   const isConfirmPasswordInvalid =
@@ -97,7 +89,13 @@ export const RegisterForm = () => {
               <PasswordTextField
                 error={isPasswordInvalid ? true : false}
                 helperText={
-                  isPasswordInvalid ? 'must be at least 8 characters\ntest' : ''
+                  isPasswordInvalid ? 
+                  <>
+                    - must contain at least 8 characters <br />
+                    - must contain one uppercase and one lowercase letter <br />
+                    - must contain at least one digit <br />
+                    - must have at least one of the following characters: !#*$@_%+=&?
+                  </> : ''
                 }
                 id="registerPasswordInput"
                 value={registerInfo.password}

@@ -1,7 +1,7 @@
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 export const PasswordTextField = ({
   error,
@@ -13,7 +13,7 @@ export const PasswordTextField = ({
   onChange,
 }: {
   error: boolean;
-  helperText: String;
+  helperText: String | ReactNode;
   id: string;
   value: String;
   label: String;
