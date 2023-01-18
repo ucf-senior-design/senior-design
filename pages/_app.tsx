@@ -26,13 +26,13 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
 
   return (
     <CacheProvider value={emotionCache}>
-      <AuthProvider>
-        <ThemeProvider theme={defaultTheme}>
-          <CssBaseline />
-          <Navbar />
+      <ThemeProvider theme={defaultTheme}>
+        <CssBaseline />
+        <Navbar />
+        <div>
           <Component {...pageProps} />
-        </ThemeProvider>
-      </AuthProvider>
+        </div>
+      </ThemeProvider>
     </CacheProvider>
   );
 };
