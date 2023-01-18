@@ -42,8 +42,7 @@ const Home: NextPage = () => {
             style={{ fontWeight: 400, color: 'white' }}
             sx={{ mb: 4, fontSize: { xs: '24px', md: '30px' } }}
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            a new collaborative approach to group planning
           </Typography>
           <SignUpButton />
         </Grid>
