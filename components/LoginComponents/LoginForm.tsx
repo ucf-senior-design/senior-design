@@ -2,8 +2,7 @@ import { Button, Divider, Grid, IconButton, InputAdornment, Paper, TextField, Ty
 import React, { useState } from "react";
 import theme from "../../styles/theme/Theme";
 import { useAuth } from "../../utility/context/AuthContext";
-import LinkButton from "./LinkButton";
-import ThirdPartyAuth from "./ThirdPartyAuth";
+import LinkButton from "../LinkButton";
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -49,7 +48,7 @@ export const LoginForm = () => {
         direction="column"
         justifyContent="space-evenly"
         alignItems="stretch"
-        xs={4}
+        xs={3}
         style={{color:theme.palette.tertiary.main}}
         >
             <Paper
@@ -142,13 +141,12 @@ export const LoginForm = () => {
                     </form>
                     <p>
                         <a style={{paddingRight:5}}>don&apos;t have an account?</a>
-                        <LinkButton link="/" text="sign up" />
+                        <LinkButton link="/Register" text="sign up" />
                     </p>
                 </Grid>
                 <Divider role="log in with google or facebook accounts">
                     <Typography variant='caption'>or log in with the following</Typography>
                 </Divider>
-                <ThirdPartyAuth />
 
             </Paper>
         </Grid>
