@@ -1,7 +1,6 @@
 import { Add } from '@mui/icons-material';
 import { Button, FormLabel, IconButton, TextField } from '@mui/material';
 import React from 'react';
-import theme from '../styles/theme/Theme';
 import { SelectListHook } from '../utility/hooks/selectList';
 import { BackdropModal } from './BackdropModal';
 
@@ -47,7 +46,7 @@ export function SelectChipList({
   return (
     <>
       <div style={$container}>
-        <FormLabel title={label} />
+        <FormLabel> {label}</FormLabel>
         <div style={$chipContainer}>
           {chips}
           <div style={$addOption}>
@@ -89,16 +88,14 @@ const $chipContainer: React.CSSProperties = {
   marginBottom: 2,
 };
 
-const $labelStyles: React.CSSProperties = {
-  marginBottom: 2,
-};
-
 const $chip: React.CSSProperties = {
   margin: 4,
   backgroundColor: '#283051',
   paddingTop: 8,
   paddingBottom: 8,
+  border: 'none',
   paddingLeft: 20,
+  boxShadow: 'none',
   paddingRight: 20,
   borderRadius: 3,
   alignSelf: 'center',
@@ -106,6 +103,7 @@ const $chip: React.CSSProperties = {
 
 const $selectedChip: React.CSSProperties = {
   margin: 4,
+  border: 'none',
   backgroundColor: '#4262BF',
   paddingTop: 8,
   paddingBottom: 8,

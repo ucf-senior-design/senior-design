@@ -2,9 +2,17 @@ import { User } from '../utility/types/user';
 import React, { useState } from 'react';
 import { useAuth } from '../utility/hooks/authentication';
 import { SelectListHook } from '../utility/hooks/selectList';
-import { Button, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  FormControl,
+  TextField,
+  ThemeProvider,
+  Typography,
+} from '@mui/material';
 import { SelectChipList } from '../components/SelectChipList';
 import { ArrowRight } from '@mui/icons-material';
+import theme from '../styles/theme/Theme';
+import { flexbox } from '@mui/system';
 
 export default function Details() {
   const { addDetails, user } = useAuth();
@@ -50,9 +58,7 @@ export default function Details() {
   const isUsernameInvalid = details.username.length === 0;
   const isNameInvalid = details.name.length === 0;
 
-  async function maybeUpdatePicture() {
-    // TODO: Implement this.
-  }
+  // TODO: Implement this uploading profile picture.
 
   async function maybeFinishRegister() {
     const user: User = {
@@ -66,65 +72,90 @@ export default function Details() {
       }
     });
   }
+
+  /* TODO: Add go back button */
+
   return (
-    <div>
-      {/* TODO: Add go back button */}
-      <div style={{ flex: 1 }}>
-        <div style={$container}>
-          <Typography
-            variant="h1"
-            style={{ textAlign: 'center', fontSize: 25 }}
-          >
-            {' '}
-            let's add some details"
-          </Typography>
+    <ThemeProvider theme={theme}>
+      <div
+        style={{
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <FormControl
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 3,
+            padding: 7,
+            maxWidth: '500px',
+            width: '80%',
+            backgroundColor: 'white',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div style={$container}>
+            <Typography
+              sx={{ textAlign: 'center', fontSize: 25, fontStyle: 'black' }}
+            >
+              let's add some details
+            </Typography>
 
-          <TextField
-            error={isNameInvalid}
-            placeholder={isNameInvalid ? 'missing name' : undefined}
-            value={details.name}
-            label="name"
-            onChange={(e) =>
-              sDetails((details) => ({
-                ...details,
-                name: e.target.value,
-              }))
-            }
-          />
-          <TextField
-            error={isUsernameInvalid}
-            placeholder={isUsernameInvalid ? 'invalid username' : undefined}
-            label="username"
-            value={details.username}
-            onChange={(e) =>
-              sDetails((details) => ({
-                ...details,
-                username: e.target.value,
-              }))
-            }
-          />
-          <SelectChipList
-            hook={foodAllergies}
-            label="allergies"
-            propertyName="allergy"
-          />
-          <SelectChipList
-            hook={medicalCond}
-            label="medical conditions"
-            propertyName="medical condition"
-          />
+            <TextField
+              sx={{ width: '100%', marginTop: 2, marginBottom: 2 }}
+              error={isNameInvalid}
+              placeholder={isNameInvalid ? 'missing name' : undefined}
+              value={details.name}
+              label="name"
+              onChange={(e) =>
+                sDetails((details) => ({
+                  ...details,
+                  name: e.target.value,
+                }))
+              }
+            />
 
-          <Button
-            disabled={isNameInvalid || isUsernameInvalid}
-            onClick={async () => {
-              await maybeFinishRegister();
-            }}
-          >
-            Continue <ArrowRight />
-          </Button>
-        </div>
+            <TextField
+              sx={{ width: '100%', marginTop: 2, marginBottom: 2 }}
+              error={isUsernameInvalid}
+              placeholder={isUsernameInvalid ? 'invalid username' : undefined}
+              label="username"
+              value={details.username}
+              onChange={(e) =>
+                sDetails((details) => ({
+                  ...details,
+                  username: e.target.value,
+                }))
+              }
+            />
+            
+            <SelectChipList
+              hook={foodAllergies}
+              label="allergies"
+              propertyName="allergy"
+            />
+            <SelectChipList
+              hook={medicalCond}
+              label="medical conditions"
+              propertyName="medical condition"
+            />
+
+            <Button
+              disabled={isNameInvalid || isUsernameInvalid}
+              onClick={async () => {
+                await maybeFinishRegister();
+              }}
+            >
+              Continue <ArrowRight />
+            </Button>
+          </div>
+        </FormControl>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
 
