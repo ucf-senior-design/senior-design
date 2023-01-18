@@ -29,8 +29,8 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
       <ThemeProvider theme={defaultTheme}>
         <CssBaseline />
         <AuthProvider>
-        <Navbar />
-        <Component {...pageProps} />
+          <Navbar />
+          <Component {...pageProps} />
         </AuthProvider>
       </ThemeProvider>
     </CacheProvider>

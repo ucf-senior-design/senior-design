@@ -3,7 +3,7 @@ import auth, {
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import type { NextApiResponse } from 'next';
-import { firebaseAuth} from '../../../utility/firebase';
+import { firebaseAuth } from '../../../utility/firebase';
 import { RegistrationRequest } from '../../../utility/types/user';
 
 export default async function handler(

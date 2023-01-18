@@ -1,4 +1,4 @@
-import { LoginForm } from '../components/LoginComponents/LoginForm';
+import { LoginForm } from '../components/AuthComponents/LoginComponents/LoginForm';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 

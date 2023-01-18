@@ -14,9 +14,9 @@ declare module '@mui/material/styles/createPalette' {
 }
 
 // If you want to add a custom color to a button, make sure to update the TS definitions for the button component as well
-declare module "@mui/material/Button" {
-    interface ButtonPropsColorOverrides {
-      tertiary: true;
-      highlight: true;
-    }
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    tertiary: true;
+    highlight: true;
+  }
 }

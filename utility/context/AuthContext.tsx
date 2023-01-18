@@ -1,49 +1,51 @@
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import React, { useContext, useEffect, useState } from "react";
-import { firebaseAuth } from "../firebase";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import React, { useContext, useEffect, useState } from 'react';
+import { firebaseAuth } from '../firebase';
 
 interface User {
-    uid: string
-    email: string
-    name: string
-    profilePic: string
-    userName: string
-    medicalInfo: Array<string>
-    allergies: Array<string>
-  }
+  uid: string;
+  email: string;
+  name: string;
+  profilePic: string;
+  userName: string;
+  medicalInfo: Array<string>;
+  allergies: Array<string>;
+}
 
 interface EmailPasswordLogin {
-    email: string
-    password: string
-  }
-  
+  email: string;
+  password: string;
+}
+
 interface AuthenticationResponse {
-    isSuccess: boolean
-    errorMessage?: string
+  isSuccess: boolean;
+  errorMessage?: string;
 }
 
 interface ContextInterface {
-    user?: firebase.User | null
-    firebaseLogin: (email: string, password: string) => Promise<any>
-    signup: any
-    logout: any
+  user?: firebase.User | null;
+  firebaseLogin: (email: string, password: string) => Promise<any>;
+  signup: any;
+  logout: any;
 }
 
-const AuthContext = React.createContext<ContextInterface>({user: null} as ContextInterface)
+const AuthContext = React.createContext<ContextInterface>({
+  user: null,
+} as ContextInterface);
 
 export function useAuth() {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw Error("useAuth must be used within an AuthProvider")
+    throw Error('useAuth must be used within an AuthProvider');
   }
-  return context
+  return context;
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<firebase.User | null>(null);
-    const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<firebase.User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   function signup(email: string, password: string) {
     return firebaseAuth.createUserWithEmailAndPassword(email, password);
@@ -58,22 +60,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
-    const unsubscribe = firebaseAuth.onAuthStateChanged(user => {
+    const unsubscribe = firebaseAuth.onAuthStateChanged((user) => {
       setUser(user);
       setLoading(false);
-    })
+    });
 
     return unsubscribe;
-  }, [])
+  }, []);
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      firebaseLogin,
-      signup,
-      logout,
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        firebaseLogin,
+        signup,
+        logout,
+      }}
+    >
       {!loading && children}
     </AuthContext.Provider>
-  )
+  );
 }
