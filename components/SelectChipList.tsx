@@ -38,15 +38,17 @@ export function SelectChipList({
 
   hook.values.options.forEach((option, index) => {
     chips.push(
-      <button
+      <Button
         key={index}
         onClick={() => hook.updateSelected(option)}
-        style={hook.isSelected(option) ? $selectedChip : $chip}
+        color="primary"
+        variant={hook.isSelected(option) ? 'contained' : 'text'}
+        sx={$chip}
       >
         <div>
           <text style={{ fontSize: 16, fontStyle: 'bold' }}>{option}</text>
         </div>
-      </button>
+      </Button>
     );
   });
 
@@ -56,11 +58,13 @@ export function SelectChipList({
         <FormLabel> {label}</FormLabel>
         <div style={$chipContainer}>
           {chips}
-          <div style={$addOption}>
-            <IconButton onClick={() => hook.togglePopUp()}>
-              <Add sx={{ fontSize: 20 }} />
-            </IconButton>
-          </div>
+          <Button
+            onClick={() => hook.togglePopUp()}
+            sx={$addChip}
+            variant="outlined"
+          >
+            <Add />
+          </Button>
         </div>
       </div>
 
@@ -74,8 +78,7 @@ export function SelectChipList({
             display: 'flex',
             flexDirection: 'column',
             padding: 20,
-            maxWidth: '300px',
-            width: '80%',
+            width: '300px',
             gap: 10,
           }}
         >
@@ -83,7 +86,8 @@ export function SelectChipList({
             {`Add  custom ${label}`}
           </Typography>
           <TextField
-            label={`add ${propertyName}`}
+            color="secondary"
+            label={`${propertyName}`}
             onChange={(e) => {
               hook.updateOptionInput(e.target.value);
             }}
@@ -93,19 +97,13 @@ export function SelectChipList({
             variant="contained"
             onClick={() => hook.addOption()}
           >
-            {' '}
-            Add{' '}
+            add
           </Button>
         </div>
       </BackdropModal>
     </>
   );
 }
-
-const $addOption: React.CSSProperties = {
-  margin: 4,
-  padding: 2,
-};
 
 const $chipContainer: React.CSSProperties = {
   flexWrap: 'wrap',
@@ -118,15 +116,27 @@ const $chipContainer: React.CSSProperties = {
 };
 
 const $chip: React.CSSProperties = {
-  margin: 4,
-  backgroundColor: theme.palette.primary.contrastText,
-  paddingTop: 15,
-  paddingBottom: 15,
-  border: 'none',
-  paddingLeft: 20,
+  paddingTop: 1,
+  paddingBottom: 1,
+  paddingLeft: 3,
+  paddingRight: 3,
+  marginLeft: 1,
+  marginRight: 1,
+  alignSelf: 'center',
+};
+
+const $addChip: React.CSSProperties = {
+  borderColor: theme.palette.primary.contrastText,
+  backgroundColor: 'transparent',
+  borderWidth: '1px',
+  color: theme.palette.primary.contrastText,
+  paddingTop: 1,
+  paddingBottom: 1,
+  paddingLeft: 3,
+  paddingRight: 3,
+  marginLeft: 1,
+  marginRight: 1,
   boxShadow: 'none',
-  paddingRight: 20,
-  borderRadius: 3,
   alignSelf: 'center',
 };
 
@@ -145,4 +155,6 @@ const $selectedChip: React.CSSProperties = {
 const $container: React.CSSProperties = {
   flexDirection: 'column',
   width: '100%',
+  marginTop: 10,
+  marginBottom: 10,
 };

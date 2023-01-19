@@ -15,7 +15,20 @@ export function BackdropModal(props: BackdropModalProps) {
   const { isOpen, toggleShow, children } = props;
   return (
     <>
-      <Modal open={isOpen} onClose={() => toggleShow()}>
+      <Modal
+        sx={{
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        open={isOpen}
+        onClose={() => {
+          console.log('shown');
+          toggleShow();
+        }}
+      >
         <div style={$childrenWrapper}>{children}</div>
       </Modal>
     </>
@@ -23,11 +36,5 @@ export function BackdropModal(props: BackdropModalProps) {
 }
 
 const $childrenWrapper: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
   padding: 10,
-  width: '100%',
-  height: '100%',
 };
