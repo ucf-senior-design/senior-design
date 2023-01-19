@@ -1,18 +1,12 @@
 import { Add } from '@mui/icons-material';
-import {
-  Button,
-  FormLabel,
-  IconButton,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Button, FormLabel, TextField, Typography } from '@mui/material';
 import React from 'react';
 import theme from '../styles/theme/Theme';
 import { SelectListHook } from '../utility/hooks/selectList';
 import { BackdropModal } from './BackdropModal';
 
 export interface SelectChipListProps {
-  updateSelected: (value: string) => void;
+  updateSelected: (_: string) => void;
   options: Map<string, boolean>;
 }
 
@@ -137,18 +131,6 @@ const $addChip: React.CSSProperties = {
   marginLeft: 1,
   marginRight: 1,
   boxShadow: 'none',
-  alignSelf: 'center',
-};
-
-const $selectedChip: React.CSSProperties = {
-  margin: 4,
-  border: 'none',
-  backgroundColor: '#9996BC',
-  paddingTop: 15,
-  paddingBottom: 15,
-  paddingLeft: 20,
-  paddingRight: 20,
-  borderRadius: 3,
   alignSelf: 'center',
 };
 

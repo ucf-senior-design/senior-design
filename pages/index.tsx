@@ -1,5 +1,4 @@
 import { Grid, Stack, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';

@@ -1,6 +1,5 @@
-import { Button, ThemeProvider } from '@mui/material';
+import { Button} from '@mui/material';
 import Link from 'next/link';
-import theme from '../../styles/theme/Theme';
 
 export const LoginButton = () => {
   return (

@@ -31,129 +31,121 @@ export const LoginForm = () => {
   };
 
   return (
-    <div style={$wrapper}>
-      <Grid
-        container
-        direction="column"
-        justifyContent="space-evenly"
-        alignItems="stretch"
-        xs={4}
+    <Grid
+      container
+      direction="column"
+      justifyContent="space-evenly"
+      alignItems="stretch"
+      sx={{ minWidth: '300px', width: '90%', maxWidth: '600px' }}
+      xs={4}
+    >
+      <Paper
+        elevation={3}
+        style={{
+          background: theme.palette.background.paper,
+
+          padding: 20,
+          paddingBottom: 40,
+        }}
       >
-        <Paper
-          elevation={3}
-          style={{
-            background: theme.palette.background.paper,
-            width: '90%',
-            maxWidth: '600px',
-            padding: 20,
-            paddingBottom: 40,
-          }}
+        <Grid
+          container
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
         >
-          <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
+          <Typography
+            variant="h4"
+            style={{
+              fontWeight: 500,
+              color: theme.palette.secondary.main,
+              padding: 5,
+            }}
           >
-            <Typography
-              variant="h4"
-              style={{
-                fontWeight: 500,
-                color: theme.palette.secondary.main,
-                padding: 5,
-              }}
+            login
+          </Typography>
+          <Typography
+            style={{ color: theme.palette.secondary.main, paddingBottom: 15 }}
+          >
+            enter your details to log in
+          </Typography>
+          <form>
+            <Grid
+              container
+              direction="column"
+              justifyContent="space-evenly"
+              alignItems="stretch"
             >
-              login
-            </Typography>
-            <Typography
-              style={{ color: theme.palette.secondary.main, paddingBottom: 15 }}
-            >
-              enter your details to log in
-            </Typography>
-            <form>
+              <TextField
+                color="secondary"
+                required
+                id="email-input"
+                value={loginInfo.email}
+                label="email"
+                placeholder="email@domain.com"
+                onChange={(e) =>
+                  sLoginInfo((loginInfo) => ({
+                    ...loginInfo,
+                    email: e.target.value,
+                  }))
+                }
+                sx={{ marginBottom: 3 }}
+              />
+
+              <TextField
+                color="secondary"
+                required
+                id="password-input"
+                value={loginInfo.password}
+                label="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="password"
+                onChange={(e) =>
+                  sLoginInfo((loginInfo) => ({
+                    ...loginInfo,
+                    password: e.target.value,
+                  }))
+                }
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
               <Grid
                 container
                 direction="column"
-                justifyContent="space-evenly"
-                alignItems="stretch"
+                justifyContent="center"
+                alignItems="center"
+                sx={{ marginBottom: 4, marginTop: 1 }}
               >
-                <TextField
-                  required
-                  id="email-input"
-                  value={loginInfo.email}
-                  label="email"
-                  placeholder="email@domain.com"
-                  onChange={(e) =>
-                    sLoginInfo((loginInfo) => ({
-                      ...loginInfo,
-                      email: e.target.value,
-                    }))
-                  }
-                  sx={{ marginBottom: 3 }}
-                />
-
-                <TextField
-                  required
-                  id="password-input"
-                  value={loginInfo.password}
-                  label="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="password"
-                  onChange={(e) =>
-                    sLoginInfo((loginInfo) => ({
-                      ...loginInfo,
-                      password: e.target.value,
-                    }))
-                  }
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                <Grid
-                  container
-                  direction="column"
-                  justifyContent="center"
-                  alignItems="center"
-                  sx={{ marginBottom: 4, marginTop: 1 }}
-                >
-                  <LinkButton link="/" text="forgot your password?" />
-                </Grid>
-                <LoginButton />
+                <LinkButton link="/" text="forgot your password?" />
               </Grid>
-            </form>
-            <p>
-              <a style={{ paddingRight: 5 }}>don&apos;t have an account?</a>
-              <LinkButton link="/" text="sign up" />
-            </p>
-          </Grid>
-          <Divider role="log in with google or facebook accounts">
-            <Typography variant="caption">
-              or log in with the following
-            </Typography>
-          </Divider>
-          <ThirdPartyAuth />
-        </Paper>
-      </Grid>
-    </div>
+              <LoginButton />
+            </Grid>
+          </form>
+          <p>
+            <a style={{ paddingRight: 5 }}>don&apos;t have an account?</a>
+            <LinkButton link="/" text="sign up" />
+          </p>
+        </Grid>
+        <Divider role="log in with google or facebook accounts">
+          <Typography variant="caption">
+            or log in with the following
+          </Typography>
+        </Divider>
+        <ThirdPartyAuth />
+      </Paper>
+    </Grid>
   );
-};
-const $wrapper: React.CSSProperties = {
-  width: '100%',
-  
-  height: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
 };

@@ -29,7 +29,7 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
       <ThemeProvider theme={defaultTheme}>
         <AuthProvider>
           <CssBaseline />
-          <Screen>
+          <Screen isLanding={props.router.asPath === '/'}>
             <Component {...pageProps} />
           </Screen>
         </AuthProvider>

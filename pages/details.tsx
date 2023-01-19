@@ -18,7 +18,7 @@ export default function Details() {
     allergies: [],
   });
 
-  async function getStoredUserInfo() {
+  React.useEffect(() => {
     if (user === undefined || user === null) {
       return;
     }
@@ -29,11 +29,7 @@ export default function Details() {
       profilePic: user.profilePic,
       name: user.name,
     }));
-  }
-
-  React.useEffect(() => {
-    getStoredUserInfo();
-  }, []);
+  }, [details.uid, user]);
 
   const foodAllergies = SelectListHook({
     options: ['egg', 'peanuts', 'tree nuts', 'milk', 'vegan'],
@@ -173,8 +169,9 @@ const $wrapper: React.CSSProperties = {
   height: '100%',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center'
+  justifyContent: 'center',
 };
+
 const $container: React.CSSProperties = {
   overflowY: 'auto',
   alignItems: 'center',
