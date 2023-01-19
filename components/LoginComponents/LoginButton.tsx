@@ -1,18 +1,14 @@
-
-import { Button, ThemeProvider } from '@mui/material';
+import { Button} from '@mui/material';
 import Link from 'next/link';
-import theme from '../../styles/theme/Theme';
 
-export const LoginButton = ({email, password} : {email:String, password:String}) => {
-    return (
-        <ThemeProvider theme={theme}>
-            <Link href='/' passHref>
-                <Button variant='contained' color='tertiary' sx={{borderRadius: 1}} aria-label="Sign up button">
-                    sign in
-                </Button>
-            </Link>
-        </ThemeProvider>
-    )
-}
+export const LoginButton = () => {
+  return (
+    <Link href="/" passHref>
+      <Button variant="contained" color="primary" aria-label="Sign up button">
+        login
+      </Button>
+    </Link>
+  );
+};
 
 export default LoginButton;
