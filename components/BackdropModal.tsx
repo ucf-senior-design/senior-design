@@ -23,10 +23,11 @@ export function BackdropModal(props: BackdropModalProps) {
 }
 
 const $childrenWrapper: React.CSSProperties = {
+  display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: 'white',
   padding: 10,
   width: '100%',
+  height: '100%',
 };

@@ -5,6 +5,8 @@ import { SelectListHook } from '../utility/hooks/selectList';
 import {
   Button,
   FormControl,
+  Grid,
+  Paper,
   TextField,
   ThemeProvider,
   Typography,
@@ -79,81 +81,111 @@ export default function Details() {
     <ThemeProvider theme={theme}>
       <div
         style={{
-          height: '100vh',
+          width: '100%',
+          height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          padding: 10,
         }}
       >
-        <FormControl
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 3,
-            padding: 7,
+        <Paper
+          elevation={3}
+          style={{
+            width: '90%',
             maxWidth: '500px',
-            width: '80%',
-            backgroundColor: 'white',
-            alignItems: 'center',
-            justifyContent: 'center',
+            background: theme.palette.primary.main,
+            padding: 20,
+            paddingBottom: 40,
           }}
         >
-          <div style={$container}>
-            <Typography
-              sx={{ textAlign: 'center', fontSize: 25, fontStyle: 'black' }}
-            >
-              let's add some details
-            </Typography>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <div style={$container}>
+              <Typography
+                variant="h4"
+                style={{
+                  textAlign: 'center',
+                  fontWeight: 500,
+                  color: theme.palette.secondary.main,
+                  padding: 5,
+                }}
+              >
+                details
+              </Typography>
+              <Typography
+                style={{
+                  textAlign: 'center',
+                  color: theme.palette.secondary.main,
+                  paddingBottom: 15,
+                }}
+              >
+                please enter some additional details.
+              </Typography>
 
-            <TextField
-              sx={{ width: '100%', marginTop: 2, marginBottom: 2 }}
-              error={isNameInvalid}
-              placeholder={isNameInvalid ? 'missing name' : undefined}
-              value={details.name}
-              label="name"
-              onChange={(e) =>
-                sDetails((details) => ({
-                  ...details,
-                  name: e.target.value,
-                }))
-              }
-            />
+              <TextField
+                color="secondary"
+                sx={{ width: '100%', marginTop: 2, marginBottom: 2 }}
+                error={isNameInvalid}
+                placeholder={isNameInvalid ? 'missing name' : undefined}
+                value={details.name}
+                label="name"
+                onChange={(e) =>
+                  sDetails((details) => ({
+                    ...details,
+                    name: e.target.value,
+                  }))
+                }
+              />
 
-            <TextField
-              sx={{ width: '100%', marginTop: 2, marginBottom: 2 }}
-              error={isUsernameInvalid}
-              placeholder={isUsernameInvalid ? 'invalid username' : undefined}
-              label="username"
-              value={details.username}
-              onChange={(e) =>
-                sDetails((details) => ({
-                  ...details,
-                  username: e.target.value,
-                }))
-              }
-            />
-            
-            <SelectChipList
-              hook={foodAllergies}
-              label="allergies"
-              propertyName="allergy"
-            />
-            <SelectChipList
-              hook={medicalCond}
-              label="medical conditions"
-              propertyName="medical condition"
-            />
+              <TextField
+                color="secondary"
+                sx={{ width: '100%', marginTop: 2, marginBottom: 2 }}
+                error={isUsernameInvalid}
+                placeholder={isUsernameInvalid ? 'invalid username' : undefined}
+                label="username"
+                value={details.username}
+                onChange={(e) =>
+                  sDetails((details) => ({
+                    ...details,
+                    username: e.target.value,
+                  }))
+                }
+              />
 
-            <Button
-              disabled={isNameInvalid || isUsernameInvalid}
-              onClick={async () => {
-                await maybeFinishRegister();
-              }}
-            >
-              Continue <ArrowRight />
-            </Button>
-          </div>
-        </FormControl>
+              <SelectChipList
+                hook={foodAllergies}
+                label="allergies"
+                propertyName="allergy"
+              />
+              <SelectChipList
+                hook={medicalCond}
+                label="medical conditions"
+                propertyName="medical condition"
+              />
+
+              <Button
+                sx={{
+                  width: '100%',
+                  paddingTop: 2,
+                  paddingBottom: 2,
+                }}
+                color="primary"
+                variant="contained"
+                disabled={isNameInvalid || isUsernameInvalid}
+                onClick={async () => {
+                  await maybeFinishRegister();
+                }}
+              >
+                Continue
+              </Button>
+            </div>
+          </Grid>
+        </Paper>
       </div>
     </ThemeProvider>
   );

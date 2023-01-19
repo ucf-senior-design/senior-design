@@ -60,6 +60,10 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ ownerState }) => ({
           boxShadow: 'none',
+          paddingTop: 15,
+          paddingBottom: 15,
+          marginTop: 3,
+          marginBottom: 3,
           ...(ownerState.variant === 'contained' &&
             (ownerState.color === 'primary' ||
               ownerState.color === 'secondary' ||

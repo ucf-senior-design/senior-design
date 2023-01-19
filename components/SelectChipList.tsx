@@ -1,6 +1,13 @@
 import { Add } from '@mui/icons-material';
-import { Button, FormLabel, IconButton, TextField } from '@mui/material';
+import {
+  Button,
+  FormLabel,
+  IconButton,
+  TextField,
+  Typography,
+} from '@mui/material';
 import React from 'react';
+import theme from '../styles/theme/Theme';
 import { SelectListHook } from '../utility/hooks/selectList';
 import { BackdropModal } from './BackdropModal';
 
@@ -37,7 +44,7 @@ export function SelectChipList({
         style={hook.isSelected(option) ? $selectedChip : $chip}
       >
         <div>
-          <text style={{ fontSize: 12, fontStyle: 'bold' }}>{option}</text>
+          <text style={{ fontSize: 16, fontStyle: 'bold' }}>{option}</text>
         </div>
       </button>
     );
@@ -61,13 +68,35 @@ export function SelectChipList({
         isOpen={hook.values.isPopUpVisible}
         toggleShow={() => hook.togglePopUp()}
       >
-        <TextField
-          label={`add ${propertyName}`}
-          onChange={(e) => {
-            hook.updateOptionInput(e.target.value);
+        <div
+          style={{
+            backgroundColor: 'white',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: 20,
+            maxWidth: '300px',
+            width: '80%',
+            gap: 10,
           }}
-        />
-        <Button onClick={() => hook.addOption()}> Add </Button>
+        >
+          <Typography variant="h6" sx={{ textAlign: 'center' }}>
+            {`Add  custom ${label}`}
+          </Typography>
+          <TextField
+            label={`add ${propertyName}`}
+            onChange={(e) => {
+              hook.updateOptionInput(e.target.value);
+            }}
+          />
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => hook.addOption()}
+          >
+            {' '}
+            Add{' '}
+          </Button>
+        </div>
       </BackdropModal>
     </>
   );
@@ -90,9 +119,9 @@ const $chipContainer: React.CSSProperties = {
 
 const $chip: React.CSSProperties = {
   margin: 4,
-  backgroundColor: '#283051',
-  paddingTop: 8,
-  paddingBottom: 8,
+  backgroundColor: theme.palette.primary.contrastText,
+  paddingTop: 15,
+  paddingBottom: 15,
   border: 'none',
   paddingLeft: 20,
   boxShadow: 'none',
@@ -104,9 +133,9 @@ const $chip: React.CSSProperties = {
 const $selectedChip: React.CSSProperties = {
   margin: 4,
   border: 'none',
-  backgroundColor: '#4262BF',
-  paddingTop: 8,
-  paddingBottom: 8,
+  backgroundColor: '#9996BC',
+  paddingTop: 15,
+  paddingBottom: 15,
   paddingLeft: 20,
   paddingRight: 20,
   borderRadius: 3,
