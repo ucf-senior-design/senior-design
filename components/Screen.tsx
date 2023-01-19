@@ -7,7 +7,6 @@ import {
   Drawer,
   IconButton,
   Stack,
-  ThemeProvider,
   Toolbar,
   Typography,
 } from '@mui/material';
@@ -16,17 +15,18 @@ import * as React from 'react';
 import theme from '../styles/theme/Theme';
 import LoggedOutDrawer from './LoggedOutDrawer';
 
-export const Navbar = () => {
+export default function Screen({
+  children,
+  isLanding,
+}: {
+  isLanding: boolean;
+  children: React.ReactNode;
+}) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [isLanding, setIsLanding] = React.useState<boolean>(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
-
-  React.useEffect(() => {
-    setIsLanding(window.location.pathname === '/');
-  });
 
   const landingTextColor = isLanding ? 'white' : undefined;
   const landingBackgroundColor = isLanding ? '#5F9DF7' : undefined;
@@ -40,21 +40,6 @@ export const Navbar = () => {
     text: string;
     variant: 'text' | 'outlined' | 'contained';
   }) {
-    // const extraStyles = isLanding
-    //   ? {
-    //       backgroundColor:
-    //         variant === 'text'
-    //           ? landingBackgroundColor
-    //           : variant !== 'outlined'
-    //           ? landingTextColor
-    //           : undefined,
-    //       color:
-    //         variant === 'text' || variant === 'outlined'
-    //           ? landingTextColor
-    //           : landingBackgroundColor,
-    //       borderColor: variant === 'outlined' ? landingTextColor : undefined,
-    //     }
-    //   : {};
     return (
       <Link href={path} passHref>
         <Button
@@ -74,7 +59,7 @@ export const Navbar = () => {
   );
 
   return (
-    <ThemeProvider theme={theme}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <nav aria-label="navigational bar">
         <AppBar position="static" color="secondary" sx={{ boxShadow: 'none' }}>
           <Toolbar
@@ -159,8 +144,16 @@ export const Navbar = () => {
           </Drawer>
         </Box>
       </nav>
-    </ThemeProvider>
+      <div
+        style={{
+          height: '100%',
+          width: '100%',
+          padding: 10,
+          backgroundColor: theme.palette.background.default,
+        }}
+      >
+        {children}
+      </div>
+    </div>
   );
-};
-
-export default Navbar;
+}

@@ -15,7 +15,7 @@ export interface User {
   name: string;
   profilePic: string;
   username: string;
-  medicalInfo: Array<MedicalInfoField>;
+  medicalInfo: Array<string>;
   allergies: Array<string>;
 }
 
