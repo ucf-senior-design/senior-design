@@ -7,7 +7,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import type { AppProps } from 'next/app';
 import * as React from 'react';
-import Navbar from '../components/NavBar';
+import Screen from '../components/Screen';
 import '../styles/globals.css';
 import theme from '../styles/theme/Theme';
 import { AuthProvider } from '../utility/context/AuthContext';
@@ -27,10 +27,11 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={defaultTheme}>
-        <CssBaseline />
         <AuthProvider>
-          <Navbar />
-          <Component {...pageProps} />
+          <CssBaseline />
+          <Screen isLanding={props.router.asPath === '/'}>
+            <Component {...pageProps} />
+          </Screen>
         </AuthProvider>
       </ThemeProvider>
     </CacheProvider>

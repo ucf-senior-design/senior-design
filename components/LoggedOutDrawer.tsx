@@ -8,11 +8,9 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  ThemeProvider,
-  Typography,
+  Typography
 } from '@mui/material';
 import Link from 'next/link';
-import theme from '../styles/theme/Theme';
 
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
@@ -56,7 +54,7 @@ export const LoggedOutDrawer = () => {
   const navItems = [navItem1, navItem2, navItem3, navItem4];
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Grid container direction="row" sx={{ mb: 2 }}>
         <IconButton color="inherit" sx={{ p: 0, pr: 1 }}>
           <AirportShuttleIcon />
@@ -67,10 +65,10 @@ export const LoggedOutDrawer = () => {
       <List>
         {navItems.map((item) => (
           <Link href={item.link} key={item.id} passHref>
-            <ListItem component="a" disablePadding>
+            <ListItem component="a" disablePadding color="primary">
               <ListItemButton aria-label={item.buttonLabel}>
                 <ListItemIcon aria-label={item.iconLabel}>
-                  <item.icon />
+                  <item.icon color="inherit" />
                 </ListItemIcon>
                 <ListItemText primary={item.name} />
               </ListItemButton>
@@ -78,7 +76,7 @@ export const LoggedOutDrawer = () => {
           </Link>
         ))}
       </List>
-    </ThemeProvider>
+    </>
   );
 };
 

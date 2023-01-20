@@ -40,13 +40,14 @@ export const LoginForm = () => {
       direction="column"
       justifyContent="space-evenly"
       alignItems="stretch"
-      xs={3}
-      style={{ color: theme.palette.tertiary.main }}
+      sx={{ minWidth: '300px', width: '90%', maxWidth: '600px' }}
+      xs={5}
+      md={3}
     >
       <Paper
         elevation={3}
         style={{
-          background: theme.palette.secondary.main,
+          background: theme.palette.background.paper,
           padding: 20,
           paddingBottom: 40,
         }}
@@ -61,14 +62,14 @@ export const LoginForm = () => {
             variant="h4"
             style={{
               fontWeight: 500,
-              color: theme.palette.tertiary.main,
+              color: theme.palette.secondary.main,
               padding: 5,
             }}
           >
             login
           </Typography>
           <Typography
-            style={{ color: theme.palette.tertiary.main, paddingBottom: 15 }}
+            style={{ color: theme.palette.secondary.main, paddingBottom: 15 }}
           >
             enter your details to log in
           </Typography>
@@ -120,7 +121,7 @@ export const LoginForm = () => {
               </Grid>
               <Button
                 variant="contained"
-                color="tertiary"
+                color="primary"
                 sx={{ borderRadius: 1 }}
                 aria-label="Sign in button"
                 onClick={() => handleSubmit()}
