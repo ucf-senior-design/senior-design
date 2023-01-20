@@ -10,8 +10,8 @@ import * as React from 'react';
 import Screen from '../components/Screen';
 import '../styles/globals.css';
 import theme from '../styles/theme/Theme';
-import { AuthProvider } from '../utility/context/AuthContext';
 import createEmotionCache from '../utility/createEmotionCache';
+import { AuthProvider } from '../utility/hooks/authentication';
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;

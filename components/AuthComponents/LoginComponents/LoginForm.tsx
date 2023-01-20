@@ -1,7 +1,7 @@
 import { Button, Divider, Grid, Paper, Typography } from '@mui/material';
 import { useState } from 'react';
 import theme from '../../../styles/theme/Theme';
-import { useAuth } from '../../../utility/context/AuthContext';
+import { useAuth } from '../../../utility/hooks/authentication';
 import { FormTextField } from '../FormTextField';
 import LinkButton from '../LinkButton';
 import { PasswordTextField } from '../PasswordTextField';
@@ -13,23 +13,33 @@ export const LoginForm = () => {
     email: '',
     password: '',
   });
-  const { firebaseLogin, user } = useAuth();
+  //const { firebaseLogin, user } = useAuth();
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { doEmailPasswordLogin } = useAuth();
   // const history = useNavigate();
 
   async function handleSubmit() {
     try {
-      setLoading(true);
-      await firebaseLogin(loginInfo.email, loginInfo.password);
-      Router.push('/');
-      console.log(user?.email);
+      //setLoading(true);
+      //await firebaseLogin(loginInfo.email, loginInfo.password);
+      //Router.push('/');
+      //console.log(user?.email);
+      setLoading(true)
+      await doEmailPasswordLogin(loginInfo, (response) => {
+        if (response.isSuccess) {
+          Router.push('/');
+        } else {
+          setError('Incorrect username or password')
+          setIsError(true);
+        }
+      })
     } catch (e) {
       // TODO: CHANGE THIS TO RED TEXT AND UPDATE USER
-      console.log(e);
-      setIsError(true);
-      setError('Incorrect username or password');
+      //console.log(e);
+      //setIsError(true);
+      //setError('Incorrect username or password');
     }
     setLoading(false);
   }
