@@ -8,7 +8,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography,
+  Typography
 } from '@mui/material';
 import Link from 'next/link';
 
@@ -35,7 +35,7 @@ const navItem2 = {
 };
 const navItem3 = {
   id: 3,
-  link: '/Login',
+  link: '/Auth/Login',
   name: 'login',
   buttonLabel: 'login button',
   icon: LoginIcon,
@@ -43,7 +43,7 @@ const navItem3 = {
 };
 const navItem4 = {
   id: 4,
-  link: '/Register',
+  link: '/Auth/Register',
   name: 'new user',
   buttonLabel: 'register button',
   icon: AddIcon,

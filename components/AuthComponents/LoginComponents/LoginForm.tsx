@@ -1,49 +1,51 @@
-import {
-  Divider,
-  Grid,
-  IconButton,
-  InputAdornment,
-  Paper,
-  TextField,
-  Typography,
-} from '@mui/material';
-import React, { useState } from 'react';
-import theme from '../../styles/theme/Theme';
-import LinkButton from './LinkButton';
-import LoginButton from './LoginButton';
-import ThirdPartyAuth from './ThirdPartyAuth';
+import { Button, Divider, Grid, Paper, Typography } from '@mui/material';
+import { useState } from 'react';
+import theme from '../../../styles/theme/Theme';
+import { useAuth } from '../../../utility/hooks/authentication';
+import { FormTextField } from '../FormTextField';
+import LinkButton from '../LinkButton';
+import { PasswordTextField } from '../PasswordTextField';
 
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Router from 'next/router';
 
 export const LoginForm = () => {
   const [loginInfo, sLoginInfo] = useState({
     email: '',
     password: '',
   });
+  //const { firebaseLogin, user } = useAuth();
+  const [error, setError] = useState('');
+  const [isError, setIsError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { doEmailPasswordLogin } = useAuth();
+  // const history = useNavigate();
 
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-  };
+  async function handleSubmit() {
+    setLoading(true);
+    await doEmailPasswordLogin(loginInfo, (response) => {
+      if (response.isSuccess) {
+        Router.push('/');
+      } else {
+        setError('Incorrect username or password');
+        setIsError(true);
+      }
+      setLoading(false);
+    });
+  }
 
   return (
     <Grid
-      container
-      direction="column"
+      item
       justifyContent="space-evenly"
       alignItems="stretch"
-      sx={{ minWidth: '300px', width: '90%', maxWidth: '600px' }}
-      xs={4}
+      xs={5}
+      md={3}
+      style={{ color: theme.palette.tertiary.main, maxWidth:500 }}
     >
       <Paper
         elevation={3}
         style={{
           background: theme.palette.background.paper,
-
           padding: 20,
           paddingBottom: 40,
         }}
@@ -76,50 +78,34 @@ export const LoginForm = () => {
               justifyContent="space-evenly"
               alignItems="stretch"
             >
-              <TextField
-                color="secondary"
-                required
-                id="email-input"
+              <FormTextField
+                error={isError}
+                helperText=""
+                id="emailInput"
                 value={loginInfo.email}
                 label="email"
                 placeholder="email@domain.com"
-                onChange={(e) =>
+                onChange={(e: { target: { value: string } }) =>
                   sLoginInfo((loginInfo) => ({
                     ...loginInfo,
                     email: e.target.value,
                   }))
                 }
-                sx={{ marginBottom: 3 }}
               />
 
-              <TextField
-                color="secondary"
-                required
-                id="password-input"
+              <PasswordTextField
+                error={isError}
+                helperText={error}
+                id="passwordInput"
                 value={loginInfo.password}
                 label="password"
-                type={showPassword ? 'text' : 'password'}
                 placeholder="password"
-                onChange={(e) =>
+                onChange={(e: { target: { value: string } }) =>
                   sLoginInfo((loginInfo) => ({
                     ...loginInfo,
                     password: e.target.value,
                   }))
                 }
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
               />
 
               <Grid
@@ -129,14 +115,27 @@ export const LoginForm = () => {
                 alignItems="center"
                 sx={{ marginBottom: 4, marginTop: 1 }}
               >
-                <LinkButton link="/" text="forgot your password?" />
+                <LinkButton
+                  link="/Auth/PasswordReset"
+                  text="forgot your password?"
+                />
               </Grid>
-              <LoginButton />
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={loading}
+                sx={{ borderRadius: 1 }}
+                aria-label="Sign in button"
+                onClick={() => handleSubmit()}
+              >
+                sign in
+              </Button>
+              
             </Grid>
           </form>
           <p>
             <a style={{ paddingRight: 5 }}>don&apos;t have an account?</a>
-            <LinkButton link="/" text="sign up" />
+            <LinkButton link="/Auth/Register" text="sign up" />
           </p>
         </Grid>
         <Divider role="log in with google or facebook accounts">
@@ -144,7 +143,6 @@ export const LoginForm = () => {
             or log in with the following
           </Typography>
         </Divider>
-        <ThirdPartyAuth />
       </Paper>
     </Grid>
   );
