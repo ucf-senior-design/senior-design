@@ -19,7 +19,7 @@ export const SignUpButton = () => {
         </Link>
       </Stack>
       <Stack sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Link href="/Register" passHref>
+        <Link href="/Auth/Register" passHref>
           <Button
             variant="outlined"
             endIcon={<ArrowForwardIcon />}

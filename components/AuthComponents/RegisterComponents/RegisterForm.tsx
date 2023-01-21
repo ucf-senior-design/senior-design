@@ -48,7 +48,8 @@ export const RegisterForm = () => {
       direction="column"
       justifyContent="space-evenly"
       alignItems="stretch"
-      xs={3}
+      xs={5}
+      md={3}
       style={{ color: theme.palette.tertiary.main }}
     >
       <Paper
@@ -164,7 +165,7 @@ export const RegisterForm = () => {
           </form>
           <p>
             <a style={{ paddingRight: 5 }}>already have an account?</a>
-            <LinkButton link="/Login" text="log in instead" />
+            <LinkButton link="/Auth/Login" text="log in instead" />
           </p>
         </Grid>
         <Divider role="log in with google or facebook accounts">

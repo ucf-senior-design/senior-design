@@ -1,4 +1,4 @@
-import { SendEmail } from '../components/AuthComponents/RegisterComponents/SendEmail';
+import { SendEmail } from '../../components/AuthComponents/RegisterComponents/SendEmail';
 
 export default function RegisterEmail() {
   return (

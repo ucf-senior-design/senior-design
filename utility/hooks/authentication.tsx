@@ -1,7 +1,7 @@
 import {
   FacebookAuthProvider,
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithPopup
 } from 'firebase/auth';
 import Router from 'next/router';
 import React from 'react';
@@ -258,7 +258,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (response.ok) {
       await storePartialCredentialResult(await response.json());
       // TODO: Create Details Page
-      Router.push('/Details');
+      Router.push('/Auth/Details');
     } else {
       callback({ isSuccess: response.ok, errorMessage: await response.text() });
     }

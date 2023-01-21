@@ -8,7 +8,7 @@ import {
   IconButton,
   Stack,
   Toolbar,
-  Typography,
+  Typography
 } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
@@ -117,7 +117,7 @@ export default function Screen({
             >
               <NavBarButton path="/" text="home" variant="text" />
               <NavBarButton path="/About" text="about" variant="text" />
-              <NavBarButton path="/Login" text="login" variant="contained" />
+              <NavBarButton path="/Auth/Login" text="login" variant="contained" />
               <NavBarButton
                 path="Register"
                 text="register"

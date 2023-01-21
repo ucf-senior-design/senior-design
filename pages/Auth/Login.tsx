@@ -1,6 +1,6 @@
 import { Grid, Stack } from '@mui/material';
 import Image from 'next/image';
-import { LoginForm } from '../components/AuthComponents/LoginComponents/LoginForm';
+import { LoginForm } from '../../components/AuthComponents/LoginComponents/LoginForm';
 
 export default function Login() {
   return (

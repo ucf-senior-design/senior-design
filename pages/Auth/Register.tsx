@@ -1,6 +1,6 @@
 import { Grid, Stack } from '@mui/material';
 import Image from 'next/image';
-import { RegisterForm } from '../components/AuthComponents/RegisterComponents/RegisterForm';
+import { RegisterForm } from '../../components/AuthComponents/RegisterComponents/RegisterForm';
 
 export default function Register() {
   return (

@@ -1,10 +1,10 @@
 import { Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { SelectChipList } from '../components/SelectChipList';
-import theme from '../styles/theme/Theme';
-import { useAuth } from '../utility/hooks/authentication';
-import { SelectListHook } from '../utility/hooks/selectList';
-import { User } from '../utility/types/user';
+import { SelectChipList } from '../../components/SelectChipList';
+import theme from '../../styles/theme/Theme';
+import { useAuth } from '../../utility/hooks/authentication';
+import { SelectListHook } from '../../utility/hooks/selectList';
+import { User } from '../../utility/types/user';
 
 export default function Details() {
   const { addDetails, user } = useAuth();
