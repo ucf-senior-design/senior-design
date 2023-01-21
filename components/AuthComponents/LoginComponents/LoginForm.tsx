@@ -35,13 +35,12 @@ export const LoginForm = () => {
 
   return (
     <Grid
-      container
-      direction="column"
+      item
       justifyContent="space-evenly"
       alignItems="stretch"
-      sx={{ minWidth: '300px', width: '90%', maxWidth: '600px' }}
       xs={5}
       md={3}
+      style={{ color: theme.palette.tertiary.main, maxWidth:500 }}
     >
       <Paper
         elevation={3}

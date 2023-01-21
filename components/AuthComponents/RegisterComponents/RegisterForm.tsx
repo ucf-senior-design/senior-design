@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, Paper, Typography } from '@mui/material';
+import { Button, Divider, Grid, Paper, Typography } from '@mui/material';
 import { useState } from 'react';
 import PasswordStrengthBar from 'react-password-strength-bar';
 import theme from '../../../styles/theme/Theme';
@@ -22,12 +22,12 @@ export const RegisterForm = () => {
   const isConfirmPasswordInvalid =
     registerInfo.password !== registerInfo.confirmPassword;
   const isPasswordInvalid =
-    registerInfo.password.length < 8 ||
-    /[A-Z]+/.test(registerInfo.password) === false ||
-    /[a-z]+/.test(registerInfo.password) === false ||
-    /[0-9]+/.test(registerInfo.password) === false ||
-    /[!#*$@_%+=&?]+/g.test(registerInfo.password) === false ||
-    /[-~’/`<>^(){}[\]|;:”\\.,]+/g.test(registerInfo.password) === true;
+    registerInfo.password.length < 8
+    // /[A-Z]+/.test(registerInfo.password) === false ||
+    // /[a-z]+/.test(registerInfo.password) === false ||
+    // /[0-9]+/.test(registerInfo.password) === false ||
+    // /[!#*$@_%+=&?]+/g.test(registerInfo.password) === false ||
+    // /[-~’/`<>^(){}[\]|;:”\\.,]+/g.test(registerInfo.password) === true;
 
   const { doEmailPasswordRegister } = useAuth();
   async function maybeRegister() {
@@ -44,13 +44,12 @@ export const RegisterForm = () => {
 
   return (
     <Grid
-      container
-      direction="column"
+      item
       justifyContent="space-evenly"
       alignItems="stretch"
       xs={5}
       md={3}
-      style={{ color: theme.palette.tertiary.main }}
+      style={{ color: theme.palette.tertiary.main, maxWidth:500 }}
     >
       <Paper
         elevation={3}
@@ -107,14 +106,7 @@ export const RegisterForm = () => {
                 error={isPasswordInvalid ? true : false}
                 helperText={
                   isPasswordInvalid ? (
-                    <>
-                      <Box sx={{ maxWidth: 250 }}>
-                        - must contain at least 8 characters <br />- must
-                        contain one uppercase and one lowercase letter <br />
-                        - must contain at least one digit <br />- must have at
-                        least one of the following characters: !#*$@_%+=&?
-                      </Box>
-                    </>
+                      "password must be at least 8 characters"
                   ) : (
                     ''
                   )
