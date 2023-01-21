@@ -260,7 +260,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (response.ok) {
       await storePartialCredentialResult(await response.json());
       // TODO: Create Details Page
-      Router.push('/Auth/RegisterEmail')
+      Router.push('/Auth/Details')
     } else {
       callback({ isSuccess: response.ok, errorMessage: await response.text() });
     }
