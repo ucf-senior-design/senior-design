@@ -14,8 +14,8 @@ export interface User {
   email: string;
   name: string;
   profilePic: string;
-  userName: string;
-  medicalInfo: Array<MedicalInfoField>;
+  username: string;
+  medicalInfo: Array<string>;
   allergies: Array<string>;
 }
 
@@ -30,7 +30,7 @@ export type UserField =
   | 'medicalInfo'
   | 'allergies';
 
-export interface UserRegistration extends Omit<User, 'uid'> {
+export interface UserRegistration extends User {
   password: string;
 }
 
@@ -42,6 +42,16 @@ export interface UserLogin {
 export type RegistrationRequest = Override<
   NextApiRequest,
   { body: UserRegistration }
+>;
+
+export type ProviderLoginRequest = Override<
+  NextApiRequest,
+  {
+    body: {
+      provider: 'google' | 'twitter' | 'facebook';
+      idToken: string;
+    };
+  }
 >;
 
 export type LoginRequest = Override<NextApiRequest, { body: UserLogin }>;
