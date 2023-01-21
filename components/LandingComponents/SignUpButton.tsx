@@ -6,7 +6,7 @@ export const SignUpButton = () => {
   return (
     <>
       <Stack sx={{ display: { sm: 'none' } }}>
-        <Link href="/Register" passHref>
+        <Link href="/Auth/Register" passHref>
           <Button
             variant="outlined"
             endIcon={<ArrowForwardIcon />}
