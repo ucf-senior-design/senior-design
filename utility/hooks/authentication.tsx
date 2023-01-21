@@ -285,7 +285,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else if (response.status === MUST_ADD_DETAILS) {
         await storePartialCredentialResult(await response.json());
         // Go to Details Page
-        Router.push('/Auth/Details');
+        // Router.push('/Auth/Details');
+        // Go to the Dashboard Page
+        Router.push('/Dashboard');
       }
       return;
     }
