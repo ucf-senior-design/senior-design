@@ -38,7 +38,7 @@ export const RegisterForm = () => {
       <Paper
         elevation={3}
         style={{
-          background: theme.palette.secondary.main,
+          background: theme.palette.background.paper,
           padding: 20,
           paddingBottom: 40,
         }}
@@ -53,14 +53,14 @@ export const RegisterForm = () => {
             variant="h4"
             style={{
               fontWeight: 500,
-              color: theme.palette.tertiary.main,
+              color: theme.palette.secondary.main,
               padding: 5,
             }}
           >
             register
           </Typography>
           <Typography
-            style={{ color: theme.palette.tertiary.main, paddingBottom: 15 }}
+            style={{ color: theme.palette.secondary.main, paddingBottom: 15 }}
           >
             please enter an email and password
           </Typography>
@@ -89,13 +89,16 @@ export const RegisterForm = () => {
               <PasswordTextField
                 error={isPasswordInvalid ? true : false}
                 helperText={
-                  isPasswordInvalid ? 
-                  <>
-                    - must contain at least 8 characters <br />
-                    - must contain one uppercase and one lowercase letter <br />
-                    - must contain at least one digit <br />
-                    - must have at least one of the following characters: !#*$@_%+=&?
-                  </> : ''
+                  isPasswordInvalid ? (
+                    <>
+                      - must contain at least 8 characters <br />- must contain
+                      one uppercase and one lowercase letter <br />
+                      - must contain at least one digit <br />- must have at
+                      least one of the following characters: !#*$@_%+=&?
+                    </>
+                  ) : (
+                    ''
+                  )
                 }
                 id="registerPasswordInput"
                 value={registerInfo.password}
@@ -114,7 +117,7 @@ export const RegisterForm = () => {
               <PasswordTextField
                 error={isConfirmPasswordInvalid ? true : false}
                 helperText={
-                  isConfirmPasswordInvalid ? 'does not match password' : ''
+                  isConfirmPasswordInvalid ? 'passwords must match' : ''
                 }
                 id="confirmPasswordInput"
                 value={registerInfo.confirmPassword}

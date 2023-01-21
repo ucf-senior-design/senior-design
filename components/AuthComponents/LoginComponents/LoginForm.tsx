@@ -21,27 +21,16 @@ export const LoginForm = () => {
   // const history = useNavigate();
 
   async function handleSubmit() {
-    try {
-      //setLoading(true);
-      //await firebaseLogin(loginInfo.email, loginInfo.password);
-      //Router.push('/');
-      //console.log(user?.email);
-      setLoading(true)
-      await doEmailPasswordLogin(loginInfo, (response) => {
-        if (response.isSuccess) {
-          Router.push('/');
-        } else {
-          setError('Incorrect username or password')
-          setIsError(true);
-        }
-      })
-    } catch (e) {
-      // TODO: CHANGE THIS TO RED TEXT AND UPDATE USER
-      //console.log(e);
-      //setIsError(true);
-      //setError('Incorrect username or password');
-    }
-    setLoading(false);
+    setLoading(true);
+    await doEmailPasswordLogin(loginInfo, (response) => {
+      if (response.isSuccess) {
+        Router.push('/');
+      } else {
+        setError('Incorrect username or password');
+        setIsError(true);
+      }
+      setLoading(false);
+    });
   }
 
   return (
@@ -92,7 +81,7 @@ export const LoginForm = () => {
             >
               <FormTextField
                 error={isError}
-                helperText={error}
+                helperText=""
                 id="emailInput"
                 value={loginInfo.email}
                 label="email"

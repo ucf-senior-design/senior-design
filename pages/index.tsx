@@ -29,22 +29,41 @@ const Home: NextPage = () => {
           }}
           sx={{ p: 3 }}
         >
-          <Typography
-            variant="h2"
-            style={{ fontWeight: 500, color: 'white' }}
-            sx={{ mb: 2, fontSize: { xs: '42px', md: '72px' } }}
-          >
-            welcome to your personal trip planner
-          </Typography>
-          <Typography
-            variant="h2"
-            style={{ fontWeight: 400, color: 'white' }}
-            sx={{ mb: 4, fontSize: { xs: '24px', md: '30px' } }}
-          >
-            a collaborative approach to group planning.
-          </Typography>
+          <Stack sx={{ display: { sm: 'none' } }}>
+            <Typography
+              variant="h2"
+              style={{ fontWeight: 500, color: 'black' }}
+              sx={{ mb: 2, fontSize: { xs: '42px', md: '72px' } }}
+            >
+              welcome to your personal trip planner
+            </Typography>
+            <Typography
+              variant="h2"
+              style={{ fontWeight: 400, color: 'black' }}
+              sx={{ mb: 4, fontSize: { xs: '24px', md: '30px' } }}
+            >
+              a collaborative approach to group planning.
+            </Typography>
+          </Stack>
+          <Stack sx={{ display: { xs: 'none', sm: 'block' } }}>
+            <Typography
+              variant="h2"
+              style={{ fontWeight: 500, color: 'white' }}
+              sx={{ mb: 2, fontSize: { xs: '42px', md: '72px' } }}
+            >
+              welcome to your personal trip planner
+            </Typography>
+            <Typography
+              variant="h2"
+              style={{ fontWeight: 400, color: 'white' }}
+              sx={{ mb: 4, fontSize: { xs: '24px', md: '30px' } }}
+            >
+              a collaborative approach to group planning.
+            </Typography>
+          </Stack>
           <SignUpButton />
         </Grid>
+
         <Stack
           sx={{ display: { sm: 'none' } }}
           style={{

@@ -15,7 +15,7 @@ export const RegisterButton = ({
       <Link href="/" passHref>
         <Button
           variant="contained"
-          color="tertiary"
+          color="primary"
           sx={{ borderRadius: 1, mt: 5 }}
           aria-label="Sign up button"
         >

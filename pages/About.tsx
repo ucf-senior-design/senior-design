@@ -7,10 +7,8 @@ import {
   Container,
   Grid,
   Typography,
-  useTheme
+  useTheme,
 } from '@mui/material';
-import Image from 'next/image';
-import styles from '../styles/Home.module.css';
 
 const item1 = {
   id: 1,
@@ -68,14 +66,20 @@ export default function About() {
               key={item.id}
               xs={8}
               direction="column"
-              sx={{ justify: 'center', alignItems: 'center', margin: 3 }}
+              sx={{ justify: 'center', alignItems: 'center', margin: 8 }}
             >
               <item.icon style={{ fontSize: '500%' }} />
-              <Card sx={{ backgroundColor: theme.palette.tertiary.main }}>
+              <Card
+                sx={{
+                  backgroundColor: theme.palette.secondary.main,
+                  minHeight: 230,
+                  maxHeight: 500,
+                }}
+              >
                 <Container>
                   <Grid
                     container
-                    padding={5}
+                    padding={7}
                     direction="column"
                     sx={{ justify: 'center', alignItems: 'center' }}
                   >
@@ -90,10 +94,6 @@ export default function About() {
           ))}
         </Box>
       </Grid>
-
-      <div className={[styles.elementToHide, styles.mountains].join(' ')}>
-        <Image src="/Mountains.svg" alt="Image of Mountains" layout="fill" />
-      </div>
     </div>
   );
 }
