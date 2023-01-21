@@ -1,11 +1,11 @@
-import { Divider, Grid, Paper, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid, Paper, Typography } from '@mui/material';
 import { useState } from 'react';
 import PasswordStrengthBar from 'react-password-strength-bar';
 import theme from '../../../styles/theme/Theme';
+import { useAuth } from '../../../utility/hooks/authentication';
 import { FormTextField } from '../FormTextField';
 import LinkButton from '../LinkButton';
 import { PasswordTextField } from '../PasswordTextField';
-import RegisterButton from './RegisterButton';
 
 export const RegisterForm = () => {
   const [registerInfo, sRegisterInfo] = useState({
@@ -16,6 +16,9 @@ export const RegisterForm = () => {
 
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
+  const isValidEmail =
+    /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(registerInfo.email) ===
+    false;
   const isConfirmPasswordInvalid =
     registerInfo.password !== registerInfo.confirmPassword;
   const isPasswordInvalid =
@@ -25,6 +28,19 @@ export const RegisterForm = () => {
     /[0-9]+/.test(registerInfo.password) === false ||
     /[!#*$@_%+=&?]+/g.test(registerInfo.password) === false ||
     /[-~’/`<>^(){}[\]|;:”\\.,]+/g.test(registerInfo.password) === true;
+
+  const { doEmailPasswordRegister } = useAuth();
+  async function maybeRegister() {
+    doEmailPasswordRegister(
+      {
+        email: registerInfo.email,
+        password: registerInfo.password,
+      },
+      (response) => {
+        setError(response.errorMessage as string); // currently this is not displayed
+      }
+    );
+  }
 
   return (
     <Grid
@@ -72,8 +88,8 @@ export const RegisterForm = () => {
               alignItems="stretch"
             >
               <FormTextField
-                error={isError}
-                helperText={error}
+                error={isValidEmail}
+                helperText={isValidEmail ? 'please enter a valid email' : ''}
                 id="registerEmailInput"
                 value={registerInfo.email}
                 label="email"
@@ -91,10 +107,12 @@ export const RegisterForm = () => {
                 helperText={
                   isPasswordInvalid ? (
                     <>
-                      - must contain at least 8 characters <br />- must contain
-                      one uppercase and one lowercase letter <br />
-                      - must contain at least one digit <br />- must have at
-                      least one of the following characters: !#*$@_%+=&?
+                      <Box sx={{ maxWidth: 250 }}>
+                        - must contain at least 8 characters <br />- must
+                        contain one uppercase and one lowercase letter <br />
+                        - must contain at least one digit <br />- must have at
+                        least one of the following characters: !#*$@_%+=&?
+                      </Box>
                     </>
                   ) : (
                     ''
@@ -130,10 +148,18 @@ export const RegisterForm = () => {
                   }))
                 }
               />
-              <RegisterButton
-                email={registerInfo.email}
-                password={registerInfo.password}
-              />
+              <Button
+                disabled={
+                  isValidEmail || isConfirmPasswordInvalid || isPasswordInvalid
+                }
+                variant="contained"
+                color="primary"
+                sx={{ borderRadius: 1, mt: 5 }}
+                aria-label="Sign up button"
+                onClick={async () => maybeRegister()}
+              >
+                sign up now
+              </Button>
             </Grid>
           </form>
           <p>

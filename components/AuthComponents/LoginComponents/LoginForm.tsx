@@ -116,7 +116,10 @@ export const LoginForm = () => {
                 alignItems="center"
                 sx={{ marginBottom: 4, marginTop: 1 }}
               >
-                <LinkButton link="/" text="forgot your password?" />
+                <LinkButton
+                  link="/PasswordReset"
+                  text="forgot your password?"
+                />
               </Grid>
               <Button
                 variant="contained"
