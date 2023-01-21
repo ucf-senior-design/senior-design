@@ -16,6 +16,7 @@ export const RegisterForm = () => {
 
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const isValidEmail =
     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(registerInfo.email) ===
     false;
@@ -31,6 +32,7 @@ export const RegisterForm = () => {
 
   const { doEmailPasswordRegister } = useAuth();
   async function maybeRegister() {
+    setLoading(true);
     doEmailPasswordRegister(
       {
         email: registerInfo.email,
@@ -40,6 +42,7 @@ export const RegisterForm = () => {
         setError(response.errorMessage as string); // currently this is not displayed
       }
     );
+    setLoading(false);
   }
 
   return (
@@ -143,7 +146,7 @@ export const RegisterForm = () => {
               />
               <Button
                 disabled={
-                  isValidEmail || isConfirmPasswordInvalid || isPasswordInvalid
+                  isValidEmail || isConfirmPasswordInvalid || isPasswordInvalid || loading
                 }
                 variant="contained"
                 color="primary"

@@ -123,12 +123,14 @@ export const LoginForm = () => {
               <Button
                 variant="contained"
                 color="primary"
+                disabled={loading}
                 sx={{ borderRadius: 1 }}
                 aria-label="Sign in button"
                 onClick={() => handleSubmit()}
               >
                 sign in
               </Button>
+              
             </Grid>
           </form>
           <p>

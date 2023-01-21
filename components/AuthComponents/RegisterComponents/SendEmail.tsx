@@ -40,8 +40,7 @@ export function SendEmail({
   }
   return (
     <Grid
-      container
-      direction="column"
+      item
       justifyContent="space-evenly"
       alignItems="stretch"
       sx={{ minWidth: '300px', width: '90%', maxWidth: '600px' }}
@@ -90,7 +89,7 @@ export function SendEmail({
                 aria-label="login"
                 sx={{ borderRadius: 1 }}
                 color="primary"
-                onClick={() => Router.push('/Login')}
+                onClick={() => Router.push('/Auth/Login')}
               >
                 {' '}
                 log in{' '}

@@ -119,7 +119,7 @@ export default function Screen({
               <NavBarButton path="/About" text="about" variant="text" />
               <NavBarButton path="/Auth/Login" text="login" variant="contained" />
               <NavBarButton
-                path="Register"
+                path="/Auth/Register"
                 text="register"
                 variant="outlined"
               />
