@@ -209,7 +209,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.status === EMAIL_VERIFIED) {
         saveRegisterdUser(user);
         // TODO: redirect to dashboard
-        Router.push('/Dashboard/Dashboard');
+        Router.push('/Dashboard/Index');
         return;
       }
       callback({ isSuccess: response.ok });
