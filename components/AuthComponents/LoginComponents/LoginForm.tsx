@@ -5,6 +5,7 @@ import { useAuth } from '../../../utility/hooks/authentication';
 import { FormTextField } from '../FormTextField';
 import LinkButton from '../LinkButton';
 import { PasswordTextField } from '../PasswordTextField';
+import ThirdPartyAuth from '../ThirdPartyAuth';
 
 import Router from 'next/router';
 
@@ -143,6 +144,7 @@ export const LoginForm = () => {
             or log in with the following
           </Typography>
         </Divider>
+        <ThirdPartyAuth />
       </Paper>
     </Grid>
   );
