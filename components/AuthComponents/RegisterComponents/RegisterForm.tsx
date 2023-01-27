@@ -6,6 +6,7 @@ import { useAuth } from '../../../utility/hooks/authentication';
 import { FormTextField } from '../FormTextField';
 import LinkButton from '../LinkButton';
 import { PasswordTextField } from '../PasswordTextField';
+import ThirdPartyAuth from '../ThirdPartyAuth';
 
 export const RegisterForm = () => {
   const [registerInfo, sRegisterInfo] = useState({
@@ -168,6 +169,7 @@ export const RegisterForm = () => {
             or sign up with the following
           </Typography>
         </Divider>
+        <ThirdPartyAuth />
       </Paper>
     </Grid>
   );
