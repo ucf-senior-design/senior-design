@@ -1,7 +1,7 @@
 import {
   FacebookAuthProvider,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
 } from 'firebase/auth';
 import Router from 'next/router';
 import React from 'react';
@@ -233,7 +233,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       JSON.stringify({
         email: user ? user.email : '',
         uid: user ? user.uid : '',
-        purpose: 'email'
+        purpose: 'email',
       }),
       'POST'
     );
@@ -260,7 +260,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (response.ok) {
       await storePartialCredentialResult(await response.json());
       // TODO: Create Details Page
-      Router.push('/Auth/Details')
+      Router.push('/Auth/Details');
     } else {
       callback({ isSuccess: response.ok, errorMessage: await response.text() });
     }
@@ -281,7 +281,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await saveRegisterdUser(await response.json());
       } else if (response.status === MUST_VERIFY_EMAIL) {
         // Go to Email Verficications Pge
-        Router.push('/Auth/RegisterEmail')
+        Router.push('/Auth/RegisterEmail');
       } else if (response.status === MUST_ADD_DETAILS) {
         await storePartialCredentialResult(await response.json());
         // Go to Details Page

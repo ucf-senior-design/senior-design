@@ -41,7 +41,7 @@ export const LoginForm = () => {
       alignItems="stretch"
       xs={5}
       md={3}
-      style={{ color: theme.palette.tertiary.main, maxWidth:500 }}
+      style={{ color: theme.palette.tertiary.main, maxWidth: 500 }}
     >
       <Paper
         elevation={3}
@@ -131,7 +131,6 @@ export const LoginForm = () => {
               >
                 sign in
               </Button>
-              
             </Grid>
           </form>
           <p>
