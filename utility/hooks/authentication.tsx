@@ -6,7 +6,11 @@ import {
 import Router from 'next/router';
 import React from 'react';
 import { useLocalStorage } from 'react-use-storage';
-import { EMAIL_VERIFIED, MUST_ADD_DETAILS, MUST_VERIFY_EMAIL } from '../constants';
+import {
+  EMAIL_VERIFIED,
+  MUST_ADD_DETAILS,
+  MUST_VERIFY_EMAIL,
+} from '../constants';
 import { createFetchRequestOptions } from '../fetch';
 import { firebaseAuth } from '../firebase';
 import { User } from '../types/user';
@@ -47,8 +51,6 @@ interface AuthContext {
     callback: (response: AuthenticationResponse) => void
   ) => Promise<void>;
 }
-
-
 
 // Use this to handle any authentication processes
 const AuthContext = React.createContext<AuthContext>({} as AuthContext);
@@ -294,7 +296,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       'POST'
     );
     const response = await fetch(`${API_URL}auth/passwordReset`, options);
-
+   
     if (response.ok) {
       callback({ isSuccess: response.ok });
     } else {
