@@ -28,7 +28,6 @@ export default async function handler(
         res.status(200).send('Success.');
       })
       .catch((error) => {
-        console.log(error);
         res.status(400).send('Try again later.');
       });
   } else {
