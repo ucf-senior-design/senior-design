@@ -6,9 +6,11 @@ import {
   Card,
   Container,
   Grid,
+  Stack,
   Typography,
   useTheme,
 } from '@mui/material';
+import Image from 'next/image';
 
 const item1 = {
   id: 1,
@@ -66,7 +68,7 @@ export default function About() {
               key={item.id}
               xs={8}
               direction="column"
-              sx={{ justify: 'center', alignItems: 'center', margin: 8 }}
+              sx={{ justify: 'center', alignItems: 'center', margin: 5 }}
             >
               <item.icon style={{ fontSize: '500%' }} />
               <Card
@@ -94,6 +96,23 @@ export default function About() {
           ))}
         </Box>
       </Grid>
+      <Stack
+        sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}
+        style={{
+          height: '100%',
+          width: '100%',
+          display: 'absolute',
+          zIndex: 1,
+          overflow: 'hidden',
+        }}
+      >
+        <Image
+          src="/about.svg"
+          alt="About"
+          layout={'fill'}
+          objectFit={'cover'}
+        />
+      </Stack>
     </div>
   );
 }

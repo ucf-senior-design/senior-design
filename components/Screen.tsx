@@ -8,7 +8,7 @@ import {
   IconButton,
   Stack,
   Toolbar,
-  Typography
+  Typography,
 } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
@@ -96,13 +96,14 @@ export default function Screen({
               <Typography
                 variant="h5"
                 component="div"
+                noWrap={true}
                 sx={{
                   flexGrow: 1,
                   display: { xs: 'none', sm: 'block' },
                   fontWeight: 700,
                 }}
               >
-                complanion
+                we-tinerary
               </Typography>
             </div>
             <Stack
@@ -117,7 +118,11 @@ export default function Screen({
             >
               <NavBarButton path="/" text="home" variant="text" />
               <NavBarButton path="/About" text="about" variant="text" />
-              <NavBarButton path="/Auth/Login" text="login" variant="contained" />
+              <NavBarButton
+                path="/Auth/Login"
+                text="login"
+                variant="contained"
+              />
               <NavBarButton
                 path="/Auth/Register"
                 text="register"

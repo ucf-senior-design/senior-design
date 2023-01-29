@@ -296,7 +296,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       'POST'
     );
     const response = await fetch(`${API_URL}auth/passwordReset`, options);
-   
+
     if (response.ok) {
       callback({ isSuccess: response.ok });
     } else {

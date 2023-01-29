@@ -23,13 +23,12 @@ export const RegisterForm = () => {
     false;
   const isConfirmPasswordInvalid =
     registerInfo.password !== registerInfo.confirmPassword;
-  const isPasswordInvalid =
-    registerInfo.password.length < 8
-    // /[A-Z]+/.test(registerInfo.password) === false ||
-    // /[a-z]+/.test(registerInfo.password) === false ||
-    // /[0-9]+/.test(registerInfo.password) === false ||
-    // /[!#*$@_%+=&?]+/g.test(registerInfo.password) === false ||
-    // /[-~’/`<>^(){}[\]|;:”\\.,]+/g.test(registerInfo.password) === true;
+  const isPasswordInvalid = registerInfo.password.length < 8;
+  // /[A-Z]+/.test(registerInfo.password) === false ||
+  // /[a-z]+/.test(registerInfo.password) === false ||
+  // /[0-9]+/.test(registerInfo.password) === false ||
+  // /[!#*$@_%+=&?]+/g.test(registerInfo.password) === false ||
+  // /[-~’/`<>^(){}[\]|;:”\\.,]+/g.test(registerInfo.password) === true;
 
   const { doEmailPasswordRegister } = useAuth();
   async function maybeRegister() {
@@ -53,7 +52,7 @@ export const RegisterForm = () => {
       alignItems="stretch"
       xs={5}
       md={3}
-      style={{ color: theme.palette.tertiary.main, maxWidth:500 }}
+      style={{ color: theme.palette.tertiary.main, maxWidth: 500 }}
     >
       <Paper
         elevation={3}
@@ -109,11 +108,9 @@ export const RegisterForm = () => {
               <PasswordTextField
                 error={isPasswordInvalid ? true : false}
                 helperText={
-                  isPasswordInvalid ? (
-                      "password must be at least 8 characters"
-                  ) : (
-                    ''
-                  )
+                  isPasswordInvalid
+                    ? 'password must be at least 8 characters'
+                    : ''
                 }
                 id="registerPasswordInput"
                 value={registerInfo.password}
@@ -147,7 +144,10 @@ export const RegisterForm = () => {
               />
               <Button
                 disabled={
-                  isValidEmail || isConfirmPasswordInvalid || isPasswordInvalid || loading
+                  isValidEmail ||
+                  isConfirmPasswordInvalid ||
+                  isPasswordInvalid ||
+                  loading
                 }
                 variant="contained"
                 color="primary"

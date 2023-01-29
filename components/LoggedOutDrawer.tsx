@@ -8,7 +8,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography
+  Typography,
 } from '@mui/material';
 import Link from 'next/link';
 
@@ -59,7 +59,7 @@ export const LoggedOutDrawer = () => {
         <IconButton color="inherit" sx={{ p: 0, pr: 1 }}>
           <AirportShuttleIcon />
         </IconButton>
-        <Typography variant="h6">complanion</Typography>
+        <Typography variant="h6">we-tinerary</Typography>
       </Grid>
       <Divider />
       <List>
