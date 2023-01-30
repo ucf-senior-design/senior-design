@@ -7,25 +7,26 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // HOW TO GET POLL ID
-  const pollID = req.query.params;
-  const tripID = req.query.tripID as string;
+  const pollID = req.body.pollID;
+  const tripID = req.body.tripID as string;
 
   switch (req.method) {
-    case 'GET': {
-      console.log(req.body);
-      await firebaseAdmin
-        .firestore()
-        .collection(`Trips/sample/polls`)
-        .get()
-        .then(async (value) => {
-          // WHAT SHOULD BE SENT HERE
-          res.status(200).send({value});
-        })
-        .catch(() => {
-          res.status(400).send('Could not get poll.');
-        });
-      break;
-    }
+    // case 'GET': {
+    //   console.log(req.body);
+    //   await firebaseAdmin
+    //     .firestore()
+    //     .collection(`Trips/sample/polls`)
+    //     .get()
+    //     .then(async (value) => {
+    //       // WHAT SHOULD BE SENT HERE
+    //       res.status(200).send({value});
+    //     })
+    //     .catch(() => {
+    //       res.status(400).send('Could not get poll.');
+    //     });
+    //   break;
+    // }
+
     case 'POST': {
       console.log(req.body);
       await firebaseAdmin
