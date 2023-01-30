@@ -6,6 +6,11 @@ import {
 import Router from 'next/router';
 import React from 'react';
 import { useLocalStorage } from 'react-use-storage';
+import {
+  EMAIL_VERIFIED,
+  MUST_ADD_DETAILS,
+  MUST_VERIFY_EMAIL,
+} from '../constants';
 import { createFetchRequestOptions } from '../fetch';
 import { firebaseAuth } from '../firebase';
 import { User } from '../types/user';
@@ -42,13 +47,10 @@ interface AuthContext {
     callback: (response: AuthenticationResponse) => void
   ) => Promise<void>;
   sendPasswordReset: (
+    email: string,
     callback: (response: AuthenticationResponse) => void
   ) => Promise<void>;
 }
-
-const MUST_VERIFY_EMAIL = 203;
-const MUST_ADD_DETAILS = 202;
-const EMAIL_VERIFIED = 201;
 
 // Use this to handle any authentication processes
 const AuthContext = React.createContext<AuthContext>({} as AuthContext);
@@ -220,7 +222,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function doGoogleLogin() {
     doThirdPartyLogin('google', new GoogleAuthProvider(), (isSuccess) => {
-      alert('Facebook Login Succesful?: ' + isSuccess);
+      alert('Google Login Succesful?: ' + isSuccess);
     });
   }
 
@@ -229,20 +231,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   ) {
     const user = localUser;
 
-    const options = createFetchRequestOptions(
-      JSON.stringify({
-        email: user ? user.email : '',
-        uid: user ? user.uid : '',
-        purpose: 'email',
-      }),
-      'POST'
-    );
+    const options = createFetchRequestOptions(JSON.stringify({}), 'POST');
 
-    const response = await fetch(`${API_URL}auth/email`, options);
+    const response = await fetch(`${API_URL}auth/verifyEmail`, options);
     if (response.ok) {
       if (response.status === EMAIL_VERIFIED) {
-        // TODO: Handle accounts That have a verified email already
-        console.log('Email Already Verified');
+        Router.push('/Dashboard/Index');
       }
       callback({ isSuccess: response.ok });
     } else {
@@ -294,13 +288,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function sendPasswordReset(
+    email: string,
     callback: (response: AuthenticationResponse) => void
   ) {
     const options = createFetchRequestOptions(
-      JSON.stringify({ purpose: 'password' }),
+      JSON.stringify({ email: email }),
       'POST'
     );
-    const response = await fetch(`${API_URL}auth/email`, options);
+    const response = await fetch(`${API_URL}auth/passwordReset`, options);
 
     if (response.ok) {
       callback({ isSuccess: response.ok });
