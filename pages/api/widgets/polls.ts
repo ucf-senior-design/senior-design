@@ -45,46 +45,21 @@ export default async function handler(
     }
 
     case 'PUT': {
-      // IF INVALID
-      if (
-        firebaseAuth.currentUser === null
-      ) {
-        res.status(400).send('Invalid User');
-
-      // ELSE IS VALID
-      } else {
-
-        // IF TRYING TO UPDATE UNDEFINED FIELD THEN 400
-        if (
-          req.body !== undefined &&
-          req.body.participants !== undefined
-        ) {
-          res.status(400).send('Cannot update attendees.');
-          return;
-        }
-
-        const updateObj = () => {
-          return {
-            participants: firebaseAdmin.firestore.FieldValue.arrayUnion(
-            firebaseAuth.currentUser?.uid
-            ),
-            // HOW TO INCREMENT RESULTS - THIS IS WRONG
-            results: firebaseAdmin.firestore.FieldValue.increment(1)
-          };             
-        };
-
-        firebaseAdmin
-          .firestore()
-          .collection(`Trips/${tripID}/polls`)
-          .doc(pollID)
-          .update(updateObj())
-          .then(() => {
-            res.status(200).send({});
-          })
-          .catch((e) => {
-            res.status(400).send('Could not create event.');
-          });
-      }
+      await firebaseAdmin
+        .firestore()
+        .collection(`Trips/${tripID}/polls`)
+        .doc(pollID)
+        .get()
+        .then((doc) => {
+          console.log(doc);
+          let docData = doc.data() as any;
+          console.log(docData);
+          // docData.options[index] += 8;
+          console.log(docData.options);
+          doc.ref.update(docData);
+        })
+        .then(() => res.status(200).send({}))
+        .catch((e) => res.status(400).send(e));
 
       break;
     }
