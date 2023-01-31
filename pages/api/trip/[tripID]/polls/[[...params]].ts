@@ -1,19 +1,25 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAuth } from '../../../utility/firebase';
-import firebaseAdmin from '../../../utility/firebaseAdmin';
-import { Poll } from '../../../utility/types/trip';
+import { firebaseAuth } from '../../../../../utility/firebase';
+import firebaseAdmin from '../../../../../utility/firebaseAdmin';
+import { Poll } from '../../../../../utility/types/trip';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const pollID = req.body.pollID;
-  const tripID = req.body.tripID as string;
+  const params = req.query.params;
+  const tripID = req.query.tripID as string;
   const index = req.body.index;
+
+  function getPollID() {
+    if (params === undefined || params?.length !== 1) {
+      return { error: true, pollID: '' };
+    }
+    return { error: false, pollID: params[0] };
+  }
 
   switch (req.method) {
     case 'POST': {
-      console.log(req.body);
       await firebaseAdmin
         .firestore()
         .collection(`Trips/${tripID}/polls`)
@@ -30,6 +36,12 @@ export default async function handler(
     }
 
     case 'PUT': {
+      const { error, pollID } = getPollID();
+      if (error) {
+        res.status(400).send('Missing Poll ID');
+        return;
+      }
+
       await firebaseAdmin
         .firestore()
         .collection(`Trips/${tripID}/polls`)
@@ -52,21 +64,23 @@ export default async function handler(
     }
 
     case 'DELETE': {
-      if (pollID === undefined) {
-        res.status(400).send('Invalid Poll');
-      } else {
-        firebaseAdmin
-          .firestore()
-          .collection(`Trips/${tripID}/polls`)
-          .doc(pollID)
-          .delete()
-          .then(() => {
-            res.status(200).send({});
-          })
-          .catch((e) => {
-            res.status(400).send('Could not create poll.');
-          });
+      const { error, pollID } = getPollID();
+      if (error) {
+        res.status(400).send('Missing Poll ID');
+        return;
       }
+
+      firebaseAdmin
+        .firestore()
+        .collection(`Trips/${tripID}/polls`)
+        .doc(pollID)
+        .delete()
+        .then(() => {
+          res.status(200).send({});
+        })
+        .catch((e) => {
+          res.status(400).send('Could not create poll.');
+        });
     }
   }
 }
