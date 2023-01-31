@@ -9,13 +9,19 @@ export default async function handler(
 ) {
   const params = req.query.params;
   const tripID = req.query.tripID as string;
-  const index = req.body.index;
 
-  function getPollID() {
+  function getVoteDetails() {
+    if (params === undefined || params?.length !== 2) {
+      return { error: true, pollID: '', index: 0 };
+    }
+    return { error: false, pollID: params[0], index: parseInt(params[1]) };
+  }
+
+  function getPollDetails() {
     if (params === undefined || params?.length !== 1) {
       return { error: true, pollID: '' };
     }
-    return { error: false, pollID: params[0] };
+    return { error: false, pollID: params[0], index: parseInt(params[1]) };
   }
 
   switch (req.method) {
@@ -36,7 +42,7 @@ export default async function handler(
     }
 
     case 'PUT': {
-      const { error, pollID } = getPollID();
+      const { error, pollID, index } = getVoteDetails();
       if (error) {
         res.status(400).send('Missing Poll ID');
         return;
@@ -64,7 +70,7 @@ export default async function handler(
     }
 
     case 'DELETE': {
-      const { error, pollID } = getPollID();
+      const { error, pollID } = getPollDetails();
       if (error) {
         res.status(400).send('Missing Poll ID');
         return;
