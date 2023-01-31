@@ -2,6 +2,12 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { firebaseAuth } from '../../../utility/firebase';
 import firebaseAdmin from '../../../utility/firebaseAdmin';
 
+function IncrementArray(doc) {
+  let docData = _.cloneDeep(data)
+  docData[index] += 1
+  return docData
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -9,6 +15,7 @@ export default async function handler(
   // HOW TO GET POLL ID
   const pollID = req.body.pollID;
   const tripID = req.body.tripID as string;
+  const index = req.body.index;
 
   switch (req.method) {
     // case 'GET': {
@@ -47,29 +54,20 @@ export default async function handler(
     case 'PUT': {
       // IF INVALID
       if (
-        firebaseAuth.currentUser === null
+        firebaseAuth.currentUser === null || results == undefined
+        || index == undefined
       ) {
-        res.status(400).send('Invalid User');
+        res.status(400).send('Invalid Poll');
 
       // ELSE IS VALID
       } else {
-
-        // IF TRYING TO UPDATE UNDEFINED FIELD THEN 400
-        if (
-          req.body !== undefined &&
-          req.body.participants !== undefined
-        ) {
-          res.status(400).send('Cannot update attendees.');
-          return;
-        }
-
         const updateObj = () => {
           return {
             participants: firebaseAdmin.firestore.FieldValue.arrayUnion(
             firebaseAuth.currentUser?.uid
             ),
             // HOW TO INCREMENT RESULTS - THIS IS WRONG
-            results: firebaseAdmin.firestore.FieldValue.increment(1)
+            results: IncrementArray(results, index)
           };             
         };
 
@@ -77,7 +75,8 @@ export default async function handler(
           .firestore()
           .collection(`Trips/${tripID}/polls`)
           .doc(pollID)
-          .update(updateObj())
+          .get
+          .update(IncrementArray(doc))
           .then(() => {
             res.status(200).send({});
           })
