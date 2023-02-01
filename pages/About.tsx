@@ -5,12 +5,9 @@ import {
   Box,
   Card,
   Container,
-  Grid,
-  Stack,
-  Typography,
-  useTheme,
+  Grid, Typography,
+  useTheme
 } from '@mui/material';
-import Image from 'next/image';
 
 const item1 = {
   id: 1,
@@ -96,23 +93,6 @@ export default function About() {
           ))}
         </Box>
       </Grid>
-      <Stack
-        sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'absolute',
-          zIndex: 1,
-          overflow: 'hidden',
-        }}
-      >
-        <Image
-          src="/about.svg"
-          alt="About"
-          layout={'fill'}
-          objectFit={'cover'}
-        />
-      </Stack>
     </div>
   );
 }
