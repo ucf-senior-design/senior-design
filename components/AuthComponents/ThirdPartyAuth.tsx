@@ -1,4 +1,5 @@
 import { IconButton } from '@mui/material';
+import Image from 'next/image';
 import { useAuth } from '../../utility/hooks/authentication';
 
 export default function ThirdPartyAuth() {
@@ -6,20 +7,24 @@ export default function ThirdPartyAuth() {
   return (
     <div style={$wrapper}>
       <IconButton onClick={doGoogleLogin}>
-        <img src="/google.png" alt="google authentication" style={$iconstyle} />
+        <Image
+          src="/google.png"
+          alt="google authentication"
+          width={40}
+          height={40}
+        />
       </IconButton>
       <IconButton onClick={doFacebookLogin}>
-        <img
+        <Image
           src="/facebook.png"
           alt="facebook authentication"
-          style={$iconstyle}
+          width={40}
+          height={40}
         />
       </IconButton>
     </div>
   );
 }
-
-const $iconstyle: React.CSSProperties = { height: 40, width: 40 };
 
 const $wrapper: React.CSSProperties = {
   width: '100%',
