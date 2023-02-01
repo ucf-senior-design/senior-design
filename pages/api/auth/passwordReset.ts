@@ -16,7 +16,7 @@ export default async function handler(
     res.status(400).send('Password cannot be reset.');
     return;
   }
-  
+
   await sendPasswordResetEmail(firebaseAuth, req.body.email)
     .then(() => {
       res.status(200).send('Success.');
