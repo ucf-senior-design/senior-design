@@ -1,4 +1,12 @@
-import { Button, CircularProgress, Divider, Grid, LinearProgress, Paper, Typography } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  Divider,
+  Grid,
+  LinearProgress,
+  Paper,
+  Typography,
+} from '@mui/material';
 import { useState } from 'react';
 import theme from '../../../styles/theme/Theme';
 import { useAuth } from '../../../utility/hooks/authentication';
@@ -8,21 +16,23 @@ import { PasswordTextField } from '../PasswordTextField';
 import ThirdPartyAuth from '../ThirdPartyAuth';
 
 import Router from 'next/router';
+import { useScreen } from '../../../utility/hooks/screen';
 
 export const LoginForm = () => {
   const [loginInfo, sLoginInfo] = useState({
     email: '',
     password: '',
   });
+  const { loading, toggleLoading } = useScreen();
   //const { firebaseLogin, user } = useAuth();
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
-  const [loading, setLoading] = useState(false);
+
   const { doEmailPasswordLogin } = useAuth();
   // const history = useNavigate();
 
   async function handleSubmit() {
-    setLoading(true);
+    toggleLoading();
     await doEmailPasswordLogin(loginInfo, (response) => {
       if (response.isSuccess) {
         Router.push('/');
@@ -30,7 +40,7 @@ export const LoginForm = () => {
         setError('Incorrect username or password');
         setIsError(true);
       }
-      setLoading(false);
+      toggleLoading();
     });
   }
 
@@ -129,7 +139,7 @@ export const LoginForm = () => {
                 aria-label="Sign in button"
                 onClick={() => handleSubmit()}
               >
-                {loading ? <CircularProgress size={25}/> : "sign in"}
+                {loading ? <CircularProgress size={25} /> : 'sign in'}
               </Button>
             </Grid>
           </form>
@@ -145,7 +155,7 @@ export const LoginForm = () => {
         </Divider>
         <ThirdPartyAuth />
       </Paper>
-      {loading ? <LinearProgress color='inherit'/> : <></>}
+     
     </Grid>
   );
 };

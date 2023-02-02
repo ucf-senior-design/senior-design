@@ -6,6 +6,7 @@ import {
   Button,
   Drawer,
   IconButton,
+  LinearProgress,
   Stack,
   Toolbar,
   Typography,
@@ -13,6 +14,7 @@ import {
 import Link from 'next/link';
 import * as React from 'react';
 import theme from '../styles/theme/Theme';
+import { useScreen } from '../utility/hooks/screen';
 import LoggedOutDrawer from './LoggedOutDrawer';
 
 export default function Screen({
@@ -23,7 +25,7 @@ export default function Screen({
   children: React.ReactNode;
 }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const { loading } = useScreen();
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -148,6 +150,8 @@ export default function Screen({
             {drawer}
           </Drawer>
         </Box>
+
+        {loading ? <LinearProgress color="secondary" /> : <></>}
       </nav>
       <div
         style={{

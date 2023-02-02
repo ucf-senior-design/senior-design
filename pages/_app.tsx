@@ -12,6 +12,7 @@ import '../styles/globals.css';
 import theme from '../styles/theme/Theme';
 import createEmotionCache from '../utility/createEmotionCache';
 import { AuthProvider } from '../utility/hooks/authentication';
+import { ScreenProvider } from '../utility/hooks/screen';
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -28,10 +29,12 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={defaultTheme}>
         <AuthProvider>
-          <CssBaseline />
-          <Screen isLanding={props.router.asPath === '/'}>
-            <Component {...pageProps} />
-          </Screen>
+          <ScreenProvider>
+            <CssBaseline />
+            <Screen isLanding={props.router.asPath === '/'}>
+              <Component {...pageProps} />
+            </Screen>
+          </ScreenProvider>
         </AuthProvider>
       </ThemeProvider>
     </CacheProvider>
