@@ -42,6 +42,8 @@ export default function About() {
     <>
       <div
         style={{
+          overflowX: 'hidden',
+          overflowY: 'auto',
           position: 'relative',
           zIndex: 5,
           height: '100%',
@@ -53,6 +55,8 @@ export default function About() {
         }}
       >
         <Box
+          width="100%"
+          height="100%"
           display="flex"
           flexDirection={'column'}
           sx={{ textAlign: 'center' }}
@@ -77,22 +81,33 @@ export default function About() {
                 xs={8}
                 direction="column"
                 flexWrap={'wrap'}
-                sx={{ justify: 'center', alignItems: 'center', margin: 8 }}
               >
                 <Card
                   sx={{
-                    backgroundColor: 'rgba(14, 14, 20, 0.64)',
-                    height: '300px',
-                    width: '400px',
+                    backgroundColor: 'transparent',
+                    height: '400px',
+                    flexDirection: 'column',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '450px',
                   }}
                 >
                   <Container>
                     <Grid
                       container
-                      padding={7}
+                      paddingRight={4}
+                      paddingLeft={4}
                       direction="column"
                       sx={{ justify: 'center', alignItems: 'center' }}
                     >
+                      <item.icon
+                        style={{
+                          fontSize: '100px',
+                          color: 'white',
+                          marginBottom: '10px',
+                        }}
+                      />
                       <Typography
                         variant="h4"
                         marginBottom={1}
@@ -101,7 +116,9 @@ export default function About() {
                       >
                         {item.header}
                       </Typography>
-                      <Typography color="white">{item.subtitle}</Typography>
+                      <Typography color="white" sx={{ fontSize: '20px' }}>
+                        {item.subtitle}
+                      </Typography>
                     </Grid>
                   </Container>
                 </Card>

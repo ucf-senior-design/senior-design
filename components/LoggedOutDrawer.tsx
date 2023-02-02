@@ -8,7 +8,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography
+  Typography,
 } from '@mui/material';
 import Link from 'next/link';
 
@@ -55,9 +55,9 @@ export const LoggedOutDrawer = () => {
 
   return (
     <>
-      <Grid container direction="row" sx={{ mb: 2 }}>
-        <IconButton color="inherit" sx={{ p: 0, pr: 1 }}>
-          <AirportShuttleIcon />
+      <Grid container direction="row" sx={{ mb: 2, color: 'white' }}>
+        <IconButton sx={{ p: 0, pr: 1 }}>
+          <AirportShuttleIcon sx={{ color: 'white' }} />
         </IconButton>
         <Typography variant="h6">complanion</Typography>
       </Grid>
@@ -65,10 +65,10 @@ export const LoggedOutDrawer = () => {
       <List>
         {navItems.map((item) => (
           <Link href={item.link} key={item.id} passHref>
-            <ListItem component="a" disablePadding color="primary">
+            <ListItem component="a" disablePadding sx={{ color: 'white' }}>
               <ListItemButton aria-label={item.buttonLabel}>
                 <ListItemIcon aria-label={item.iconLabel}>
-                  <item.icon color="inherit" />
+                  <item.icon sx={{ color: 'white' }} />
                 </ListItemIcon>
                 <ListItemText primary={item.name} />
               </ListItemButton>
