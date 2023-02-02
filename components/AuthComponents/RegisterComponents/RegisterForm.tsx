@@ -1,4 +1,4 @@
-import { Button, Divider, Grid, Paper, Typography } from '@mui/material';
+import { Button, CircularProgress, Divider, Grid, LinearProgress, Paper, Typography } from '@mui/material';
 import { useState } from 'react';
 import PasswordStrengthBar from 'react-password-strength-bar';
 import theme from '../../../styles/theme/Theme';
@@ -155,7 +155,7 @@ export const RegisterForm = () => {
                 aria-label="Sign up button"
                 onClick={async () => maybeRegister()}
               >
-                sign up now
+                {loading ? <CircularProgress size={25}/> : "sign up now"}
               </Button>
             </Grid>
           </form>
@@ -171,6 +171,7 @@ export const RegisterForm = () => {
         </Divider>
         <ThirdPartyAuth />
       </Paper>
+      {loading ? <LinearProgress color='inherit'/> : <></>}
     </Grid>
   );
 };

@@ -1,4 +1,4 @@
-import { Button, Divider, Grid, Paper, Typography } from '@mui/material';
+import { Button, CircularProgress, Divider, Grid, LinearProgress, Paper, Typography } from '@mui/material';
 import { useState } from 'react';
 import theme from '../../../styles/theme/Theme';
 import { useAuth } from '../../../utility/hooks/authentication';
@@ -129,7 +129,7 @@ export const LoginForm = () => {
                 aria-label="Sign in button"
                 onClick={() => handleSubmit()}
               >
-                sign in
+                {loading ? <CircularProgress size={25}/> : "sign in"}
               </Button>
             </Grid>
           </form>
@@ -145,6 +145,7 @@ export const LoginForm = () => {
         </Divider>
         <ThirdPartyAuth />
       </Paper>
+      {loading ? <LinearProgress color='inherit'/> : <></>}
     </Grid>
   );
 };
