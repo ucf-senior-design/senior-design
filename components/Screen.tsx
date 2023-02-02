@@ -9,7 +9,7 @@ import {
   LinearProgress,
   Stack,
   Toolbar,
-  Typography,
+  Typography
 } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
@@ -151,7 +151,7 @@ export default function Screen({
           </Drawer>
         </Box>
 
-        {loading ? <LinearProgress color="secondary" /> : <></>}
+        {loading ? <LinearProgress color='inherit' sx={{color:theme.palette.highlight.main}} /> : <></>}
       </nav>
       <div
         style={{
