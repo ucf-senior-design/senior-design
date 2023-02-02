@@ -1,5 +1,3 @@
-// TODO: Move weather.ts under widgets folder once merged in
-
 export interface Main {
   temp: number;
   feels_like: number;
@@ -44,18 +42,8 @@ export interface ForecastData {
   city: City;
 }
 
-export interface CurrentWeather {
+export interface CurrentData {
   weather: Weather;
   main: Main;
   name: string;
 }
-
-
-
-// export const fetchCurrentWeather = async (zipcode:number): Promise<ForecastData> => {
-//     const API_KEY = process.env.WEATHER_API_KEY;
-//     //const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${zipcode}&aqi=yes`)
-//     const res = await fetch('https://api.openweathermap.org/data/2.5/forecast?lat=44.34&lon=10.99&appid=${API_KEY}&cnt=5')
-//     const data: ForecastData = await res.json()
-//     return data
-// };
