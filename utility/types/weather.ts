@@ -13,10 +13,6 @@ export interface Weather {
   icon: string;
 }
 
-export interface Clouds {
-  all: number;
-}
-
 export interface City {
   id: number;
   name: string;
@@ -31,7 +27,6 @@ export interface Forecast {
   dt: number;
   main: Main;
   weather: Weather[];
-  clouds: Clouds;
   dt_txt: string;
 }
 
