@@ -1,7 +1,7 @@
-import { getFirestore } from 'firebase/firestore';
-import firebase from 'firebase/compat/app';
-import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
+import firebase from 'firebase/compat/app';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig =
   process.env.REACT_APP_FIREBASE_API_KEY !== undefined

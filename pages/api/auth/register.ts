@@ -3,7 +3,7 @@ import auth, {
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import type { NextApiResponse } from 'next';
-import { firebaseAuth} from '../../../utility/firebase';
+import { firebaseAuth } from '../../../utility/firebase';
 import { RegistrationRequest } from '../../../utility/types/user';
 
 export default async function handler(
@@ -37,7 +37,6 @@ export default async function handler(
           res.status(400).send('Invalid Password.');
           break;
         default:
-          console.log(error.code);
           res.status(400).send('Try again later.');
       }
     });

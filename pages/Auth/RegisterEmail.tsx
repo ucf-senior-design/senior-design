@@ -1,9 +1,9 @@
-import { LoginForm } from '../components/LoginComponents/LoginForm';
+import { SendEmail } from '../../components/AuthComponents/RegisterComponents/SendEmail';
 
-export default function Login() {
+export default function RegisterEmail() {
   return (
     <div style={$wrapper}>
-      <LoginForm />
+      <SendEmail purpose="emailVerify" />
     </div>
   );
 }
