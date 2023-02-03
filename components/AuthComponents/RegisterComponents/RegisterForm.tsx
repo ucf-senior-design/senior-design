@@ -1,11 +1,21 @@
-import { Button, Divider, Grid, Paper, Typography } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  Divider,
+  Grid,
+  LinearProgress,
+  Paper,
+  Typography,
+} from '@mui/material';
 import { useState } from 'react';
 import PasswordStrengthBar from 'react-password-strength-bar';
 import theme from '../../../styles/theme/Theme';
 import { useAuth } from '../../../utility/hooks/authentication';
+import { useScreen } from '../../../utility/hooks/screen';
 import { FormTextField } from '../FormTextField';
 import LinkButton from '../LinkButton';
 import { PasswordTextField } from '../PasswordTextField';
+import ThirdPartyAuth from '../ThirdPartyAuth';
 
 export const RegisterForm = () => {
   const [registerInfo, sRegisterInfo] = useState({
@@ -16,7 +26,7 @@ export const RegisterForm = () => {
 
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { loading, toggleLoading } = useScreen();
   const isValidEmail =
     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(registerInfo.email) ===
     false;
@@ -31,8 +41,8 @@ export const RegisterForm = () => {
 
   const { doEmailPasswordRegister } = useAuth();
   async function maybeRegister() {
-    setLoading(true);
-    doEmailPasswordRegister(
+    toggleLoading();
+    await doEmailPasswordRegister(
       {
         email: registerInfo.email,
         password: registerInfo.password,
@@ -41,18 +51,18 @@ export const RegisterForm = () => {
         setError(response.errorMessage as string); // currently this is not displayed
       }
     );
-    setLoading(false);
+    toggleLoading();
   }
 
   return (
     <Paper
       elevation={3}
       style={{
+        maxWidth: '400px',
+        width: '80vw',
         background: theme.palette.background.paper,
         padding: 20,
         paddingBottom: 40,
-        maxWidth: '400px',
-        width: '80vw',
       }}
     >
       <Grid
@@ -148,7 +158,7 @@ export const RegisterForm = () => {
               aria-label="Sign up button"
               onClick={async () => maybeRegister()}
             >
-              sign up now
+              {loading ? <CircularProgress size={25} /> : 'sign up now'}
             </Button>
           </Grid>
         </form>
@@ -160,6 +170,7 @@ export const RegisterForm = () => {
       <Divider role="log in with google or facebook accounts">
         <Typography variant="caption">or sign up with the following</Typography>
       </Divider>
+      <ThirdPartyAuth />
     </Paper>
   );
 };

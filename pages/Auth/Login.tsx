@@ -13,7 +13,7 @@ export default function Login() {
       >
         <LoginForm />
         <Stack
-          sx={{ display: { xs: 'none', sm: 'block' } }}
+          sx={{ display: { xs: 'none', md: 'block' } }}
           style={{
             height: '30%',
             width: '30%',

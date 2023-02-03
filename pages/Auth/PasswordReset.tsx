@@ -1,9 +1,24 @@
-import { SendEmail } from '../../components/AuthComponents/RegisterComponents/SendEmail';
+import { useState } from 'react';
+import { useAuth } from '../../utility/hooks/authentication';
 
-export default function RegisterEmail() {
+export default function PasswordReset() {
+  const [email, setEmail] = useState('');
+  const { sendPasswordReset } = useAuth();
   return (
     <div style={$wrapper}>
-      <SendEmail purpose="passwordReset" />
+      <input value={email} onChange={(e) => setEmail(e.target.value)} />
+
+      <button
+        onClick={() =>
+          sendPasswordReset(email, (response) => {
+            if (response.isSuccess) {
+              alert('email sent succesfully.');
+            }
+          })
+        }
+      >
+        send email
+      </button>
     </div>
   );
 }

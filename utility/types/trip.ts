@@ -26,8 +26,9 @@ export type Event = {
 
 export type Poll = {
   uid: string;
-  options: Array<string>;
-  participants: Array<string>;
+  options: Array<{
+    value: string;
+    voters: Array<string>;
+  }>;
   description: string;
-  results: Array<number>;
 };

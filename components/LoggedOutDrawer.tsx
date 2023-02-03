@@ -59,7 +59,7 @@ export const LoggedOutDrawer = () => {
         <IconButton sx={{ p: 0, pr: 1 }}>
           <AirportShuttleIcon sx={{ color: 'white' }} />
         </IconButton>
-        <Typography variant="h6">complanion</Typography>
+        <Typography variant="h6">we-tinerary</Typography>
       </Grid>
       <Divider />
       <List>
