@@ -31,6 +31,7 @@ export const PasswordTextField = ({
   return (
     <TextField
       required
+      color="secondary"
       error={error}
       helperText={helperText}
       id={id}

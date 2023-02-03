@@ -31,7 +31,7 @@ export default function Screen({
   const landingTextColor = path === '/' ? 'white' : undefined;
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
   const backgroundImage =
-    path === '/About' ? "url('/mountains.svg')" : undefined;
+    path === '/About' ? "url('/Mountains.svg') 80% 80% " : undefined;
   function NavBarButton({
     path,
     text,
