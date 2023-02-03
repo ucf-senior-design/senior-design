@@ -5,9 +5,8 @@ import {
   Box,
   Card,
   Container,
-  Grid,
-  Typography,
-  useTheme,
+  Grid, Typography,
+  useTheme
 } from '@mui/material';
 
 const item1 = {
@@ -66,7 +65,7 @@ export default function About() {
               key={item.id}
               xs={8}
               direction="column"
-              sx={{ justify: 'center', alignItems: 'center', margin: 8 }}
+              sx={{ justify: 'center', alignItems: 'center', margin: 5 }}
             >
               <item.icon style={{ fontSize: '500%' }} />
               <Card

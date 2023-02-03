@@ -1,16 +1,10 @@
 import auth from 'firebase/auth';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { EMAIL_VERIFIED, ERROR, SUCCESS } from '../../../utility/constants';
 import { firebaseAuth } from '../../../utility/firebase';
 import firebaseAdmin from '../../../utility/firebaseAdmin';
 import { User } from '../../../utility/types/user';
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '4mb',
-    },
-  },
-};
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<User | string>
@@ -26,6 +20,7 @@ export default async function handler(
   };
 
   try {
+    // Checks to make sure that the username is not currently taken by another user. If it is, the query will return one doc.
     const usersWithUsername = await firebaseAdmin
       .firestore()
       .collection('Users')
@@ -33,17 +28,21 @@ export default async function handler(
       .get();
 
     if (usersWithUsername.docs.length > 0) {
-      res.status(400).send('Username taken.');
+      res.status(ERROR).send('Username taken.');
       return;
     }
+
+    // Stores the users details in the "Users" collection. The document will be set by the useres uid.
     await firebaseAdmin.firestore().collection('Users').doc(user.uid).set(user);
+
+    // Check to see if the user's email is already verified.
     if (firebaseAuth.currentUser?.emailVerified) {
-      res.status(201).send(user);
+      res.status(EMAIL_VERIFIED).send(user);
       return;
     }
-    res.status(200).send(user);
+    res.status(SUCCESS).send(user);
   } catch (error) {
     let authError = error as auth.AuthError;
-    res.status(400).send(authError.message);
+    res.status(ERROR).send(authError.message);
   }
 }

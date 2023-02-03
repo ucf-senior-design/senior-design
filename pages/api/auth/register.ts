@@ -37,7 +37,6 @@ export default async function handler(
           res.status(400).send('Invalid Password.');
           break;
         default:
-          console.log(error.code);
           res.status(400).send('Try again later.');
       }
     });

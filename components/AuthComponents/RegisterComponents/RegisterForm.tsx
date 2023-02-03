@@ -1,11 +1,21 @@
-import { Button, Divider, Grid, Paper, Typography } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  Divider,
+  Grid,
+  LinearProgress,
+  Paper,
+  Typography,
+} from '@mui/material';
 import { useState } from 'react';
 import PasswordStrengthBar from 'react-password-strength-bar';
 import theme from '../../../styles/theme/Theme';
 import { useAuth } from '../../../utility/hooks/authentication';
+import { useScreen } from '../../../utility/hooks/screen';
 import { FormTextField } from '../FormTextField';
 import LinkButton from '../LinkButton';
 import { PasswordTextField } from '../PasswordTextField';
+import ThirdPartyAuth from '../ThirdPartyAuth';
 
 export const RegisterForm = () => {
   const [registerInfo, sRegisterInfo] = useState({
@@ -16,24 +26,23 @@ export const RegisterForm = () => {
 
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { loading, toggleLoading } = useScreen();
   const isValidEmail =
     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(registerInfo.email) ===
     false;
   const isConfirmPasswordInvalid =
     registerInfo.password !== registerInfo.confirmPassword;
-  const isPasswordInvalid =
-    registerInfo.password.length < 8
-    // /[A-Z]+/.test(registerInfo.password) === false ||
-    // /[a-z]+/.test(registerInfo.password) === false ||
-    // /[0-9]+/.test(registerInfo.password) === false ||
-    // /[!#*$@_%+=&?]+/g.test(registerInfo.password) === false ||
-    // /[-~’/`<>^(){}[\]|;:”\\.,]+/g.test(registerInfo.password) === true;
+  const isPasswordInvalid = registerInfo.password.length < 8;
+  // /[A-Z]+/.test(registerInfo.password) === false ||
+  // /[a-z]+/.test(registerInfo.password) === false ||
+  // /[0-9]+/.test(registerInfo.password) === false ||
+  // /[!#*$@_%+=&?]+/g.test(registerInfo.password) === false ||
+  // /[-~’/`<>^(){}[\]|;:”\\.,]+/g.test(registerInfo.password) === true;
 
   const { doEmailPasswordRegister } = useAuth();
   async function maybeRegister() {
-    setLoading(true);
-    doEmailPasswordRegister(
+    toggleLoading();
+    await doEmailPasswordRegister(
       {
         email: registerInfo.email,
         password: registerInfo.password,
@@ -42,7 +51,7 @@ export const RegisterForm = () => {
         setError(response.errorMessage as string); // currently this is not displayed
       }
     );
-    setLoading(false);
+    toggleLoading();
   }
 
   return (
@@ -52,7 +61,7 @@ export const RegisterForm = () => {
       alignItems="stretch"
       xs={5}
       md={3}
-      style={{ color: theme.palette.tertiary.main, maxWidth:500 }}
+      style={{ color: theme.palette.tertiary.main, maxWidth: 500 }}
     >
       <Paper
         elevation={3}
@@ -108,11 +117,9 @@ export const RegisterForm = () => {
               <PasswordTextField
                 error={isPasswordInvalid ? true : false}
                 helperText={
-                  isPasswordInvalid ? (
-                      "password must be at least 8 characters"
-                  ) : (
-                    ''
-                  )
+                  isPasswordInvalid
+                    ? 'password must be at least 8 characters'
+                    : ''
                 }
                 id="registerPasswordInput"
                 value={registerInfo.password}
@@ -146,7 +153,10 @@ export const RegisterForm = () => {
               />
               <Button
                 disabled={
-                  isValidEmail || isConfirmPasswordInvalid || isPasswordInvalid || loading
+                  isValidEmail ||
+                  isConfirmPasswordInvalid ||
+                  isPasswordInvalid ||
+                  loading
                 }
                 variant="contained"
                 color="primary"
@@ -154,7 +164,7 @@ export const RegisterForm = () => {
                 aria-label="Sign up button"
                 onClick={async () => maybeRegister()}
               >
-                sign up now
+                {loading ? <CircularProgress size={25} /> : 'sign up now'}
               </Button>
             </Grid>
           </form>
@@ -168,6 +178,7 @@ export const RegisterForm = () => {
             or sign up with the following
           </Typography>
         </Divider>
+        <ThirdPartyAuth />
       </Paper>
     </Grid>
   );
