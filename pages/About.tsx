@@ -42,107 +42,108 @@ export default function About() {
     <>
       <div
         style={{
-          overflowX: 'hidden',
-          overflowY: 'auto',
           position: 'relative',
           zIndex: 5,
+          padding: 0,
           height: '100%',
           width: '100%',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          display: 'flex',
-        }}
-      >
-        <Box
-          width="100%"
-          height="100%"
-          display="flex"
-          flexDirection={'column'}
-          sx={{ textAlign: 'center' }}
-        >
-          <Typography variant="h2" color="white" style={{ fontWeight: 500 }}>
-            a collaborative approach to group planning
-          </Typography>
-          <Typography variant="h4" color="white" style={{ fontWeight: 300 }}>
-            designed for quick and painless planning, even with lots of moving
-            parts
-          </Typography>
-
-          <Box
-            display="flex"
-            flexDirection={{ xs: 'column', sm: 'row' }}
-            sx={{ margin: 'auto' }}
-          >
-            {boxItems.map((item) => (
-              <Grid
-                container
-                key={item.id}
-                xs={8}
-                direction="column"
-                flexWrap={'wrap'}
-              >
-                <Card
-                  sx={{
-                    backgroundColor: 'transparent',
-                    height: '400px',
-                    flexDirection: 'column',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '450px',
-                  }}
-                >
-                  <Container>
-                    <Grid
-                      container
-                      paddingRight={4}
-                      paddingLeft={4}
-                      direction="column"
-                      sx={{ justify: 'center', alignItems: 'center' }}
-                    >
-                      <item.icon
-                        style={{
-                          fontSize: '100px',
-                          color: 'white',
-                          marginBottom: '10px',
-                        }}
-                      />
-                      <Typography
-                        variant="h4"
-                        marginBottom={1}
-                        color="white"
-                        sx={{ fontWeight: 'bold' }}
-                      >
-                        {item.header}
-                      </Typography>
-                      <Typography color="white" sx={{ fontSize: '20px' }}>
-                        {item.subtitle}
-                      </Typography>
-                    </Grid>
-                  </Container>
-                </Card>
-              </Grid>
-            ))}
-          </Box>
-        </Box>
-      </div>
-      <Stack
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'absolute',
-          zIndex: 1,
           overflow: 'hidden',
         }}
       >
-        <Image
-          src="/mountains.svg"
-          alt="Landing"
-          layout={'fill'}
-          objectFit={'cover'}
-        />
-      </Stack>
+        <div
+          style={{
+            padding: '30px',
+            overflowY: 'auto',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 0,
+            flexDirection: 'row',
+            textAlign: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div>
+            <Typography
+              variant="h2"
+              color="white"
+              style={{ fontWeight: 500 }}
+              sx={{
+                fontSize: { xs: '40px', md: '50px' },
+              }}
+            >
+              a collaborative approach to group planning
+            </Typography>
+            <Typography
+              variant="h4"
+              color="white"
+              sx={{
+                fontSize: { xs: '30px', md: '40px' },
+              }}
+              style={{ fontWeight: 300 }}
+            >
+              designed for quick and painless planning, even with lots of moving
+              parts
+            </Typography>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            {boxItems.map((item) => (
+              <Card
+                key={item.id}
+                sx={{
+                  backgroundColor: 'transparent',
+                  height: '400px',
+                  flexDirection: 'column',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '450px',
+                }}
+              >
+                <Grid
+                  container
+                  paddingRight={4}
+                  paddingLeft={4}
+                  direction="column"
+                  sx={{ justify: 'center', alignItems: 'center' }}
+                >
+                  <item.icon
+                    style={{
+                      fontSize: '100px',
+                      color: 'white',
+                      marginBottom: '10px',
+                    }}
+                  />
+                  <Typography
+                    variant="h4"
+                    marginBottom={1}
+                    color="white"
+                    sx={{
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {item.header}
+                  </Typography>
+                  <Typography color="white" sx={{ fontSize: '20px' }}>
+                    {item.subtitle}
+                  </Typography>
+                </Grid>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
     </>
   );
 }
