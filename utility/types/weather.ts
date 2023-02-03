@@ -1,4 +1,4 @@
-export interface Main {
+interface Main {
   temp: number;
   feels_like: number;
   temp_min: number;
@@ -6,14 +6,14 @@ export interface Main {
   humidity: number;
 }
 
-export interface Weather {
+interface Weather {
   id: number;
   main: string;
   description: string;
   icon: string;
 }
 
-export interface City {
+interface City {
   id: number;
   name: string;
   coord: {
@@ -28,6 +28,10 @@ export interface Forecast {
   main: Main;
   weather: Weather[];
   dt_txt: string;
+  cod: number;
+  cnt: number;
+  list: Forecast[];
+  city: City;
 }
 
 export interface ForecastData {
@@ -38,7 +42,7 @@ export interface ForecastData {
 }
 
 export interface CurrentData {
-  weather: Weather;
+  weather: Weather[];
   main: Main;
   name: string;
 }
