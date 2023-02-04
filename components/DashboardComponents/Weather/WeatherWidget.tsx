@@ -8,8 +8,7 @@ import {
   Paper,
   Stack,
   TextField,
-  Typography,
-  useMediaQuery,
+  Typography
 } from '@mui/material';
 import Image from 'next/image';
 import React from 'react';
@@ -19,10 +18,7 @@ const WeatherWidget: React.FC = () => {
   const [editMode, setEditMode] = React.useState(false);
   const [city, setCity] = React.useState('Bohol, Philippines');
   const [metric, setMetric] = React.useState('imperial');
-  const [position, setPosition] = React.useState({ x: 0, y: 0 });
-  const smallScreen = useMediaQuery('(maxWidth: 768px)');
   const [error, setError] = React.useState(false);
-  const [dragging, setDragging] = React.useState(false);
   const [loading, sLoading] = React.useState(false);
 
   const [weatherWidget, setWeatherWidget] = React.useState<{
