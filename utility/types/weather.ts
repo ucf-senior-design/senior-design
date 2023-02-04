@@ -28,20 +28,21 @@ export interface Forecast {
   main: Main;
   weather: Weather[];
   dt_txt: string;
-  cod: number;
+  cod: string;
   cnt: number;
   list: Forecast[];
   city: City;
 }
 
 export interface ForecastData {
-  cod: number;
+  cod: string;
   cnt: number;
   list: Forecast[];
   city: City;
 }
 
 export interface CurrentData {
+  cod: string;
   weather: Weather[];
   main: Main;
   name: string;
