@@ -9,12 +9,11 @@ import {
   Stack,
   TextField,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from '@mui/material';
 import Image from 'next/image';
 import React from 'react';
 import { CurrentData, ForecastData } from '../../../utility/types/weather';
-
 
 const WeatherWidget: React.FC = () => {
   const [editMode, setEditMode] = React.useState(false);
@@ -23,18 +22,16 @@ const WeatherWidget: React.FC = () => {
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
   const smallScreen = useMediaQuery('(maxWidth: 768px)');
   const [error, setError] = React.useState(false);
-  const nodeRef = React.useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = React.useState(false);
   const [loading, sLoading] = React.useState(false);
 
-  const handleDrag = (e: any, val: any) => {
-    setPosition({ x: val.x, y: val.y });
-  };
-
-  const [weatherWidget, setWeatherWidget] = React.useState<{forecast?: ForecastData, current?: CurrentData}>({
+  const [weatherWidget, setWeatherWidget] = React.useState<{
+    forecast?: ForecastData;
+    current?: CurrentData;
+  }>({
     forecast: undefined,
-    current: undefined
-  })
+    current: undefined,
+  });
 
   async function fetchForecast(
     name: string,
@@ -53,56 +50,58 @@ const WeatherWidget: React.FC = () => {
     const res = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}&units=${metric}`
     );
-    return await res.json()
+    return await res.json();
   }
 
   React.useEffect(() => {
     //toggleLoading();
     async function fetchWeather() {
       try {
-        if (city === "") {
-          setError(true);
+        if (city === '') {
           setEditMode(true);
         } else {
-          sLoading(true)
-          const forecastData = await fetchForecast(city, metric)
-          const currentData = await fetchCurrentWeather(city, metric)
-  
-          if (forecastData === undefined || currentData === undefined || forecastData.cod === "404") {
+          sLoading(true);
+          const forecastData = await fetchForecast(city, metric);
+          const currentData = await fetchCurrentWeather(city, metric);
+
+          if (
+            forecastData === undefined ||
+            currentData === undefined ||
+            forecastData.cod === '404'
+          ) {
             setError(true);
             setEditMode(true);
-            
           } else {
             setEditMode(false);
             setError(false);
 
             setWeatherWidget({
               forecast: forecastData,
-              current: currentData
-            })
+              current: currentData,
+            });
           }
         }
         sLoading(false);
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
       //toggleLoading();
     }
     fetchWeather();
   }, [city, metric]);
 
-  if (weatherWidget.current === undefined || weatherWidget.forecast === undefined) {
-    return (
-          <CircularProgress color="inherit" />
-    );
+  if (
+    weatherWidget.current === undefined ||
+    weatherWidget.forecast === undefined
+  ) {
+    return <CircularProgress color="inherit" />;
   }
 
   return (
     <div>
-      {weatherWidget &&
-      <div>
-            {/* <Draggable position={position} onStop={handleDrag} disabled={smallScreen}> */}
-            <Paper
+      {weatherWidget && (
+        <div>
+          <Paper
             square={false}
             style={{
               display: 'inline-block',
@@ -128,10 +127,11 @@ const WeatherWidget: React.FC = () => {
               )}
             </Grid>
             <Divider orientation="horizontal" />
-            <Grid container direction="row" justifyContent="space-around">
+            <Grid container direction="row" justifyContent="space-evenly">
               <Stack
                 direction={'row'}
                 justifyContent={'space-around'}
+                spacing={3}
                 divider={
                   <Divider orientation="vertical" flexItem variant="middle" />
                 }
@@ -140,7 +140,6 @@ const WeatherWidget: React.FC = () => {
                   justifyContent={'center'}
                   alignItems={'center'}
                   margin={1}
-                  marginRight={3}
                 >
                   <Image
                     src={`http://openweathermap.org/img/wn/${weatherWidget.current.weather[0].icon}@2x.png`}
@@ -156,23 +155,27 @@ const WeatherWidget: React.FC = () => {
                   justifyContent={'center'}
                   alignItems={'center'}
                   margin={1}
-                  marginLeft={3}
                 >
+                  {/* TODO: Grab the location from trip info as a default parameter instead */}
                   {editMode ? (
                     <TextField
                       error={error}
                       disabled={loading}
                       helperText={error ? 'city not found' : ''}
                       id="city_name"
-                      label={loading ? <CircularProgress /> : "enter a city"}
+                      label={loading ? 'loading...' : 'enter a city'}
                       variant="standard"
                       onBlur={(e) => setCity(e.target.value)}
                     />
                   ) : (
-                    <Typography variant="h4">{weatherWidget.current.name}</Typography>
+                    <Typography variant="h4">
+                      {weatherWidget.current.name}
+                    </Typography>
                   )}
-                  <Typography variant="h6">{weatherWidget.current.main.temp}°F</Typography>
-  
+                  <Typography variant="h6">
+                    {weatherWidget.current.main.temp}°F
+                  </Typography>
+
                   <Typography
                     variant="caption"
                     noWrap={true}
@@ -196,8 +199,8 @@ const WeatherWidget: React.FC = () => {
             >
               {/* TODO: Currently, the weather forecast is grabbed during different times (the api gives us 3 hour forecasts but it's difficult to grab all the noon forecasts etc.)*/}
               {weatherWidget.forecast.list
-                .filter((_:any, i:any) => i % 9 === 0)
-                .map((data:any, idx:any) => (
+                .filter((_: any, i: any) => i % 9 === 0)
+                .map((data: any, idx: any) => (
                   <Stack
                     key={idx}
                     justifyContent={'center'}
@@ -215,14 +218,15 @@ const WeatherWidget: React.FC = () => {
                       width={50}
                       height={50}
                     />
-                    <Typography variant="caption">{data.main.temp}°F</Typography>
+                    <Typography variant="caption">
+                      {data.main.temp}°F
+                    </Typography>
                   </Stack>
                 ))}
             </Stack>
           </Paper>
-        {/* </Draggable> */}
         </div>
-      }
+      )}
     </div>
   );
 };
@@ -236,4 +240,5 @@ const $iconButtonStyle: React.CSSProperties = {
   width: 25,
   height: 25,
 };
+
 export default WeatherWidget;
