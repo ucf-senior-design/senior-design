@@ -50,7 +50,6 @@ const WeatherWidget: React.FC = () => {
   }
 
   React.useEffect(() => {
-    //toggleLoading();
     async function fetchWeather() {
       try {
         if (city === '') {
@@ -81,7 +80,6 @@ const WeatherWidget: React.FC = () => {
       } catch (e) {
         console.log(e);
       }
-      //toggleLoading();
     }
     fetchWeather();
   }, [city, metric]);
@@ -126,8 +124,10 @@ const WeatherWidget: React.FC = () => {
             <Grid container direction="row" justifyContent="space-evenly">
               <Stack
                 direction={'row'}
-                justifyContent={'space-around'}
-                spacing={3}
+                justifyContent={'center'}
+                alignItems={'center'}
+                margin={1}
+                spacing={2}
                 divider={
                   <Divider orientation="vertical" flexItem variant="middle" />
                 }
@@ -151,6 +151,7 @@ const WeatherWidget: React.FC = () => {
                   justifyContent={'center'}
                   alignItems={'center'}
                   margin={1}
+                  padding={1}
                 >
                   {/* TODO: Grab the location from trip info as a default parameter instead */}
                   {editMode ? (
