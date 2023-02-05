@@ -324,16 +324,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function getTrips(
     callback: (response: Response) => void
     ) {
-      const myHeaders = new Headers();
-      myHeaders.append('Content-Type', 'application/json');
-      
-      const options: RequestInit = {
-        method: "GET",
-        // Request with GET/HEAD method cannot have body.
-        headers: myHeaders,
-        redirect: 'follow',
-      };
-  
+      const options = createFetchRequestOptions(null, 'GET');
       const response = await fetch(`${API_URL}trip`, options);
  
       if (response.ok) {

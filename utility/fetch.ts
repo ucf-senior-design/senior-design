@@ -30,7 +30,7 @@ export async function handleFetch<T>(
       case 'GET': {
         const response: AxiosResponse = await axios.get(url);
         result = response.data as any as T;
-        break;       
+        break;
       }
     }
   } catch (err: any) {
@@ -51,11 +51,13 @@ export async function handleFetch<T>(
 }
 
 export function createFetchRequestOptions(
-  body: string,
+  body: string | null,
   method: 'POST' | 'GET' | 'DELETE'
 ) {
   const myHeaders = new Headers();
-  myHeaders.append('Content-Type', 'application/json');
+  if (body !== null) {
+    myHeaders.append('Content-Type', 'application/json');
+  }
 
   const requestOptions: RequestInit = {
     method,
