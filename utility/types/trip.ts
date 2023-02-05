@@ -18,6 +18,7 @@ export type Duration = {
 };
 export type Event = {
   uid: string;
+  title: string;
   attendees: Array<string>;
   duration: Duration;
   location: string;
