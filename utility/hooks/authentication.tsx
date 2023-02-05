@@ -44,6 +44,9 @@ interface AuthContext {
   sendPasswordReset: (
     callback: (response: AuthenticationResponse) => void
   ) => Promise<void>;
+  getTrips: (
+    callback: (response: AuthenticationResponse) => void
+  ) => Promise<void>;
 }
 
 const MUST_VERIFY_EMAIL = 203;
@@ -89,6 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         doLogout,
         sendEmailVerification,
         sendPasswordReset,
+        getTrips
       }}
     >
       {children}
@@ -310,4 +314,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       callback({ isSuccess: response.ok, errorMessage: await response.text() });
     }
   }
+
+  async function getTrips(
+    callback: (response: AuthenticationResponse) => void
+    ) {
+      const myHeaders = new Headers();
+      myHeaders.append('Content-Type', 'application/json');
+      
+      const options: RequestInit = {
+        method: "GET",
+        // Request with GET/HEAD method cannot have body.
+        headers: myHeaders,
+        redirect: 'follow',
+      };
+  
+      const response = await fetch(`${API_URL}trip`, options);
+ 
+      if (response.ok) {
+        callback({result: await response.text() , isSuccess: response.ok });
+      } else {
+        callback({ isSuccess: response.ok, errorMessage: await response.text() });
+      }
+    }
 }

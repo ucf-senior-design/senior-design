@@ -27,6 +27,11 @@ export async function handleFetch<T>(
         result = response.data as any as T;
         break;
       }
+      case 'GET': {
+        const response: AxiosResponse = await axios.get(url);
+        result = response.data as any as T;
+        break;       
+      }
     }
   } catch (err: any) {
     switch (err) {
