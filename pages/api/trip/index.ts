@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { firebaseAuth } from '../../../utility/firebase';
 import firebaseAdmin from '../../../utility/firebaseAdmin';
 
 export default async function handler(
@@ -8,23 +9,20 @@ export default async function handler(
   switch (req.method) {
     case 'POST': {
       console.log(req.body);
+      try {
       await firebaseAdmin.firestore().collection('Trips/').add(req.body);
-      // .then(async (value) => {
-      //   const id = (await value.get()).id;
-      //   const data = (await value.get()).data();
-      //   res.status(200).send({ uid: id, ...data });
-      // })
-      // .catch(() => {
-      //   res.status(400).send('Could not create event.');
-      // });
+      } catch (e) {
+        res.status(400).send('Error when creating trip.')
+      }
       res.status(200).send({});
       break;
     }
     case 'GET': {
+      if (firebaseAuth.currentUser == null) {
+        res.status(400).send('User is not logged in.')
+      }
+      
       let trips = new Map<string, any>();
-      const {
-        query: { user },
-      } = req;
       try {
         let allTrips = await firebaseAdmin
           .firestore()
@@ -33,7 +31,7 @@ export default async function handler(
         allTrips.forEach((doc) => {
           if (
             Object.hasOwn(doc.data(), 'attendees') &&
-            doc.data()['attendees'].includes(user)
+            doc.data()['attendees'].includes(firebaseAuth.currentUser)
           ) {
             trips.set(doc.id, doc.data());
           }
