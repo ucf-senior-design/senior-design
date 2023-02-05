@@ -6,6 +6,10 @@ import { Event } from '../../utility/types/trip';
 export default function JoinableEvent({ event }: { event: Event }) {
   return (
     <Paper
+      onClick={() => {
+        // TODO: Handle Clicking on Join Event
+        console.log('event clicked', event);
+      }}
       sx={{
         padding: '20px',
         backgroundColor: 'rgba(84, 89, 118, 0.08)',

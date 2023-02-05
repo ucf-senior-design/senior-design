@@ -1,7 +1,6 @@
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import PublicIcon from '@mui/icons-material/Public';
-import Image from 'next/image';
 import { Card, Grid, Typography, useTheme } from '@mui/material';
 
 const item1 = {
