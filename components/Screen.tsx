@@ -9,7 +9,7 @@ import {
   LinearProgress,
   Stack,
   Toolbar,
-  Typography
+  Typography,
 } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
@@ -19,9 +19,9 @@ import LoggedOutDrawer from './LoggedOutDrawer';
 
 export default function Screen({
   children,
-  isLanding,
+  path,
 }: {
-  isLanding: boolean;
+  path: string;
   children: React.ReactNode;
 }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -30,9 +30,10 @@ export default function Screen({
     setMobileOpen((prevState) => !prevState);
   };
 
-  const landingTextColor = isLanding ? 'white' : undefined;
-  const landingBackgroundColor = isLanding ? '#5F9DF7' : undefined;
-
+  const landingTextColor = path === '/' ? 'white' : undefined;
+  const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
+  const backgroundImage =
+    path === '/About' ? "url('/Mountains.svg') 80% 80% " : undefined;
   function NavBarButton({
     path,
     text,
@@ -45,7 +46,7 @@ export default function Screen({
     return (
       <Link href={path} passHref>
         <Button
-          color={isLanding ? 'landing' : 'secondary'}
+          color={path === '/' ? 'landing' : 'secondary'}
           variant={variant}
           aria-label={`${text}-button`}
         >
@@ -138,6 +139,8 @@ export default function Screen({
             variant="temporary"
             PaperProps={{
               sx: {
+                backgroundColor: 'rgba(44, 42, 60, 0.79);',
+                backdropFilter: 'blur(8px)',
                 padding: 2,
                 width: '70vw',
                 maxWidth: '300px',
@@ -159,6 +162,7 @@ export default function Screen({
           width: '100%',
           padding: 10,
           backgroundColor: theme.palette.background.default,
+          background: backgroundImage,
         }}
       >
         {children}

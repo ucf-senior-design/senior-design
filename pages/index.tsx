@@ -1,8 +1,9 @@
-import { Grid, Stack, Typography } from '@mui/material';
+import { Button, Grid,  Stack, Typography } from '@mui/material';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import SignUpButton from '../components/LandingComponents/SignUpButton';
+import Link from 'next/link';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const Home: NextPage = () => {
   return (
@@ -29,39 +30,31 @@ const Home: NextPage = () => {
           }}
           sx={{ p: 3 }}
         >
-          <Stack sx={{ display: { sm: 'none' } }}>
-            <Typography
-              variant="h2"
-              style={{ fontWeight: 500, color: 'black' }}
-              sx={{ mb: 2, fontSize: { xs: '42px', md: '72px' } }}
+          <Typography
+            variant="h2"
+            style={{ fontWeight: 500, color: 'white' }}
+            sx={{ mb: 2, fontSize: { xs: '42px', md: '72px' } }}
+          >
+            welcome to your personal trip planner
+          </Typography>
+          <Typography
+            variant="h2"
+            style={{ fontWeight: 400, color: 'white' }}
+            sx={{ mb: 4, fontSize: { xs: '24px', md: '30px' } }}
+          >
+            a collaborative approach to group planning.
+          </Typography>
+
+          <Link href="/Auth/Register" passHref>
+            <Button
+              variant="outlined"
+              endIcon={<ArrowForwardIcon />}
+              aria-label="Sign up button"
+              sx={{ fontSize: '18px', color: 'white', borderColor: 'white' }}
             >
-              welcome to your personal trip planner
-            </Typography>
-            <Typography
-              variant="h2"
-              style={{ fontWeight: 400, color: 'black' }}
-              sx={{ mb: 4, fontSize: { xs: '24px', md: '30px' } }}
-            >
-              a collaborative approach to group planning.
-            </Typography>
-          </Stack>
-          <Stack sx={{ display: { xs: 'none', sm: 'block' } }}>
-            <Typography
-              variant="h2"
-              style={{ fontWeight: 500, color: 'white' }}
-              sx={{ mb: 2, fontSize: { xs: '42px', md: '72px' } }}
-            >
-              welcome to your personal trip planner
-            </Typography>
-            <Typography
-              variant="h2"
-              style={{ fontWeight: 400, color: 'white' }}
-              sx={{ mb: 4, fontSize: { xs: '24px', md: '30px' } }}
-            >
-              a collaborative approach to group planning.
-            </Typography>
-          </Stack>
-          <SignUpButton />
+              get started
+            </Button>
+          </Link>
         </Grid>
 
         <Stack

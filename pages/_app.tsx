@@ -31,7 +31,7 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
         <AuthProvider>
           <ScreenProvider>
             <CssBaseline />
-            <Screen isLanding={props.router.asPath === '/'}>
+            <Screen path={props.router.asPath}>
               <Component {...pageProps} />
             </Screen>
           </ScreenProvider>
