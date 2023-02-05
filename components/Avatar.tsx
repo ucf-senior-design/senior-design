@@ -1,10 +1,13 @@
+import { PhotoSizeSelectActual } from '@mui/icons-material';
 import { Avatar as MuiAvatar } from '@mui/material';
 export default function Avatar({
   name,
   image,
+  size,
 }: {
   name: string;
   image?: string;
+  size?: number;
 }) {
   function stringToColor(string: string) {
     let hash = 0;
@@ -30,6 +33,8 @@ export default function Avatar({
     return {
       sx: {
         bgcolor: stringToColor(name),
+        width: size,
+        height: size,
       },
       children:
         name.split(' ').length >= 2
@@ -38,7 +43,13 @@ export default function Avatar({
     };
   }
   if (image) {
-    return <MuiAvatar alt={name} src={image} />;
+    return (
+      <MuiAvatar
+        alt={name}
+        src={image}
+        sx={size ? { width: size, height: size } : undefined}
+      />
+    );
   }
   return <MuiAvatar {...stringAvatar(name)} />;
 }

@@ -1,6 +1,7 @@
-import { Box } from '@mui/system';
-import Event from '../../components/Dashboard/Event';
-import JoinableEvent from '../../components/Dashboard/JoinableEvent';
+import { WbCloudy } from '@mui/icons-material';
+import { Grid } from '@mui/material';
+import Day from '../../components/Dashboard/Day';
+import Masonry from '@mui/lab/Masonry';
 import Poll from '../../components/Dashboard/Widgets/Poll/Poll';
 import Suggestions from '../../components/Dashboard/Widgets/Suggestions';
 import {
@@ -69,13 +70,62 @@ export default function Dashboard() {
       },
     ],
   };
+
+  function CenterItem({ children }: { children: React.ReactNode }) {
+    return (
+      <Grid item xs={8} sx={{ paddingLeft: '20px', paddingRight: '20px' }}>
+        {children}
+      </Grid>
+    );
+  }
+
+  function WidgetItem({ children }: { children: React.ReactNode }) {
+    return (
+      <Grid item xs={2}>
+        {children}
+      </Grid>
+    );
+  }
+
   return (
-    <Box gap={4} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Event event={sEvent} />
-      <JoinableEvent event={sEvent} />
-      <Poll poll={sPoll} showResults={false} />
-      <Poll poll={sPoll} showResults={true} />
-      <Suggestions suggestion={sSuggestion} />
-    </Box>
+    <Grid container sx={{ padding: 2, backgroundColor: '#EFEFEF' }}>
+      <WidgetItem>
+        <Masonry columns={1} spacing={2} sx={{ backgroundColor: '#EFEFEF' }}>
+          <Poll poll={sPoll} showResults={false} />
+          <Suggestions suggestion={sSuggestion} />
+          <Poll poll={sPoll} showResults={true} />
+        </Masonry>
+      </WidgetItem>
+      <CenterItem>
+        <Day
+          day={new Date()}
+          events={[sEvent, sEvent]}
+          joinableEvents={[sEvent, sEvent]}
+          weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
+          temperature={60}
+        />
+        <Day
+          day={new Date()}
+          events={[sEvent, sEvent]}
+          joinableEvents={[sEvent, sEvent]}
+          weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
+          temperature={60}
+        />
+        <Day
+          day={new Date()}
+          events={[sEvent, sEvent]}
+          joinableEvents={[sEvent, sEvent]}
+          weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
+          temperature={60}
+        />
+      </CenterItem>
+      <WidgetItem>
+        <Masonry columns={1} spacing={2}>
+          <Poll poll={sPoll} showResults={false} />
+          <Suggestions suggestion={sSuggestion} />
+          <Poll poll={sPoll} showResults={true} />
+        </Masonry>
+      </WidgetItem>
+    </Grid>
   );
 }

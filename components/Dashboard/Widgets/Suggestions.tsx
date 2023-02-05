@@ -7,6 +7,7 @@ import {
 import Avatar from '../../Avatar';
 import WidgetHeader from './WidgetHeader';
 import Image from 'next/image';
+import { Add } from '@mui/icons-material';
 
 function VoteButton({
   image,
@@ -37,7 +38,7 @@ function Suggestion({ suggestion }: { suggestion: SuggestionOption }) {
         xs={8}
         sx={{ display: 'flex', flexDirection: 'row', gap: 2, width: '100%' }}
       >
-        <Avatar name={suggestion.owner} />
+        <Avatar name={suggestion.owner} size={30}/>
         <Typography> {suggestion.option}</Typography>
       </Grid>
 
@@ -101,7 +102,19 @@ export default function Suggestions({
 }) {
   return (
     <Paper sx={{ padding: '20px' }}>
-      <WidgetHeader owner={suggestion.owner} />
+      <WidgetHeader
+        owner={suggestion.owner}
+        rightAccessory={
+          <Button
+            onClick={() => {
+              /** TODO: Handle Adding a Suggestion */
+              console.log('Add Suggestion');
+            }}
+          >
+            <Add />
+          </Button>
+        }
+      />
       <Typography
         sx={{ fontSize: '20px', fontWeight: '600', textAlign: 'center' }}
       >

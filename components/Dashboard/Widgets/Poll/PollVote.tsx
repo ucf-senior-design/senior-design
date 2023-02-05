@@ -16,7 +16,7 @@ function PollOption({
         alignItems: 'center',
         gap: 4,
         color: selected ? '#3F3D56' : '#BBB',
-        padding: '15px',
+        padding: '10px',
         border: `1.5px solid ${selected ? '#3F3D56' : '#BBB'}`,
         borderRadius: '5px',
       }}
