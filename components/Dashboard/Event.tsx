@@ -1,11 +1,9 @@
 import { LocationOn } from '@mui/icons-material';
 import { Grid, Paper, Typography } from '@mui/material';
+import { getTime } from '../../utility/helper';
 import { Event as EventType } from '../../utility/types/trip';
 import Avatar from '../Avatar';
 export default function Event({ event }: { event: EventType }) {
-  function getTime(date: Date) {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
   return (
     <Paper sx={{ padding: '20px' }}>
       <Grid container>

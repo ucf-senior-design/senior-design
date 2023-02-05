@@ -1,4 +1,5 @@
 import Event from '../../components/Dashboard/Event';
+import JoinableEvent from '../../components/Dashboard/JoinableEvent';
 import { Event as EventType } from '../../utility/types/trip';
 /**
  * Delete Later: Just to prevent merge conflicts and display components
@@ -18,6 +19,7 @@ export default function Dashboard() {
   return (
     <div>
       <Event event={sEvent} />
+      <JoinableEvent event={sEvent} />
     </div>
   );
 }
