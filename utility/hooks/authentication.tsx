@@ -20,6 +20,12 @@ interface AuthenticationResponse {
   errorMessage?: string;
 }
 
+interface Response {
+  result?: any;
+  isSuccess: boolean;
+  errorMessage?: string;
+}
+
 interface AuthContext {
   user?: User & { didFinishRegister: boolean };
   saveRegisterdUser: (user: User) => Promise<void>;
@@ -316,7 +322,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function getTrips(
-    callback: (response: AuthenticationResponse) => void
+    callback: (response: Response) => void
     ) {
       const myHeaders = new Headers();
       myHeaders.append('Content-Type', 'application/json');

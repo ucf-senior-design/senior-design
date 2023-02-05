@@ -30,7 +30,7 @@ export default async function handler(
           .get();
         allTrips.forEach((doc) => {
           if (
-            Object.hasOwn(doc.data(), 'attendees') &&
+            Object.hasOwn(doc.data(), 'attendees') && firebaseAuth.currentUser != null &&
             doc.data()['attendees'].includes(firebaseAuth.currentUser.uid)
           ) {
             trips.set(doc.id, doc.data());
