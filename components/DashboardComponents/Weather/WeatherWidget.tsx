@@ -15,10 +15,8 @@ import React from 'react';
 import { CurrentData, ForecastData } from '../../../utility/types/weather';
 
 const WeatherWidget: React.FC = () => {
-  const [editMode, setEditMode] = React.useState(false);
-  const [city, setCity] = React.useState('Bohol, Philippines');
+  const [city, setCity] = React.useState('Bohol, Philippines'); //TODO: Grab location from trip as default
   const [metric, setMetric] = React.useState('imperial');
-  const [error, setError] = React.useState(false);
   const [loading, sLoading] = React.useState(false);
 
   const [weatherWidget, setWeatherWidget] = React.useState<{
@@ -28,6 +26,11 @@ const WeatherWidget: React.FC = () => {
     forecast: undefined,
     current: undefined,
   });
+
+  const [state, setState] = React.useState({
+    isError: false,
+    inEditMode: false
+  })
 
   async function fetchForecast(
     name: string,
@@ -53,7 +56,10 @@ const WeatherWidget: React.FC = () => {
     async function fetchWeather() {
       try {
         if (city === '') {
-          setEditMode(true);
+          setState((val) => ({
+            ...val,
+            inEditMode: true
+          }))
         } else {
           sLoading(true);
           const forecastData = await fetchForecast(city, metric);
@@ -64,11 +70,15 @@ const WeatherWidget: React.FC = () => {
             currentData === undefined ||
             forecastData.cod === '404'
           ) {
-            setError(true);
-            setEditMode(true);
+            setState({
+              isError: true,
+              inEditMode: true,
+            })
           } else {
-            setEditMode(false);
-            setError(false);
+            setState({
+              isError: false,
+              inEditMode: false,
+            })
 
             setWeatherWidget({
               forecast: forecastData,
@@ -104,16 +114,22 @@ const WeatherWidget: React.FC = () => {
             }}
           >
             <Grid container direction="row" justifyContent="flex-end">
-              {editMode ? (
+              {state.inEditMode ? (
                 <IconButton
-                  onClick={() => setEditMode(false)}
+                  onClick={() => setState((val) => ({
+                    ...val,
+                    inEditMode: false
+                  }))}
                   style={$iconButtonStyle}
                 >
                   <CancelIcon style={$iconStyle} />
                 </IconButton>
               ) : (
                 <IconButton
-                  onClick={() => setEditMode(true)}
+                  onClick={() => setState((val) => ({
+                    ...val,
+                    inEditMode: true
+                  }))}
                   style={$iconButtonStyle}
                 >
                   <EditIcon style={$iconStyle} />
@@ -154,11 +170,11 @@ const WeatherWidget: React.FC = () => {
                   padding={1}
                 >
                   {/* TODO: Grab the location from trip info as a default parameter instead */}
-                  {editMode ? (
+                  {state.inEditMode ? (
                     <TextField
-                      error={error}
+                      error={state.isError}
                       disabled={loading}
-                      helperText={error ? 'city not found' : ''}
+                      helperText={state.isError ? 'city not found' : ''}
                       id="city_name"
                       label={loading ? 'loading...' : 'enter a city'}
                       variant="standard"
@@ -196,7 +212,14 @@ const WeatherWidget: React.FC = () => {
             >
               {/* TODO: Currently, the weather forecast is grabbed during different times (the api gives us 3 hour forecasts but it's difficult to grab all the noon forecasts etc.)*/}
               {weatherWidget.forecast.list
-                .filter((_: any, i: any) => i % 9 === 0)
+                .filter((data:any) => {
+                  const today = new Date();
+                  today.setHours(0,0,0,0);
+                  const current = new Date(data.dt * 1000);
+                  current.setHours(0,0,0,0)
+                  return current.getTime() !== today.getTime();
+                })
+                .filter((_: any, i: any) => i % 8 === 0)
                 .map((data: any, idx: any) => (
                   <Stack
                     key={idx}
