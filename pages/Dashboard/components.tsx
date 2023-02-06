@@ -4,6 +4,7 @@ import Day from '../../components/Dashboard/Day';
 import Masonry from '@mui/lab/Masonry';
 import Poll from '../../components/Dashboard/Widgets/Poll/Poll';
 import Suggestions from '../../components/Dashboard/Widgets/Suggestions';
+
 import {
   Event as EventType,
   Poll as PollType,
@@ -89,43 +90,35 @@ export default function Dashboard() {
 
   return (
     <Grid container sx={{ padding: 2, backgroundColor: '#EFEFEF' }}>
-      <WidgetItem>
-        <Masonry columns={1} spacing={2} sx={{ backgroundColor: '#EFEFEF' }}>
-          <Poll poll={sPoll} showResults={false} />
-          <Suggestions suggestion={sSuggestion} />
-          <Poll poll={sPoll} showResults={true} />
-        </Masonry>
-      </WidgetItem>
-      <CenterItem>
-        <Day
-          day={new Date()}
-          events={[sEvent, sEvent]}
-          joinableEvents={[sEvent, sEvent]}
-          weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
-          temperature={60}
-        />
-        <Day
-          day={new Date()}
-          events={[sEvent, sEvent]}
-          joinableEvents={[sEvent, sEvent]}
-          weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
-          temperature={60}
-        />
-        <Day
-          day={new Date()}
-          events={[sEvent, sEvent]}
-          joinableEvents={[sEvent, sEvent]}
-          weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
-          temperature={60}
-        />
-      </CenterItem>
-      <WidgetItem>
-        <Masonry columns={1} spacing={2}>
-          <Poll poll={sPoll} showResults={false} />
-          <Suggestions suggestion={sSuggestion} />
-          <Poll poll={sPoll} showResults={true} />
-        </Masonry>
-      </WidgetItem>
+      <Poll poll={sPoll} showResults={false} />
+      <Suggestions suggestion={sSuggestion} />
+      <Poll poll={sPoll} showResults={true} />
+
+      <Day
+        day={new Date()}
+        events={[sEvent, sEvent]}
+        joinableEvents={[sEvent, sEvent]}
+        weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
+        temperature={60}
+      />
+      <Day
+        day={new Date()}
+        events={[sEvent, sEvent]}
+        joinableEvents={[sEvent, sEvent]}
+        weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
+        temperature={60}
+      />
+      <Day
+        day={new Date()}
+        events={[sEvent, sEvent]}
+        joinableEvents={[sEvent, sEvent]}
+        weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
+        temperature={60}
+      />
+
+      <Poll poll={sPoll} showResults={false} />
+      <Suggestions suggestion={sSuggestion} />
+      <Poll poll={sPoll} showResults={true} />
     </Grid>
   );
 }
