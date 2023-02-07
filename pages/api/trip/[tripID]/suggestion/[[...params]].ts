@@ -33,17 +33,12 @@ export default async function handler(
         (!params[0] &&
           params[0] !== 'addLike' &&
           params[0] !== 'removeLike' &&
-          params[0] !== 'update')
+          params[0] !== 'add')
       ) {
         res.status(400).send('Invalid Params');
       } else {
         const purpose = params[0];
         const widgetId = params[1];
-
-        if (purpose === 'info' && req.body !== undefined) {
-          res.status(400).send('Cannot update suggestion widget.');
-          return;
-        }
 
         const updateObj = () => {
           switch (purpose) {
@@ -61,8 +56,12 @@ export default async function handler(
                 ),
               };
             }
-            case 'update': {
-              return req.body;
+            case 'add': {
+              return {
+                suggestions: firebaseAdmin.firestore.FieldValue.arrayUnion(
+                  req.body
+                ),
+              };
             }
           }
           return {};
@@ -70,14 +69,14 @@ export default async function handler(
 
         firebaseAdmin
           .firestore()
-          .collection(`Trips/${tripID}/events`)
+          .collection(`Trips/${tripID}/suggestions`)
           .doc(widgetId)
           .update(updateObj())
           .then(() => {
             res.status(200).send({});
           })
           .catch((e) => {
-            res.status(400).send('Could not create event.');
+            res.status(400).send('Could not modify suggestion widget.');
           });
       }
       break;
@@ -93,7 +92,7 @@ export default async function handler(
           .doc(params[0])
           .get()
           .then((suggestion) => {
-            res.status(200).send(suggestion.data());
+            res.status(200).send({ uid: params[0], ...suggestion.data() });
           })
           .catch((e) => {
             res.status(400).send('Could not get suggestion.');
@@ -101,7 +100,7 @@ export default async function handler(
       }
       break;
     }
-    
+
     case 'DELETE': {
       if (params === undefined || params.length !== 1) {
         res.status(400).send('Invalid Params');
