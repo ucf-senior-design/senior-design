@@ -12,7 +12,7 @@ export default function Poll({
   showResults: boolean;
 }) {
   return (
-    <Paper sx={{ padding: '20px' }}>
+    <Paper sx={{ padding: '20px', width: '80vw', maxWidth: '300px' }}>
       <WidgetHeader owner={poll.owner} />
       <Typography
         sx={{ fontSize: '20px', fontWeight: '600', textAlign: 'center' }}

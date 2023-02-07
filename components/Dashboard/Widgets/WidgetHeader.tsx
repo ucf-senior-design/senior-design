@@ -15,6 +15,8 @@ export default function WidgetHeader({
         alignItems: 'center',
         flexDirection: 'row',
         gap: 1,
+        width: '80vw',
+        maxWidth: '300px',
       }}
     >
       <Grid

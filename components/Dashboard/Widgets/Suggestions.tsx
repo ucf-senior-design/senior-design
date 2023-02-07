@@ -7,7 +7,12 @@ import {
 import Avatar from '../../Avatar';
 import WidgetHeader from './WidgetHeader';
 import Image from 'next/image';
-import { Add } from '@mui/icons-material';
+import {
+  Add,
+  Favorite,
+  FavoriteBorder,
+  HeartBrokenOutlined,
+} from '@mui/icons-material';
 
 function VoteButton({
   image,
@@ -31,64 +36,35 @@ function Suggestion({ suggestion }: { suggestion: SuggestionOption }) {
   const downvoteUnSelected = '/downvote-unselected.svg';
 
   return (
-    <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+    <Grid container>
       {/** TODO: Ensure Trip Hook has a way to store owner information and get the user's name from this. */}
-      <Grid
-        item
-        xs={8}
-        sx={{ display: 'flex', flexDirection: 'row', gap: 2, width: '100%' }}
-      >
-        <Avatar name={suggestion.owner} size={30}/>
-        <Typography> {suggestion.option}</Typography>
-      </Grid>
 
       <Grid
         item
-        xs={4}
+        xs={10}
+        sx={{ display: 'flex', flexDirection: 'row', gap: 2, width: '100%' }}
+      >
+        <Typography> {suggestion.option}</Typography>
+      </Grid>
+      <Grid
+        item
+        xs={2}
         sx={{
           width: '100%',
           display: 'flex',
-          flexDirection: 'row',
-          gap: 0,
           alignItems: 'center',
           justifyContent: 'end',
         }}
       >
-        <Box sx={{ gap: 0 }}>
-          {user !== null &&
-          user?.uid !== undefined &&
-          suggestion.upVotes.includes(user?.uid) ? (
-            <VoteButton
-              image={upvoteSelected}
-              handleOnClick={() => {
-                console.log('upvote selected clicked');
-              }}
-            />
-          ) : (
-            <VoteButton
-              image={upvoteUnSelected}
-              handleOnClick={() => {
-                console.log('upvote unselected clicked');
-              }}
-            />
-          )}
-          {suggestion.upVotes.length - suggestion.downVotes.length}
-        </Box>
-        {user !== null &&
-        user?.uid !== undefined &&
-        suggestion.downVotes.includes(user?.uid) ? (
-          <VoteButton
-            image={downvoteSelected}
-            handleOnClick={() => {
-              console.log('downvote selected clicked');
-            }}
+        {suggestion.upVotes.includes(user?.uid ?? '') ? (
+          <Favorite
+            sx={{ color: 'pink' }}
+            onClick={() => console.log('handle unselecting favorite')}
           />
         ) : (
-          <VoteButton
-            image={downvoteUnSelected}
-            handleOnClick={() => {
-              console.log('downvote unselected clicked');
-            }}
+          <FavoriteBorder
+            sx={{ color: 'pink' }}
+            onClick={() => console.log('handle selecting favorite.')}
           />
         )}
       </Grid>
@@ -101,7 +77,7 @@ export default function Suggestions({
   suggestion: SuggestionWidget;
 }) {
   return (
-    <Paper sx={{ padding: '20px' }}>
+    <Paper sx={{ padding: '20px', width: '80vw', maxWidth: '300px' }}>
       <WidgetHeader
         owner={suggestion.owner}
         rightAccessory={

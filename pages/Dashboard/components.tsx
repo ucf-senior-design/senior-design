@@ -53,13 +53,13 @@ export default function Dashboard() {
     suggestions: [
       {
         owner: 'a',
-        option: 'option',
+        option: 'option 1 for the suggestion widget',
         upVotes: ['person1', 'person2', 'person3'],
         downVotes: [],
       },
       {
         owner: 'b',
-        option: 'option',
+        option: 'option 2 for the suggestion widget',
         upVotes: ['person2', 'person3'],
         downVotes: [],
       },
@@ -89,7 +89,17 @@ export default function Dashboard() {
   }
 
   return (
-    <Grid container sx={{ padding: 2, backgroundColor: '#EFEFEF' }}>
+    <Grid
+      container
+      sx={{
+        padding: 2,
+        backgroundColor: '#EFEFEF',
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+        gap: 2,
+      }}
+    >
       <Poll poll={sPoll} showResults={false} />
       <Suggestions suggestion={sSuggestion} />
       <Poll poll={sPoll} showResults={true} />
@@ -101,24 +111,6 @@ export default function Dashboard() {
         weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
         temperature={60}
       />
-      <Day
-        day={new Date()}
-        events={[sEvent, sEvent]}
-        joinableEvents={[sEvent, sEvent]}
-        weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
-        temperature={60}
-      />
-      <Day
-        day={new Date()}
-        events={[sEvent, sEvent]}
-        joinableEvents={[sEvent, sEvent]}
-        weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
-        temperature={60}
-      />
-
-      <Poll poll={sPoll} showResults={false} />
-      <Suggestions suggestion={sSuggestion} />
-      <Poll poll={sPoll} showResults={true} />
     </Grid>
   );
 }
