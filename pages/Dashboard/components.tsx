@@ -1,7 +1,6 @@
 import { WbCloudy } from '@mui/icons-material';
 import { Grid } from '@mui/material';
 import Day from '../../components/Dashboard/Day';
-import Masonry from '@mui/lab/Masonry';
 import Poll from '../../components/Dashboard/Widgets/Poll/Poll';
 import Suggestions from '../../components/Dashboard/Widgets/Suggestions';
 
