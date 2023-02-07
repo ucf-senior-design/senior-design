@@ -8,13 +8,11 @@ export default async function handler(
 ) {
   const tripID = req.query.tripID as string;
   const params = req.query.params;
-
   switch (req.method) {
     case 'POST': {
-      console.log(req.body);
       await firebaseAdmin
         .firestore()
-        .collection(`Trips/${tripID}/events`)
+        .collection(`Trips/${tripID}/suggestions`)
         .add(req.body)
         .then(async (value) => {
           const id = (await value.get()).id;
@@ -22,7 +20,7 @@ export default async function handler(
           res.status(200).send({ uid: id, ...data });
         })
         .catch(() => {
-          res.status(400).send('Could not create event.');
+          res.status(400).send('Could not create suggestion widget.');
         });
       break;
     }
@@ -33,41 +31,37 @@ export default async function handler(
         params === undefined ||
         params.length !== 2 ||
         (!params[0] &&
-          params[0] !== 'join' &&
-          params[0] !== 'leave' &&
-          params[0] !== 'info')
+          params[0] !== 'addLike' &&
+          params[0] !== 'removeLike' &&
+          params[0] !== 'update')
       ) {
         res.status(400).send('Invalid Params');
       } else {
         const purpose = params[0];
-        const eventId = params[1];
+        const widgetId = params[1];
 
-        if (
-          purpose === 'info' &&
-          req.body !== undefined &&
-          req.body.attendees !== undefined
-        ) {
-          res.status(400).send('Cannot update attendees.');
+        if (purpose === 'info' && req.body !== undefined) {
+          res.status(400).send('Cannot update suggestion widget.');
           return;
         }
 
         const updateObj = () => {
           switch (purpose) {
-            case 'join': {
+            case 'addLike': {
               return {
-                attendees: firebaseAdmin.firestore.FieldValue.arrayUnion(
+                likes: firebaseAdmin.firestore.FieldValue.arrayUnion(
                   firebaseAuth.currentUser?.uid
                 ),
               };
             }
-            case 'leave': {
+            case 'removeLike': {
               return {
-                attendees: firebaseAdmin.firestore.FieldValue.arrayRemove(
+                likes: firebaseAdmin.firestore.FieldValue.arrayRemove(
                   firebaseAuth.currentUser?.uid
                 ),
               };
             }
-            case 'info': {
+            case 'update': {
               return req.body;
             }
           }
@@ -77,7 +71,7 @@ export default async function handler(
         firebaseAdmin
           .firestore()
           .collection(`Trips/${tripID}/events`)
-          .doc(eventId)
+          .doc(widgetId)
           .update(updateObj())
           .then(() => {
             res.status(200).send({});
@@ -86,26 +80,45 @@ export default async function handler(
             res.status(400).send('Could not create event.');
           });
       }
-
       break;
     }
 
+    case 'GET': {
+      if (params === undefined || params.length !== 1) {
+        res.status(400).send('Invalid Params');
+      } else {
+        firebaseAdmin
+          .firestore()
+          .collection(`Trips/${tripID}/suggestions`)
+          .doc(params[0])
+          .get()
+          .then((suggestion) => {
+            res.status(200).send(suggestion.data());
+          })
+          .catch((e) => {
+            res.status(400).send('Could not get suggestion.');
+          });
+      }
+      break;
+    }
+    
     case 'DELETE': {
       if (params === undefined || params.length !== 1) {
         res.status(400).send('Invalid Params');
       } else {
         firebaseAdmin
           .firestore()
-          .collection(`Trips/${tripID}/events`)
+          .collection(`Trips/${tripID}/suggestions`)
           .doc(params[0])
           .delete()
           .then(() => {
             res.status(200).send({});
           })
           .catch((e) => {
-            res.status(400).send('Could not delete event.');
+            res.status(400).send('Could not delete suggestion.');
           });
       }
+      break;
     }
   }
 }
