@@ -8,7 +8,7 @@ import {
   Paper,
   Stack,
   TextField,
-  Typography
+  Typography,
 } from '@mui/material';
 import Image from 'next/image';
 import React from 'react';
@@ -29,8 +29,8 @@ const WeatherWidget: React.FC = () => {
 
   const [state, setState] = React.useState({
     isError: false,
-    inEditMode: false
-  })
+    inEditMode: false,
+  });
 
   async function fetchForecast(
     name: string,
@@ -58,8 +58,8 @@ const WeatherWidget: React.FC = () => {
         if (city === '') {
           setState((val) => ({
             ...val,
-            inEditMode: true
-          }))
+            inEditMode: true,
+          }));
         } else {
           sLoading(true);
           const forecastData = await fetchForecast(city, metric);
@@ -73,12 +73,12 @@ const WeatherWidget: React.FC = () => {
             setState({
               isError: true,
               inEditMode: true,
-            })
+            });
           } else {
             setState({
               isError: false,
               inEditMode: false,
-            })
+            });
 
             setWeatherWidget({
               forecast: forecastData,
@@ -116,20 +116,24 @@ const WeatherWidget: React.FC = () => {
             <Grid container direction="row" justifyContent="flex-end">
               {state.inEditMode ? (
                 <IconButton
-                  onClick={() => setState((val) => ({
-                    ...val,
-                    inEditMode: false
-                  }))}
+                  onClick={() =>
+                    setState((val) => ({
+                      ...val,
+                      inEditMode: false,
+                    }))
+                  }
                   style={$iconButtonStyle}
                 >
                   <CancelIcon style={$iconStyle} />
                 </IconButton>
               ) : (
                 <IconButton
-                  onClick={() => setState((val) => ({
-                    ...val,
-                    inEditMode: true
-                  }))}
+                  onClick={() =>
+                    setState((val) => ({
+                      ...val,
+                      inEditMode: true,
+                    }))
+                  }
                   style={$iconButtonStyle}
                 >
                   <EditIcon style={$iconStyle} />
@@ -212,11 +216,11 @@ const WeatherWidget: React.FC = () => {
             >
               {/* TODO: Currently, the weather forecast is grabbed during different times (the api gives us 3 hour forecasts but it's difficult to grab all the noon forecasts etc.)*/}
               {weatherWidget.forecast.list
-                .filter((data:any) => {
+                .filter((data: any) => {
                   const today = new Date();
-                  today.setHours(0,0,0,0);
+                  today.setHours(0, 0, 0, 0);
                   const current = new Date(data.dt * 1000);
-                  current.setHours(0,0,0,0)
+                  current.setHours(0, 0, 0, 0);
                   return current.getTime() !== today.getTime();
                 })
                 .filter((_: any, i: any) => i % 8 === 0)
