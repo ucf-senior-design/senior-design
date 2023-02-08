@@ -131,7 +131,7 @@ export default async function handler(
             res.status(200).send({});
           })
           .catch((e) => {
-            res.status(400).send('Could not create event.');
+            res.status(400).send('Could not delete event.');
           });
       }
     }
