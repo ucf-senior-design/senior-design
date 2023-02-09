@@ -3,10 +3,30 @@ export type Trip = {
   attendees: Array<string>;
   itinerary: Array<Array<Event>>;
   polls: Array<Poll>;
+  activtityPref: Array<any>;
   duration: Duration;
   weather?: Weather;
 };
 
+export type ActivityPrefField =
+  | 'SPORTS'
+  | 'NATURE'
+  | 'SIGHTSEEING'
+  | 'LOWPRICE'
+  | 'MEDPRICE'
+  | 'HIGHPRICE'
+  | 'VERYHIGHPRICE';
+
+export type ActivityPref = {
+  title: string;
+  sports: Array<string>;
+  nature: Array<string>;
+  sightseeing: Array<string>;
+  lowPrice: Array<string>; // < $500
+  medPrice: Array<string>; // $500 - $1000
+  highPrice: Array<string>; // $1000 - $2500
+  veryHighPrice: Array<string>; // > $2500
+};
 // TODO: Determine what is necessary
 export type Weather = {
   zipCode: string;
