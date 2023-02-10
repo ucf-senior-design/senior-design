@@ -8,21 +8,21 @@ export default async function handler(
 ) {
   switch (req.method) {
     case 'POST': {
-      console.log(req.body);
       try {
-      await firebaseAdmin.firestore().collection('Trips/').add(req.body);
+        await firebaseAdmin.firestore().collection('Trips/').add(req.body);
+        res.status(200).send({});
       } catch (e) {
         res.status(400).send('Error when creating trip.')
       }
-      res.status(200).send({});
       break;
     }
     case 'GET': {
       if (firebaseAuth.currentUser == null) {
         res.status(400).send('User is not logged in.')
+        break;
       }
       
-      let trips = new Map<string, any>();
+      let trips: string[] = new Array<string>();
       try {
         let allTrips = await firebaseAdmin
           .firestore()
@@ -33,7 +33,7 @@ export default async function handler(
             Object.hasOwn(doc.data(), 'attendees') && firebaseAuth.currentUser != null &&
             doc.data()['attendees'].includes(firebaseAuth.currentUser.uid)
           ) {
-            trips.set(doc.id, doc.data());
+            trips.push(doc.id);
           }
         });
       } catch (e) {
@@ -43,13 +43,28 @@ export default async function handler(
             'Error when loading trips'
           );
       }
-      res.status(200).send(Object.fromEntries(trips));
+      res.status(200).send(trips);
       break;
     }
 
-    // case 'DELETE': {
-    // }
+    case 'DELETE': {
+      let tripID = req.body
+      if (tripID == undefined || tripID.length == 0) {
+        res.status(400).send('tripID is undefined')
+      } else {
+      firebaseAdmin
+        .firestore()
+        .collection(`Trips/`)
+        .doc(tripID)
+        .delete()
+        .then(() => {
+          res.status(200).send({});
+        })
+        .catch((e) => {
+          res.status(400).send('Could not delete trip.');
+        });
+      }
+      break;
   }
-  const tripID = req.query.tripID as string;
-  const params = req.query.params;
+}
 }
