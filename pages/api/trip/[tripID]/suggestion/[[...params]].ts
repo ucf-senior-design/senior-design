@@ -16,7 +16,6 @@ export default async function handler(
         .add(req.body.details)
         .then(async (value) => {
           const widgetID = value.id;
-          console.log('widgetID', widgetID);
           const suggestions: Array<any> = [];
 
           const user = 'user';
@@ -70,7 +69,7 @@ export default async function handler(
       } else {
         const purpose = params[0];
         const widgetId = params[1];
-        console.log('suggestion', req.body);
+
         const updateObj = () => {
           switch (purpose) {
             case 'like': {

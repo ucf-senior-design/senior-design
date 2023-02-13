@@ -31,7 +31,7 @@ export default function useSuggestion(
 ): useSuggestionHook {
   const { user } = useAuth();
   const userID = user?.uid ?? '';
-  console.log(user, userID, 'users');
+
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [suggestion, setSuggestion] = React.useState<SuggestionUseState>({
     showAddPopUp: false,
