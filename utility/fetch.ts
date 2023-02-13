@@ -10,7 +10,7 @@ import auth from 'firebase/auth';
  * @returns corresponding result, errorMessage, and errorCode
  */
 export async function handleFetch<T>(
-  method: 'POST' | 'GET',
+  method: 'POST' | 'GET' | 'PUT',
   url: string,
   type: 'Firebase/Auth',
   data: any = {}
@@ -22,6 +22,14 @@ export async function handleFetch<T>(
     switch (method) {
       case 'POST': {
         const response: AxiosResponse = await axios.post(url, data, {
+          headers: { 'Content-Type': 'application/json' },
+        });
+        result = response.data as any as T;
+        break;
+      }
+
+      case 'PUT': {
+        const response: AxiosResponse = await axios.put(url, data, {
           headers: { 'Content-Type': 'application/json' },
         });
         result = response.data as any as T;
@@ -47,7 +55,7 @@ export async function handleFetch<T>(
 
 export function createFetchRequestOptions(
   body: string,
-  method: 'POST' | 'GET' | 'DELETE'
+  method: 'POST' | 'GET' | 'DELETE' | 'PUT'
 ) {
   const myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');

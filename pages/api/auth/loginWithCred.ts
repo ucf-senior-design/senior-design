@@ -38,6 +38,7 @@ export default async function handler(
   async function doLogin(credential: OAuthCredential) {
     await signInWithCredential(firebaseAuth, credential)
       .then(async (result) => {
+        console.log('hello');
         const maybeUser = await (
           await firebaseAdmin
             .firestore()
@@ -61,6 +62,7 @@ export default async function handler(
         res.status(200).send(user);
       })
       .catch((error: auth.AuthError) => {
+        console.log(error.code);
         switch (error.code) {
           case AuthErrorCodes.INVALID_EMAIL:
             res.status(400).send('Invalid email.');
