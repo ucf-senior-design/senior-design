@@ -21,7 +21,7 @@ export default async function handler(
         res.status(400).send('User is not logged in.')
         break;
       }
-      
+
       let trips: string[] = new Array<string>();
       try {
         let allTrips = await firebaseAdmin
@@ -61,6 +61,7 @@ export default async function handler(
           res.status(200).send({});
         })
         .catch((e) => {
+          console.log(e)
           res.status(400).send('Could not delete trip.');
         });
       }
