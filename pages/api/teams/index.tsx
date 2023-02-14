@@ -8,8 +8,8 @@ export default async function handler(
   switch (req.method) {
     case 'POST': { // assume req.body is a valid team
     try {
-        await firebaseAdmin.firestore().collection('Teams/').add(req.body);
-        res.status(200).send({});
+        let trip = await firebaseAdmin.firestore().collection('Teams/').add(req.body);
+        res.status(200).send(trip.id);
     } catch (e) {
         res.status(400).send('Error when creating team.')
     }
