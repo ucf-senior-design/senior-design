@@ -15,10 +15,6 @@ export default async function handler(
     }
       break;
     }
-    
-    case 'GET': {
-      break;
-    }
 
     case 'DELETE': { // asusume req.body is a valid team
     let teamID = req.body
