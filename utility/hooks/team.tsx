@@ -31,17 +31,48 @@ export const createTeam = async ( team: Team, callback: (response: Response) => 
   }
 }
 
-export const deleteTeam = async ( team: Team, callback: (response: Response) => void ) => {
-  const options = createFetchRequestOptions(JSON.stringify(team), 'DELETE');
-  if (isValidTeam(team)) {
-    const response = await fetch(`${API_URL}team`, options);
-    if (response.ok) {
-      callback({ isSuccess: response.ok });
-  
-    } else {
-      callback({ isSuccess: response.ok, errorMessage: await response.text() });
-    }
+export const deleteTeam = async ( teamID: string, callback: (response: Response) => void ) => {
+  const options = createFetchRequestOptions(JSON.stringify(teamID), 'DELETE');
+  const response = await fetch(`${API_URL}team`, options);
+
+  if (response.ok) {
+    callback({ isSuccess: response.ok });
+
   } else {
-    callback({ isSuccess: false, errorMessage: "Team is not valid."})
+    callback({ isSuccess: response.ok, errorMessage: await response.text() });
   }
+}
+
+export const getMembers = async (teamID: string, callback: (response: Response) => void) => {
+  // const options = createFetchRequestOptions(null, 'GET'); // TODO: update for this is in dashboard branch
+  // const response = await fetch(`${API_URL}team/${teamID}`, options);
+
+  // if (response.ok) {
+  //   callback({ result: await response.text(), isSuccess: response.ok });
+  // } else {
+  //   callback({ isSuccess: response.ok, errorMessage: await response.text() });
+  // }
+}
+
+export const updateTeam = async (teamID: string, userID: string, purpose: string, callback: (response: Response) => void) => {
+  // const options = createFetchRequestOptions(JSON.stringify(userID), 'PUT'); // TODO: update axios to support put endpoints
+  // const response = await fetch(`${API_URL}team/${teamID}`, options);
+
+  // if (response.ok) {
+  //   callback({ isSuccess: response.ok });
+
+  // } else {
+  //   callback({ isSuccess: response.ok, errorMessage: await response.text() });
+  // }
+}
+
+export const getTeams = async (userID: string, callback: (reponse: Response) => void) => {
+  // const options = createFetchRequestOptions(null, 'GET'); // TODO: update for this is in dashboard branch
+  // const response = await fetch(`${API_URL}team/${userID}`, options);
+
+  // if (response.ok) {
+  //   callback({ result: await response.text(), isSuccess: response.ok });
+  // } else {
+  //   callback({ isSuccess: response.ok, errorMessage: await response.text() });
+  // }
 }
