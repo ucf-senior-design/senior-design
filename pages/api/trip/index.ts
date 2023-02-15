@@ -46,26 +46,5 @@ export default async function handler(
       res.status(200).send(trips);
       break;
     }
-
-    case 'DELETE': {
-      let tripID = req.body
-      if (tripID == undefined || tripID.length == 0) {
-        res.status(400).send('tripID is undefined')
-      } else {
-      firebaseAdmin
-        .firestore()
-        .collection(`Trips/`)
-        .doc(tripID)
-        .delete()
-        .then(() => {
-          res.status(200).send({});
-        })
-        .catch((e) => {
-          console.log(e)
-          res.status(400).send('Could not delete trip.');
-        });
-      }
-      break;
-  }
 }
 }
