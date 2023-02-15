@@ -16,7 +16,7 @@ export default async function handler(
           res.status(200).send({ uid: value.id, ...req.body });
         })
         .catch((e) => {
-          res.status(400).send('Cannot create Trip.');
+          res.status(400).send('Error when creating trip.');
         });
 
       break;

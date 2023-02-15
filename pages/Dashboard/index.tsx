@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { useAuth } from '../../utility/hooks/authentication'; // Import the auth context
+import { useTrips } from '../../utility/hooks/trips'; // Import the trips context
 
 export default function Index() {
-    const { user, getTrips} = useAuth();
+    const { user } = useAuth();
+    const { getTrips } = useTrips();
 
     useEffect( () => {
         getTrips(

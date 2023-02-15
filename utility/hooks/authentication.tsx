@@ -20,12 +20,6 @@ interface AuthenticationResponse {
   errorMessage?: string;
 }
 
-interface Response {
-  result?: any;
-  isSuccess: boolean;
-  errorMessage?: string;
-}
-
 interface AuthContext {
   user?: User & { didFinishRegister: boolean };
   saveRegisterdUser: (user: User) => Promise<void>;
@@ -48,9 +42,6 @@ interface AuthContext {
     callback: (response: AuthenticationResponse) => void
   ) => Promise<void>;
   sendPasswordReset: (
-    callback: (response: AuthenticationResponse) => void
-  ) => Promise<void>;
-  getTrips: (
     callback: (response: AuthenticationResponse) => void
   ) => Promise<void>;
 }
@@ -98,7 +89,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         doLogout,
         sendEmailVerification,
         sendPasswordReset,
-        getTrips
       }}
     >
       {children}
@@ -321,16 +311,5 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  async function getTrips(
-    callback: (response: Response) => void
-    ) {
-      const options = createFetchRequestOptions(null, 'GET');
-      const response = await fetch(`${API_URL}trip`, options);
- 
-      if (response.ok) {
-        callback({result: await response.text() , isSuccess: response.ok });
-      } else {
-        callback({ isSuccess: response.ok, errorMessage: await response.text() });
-      }
-    }
+
 }
