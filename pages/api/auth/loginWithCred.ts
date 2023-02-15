@@ -7,6 +7,7 @@ import auth, {
   TwitterAuthProvider,
 } from 'firebase/auth';
 import type { NextApiResponse } from 'next';
+import { MUST_ADD_DETAILS } from '../../../utility/constants';
 import { firebaseAuth } from '../../../utility/firebase';
 import firebaseAdmin from '../../../utility/firebaseAdmin';
 import { ProviderLoginRequest, User } from '../../../utility/types/user';
@@ -45,8 +46,9 @@ export default async function handler(
             .get()
         ).docs[0];
 
+        // Looks to see if user has filled out their details yet by seeing if there is a doc in the "Users" collection with the user's uid.
         if (maybeUser === undefined) {
-          res.status(202).send({
+          res.status(MUST_ADD_DETAILS).send({
             uid: result.user.uid,
             email: result.user.email,
             name: result.user.displayName,

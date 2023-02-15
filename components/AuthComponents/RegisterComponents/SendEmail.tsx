@@ -7,8 +7,10 @@ import { useAuth } from '../../../utility/hooks/authentication';
 
 export function SendEmail({
   purpose,
+  email,
 }: {
   purpose: 'emailVerify' | 'passwordReset';
+  email?: string;
 }) {
   const { sendEmailVerification, sendPasswordReset } = useAuth();
   const title = purpose === 'emailVerify' ? 'almost there!' : 'password reset';
@@ -29,7 +31,7 @@ export function SendEmail({
       });
     }
     if (purpose === 'passwordReset') {
-      sendPasswordReset((response) => {
+      sendPasswordReset(email ?? '', (response) => {
         if (!response.isSuccess) {
           alert(response.errorMessage);
         } else {

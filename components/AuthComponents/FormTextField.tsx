@@ -19,6 +19,7 @@ export const FormTextField = ({
 }) => {
   return (
     <TextField
+      color="secondary"
       required
       error={error}
       helperText={helperText}
