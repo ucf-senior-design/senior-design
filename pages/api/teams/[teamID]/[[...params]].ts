@@ -23,30 +23,38 @@ export default async function handler(
     }
 
     case 'PUT': {
-        // Adds a user to a team given a userID
+        if (
+            params === undefined ||
+            params.length !== 2 ||
+            (!params[0] &&
+              params[0] !== 'join' &&
+              params[0] !== 'leave')
+          ) {
+            res.status(400).send('Invalid Params');
+          } else {
+        const purpose = params[0]; // join | leave
         let userID = req.body; 
         try {
             const docRef = doc(firebaseDatbase, "Teams", teamID);
-            await updateDoc(docRef, {
-                members: arrayUnion(userID)
-            });
+            switch (purpose) {
+                case 'join': {
+                    await updateDoc(docRef, {
+                        members: arrayUnion(userID)
+                    });
+                    break
+                }
+                case 'leave': {
+                    await updateDoc(docRef, {
+                        members: arrayRemove(userID)
+                    });
+                    break
+                }
+            }
+            res.status(200).send(docRef.id);
         } catch (e) {
-            res.status(400).send('Error when updating team.')
+            res.status(400).send('Error when updating team.');
         }
-        break;
     }
-
-    case 'DELETE': {
-        // Deletes a user from a team given userID
-        let userID = req.body; 
-        try {
-            const docRef = doc(firebaseDatbase, "Teams", teamID);
-            await updateDoc(docRef, {
-                members: arrayRemove(userID)
-            });
-        } catch (e) {
-            res.status(400).send('Error when updating team.')
-        }
         break;
     }
   }
