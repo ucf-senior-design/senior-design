@@ -22,6 +22,14 @@ interface TripsContext {
     tripID: string,
     callback: (response: Response) => void
   ) => Promise<void>;
+  joinTrip: (
+    tripID: string,
+    callback: (response: Response) => void
+  ) => Promise<void>;
+  leaveTrip: (
+    tripID: string,
+    callback: (response: Response) => void
+  ) => Promise<void>;
 }
 
 const TripsContext = React.createContext<TripsContext>({} as TripsContext);
@@ -44,6 +52,8 @@ export function TripsProvider({ children }: { children: React.ReactNode }) {
         getTrips,
         createTrip,
         deleteTrip,
+        joinTrip,
+        leaveTrip
       }}
     >
       {children}
