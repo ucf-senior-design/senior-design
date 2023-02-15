@@ -278,7 +278,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         Router.push('/Auth/RegisterEmail');
       } else if (response.status === MUST_ADD_DETAILS) {
         await storePartialCredentialResult(await response.json());
-        // Go to Details Page
+        //Go to Details Page
         Router.push('/Auth/Details');
       }
       return;

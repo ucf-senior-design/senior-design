@@ -1,10 +1,8 @@
 export type Trip = {
   uid: string;
   attendees: Array<string>;
-  itinerary: Array<Array<Event>>;
-  polls: Array<Poll>;
   duration: Duration;
-  weather?: Weather;
+  destination: string;
 };
 
 // TODO: Determine what is necessary
