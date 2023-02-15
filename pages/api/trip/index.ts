@@ -22,21 +22,26 @@ export default async function handler(
         break;
       }
 
-      let trips: string[] = new Array<string>();
       try {
-        let allTrips = await firebaseAdmin
+        const trips = await firebaseAdmin
           .firestore()
           .collection('Trips/').where('attendees', 'array-contains', firebaseAuth.currentUser.uid)
           .orderBy('duration.start')
-          .get();
+          .get()
+          .then( async (value) => {
+            console.log(value)
+            console.log(value.docs)
+            // let itineraryEvents = unpackArrayResponse(value.docs);
+          });
+          res.status(200).send(trips);
       } catch (e) {
+        console.log(e);
         res
           .status(400)
           .send(
-            'Error when loading trips'
+            e
           );
       }
-      res.status(200).send(trips);
       break;
     }
 }
