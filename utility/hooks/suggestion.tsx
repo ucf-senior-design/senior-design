@@ -26,12 +26,10 @@ export type useSuggestionHook = {
 
 export default function useSuggestion(
   s: SuggestionWidget,
+  userID: string,
   // TODO: Remove this once we have the trip use state / provider setup.
   tripID: string
 ): useSuggestionHook {
-  const { user } = useAuth();
-  const userID = user?.uid ?? '';
-
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [suggestion, setSuggestion] = React.useState<SuggestionUseState>({
     showAddPopUp: false,

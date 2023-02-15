@@ -1,15 +1,24 @@
 import { Box, Button, Grid, Paper, TextField, Typography } from '@mui/material';
-import { SuggestionOption } from '../../../utility/types/trip';
+import {
+  SuggestionOption,
+  SuggestionWidget,
+} from '../../../utility/types/trip';
 import WidgetHeader from './WidgetHeader';
 import { Add, Favorite, FavoriteBorder } from '@mui/icons-material';
-import { useSuggestionHook } from '../../../utility/hooks/suggestion';
+import useSuggestion, {
+  useSuggestionHook,
+} from '../../../utility/hooks/suggestion';
 import React from 'react';
 import { BackdropModal } from '../../BackdropModal';
 
 export default function Suggestions({
-  useSuggestion,
+  suggestionWidget,
+  userID,
+  tripID,
 }: {
-  useSuggestion: useSuggestionHook;
+  userID: string;
+  tripID: string;
+  suggestionWidget: SuggestionWidget;
 }) {
   const {
     doesUserOwn,
@@ -22,7 +31,7 @@ export default function Suggestions({
     deleteSuggestion,
     addSuggestion,
     toggleShowAllSuggestionsPopUp,
-  } = useSuggestion;
+  } = useSuggestion(suggestionWidget, userID, tripID);
 
   function Suggestion({ suggestion }: { suggestion: SuggestionOption }) {
     return (
@@ -127,7 +136,7 @@ export default function Suggestions({
       </BackdropModal>
       <Paper sx={{ padding: '20px', width: '80vw', maxWidth: '300px' }}>
         <WidgetHeader
-          owner={useSuggestion.suggestion.owner}
+          owner={suggestion.owner}
           rightAccessory={
             <Button onClick={() => toggleAddPopUp()}>
               <Add />

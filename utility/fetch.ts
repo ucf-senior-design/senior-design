@@ -60,12 +60,16 @@ export function createFetchRequestOptions(
   const myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
 
-  const requestOptions: RequestInit = {
-    method,
-    headers: myHeaders,
-    body,
-    redirect: 'follow',
-  };
+  const requestOptions: RequestInit =
+    method !== 'GET'
+      ? {
+          method,
+          headers: myHeaders,
+          redirect: 'follow',
+        }
+      : {
+          method,
+        };
 
   return requestOptions;
 }
