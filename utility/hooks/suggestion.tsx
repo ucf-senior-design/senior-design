@@ -2,6 +2,7 @@ import React from 'react';
 import { createFetchRequestOptions } from '../fetch';
 import { SuggestionOption, SuggestionWidget } from '../types/trip';
 import { useAuth } from './authentication';
+import { useTrip } from './trip';
 
 // Type of the Suggestion useState used in this custom hook
 interface SuggestionUseState extends SuggestionWidget {
@@ -24,12 +25,13 @@ export type useSuggestionHook = {
   doesUserOwn: (option: string) => boolean;
 };
 
-export default function useSuggestion(
-  s: SuggestionWidget,
-  userID: string,
-  // TODO: Remove this once we have the trip use state / provider setup.
-  tripID: string
-): useSuggestionHook {
+export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
+  const { user } = useAuth();
+  const { trip } = useTrip();
+
+  const userID = user?.uid ?? '';
+  const tripID = trip.uid;
+
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [suggestion, setSuggestion] = React.useState<SuggestionUseState>({
     showAddPopUp: false,

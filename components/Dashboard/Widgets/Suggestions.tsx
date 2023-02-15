@@ -5,18 +5,53 @@ import {
 } from '../../../utility/types/trip';
 import WidgetHeader from './WidgetHeader';
 import { Add, Favorite, FavoriteBorder } from '@mui/icons-material';
-import useSuggestion, {
-  useSuggestionHook,
-} from '../../../utility/hooks/suggestion';
+import useSuggestion from '../../../utility/hooks/suggestion';
 import React from 'react';
 import { BackdropModal } from '../../BackdropModal';
+import { useTrip } from '../../../utility/hooks/trip';
 
-export default function Suggestions({
+export function SuggestionWidgets() {
+  const { trip } = useTrip();
+
+  const [suggestions, setSuggestions] = React.useState<React.ReactNode>(<></>);
+  React.useEffect(() => {
+    setSuggestions(getSuggestions);
+  }, [trip.suggestions]);
+
+  function getSuggestions() {
+    const s: Array<React.ReactNode> = [];
+    trip.suggestions?.forEach((suggestion) => {
+      s.push(
+        <Suggestions
+          key={suggestion.uid}
+          suggestionWidget={suggestion}
+          tripID={trip.uid}
+        />
+      );
+    });
+
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyItems: 'center',
+          flexDirection: 'column',
+          gap: 5,
+        }}
+      >
+        {s}
+      </div>
+    );
+  }
+
+  return <> {suggestions}</>;
+}
+
+function Suggestions({
   suggestionWidget,
-  userID,
   tripID,
 }: {
-  userID: string;
   tripID: string;
   suggestionWidget: SuggestionWidget;
 }) {
@@ -31,7 +66,7 @@ export default function Suggestions({
     deleteSuggestion,
     addSuggestion,
     toggleShowAllSuggestionsPopUp,
-  } = useSuggestion(suggestionWidget, userID, tripID);
+  } = useSuggestion(suggestionWidget);
 
   function Suggestion({ suggestion }: { suggestion: SuggestionOption }) {
     return (
