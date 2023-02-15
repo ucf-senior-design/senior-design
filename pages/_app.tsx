@@ -12,7 +12,6 @@ import theme from '../styles/theme/Theme';
 import createEmotionCache from '../utility/createEmotionCache';
 import { AuthProvider } from '../utility/hooks/authentication';
 import { ScreenProvider } from '../utility/hooks/screen';
-import { TeamProvider } from '../utility/hooks/team';
 
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -33,14 +32,12 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={defaultTheme}>
         <AuthProvider>
-        <TeamProvider>
           <ScreenProvider>
             <CssBaseline />
             <Screen path={props.router.asPath}>
               <Component {...pageProps} />
             </Screen>
           </ScreenProvider>
-          </TeamProvider>
         </AuthProvider>
       </ThemeProvider>
     </CacheProvider>
