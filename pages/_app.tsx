@@ -28,14 +28,12 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={defaultTheme}>
-        <TripsProvider>
         <AuthProvider>
           <CssBaseline />
           <Screen isLanding={props.router.asPath === '/'}>
             <Component {...pageProps} />
           </Screen>
         </AuthProvider>
-        </TripsProvider>
       </ThemeProvider>
     </CacheProvider>
   );
