@@ -79,8 +79,8 @@ export function TripsProvider({ children }: { children: React.ReactNode }) {
     tripID: string,
     callback: (response: Response) => void
   ) {
-    const options = createFetchRequestOptions(tripID, 'DELETE');
-    const response = await fetch(`${API_URL}/trip`, options);
+    const options = createFetchRequestOptions(null, 'DELETE');
+    const response = await fetch(`${API_URL}trip/${tripID}`, options);
 
     if (response.ok) {
       callback({ isSuccess: response.ok });
@@ -93,33 +93,33 @@ export function TripsProvider({ children }: { children: React.ReactNode }) {
     tripID: string,
     callback: (response: Response) => void
   ) {
-    const options = createFetchRequestOptions({}, 'PUT');
-    const response = await fetch(`${API_URL}/trip`, options);
+    // const options = createFetchRequestOptions(tripID, 'PUT'); // TODO: implement PUT in axios
+    // const response = await fetch(`${API_URL}trip/${tripID}`, options);
 
-    if (response.ok) {
-      callback({ isSuccess: response.ok });
-    } else {
-      callback({
-        isSuccess: response.ok,
-        errorMessage: await response.text(),
-      });
-    }
+    // if (response.ok) {
+    //   callback({ isSuccess: response.ok });
+    // } else {
+    //   callback({
+    //     isSuccess: response.ok,
+    //     errorMessage: await response.text(),
+    //   });
+    // }
   }
 
   async function leaveTrip(
     tripID: string,
     callback: (response: Response) => void
   ) {
-    const options = createFetchRequestOptions({}, 'PUT');
-    const response = await fetch(`${API_URL}/trip`, options);
+    // const options = createFetchRequestOptions(tripID, 'PUT'); // TODO: implement PUT in axios
+    // const response = await fetch(`${API_URL}trip/${tripID}`, options);
 
-    if (response.ok) {
-      callback({ isSuccess: response.ok });
-    } else {
-      callback({
-        isSuccess: response.ok,
-        errorMessage: await response.text(),
-      });
-    }
+    // if (response.ok) {
+    //   callback({ isSuccess: response.ok });
+    // } else {
+    //   callback({
+    //     isSuccess: response.ok,
+    //     errorMessage: await response.text(),
+    //   });
+    // }
   }
 }
