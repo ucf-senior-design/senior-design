@@ -26,16 +26,9 @@ export default async function handler(
       try {
         let allTrips = await firebaseAdmin
           .firestore()
-          .collection('Trips/')
+          .collection('Trips/').where('attendees', 'array-contains', firebaseAuth.currentUser.uid)
+          .orderBy('duration.start')
           .get();
-        allTrips.forEach((doc) => {
-          if (
-            Object.hasOwn(doc.data(), 'attendees') && firebaseAuth.currentUser != null &&
-            doc.data()['attendees'].includes(firebaseAuth.currentUser.uid)
-          ) {
-            trips.push(doc.id);
-          }
-        });
       } catch (e) {
         res
           .status(400)
