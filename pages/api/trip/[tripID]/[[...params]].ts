@@ -14,7 +14,7 @@ export default async function handler(
       if (tripID == undefined || tripID.length == 0) {
         res.status(400).send('tripID is undefined');
       } else {
-        firebaseAdmin
+        await firebaseAdmin
           .firestore()
           .collection(`Trips/`)
           .doc(tripID)
