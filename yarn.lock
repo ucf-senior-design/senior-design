@@ -5148,6 +5148,11 @@ react-is@^18.0.0, react-is@^18.2.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
+react-leaf-polls@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/react-leaf-polls/-/react-leaf-polls-1.1.6.tgz#e5a0b63a5a516ab52f7482c48569761da315b730"
+  integrity sha512-389Q2c1BUD/xYAFXd7QYcWw3t7DFN0c6LrJODg+0lxN2lLwahmF6Vx+/jrAuzIJ3gV1Kh0t5wf3HOGlbT/AbcA==
+
 react-password-strength-bar@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/react-password-strength-bar/-/react-password-strength-bar-0.4.1.tgz#381073552a99d3401b884195c5fa9a7d56913dd0"

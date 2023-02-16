@@ -39,6 +39,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-grid-layout": "^1.3.4",
+    "react-leaf-polls": "^1.1.6",
     "react-password-strength-bar": "^0.4.1",
     "react-use-storage": "^0.5.1"
   },
