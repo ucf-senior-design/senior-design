@@ -1,7 +1,7 @@
 import { Button, Paper, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
-import WeatherWidget from '../../components/DashboardComponents/Weather/WeatherWidget';
+import WeatherWidget from '../../components/Dashboard/Widgets/WeatherWidget';
 
 export default function Overview() {
   const [weatherwidget, setweatherwidget] = useState(false);

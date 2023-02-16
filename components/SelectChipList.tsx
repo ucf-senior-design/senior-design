@@ -36,7 +36,7 @@ export function SelectChipList({
         key={index}
         onClick={() => hook.updateSelected(option)}
         color="primary"
-        variant={hook.isSelected(option) ? 'contained' : 'text'}
+        variant={hook.isSelected(option) ? 'contained' : 'outlined'}
         sx={$chip}
       >
         <div>
@@ -120,10 +120,9 @@ const $chip: React.CSSProperties = {
 };
 
 const $addChip: React.CSSProperties = {
-  borderColor: theme.palette.primary.contrastText,
-  backgroundColor: 'transparent',
-  borderWidth: '1px',
-  color: theme.palette.primary.contrastText,
+  backgroundColor: '#A09CC9',
+  border: 'none',
+  color: 'white',
   paddingTop: 1,
   paddingBottom: 1,
   paddingLeft: 3,
