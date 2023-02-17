@@ -15,9 +15,14 @@ export default function Photodump() {
       <Typography variant="h1">
         <b>PhotoDump</b> trip_name
       </Typography>
+
+      {/* <h1> PLACEHOLDER TEXT :P</h1> */}
+      <BasicRows />
+      <Gallery photos={samplephotos} targetRowHeight={1} />
       <Box textAlign={'center'}>
+        <br />
         <Button variant="contained" component="label" size="large">
-          Upload
+          Upload Photo
           <input hidden accept="image/*" multiple type="file" />
         </Button>
         <IconButton
@@ -29,11 +34,11 @@ export default function Photodump() {
           <input hidden accept="image/*" type="file" />
           <PhotoCamera />
         </IconButton>
+      <Button variant="contained" component="label" size="large">
+        Download All
+        <input hidden accept="image/*" multiple type="file" />
+      </Button>
       </Box>
-
-      {/* <h1> PLACEHOLDER TEXT :P</h1> */}
-      <BasicRows />
-      <Gallery photos={samplephotos} targetRowHeight={1} />
     </>
   );
 }
