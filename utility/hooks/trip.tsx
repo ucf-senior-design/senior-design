@@ -42,7 +42,7 @@ export function TripProvider({
   // TODO: remove this and read in the trip in the initilizeTrip() function
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: 'sample',
-    attendees: [],
+    attendees: new Set(),
     duration: {
       start: new Date(),
       end: new Date(),

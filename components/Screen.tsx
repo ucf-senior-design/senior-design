@@ -14,6 +14,7 @@ import {
 import Link from 'next/link';
 import * as React from 'react';
 import theme from '../styles/theme/Theme';
+import { useAuth } from '../utility/hooks/authentication';
 import { useScreen } from '../utility/hooks/screen';
 import LoggedOutDrawer from './LoggedOutDrawer';
 
@@ -29,6 +30,9 @@ export default function Screen({
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+  const { user } = useAuth();
+
+  
 
   const landingTextColor = path === '/' ? 'white' : undefined;
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
@@ -154,7 +158,14 @@ export default function Screen({
           </Drawer>
         </Box>
 
-        {loading ? <LinearProgress color='inherit' sx={{color:theme.palette.highlight.main}} /> : <></>}
+        {loading ? (
+          <LinearProgress
+            color="inherit"
+            sx={{ color: theme.palette.highlight.main }}
+          />
+        ) : (
+          <></>
+        )}
       </nav>
       <div
         style={{

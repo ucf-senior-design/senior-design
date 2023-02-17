@@ -1,6 +1,6 @@
 export type Trip = {
   uid: string;
-  attendees: Array<string>;
+  attendees: Set<string>;
   duration: Duration;
   destination: string;
 };
