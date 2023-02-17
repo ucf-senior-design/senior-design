@@ -169,8 +169,8 @@ export default function Screen({
       </nav>
       <div
         style={{
-          height: '100%',
-          width: '100%',
+          height: '100vh',
+          width: '100vw',
           padding: 10,
           backgroundColor: theme.palette.background.default,
           background: backgroundImage,
