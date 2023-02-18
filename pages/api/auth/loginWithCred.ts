@@ -6,19 +6,21 @@ import auth, {
   signInWithCredential,
   TwitterAuthProvider,
 } from 'firebase/auth';
-import type { NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { MUST_ADD_DETAILS } from '../../../utility/constants';
 import { firebaseAuth } from '../../../utility/firebase';
 import firebaseAdmin from '../../../utility/firebaseAdmin';
-import { ProviderLoginRequest, User } from '../../../utility/types/user';
+import { User } from '../../../utility/types/user';
 
 export default async function handler(
-  req: ProviderLoginRequest,
+  req: NextApiRequest,
   res: NextApiResponse
 ) {
   switch (req.body.provider) {
     case 'google':
-      doLogin(GoogleAuthProvider.credential(req.body.idToken));
+      doLogin(
+        GoogleAuthProvider.credential(req.body.idToken, req.body.accessToken)
+      );
       break;
     case 'twitter':
       doLogin(
