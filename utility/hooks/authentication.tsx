@@ -14,6 +14,8 @@ import {
 import { createFetchRequestOptions } from '../fetch';
 import { firebaseAuth } from '../firebase';
 import { User } from '../types/user';
+import { User as FirebaseUser } from 'firebase/auth';
+import firebaseAdmin from '../firebaseAdmin';
 
 interface EmailPasswordLogin {
   email: string;
@@ -98,11 +100,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   async function maybeLoadPersistedUser() {
-    const user = localUser;
-
-    if (user !== undefined && user !== null) {
-      setUser(user);
-    }
+    await fetch(`${API_URL}auth/user`, { method: 'GET' }).then(
+      async (response) => {
+        if (response.ok) {
+          let currentUser: FirebaseUser = await response.json();
+          setUser({
+            username: localUser?.username ?? '',
+            medicalInfo: localUser?.medicalInfo ?? [],
+            allergies: localUser?.allergies ?? [],
+            didFinishRegister: localUser?.didFinishRegister ?? false,
+            uid: currentUser.uid,
+            email: currentUser.email ?? '',
+            name: currentUser.displayName ?? '',
+            profilePic: currentUser.photoURL ?? '',
+          });
+        } else {
+          removeLocalUser();
+          setUser(undefined);
+        }
+      }
+    );
   }
 
   async function doLogout() {
@@ -127,12 +144,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function doLoginWithCredentials(
     provider: 'google' | 'facebook' | 'twitter',
-    idToken: string
+
+    idToken: string,
+    accessToken?: string
   ) {
     const options = createFetchRequestOptions(
       JSON.stringify({
         provider: provider,
         idToken: idToken,
+        accessToken: accessToken,
       }),
       'POST'
     );
@@ -140,6 +160,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const response = await fetch(`${API_URL}auth/loginWithCred`, options);
 
     if ((response.ok, response.status)) {
+      console.log(response);
       if (response.status === 200) {
         await saveRegisterdUser(await response.json());
       }
@@ -158,7 +179,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   ) {
     signInWithPopup(firebaseAuth, provider)
       .then(async (result) => {
-        const user = result.user;
         const credential =
           providerType === 'facebook'
             ? FacebookAuthProvider.credentialFromResult(result)
@@ -166,7 +186,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (credential !== null && credential?.accessToken !== null) {
           if (providerType === 'google') {
-            await doLoginWithCredentials('google', credential.accessToken ?? '')
+            console.log(credential);
+            await doLoginWithCredentials(
+              'google',
+              credential.idToken ?? '',
+              credential.accessToken ?? ''
+            )
               .then(() => callback(true))
               .catch(() => callback(false));
           } else {
@@ -211,7 +236,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.status === EMAIL_VERIFIED) {
         saveRegisterdUser(user);
         // TODO: redirect to dashboard
-        Router.push('/Dashboard/Index');
+        Router.push('/Dashboard/');
         return;
       }
       callback({ isSuccess: response.ok });
@@ -251,9 +276,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const options = createFetchRequestOptions(JSON.stringify(register), 'POST');
     const response = await fetch(`${API_URL}auth/register`, options);
 
+    console.log(response);
     if (response.ok) {
       await storePartialCredentialResult(await response.json());
-      // TODO: Create Details Page
       Router.push('/Auth/Details');
     } else {
       callback({ isSuccess: response.ok, errorMessage: await response.text() });
@@ -275,6 +300,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await saveRegisterdUser(await response.json());
       } else if (response.status === MUST_VERIFY_EMAIL) {
         // Go to Email Verficications Pge
+        await saveRegisterdUser(await response.json());
         Router.push('/Auth/RegisterEmail');
       } else if (response.status === MUST_ADD_DETAILS) {
         await storePartialCredentialResult(await response.json());

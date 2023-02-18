@@ -40,7 +40,9 @@ export function SelectChipList({
         sx={$chip}
       >
         <div>
-          <text style={{ fontSize: 16, fontStyle: 'bold' }}>{option}</text>
+          <Typography style={{ fontSize: 16, fontStyle: 'bold' }}>
+            {option}
+          </Typography>
         </div>
       </Button>
     );
