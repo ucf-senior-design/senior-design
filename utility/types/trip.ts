@@ -1,11 +1,8 @@
 export type Trip = {
   uid: string;
   attendees: Array<string>;
-  itinerary: Array<Array<Event>>;
-  polls: Array<Poll>;
-  activtityPref: Array<any>;
   duration: Duration;
-  weather?: Weather;
+  destination: string;
 };
 
 export type ActivityPrefField =
