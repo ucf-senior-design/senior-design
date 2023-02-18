@@ -1,5 +1,7 @@
 import React from 'react';
+import { createFetchRequestOptions } from '../fetch';
 import { SuggestionOption, SuggestionWidget, Trip } from '../types/trip';
+import { useDashboard } from './dashboard';
 
 interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>;
@@ -40,6 +42,7 @@ export function TripProvider({
   id: string;
 }) {
   // TODO: remove this and read in the trip in the initilizeTrip() function
+
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: 'sample',
     attendees: new Set(),
@@ -53,9 +56,10 @@ export function TripProvider({
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   async function initilizeTrip() {
+    let trip = await getTrip();
     let suggestionWidgets = await getSuggestionWidgetData([]);
 
-    if (suggestionWidgets === null) {
+    if (suggestionWidgets === null || trip === null) {
       alert('Cannot load trip.');
       return;
     }
@@ -64,47 +68,42 @@ export function TripProvider({
     setTrip({ ...trip, suggestions: suggestionWidgets });
   }
 
+  async function getTrip() {
+    console.log(id);
+    const options = createFetchRequestOptions(null, 'GET');
+    let t = null;
+    const response = await fetch(`${API_URL}trip/${id}`, options);
+    if (response.ok) {
+      t = (await response.json()) as Trip;
+    }
+    return t;
+  }
   async function getSuggestionWidgetData(suggestionIDs: Array<string>) {
-    suggestionIDs = [
-      '6iTldrtHhzzysFMhOgRM',
-      '5SIaabTavwsmKGPrfTGy',
-      'F5UkHGJPJtCNNM3c0nIv',
-    ];
-    console.log('s', suggestionIDs);
-    let promises: Array<Promise<Response>> = [];
     const suggestionWidgets = new Map<string, SuggestionWidget>();
 
-    suggestionIDs.forEach((id) => {
-      promises.push(
-        fetch(`${API_URL}trip/${trip.uid}/suggestion/${id}`, {
-          method: 'GET',
-        })
-      );
-    });
+    await fetch(`${API_URL}trip/${trip.uid}/suggestion/`, {
+      method: 'GET',
+    }).then(async (response) => {
+      if (response.ok) {
+        console.log('res', response);
 
-    await Promise.all(promises).then((responses) => {
-      console.log('responses', responses);
-      responses.forEach(async (response) => {
-        if (response.ok) {
-          const data = await response.json();
-          console.log('data', data);
-          const suggestions = new Map<string, SuggestionOption>();
-          data.suggestions.forEach((s: any) => {
-            suggestions.set(s.uid, {
-              ...s,
-              likes: new Set(s.likes),
-            } as SuggestionOption);
-            suggestionWidgets.set(data.uid, {
-              uid: data.uid,
-              owner: data.owner,
-              title: data.title,
-              suggestions: suggestions,
-            });
+        const { data } = await response.json();
+
+        const suggestions = new Map<string, SuggestionOption>();
+        data.forEach((s: any) => {
+          suggestions.set(s.uid, {
+            ...s,
+            likes: new Set(s.likes),
+          } as SuggestionOption);
+          suggestionWidgets.set(data.uid, {
+            uid: data.uid,
+            owner: data.owner,
+            title: data.title,
+            suggestions: suggestions,
           });
-        }
-      });
+        });
+      }
     });
-    console.log('done', suggestionWidgets);
     return suggestionWidgets;
   }
 

@@ -17,6 +17,7 @@ import theme from '../styles/theme/Theme';
 import { useAuth } from '../utility/hooks/authentication';
 import { useScreen } from '../utility/hooks/screen';
 import LoggedOutDrawer from './LoggedOutDrawer';
+import Page from './Page';
 
 export default function Screen({
   children,
@@ -30,14 +31,10 @@ export default function Screen({
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
-  const { user } = useAuth();
-
-  
 
   const landingTextColor = path === '/' ? 'white' : undefined;
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
-  const backgroundImage =
-    path === '/About' ? "url('/Mountains.svg') 80% 80% " : undefined;
+
   function NavBarButton({
     path,
     text,
@@ -124,14 +121,14 @@ export default function Screen({
               }}
             >
               <NavBarButton path="/" text="home" variant="text" />
-              <NavBarButton path="/About" text="about" variant="text" />
+              <NavBarButton path="/about" text="about" variant="text" />
               <NavBarButton
-                path="/Auth/Login"
+                path="/auth/login"
                 text="login"
                 variant="contained"
               />
               <NavBarButton
-                path="/Auth/Register"
+                path="/auth/register"
                 text="register"
                 variant="outlined"
               />
@@ -167,17 +164,7 @@ export default function Screen({
           <></>
         )}
       </nav>
-      <div
-        style={{
-          height: '100vh',
-          width: '100vw',
-          padding: 10,
-          backgroundColor: theme.palette.background.default,
-          background: backgroundImage,
-        }}
-      >
-        {children}
-      </div>
+      <Page path={path}>{children}</Page>
     </div>
   );
 }

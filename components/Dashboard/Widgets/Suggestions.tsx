@@ -70,7 +70,7 @@ function Suggestions({
 
   function Suggestion({ suggestion }: { suggestion: SuggestionOption }) {
     return (
-      <Grid container>
+      <Grid key={suggestion.uid} container>
         {/** TODO: Ensure Trip Hook has a way to store owner information and get the user's name from this. */}
         <Grid
           item

@@ -10,6 +10,22 @@ export default async function handler(
   const tripID = req.query.tripID as string;
   const params = req.query.params;
   switch (req.method) {
+    case 'GET': {
+      console.log('tripID', tripID);
+      await firebaseAdmin
+        .firestore()
+        .collection(`Trips/`)
+        .doc(tripID)
+        .get()
+        .then((value) => {
+          console.log(tripID, value.data());
+          res.status(200).send(value.data());
+        })
+        .catch((e: any) => {
+          res.status(400).send('Could not get rip.');
+        });
+      break;
+    }
     case 'DELETE': {
       if (tripID == undefined || tripID.length == 0) {
         res.status(400).send('tripID is undefined');

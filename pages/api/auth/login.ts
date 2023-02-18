@@ -16,6 +16,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  console.log(req.body);
   signInWithEmailAndPassword(firebaseAuth, req.body.email, req.body.password)
     .then(async (result) => {
       // Looks to see if user has filled out their details yet by seeing if there is a doc in the "Users" collection with the user's uid.
@@ -51,6 +52,7 @@ export default async function handler(
       }
     })
     .catch((error: auth.AuthError) => {
+      console.log(error);
       switch (error.code) {
         case AuthErrorCodes.INVALID_EMAIL:
           res.status(ERROR).send('Invalid email.');

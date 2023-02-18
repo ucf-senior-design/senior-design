@@ -41,7 +41,7 @@ export const RegisterForm = () => {
 
   const { doEmailPasswordRegister } = useAuth();
   async function maybeRegister() {
-    toggleLoading();
+    // toggleLoading();
     await doEmailPasswordRegister(
       {
         email: registerInfo.email,
@@ -51,7 +51,7 @@ export const RegisterForm = () => {
         setError(response.errorMessage as string); // currently this is not displayed
       }
     );
-    toggleLoading();
+    // toggleLoading();
   }
 
   return (
@@ -164,7 +164,7 @@ export const RegisterForm = () => {
         </form>
         <p>
           <a style={{ paddingRight: 5 }}>already have an account?</a>
-          <LinkButton link="/Auth/Login" text="log in instead" />
+          <LinkButton link="/auth/login" text="log in instead" />
         </p>
       </Grid>
       <Divider role="log in with google or facebook accounts">

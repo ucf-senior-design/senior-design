@@ -5,6 +5,8 @@ import { useAuth } from './authentication';
 import { Response } from '../types/helper';
 
 interface DashboardContext {
+  trips: Map<string, Trip> | undefined;
+  getTrips: () => Promise<void>;
   createTrip: (
     trip: Trip,
     callback: (response: Response) => void
@@ -27,11 +29,11 @@ const DashboardContext = React.createContext<DashboardContext>(
   {} as DashboardContext
 );
 
-export function useTrips(): DashboardContext {
+export function useDashboard(): DashboardContext {
   const context = React.useContext(DashboardContext);
 
   if (!context) {
-    throw Error('useAuth must be used within an AuthProvider');
+    throw Error('useDashboard  must be used within an DashboardProvider');
   }
   return context;
 }
@@ -41,13 +43,11 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   const [trips, setTrips] = React.useState<Map<string, Trip>>();
   const { user } = useAuth();
 
-  React.useEffect(() => {
-    getTrips();
-  }, []);
-
   return (
     <DashboardContext.Provider
       value={{
+        trips,
+        getTrips,
         createTrip,
         deleteTrip,
         joinTrip,
@@ -69,6 +69,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
             tTrips.set(trip.uid, trip);
           });
         });
+        console.log(tTrips);
         setTrips(tTrips);
       }
     });

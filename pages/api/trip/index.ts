@@ -26,6 +26,7 @@ export default async function handler(
         res.status(400).send('User is not logged in.');
         break;
       }
+
       await firebaseAdmin
         .firestore()
         .collection(`Trips`)
