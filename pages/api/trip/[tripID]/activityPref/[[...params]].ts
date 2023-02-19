@@ -33,7 +33,7 @@ export default async function handler(
           res.status(200).send({ uid: id, ...data });
         })
         .catch(() => {
-          res.status(400).send('Could not update preferences.');
+          res.status(400).send('Could not create widget.');
         });
       break;
     }
