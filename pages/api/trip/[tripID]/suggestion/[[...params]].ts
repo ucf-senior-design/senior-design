@@ -22,8 +22,8 @@ export default async function handler(
           const suggestions: Array<any> = [];
 
           const user = 'user';
-          req.body.suggestions.forEach(
-            async (suggestion: string, index: number) => {
+          req.body.suggestions
+            .forEach(async (suggestion: string, index: number) => {
               const suggestionObj = {
                 owner: user,
                 likes: [user],
@@ -38,9 +38,14 @@ export default async function handler(
                     uid: value.id,
                     ...suggestionObj,
                   });
+                })
+                .catch(() => {
+                  res.status(400).send('Error adding optinos');
                 });
-            }
-          );
+            })
+            .catch(() => {
+              res.status(400).send('Error adding suggestion details');
+            });
 
           await firebaseAdmin.firestore().batch().commit();
           res.status(200).send({
