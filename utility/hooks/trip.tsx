@@ -57,7 +57,7 @@ export function TripProvider({
 
   async function initilizeTrip() {
     let trip = await getTrip();
-    let suggestionWidgets = await getSuggestionWidgetData([]);
+    let suggestionWidgets = await getSuggestionWidgetData();
 
     if (suggestionWidgets === null || trip === null) {
       alert('Cannot load trip.');
@@ -69,7 +69,6 @@ export function TripProvider({
   }
 
   async function getTrip() {
-    console.log(id);
     const options = createFetchRequestOptions(null, 'GET');
     let t = null;
     const response = await fetch(`${API_URL}trip/${id}`, options);
@@ -78,27 +77,28 @@ export function TripProvider({
     }
     return t;
   }
-  async function getSuggestionWidgetData(suggestionIDs: Array<string>) {
+  async function getSuggestionWidgetData() {
     const suggestionWidgets = new Map<string, SuggestionWidget>();
 
     await fetch(`${API_URL}trip/${trip.uid}/suggestion/`, {
       method: 'GET',
     }).then(async (response) => {
       if (response.ok) {
-        console.log('res', response);
-
         const { data } = await response.json();
 
-        const suggestions = new Map<string, SuggestionOption>();
         data.forEach((s: any) => {
-          suggestions.set(s.uid, {
-            ...s,
-            likes: new Set(s.likes),
-          } as SuggestionOption);
-          suggestionWidgets.set(data.uid, {
-            uid: data.uid,
-            owner: data.owner,
-            title: data.title,
+          const suggestions = new Map<string, SuggestionOption>();
+          s.suggestions.forEach((sug: SuggestionOption) => {
+            suggestions.set(sug.uid, {
+              ...sug,
+              likes: new Set(sug.likes),
+            } as SuggestionOption);
+          });
+
+          suggestionWidgets.set(s.uid, {
+            uid: s.uid,
+            owner: s.owner,
+            title: s.title,
             suggestions: suggestions,
           });
         });
