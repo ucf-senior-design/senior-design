@@ -1,17 +1,18 @@
 import { WbCloudy } from '@mui/icons-material';
 import { Grid } from '@mui/material';
-import Day from '../../components/Dashboard/Day';
-import Poll from '../../components/Dashboard/Widgets/Poll/Poll';
+import React from 'react';
 import Suggestions from '../../components/Dashboard/Widgets/Suggestions';
+import useSuggestion from '../../utility/hooks/suggestion';
 
 import {
   Event as EventType,
   Poll as PollType,
-  SuggestionWidget,
+  SuggestionOption,
 } from '../../utility/types/trip';
 /**
  * Delete Later: Just to prevent merge conflicts and display components
  */
+
 export default function Dashboard() {
   const sEvent: EventType = {
     uid: 'uid',
@@ -45,47 +46,47 @@ export default function Dashboard() {
     ],
   };
 
-  const sSuggestion: SuggestionWidget = {
-    uid: 'uid',
-    owner: 'owner',
-    title: 'title',
+  // Remove after we have the trip hook built this is just for testing
+  const [tripID, setTripID] = React.useState('hello');
+  const fetchResponse = {
+    widget: {
+      uid: 'uZX8pFcQg1gccgYWdZO3',
+      owner: 'test',
+      title: 'Test Widget Postman',
+    },
     suggestions: [
       {
-        owner: 'a',
-        option: 'option 1 for the suggestion widget',
-        upVotes: ['person1', 'person2', 'person3'],
-        downVotes: [],
+        uid: 'sitsmCfW40S8EKXs0r7I',
+        owner: 'user',
+        likes: ['user'],
+        option: 'goodbye',
       },
       {
-        owner: 'b',
-        option: 'option 2 for the suggestion widget',
-        upVotes: ['person2', 'person3'],
-        downVotes: [],
-      },
-      {
-        owner: 'c',
-        option: 'option',
-        upVotes: ['person3'],
-        downVotes: [],
+        uid: 'psAqq8DGzhTccsBkehgR',
+        owner: 'user',
+        likes: ['user'],
+        option: 'hello',
       },
     ],
   };
 
-  function CenterItem({ children }: { children: React.ReactNode }) {
-    return (
-      <Grid item xs={8} sx={{ paddingLeft: '20px', paddingRight: '20px' }}>
-        {children}
-      </Grid>
-    );
-  }
+  const suggestions = new Map<string, SuggestionOption>();
+  fetchResponse.suggestions.forEach((suggestion) => {
+    suggestions.set(suggestion.uid, {
+      likes: new Set<string>(suggestion.likes),
+      uid: suggestion.uid,
+      owner: suggestion.owner,
+      option: suggestion.option,
+    });
+  });
 
-  function WidgetItem({ children }: { children: React.ReactNode }) {
-    return (
-      <Grid item xs={2}>
-        {children}
-      </Grid>
-    );
-  }
+  const suggestion = useSuggestion(
+    {
+      suggestions: suggestions,
+      ...fetchResponse.widget,
+    },
+    tripID
+  );
 
   return (
     <Grid
@@ -99,17 +100,7 @@ export default function Dashboard() {
         gap: 2,
       }}
     >
-      <Poll poll={sPoll} showResults={false} />
-      <Suggestions suggestion={sSuggestion} />
-      <Poll poll={sPoll} showResults={true} />
-
-      <Day
-        day={new Date()}
-        events={[sEvent, sEvent]}
-        joinableEvents={[sEvent, sEvent]}
-        weatherIcon={<WbCloudy sx={{ fontSize: '32px' }} />}
-        temperature={60}
-      />
+      <Suggestions useSuggestion={suggestion} />
     </Grid>
   );
 }
