@@ -1,111 +1,158 @@
-import { Box, Button, Grid, Paper, Typography } from '@mui/material';
-import { useAuth } from '../../../utility/hooks/authentication';
-import {
-  SuggestionOption,
-  SuggestionWidget,
-} from '../../../utility/types/trip';
-import Avatar from '../../Avatar';
+import { Box, Button, Grid, Paper, TextField, Typography } from '@mui/material';
+import { SuggestionOption } from '../../../utility/types/trip';
 import WidgetHeader from './WidgetHeader';
-import Image from 'next/image';
-import {
-  Add,
-  Favorite,
-  FavoriteBorder,
-  HeartBrokenOutlined,
-} from '@mui/icons-material';
+import { Add, Favorite, FavoriteBorder } from '@mui/icons-material';
+import { useSuggestionHook } from '../../../utility/hooks/suggestion';
+import React from 'react';
+import { BackdropModal } from '../../BackdropModal';
 
-function VoteButton({
-  image,
-  handleOnClick,
-}: {
-  image: string;
-  handleOnClick: () => void;
-}) {
-  return (
-    <Button onClick={handleOnClick}>
-      <Image src={image} width={25} height={25} />
-    </Button>
-  );
-}
-
-function Suggestion({ suggestion }: { suggestion: SuggestionOption }) {
-  const { user } = useAuth();
-  const upvoteSelected = '/upvote-selected.svg';
-  const upvoteUnSelected = '/upvote-unselected.svg';
-  const downvoteSelected = '/downvote-selected.svg';
-  const downvoteUnSelected = '/downvote-unselected.svg';
-
-  return (
-    <Grid container>
-      {/** TODO: Ensure Trip Hook has a way to store owner information and get the user's name from this. */}
-
-      <Grid
-        item
-        xs={10}
-        sx={{ display: 'flex', flexDirection: 'row', gap: 2, width: '100%' }}
-      >
-        <Typography> {suggestion.option}</Typography>
-      </Grid>
-      <Grid
-        item
-        xs={2}
-        sx={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'end',
-        }}
-      >
-        {suggestion.upVotes.includes(user?.uid ?? '') ? (
-          <Favorite
-            sx={{ color: 'pink' }}
-            onClick={() => console.log('handle unselecting favorite')}
-          />
-        ) : (
-          <FavoriteBorder
-            sx={{ color: 'pink' }}
-            onClick={() => console.log('handle selecting favorite.')}
-          />
-        )}
-      </Grid>
-    </Grid>
-  );
-}
 export default function Suggestions({
-  suggestion,
+  useSuggestion,
 }: {
-  suggestion: SuggestionWidget;
+  useSuggestion: useSuggestionHook;
 }) {
+  const {
+    doesUserOwn,
+    storeNewSuggestion,
+    toggleAddPopUp,
+    didUserLike,
+    like,
+    unLike,
+    suggestion,
+    deleteSuggestion,
+    addSuggestion,
+    toggleShowAllSuggestionsPopUp,
+  } = useSuggestion;
+
+  function Suggestion({ suggestion }: { suggestion: SuggestionOption }) {
+    return (
+      <Grid container>
+        {/** TODO: Ensure Trip Hook has a way to store owner information and get the user's name from this. */}
+        <Grid
+          item
+          xs={10}
+          sx={{ display: 'flex', flexDirection: 'row', gap: 2, width: '100%' }}
+        >
+          <Typography> {suggestion.option}</Typography>
+        </Grid>
+        <Grid
+          item
+          xs={2}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'end',
+          }}
+        >
+          {didUserLike(suggestion.uid) ? (
+            <Favorite
+              sx={{ color: 'pink' }}
+              onClick={async () => await unLike(suggestion.uid)}
+            />
+          ) : (
+            <FavoriteBorder
+              sx={{ color: 'pink' }}
+              onClick={async () => await like(suggestion.uid)}
+            />
+          )}
+        </Grid>
+      </Grid>
+    );
+  }
+
+  function CreateSuggestions({ showAll }: { showAll: boolean }) {
+    const a: Array<React.ReactNode> = [];
+    suggestion.suggestions.forEach((suggestion, key) => {
+      if (a.length < 5 || showAll) {
+        a.push(<Suggestion key={key} suggestion={suggestion} />);
+      }
+    });
+    return <>{a}</>;
+  }
+
   return (
-    <Paper sx={{ padding: '20px', width: '80vw', maxWidth: '300px' }}>
-      <WidgetHeader
-        owner={suggestion.owner}
-        rightAccessory={
-          <Button
-            onClick={() => {
-              /** TODO: Handle Adding a Suggestion */
-              console.log('Add Suggestion');
-            }}
-          >
-            <Add />
-          </Button>
-        }
-      />
-      <Typography
-        sx={{ fontSize: '20px', fontWeight: '600', textAlign: 'center' }}
+    <>
+      <BackdropModal
+        isOpen={suggestion.showAllSuggestionsPopUp}
+        toggleShow={() => toggleShowAllSuggestionsPopUp()}
       >
-        {suggestion.title}
-      </Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {suggestion.suggestions.map((suggestion, index) => {
-          if (index < 5) {
-            return <Suggestion key={index} suggestion={suggestion} />;
+        <div
+          style={{
+            backgroundColor: 'white',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: 20,
+            width: '300px',
+            gap: 10,
+          }}
+        >
+          <Typography variant="h6" sx={{ textAlign: 'center' }}>
+            All Suggestions
+          </Typography>
+          <CreateSuggestions showAll={true} />
+        </div>
+      </BackdropModal>
+      <BackdropModal
+        isOpen={suggestion.showAddPopUp}
+        toggleShow={() => toggleAddPopUp()}
+      >
+        <div
+          style={{
+            backgroundColor: 'white',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: 20,
+            width: '300px',
+            gap: 10,
+          }}
+        >
+          <Typography variant="h6" sx={{ textAlign: 'center' }}>
+            {`Add suggestions for ${suggestion.title}`}
+          </Typography>
+          <TextField
+            color="secondary"
+            label={'new suggestion'}
+            onChange={(e) => {
+              storeNewSuggestion(e.target.value);
+            }}
+          />
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => addSuggestion()}
+          >
+            add
+          </Button>
+        </div>
+      </BackdropModal>
+      <Paper sx={{ padding: '20px', width: '80vw', maxWidth: '300px' }}>
+        <WidgetHeader
+          owner={useSuggestion.suggestion.owner}
+          rightAccessory={
+            <Button onClick={() => toggleAddPopUp()}>
+              <Add />
+            </Button>
           }
-        })}
-      </Box>
-      {suggestion.suggestions.length >= 5 && (
-        <Button variant="text"> view more</Button>
-      )}
-    </Paper>
+        />
+        <Typography
+          sx={{ fontSize: '20px', fontWeight: '600', textAlign: 'center' }}
+        >
+          {suggestion.title}
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <>
+            <CreateSuggestions showAll={false} />
+          </>
+        </Box>
+        {suggestion.suggestions.size >= 5 && (
+          <Button
+            variant="text"
+            onClick={() => toggleShowAllSuggestionsPopUp()}
+          >
+            view more
+          </Button>
+        )}
+      </Paper>
+    </>
   );
 }

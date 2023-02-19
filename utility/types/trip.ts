@@ -5,15 +5,16 @@ export type Trip = {
   destination: string;
 };
 
+export type Duration = {
+  start: Date;
+  end: Date;
+};
+
 // TODO: Determine what is necessary
 export type Weather = {
   zipCode: string;
 };
 
-export type Duration = {
-  start: Date;
-  end: Date;
-};
 export type Event = {
   uid: string;
   title: string;
@@ -34,15 +35,15 @@ export type Poll = {
   options: Array<PollOption>;
 };
 
-export type SuggestionOption = {
+export interface SuggestionOption {
+  uid: string;
   owner: string;
   option: string;
-  upVotes: Array<string>;
-  downVotes: Array<string>;
-};
-export type SuggestionWidget = {
+  likes: Set<string>;
+}
+export interface SuggestionWidget {
   owner: string;
   uid: string;
   title: string;
-  suggestions: Array<SuggestionOption>;
-};
+  suggestions: Map<string, SuggestionOption>;
+}

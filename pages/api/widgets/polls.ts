@@ -13,7 +13,6 @@ export default async function handler(
 
   switch (req.method) {
     case 'POST': {
-      console.log(req.body);
       await firebaseAdmin
         .firestore()
         .collection(`Trips/${tripID}/polls`)

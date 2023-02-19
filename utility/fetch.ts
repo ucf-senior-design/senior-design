@@ -35,14 +35,14 @@ export async function handleFetch<T>(
       case 'DELETE': {
         const response: AxiosResponse = await axios.delete(url);
         result = response.data as any as T;
-        break
+        break;
       }
       case 'PUT': {
         const response: AxiosResponse = await axios.put(url, data, {
           headers: { 'Content-Type': 'application/json' },
         });
         result = response.data as any as T;
-        break
+        break;
       }
     }
   } catch (err: any) {
