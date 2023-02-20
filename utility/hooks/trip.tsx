@@ -1,7 +1,6 @@
 import React from 'react';
 import { createFetchRequestOptions } from '../fetch';
 import { SuggestionOption, SuggestionWidget, Trip } from '../types/trip';
-import { useDashboard } from './dashboard';
 
 interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>;
@@ -30,7 +29,7 @@ export function useTrip(): TripContext {
   const context = React.useContext(TripContext);
 
   if (!context) {
-    throw Error('useAuth must be used within an TripProvider');
+    throw Error('useTrip must be used within an TripProvider');
   }
   return context;
 }
@@ -44,19 +43,21 @@ export function TripProvider({
   // TODO: remove this and read in the trip in the initilizeTrip() function
 
   const [trip, setTrip] = React.useState<TripUseState>({
-    uid: 'sample',
+    uid: '',
     attendees: new Set(),
     duration: {
       start: new Date(),
       end: new Date(),
     },
-    destination: 'Ohio',
+    destination: '',
     suggestions: new Map<string, SuggestionWidget>(),
   });
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   async function initilizeTrip() {
     let trip = await getTrip();
+    console.log(trip);
+
     let suggestionWidgets = await getSuggestionWidgetData();
 
     if (suggestionWidgets === null || trip === null) {
@@ -80,7 +81,7 @@ export function TripProvider({
   async function getSuggestionWidgetData() {
     const suggestionWidgets = new Map<string, SuggestionWidget>();
 
-    await fetch(`${API_URL}trip/${trip.uid}/suggestion/`, {
+    await fetch(`${API_URL}trip/${id}/suggestion/`, {
       method: 'GET',
     }).then(async (response) => {
       if (response.ok) {
@@ -124,6 +125,18 @@ export function TripProvider({
 
   // TODO: Allow a user to delete a weather widget for the trip.
   async function deleteWeather(uid: string) {}
+
+  // TODO: Allow a user to delete an activity widget for the trip.
+  async function deleteActivityWidget(uid: string) {}
+
+  // TODO: Allow a user to delete an activity widget for the trip.
+  async function createActivityWidget() {}
+
+  // TODO: Allow a user to create an availabillity widget for the trip.
+  async function createAvailabillityWidget() {}
+
+  // TODO: Allow a user to delete an availabillity widget for the trip
+  async function deleteAvailabillityWidget() {}
 
   React.useEffect(() => {
     console.log('getting data for trip:', id);
