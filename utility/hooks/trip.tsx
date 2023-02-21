@@ -1,9 +1,10 @@
 import React from 'react';
 import { createFetchRequestOptions } from '../fetch';
-import { SuggestionOption, SuggestionWidget, Trip } from '../types/trip';
-
+import { SuggestionOption, SuggestionWidget, Trip, Event } from '../types/trip';
 interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>;
+  joinableEvents: Array<Array<Event>>;
+  itinerary: Array<Array<Event>>;
 }
 
 interface TripContext {
@@ -51,33 +52,30 @@ export function TripProvider({
     },
     destination: '',
     suggestions: new Map<string, SuggestionWidget>(),
+    itinerary: [],
+    joinableEvents: [],
   });
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   async function initilizeTrip() {
     let trip = await getTrip();
-    console.log(trip);
-
     let suggestionWidgets = await getSuggestionWidgetData();
+    let eventData = await getEventData();
 
-    if (suggestionWidgets === null || trip === null) {
+    if (suggestionWidgets === null || trip === null || eventData == null) {
       alert('Cannot load trip.');
       return;
     }
 
     console.log('initializing trip....');
-    setTrip({ ...trip, suggestions: suggestionWidgets });
+    setTrip({
+      ...trip,
+      suggestions: suggestionWidgets,
+      itinerary: eventData.userEvents,
+      joinableEvents: eventData.joinableEvents,
+    });
   }
 
-  async function getTrip() {
-    const options = createFetchRequestOptions(null, 'GET');
-    let t = null;
-    const response = await fetch(`${API_URL}trip/${id}`, options);
-    if (response.ok) {
-      t = (await response.json()) as Trip;
-    }
-    return t;
-  }
   async function getSuggestionWidgetData() {
     const suggestionWidgets = new Map<string, SuggestionWidget>();
 
@@ -106,6 +104,122 @@ export function TripProvider({
       }
     });
     return suggestionWidgets;
+  }
+  async function getTrip() {
+    const options = createFetchRequestOptions(null, 'GET');
+    let t = null;
+    const response = await fetch(`${API_URL}trip/${id}`, options);
+    if (response.ok) {
+      t = (await response.json()) as Trip;
+    }
+    return t;
+  }
+
+  function addEventToList(list: Array<Array<Event>>, event: Event) {
+    if (list.length === 0) {
+      list.push([
+        {
+          ...event,
+          duration: {
+            start: new Date(event.duration.start),
+            end: new Date(event.duration.end),
+          },
+        },
+      ]);
+      return list;
+    }
+
+    if (
+      new Date(list[list.length - 1][0].duration.start).toLocaleDateString() !==
+      new Date(event.duration.start).toLocaleDateString()
+    ) {
+      list.push([
+        {
+          ...event,
+          duration: {
+            start: new Date(event.duration.start),
+            end: new Date(event.duration.end),
+          },
+        },
+      ]);
+      return list;
+    }
+
+    list[list.length - 1].push({
+      ...event,
+      duration: {
+        start: new Date(event.duration.start),
+        end: new Date(event.duration.end),
+      },
+    });
+    return list;
+  }
+
+  // TODO: Handle short break periods when determining joinable events
+  async function getEventData() {
+    let joinableEvents: Array<Array<Event>> = [];
+    let userEvents: Array<Array<Event>> = [];
+
+    const response = await fetch(`${API_URL}trip/${id}/event`, {
+      method: 'GET',
+    });
+
+    if (response.ok) {
+      let data = await response.json();
+      console.log('event data', data);
+      const {
+        joinable,
+        itinerary,
+      }: { joinable: Array<Event>; itinerary: Array<Event> } = data;
+
+      console.log(itinerary, joinable);
+      // Determine actualy joinable events
+      let joinableIndex = 0;
+
+      itinerary.forEach((event: Event, index) => {
+        if (joinableIndex < joinable.length) {
+          if (
+            event.duration.end <= joinable[joinableIndex].duration.start &&
+            (index + 1 == itinerary.length ||
+              itinerary[index + 1].duration.start >=
+                joinable[joinableIndex].duration.end)
+          ) {
+            joinableEvents = addEventToList(
+              joinableEvents,
+              joinable[joinableIndex]
+            );
+            joinableIndex++;
+          } else if (
+            index === 0 &&
+            joinable[joinableIndex].duration.end <= event.duration.start
+          ) {
+            joinableEvents = addEventToList(
+              joinableEvents,
+              joinable[joinableIndex]
+            );
+            joinableIndex++;
+          } else {
+            joinableIndex++;
+          }
+        }
+
+        userEvents = addEventToList(userEvents, event);
+      });
+
+      while (joinableIndex < joinable.length) {
+        joinableEvents = addEventToList(
+          joinableEvents,
+          joinable[joinableIndex]
+        );
+        joinableIndex++;
+      }
+    }
+
+    if (response.ok) {
+      console.log(userEvents, joinableEvents);
+      return { userEvents, joinableEvents };
+    }
+    return null;
   }
 
   // TODO: Allow a user to create a suggestion widget for the trip.

@@ -75,9 +75,10 @@ export default async function handler(
             .get()
             .then(async (value) => {
               joinableEvents = unpackArrayResponse(value.docs);
+
               res.status(200).send({
-                joinable: joinableEvents,
-                itinerary: itineraryEvents,
+                joinable: joinableEvents ?? [],
+                itinerary: itineraryEvents ?? [],
               });
             })
             .catch((e) => {
