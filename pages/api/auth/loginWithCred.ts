@@ -16,6 +16,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  console.log('body', req.body);
   switch (req.body.provider) {
     case 'google':
       doLogin(

@@ -77,6 +77,7 @@ export function createFetchRequestOptions(
           method,
           headers: myHeaders,
           redirect: 'follow',
+          body: body,
         }
       : {
           method,

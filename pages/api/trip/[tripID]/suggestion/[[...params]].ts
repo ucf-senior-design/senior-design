@@ -141,8 +141,11 @@ export default async function handler(
             .collection(`Trips/${tripID}/suggestions/`)
             .get()
             .then((value) => {
+              if (value.docs.length === 0) {
+                res.status(200).send({ data: [] });
+              }
               const suggestions = unpackArrayResponse(value.docs);
-              res.status(200).send(suggestions);
+              res.status(200).send({ data: suggestions });
             })
             .catch((e) => {
               res.status(400).send('Error getting polls');
