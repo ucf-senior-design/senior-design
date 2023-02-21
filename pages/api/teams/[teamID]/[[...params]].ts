@@ -1,6 +1,7 @@
 import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { NextApiRequest, NextApiResponse } from 'next';
 import { firebaseDatbase } from '../../../../utility/firebase';
+import firebaseAdmin from "../../../../utility/firebaseAdmin";
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,10 +15,11 @@ export default async function handler(
         // Returns members of a team given a team name or id
         try {
             const docRef = doc(firebaseDatbase, "Teams", teamID);
-            const team = await (await getDoc(docRef)).data;
-            res.status(200).send(team);
+            const team = await (await getDoc(docRef)).data();
+            res.status(200).send(JSON.stringify(team));
         } catch (e) {
             res.status(400).send('Error when executing team query.')
+            console.log(e)
         }
         break;
     }
@@ -25,7 +27,7 @@ export default async function handler(
     case 'PUT': {
         if (
             params === undefined ||
-            params.length !== 2 ||
+            params.length !== 1 ||
             (!params[0] &&
               params[0] !== 'join' &&
               params[0] !== 'leave')
@@ -57,5 +59,24 @@ export default async function handler(
     }
         break;
     }
+
+    case 'DELETE': {
+        if (teamID == undefined || teamID.length == 0) {
+            res.status(400).send('tripID is undefined')
+        } else {
+        firebaseAdmin
+            .firestore()
+            .collection(`Teams/`)
+            .doc(teamID)
+            .delete()
+            .then(() => {
+            res.status(200).send({});
+            })
+            .catch((e) => {
+            res.status(400).send('Could not delete team.');
+            });
+        }
+          break;
+      }
   }
 }

@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { unpackArrayResponse } from '../../../../../utility/firebase';
 import firebaseAdmin from '../../../../../utility/firebaseAdmin';
 
 export default async function handler(
@@ -10,18 +11,14 @@ export default async function handler(
 
   switch (req.method) {
     case 'GET': {
-        // Gets all teams of a particular user
-        let teams: string[] = new Array<string>();
         try {
-            let allTeams= await firebaseAdmin.firestore().collection('Teams/').get();
-            allTeams.forEach((doc) => {
-                if (Object.hasOwn(doc.data(), 'members') && userID != null && doc.data()['members'].includes(userID)) {
-                    teams.push(doc.id)
-                }
+            await firebaseAdmin.firestore().collection('Teams/').where('members', 'array-contains', userID).get().then((value) => {
+              const teams = unpackArrayResponse(value.docs);
+              res.status(200).send(JSON.stringify(teams))
             });
-            res.status(200).send(teams);
         } catch (e) {
             res.status(400).send('Error when loading teams');
+            console.log(e)
         }
         break;
     }

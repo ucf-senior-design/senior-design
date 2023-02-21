@@ -15,25 +15,5 @@ export default async function handler(
     }
       break;
     }
-
-    case 'DELETE': { // asusume req.body is a valid team
-    let teamID = req.body
-    if (teamID == undefined || teamID.length == 0) {
-        res.status(400).send('tripID is undefined')
-    } else {
-    firebaseAdmin
-        .firestore()
-        .collection(`Teams/`)
-        .doc(teamID)
-        .delete()
-        .then(() => {
-        res.status(200).send({});
-        })
-        .catch((e) => {
-        res.status(400).send('Could not delete team.');
-        });
-    }
-      break;
-  }
 }
 }
