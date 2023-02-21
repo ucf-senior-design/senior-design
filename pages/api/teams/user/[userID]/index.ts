@@ -6,7 +6,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const params = req.query.params;
   const userID = req.query.userID as string;
 
   switch (req.method) {
@@ -14,7 +13,7 @@ export default async function handler(
         try {
             await firebaseAdmin.firestore().collection('Teams/').where('members', 'array-contains', userID).get().then((value) => {
               const teams = unpackArrayResponse(value.docs);
-              res.status(200).send(JSON.stringify(teams))
+              res.status(200).send(JSON.stringify({teams:teams}))
             });
         } catch (e) {
             res.status(400).send('Error when loading teams');

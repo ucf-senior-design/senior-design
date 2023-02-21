@@ -16,7 +16,7 @@ export default async function handler(
         try {
             const docRef = doc(firebaseDatbase, "Teams", teamID);
             const team = await (await getDoc(docRef)).data();
-            res.status(200).send(JSON.stringify(team));
+            res.status(200).send(JSON.stringify({teams:team}));
         } catch (e) {
             res.status(400).send('Error when executing team query.')
         }
