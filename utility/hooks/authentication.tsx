@@ -77,6 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   React.useEffect(() => {
+    console.log('loading user....');
     maybeLoadPersistedUser();
   }, []);
 
@@ -159,16 +160,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const response = await fetch(`${API_URL}auth/loginWithCred`, options);
 
-    if ((response.ok, response.status)) {
-      console.log(response);
+    if (response.ok) {
+      console.log(response.status);
       if (response.status === 200) {
         await saveRegisterdUser(await response.json());
       }
       if (response.status === 202) {
         await storePartialCredentialResult(await response.json());
+        Router.push('auth/details');
       }
     } else {
-      alert(await response.text());
+      console.log(response.status, await response.text());
     }
   }
 
@@ -236,7 +238,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.status === EMAIL_VERIFIED) {
         saveRegisterdUser(user);
         // TODO: redirect to dashboard
-        Router.push('/Dashboard/');
+        Router.push('/dashboard/');
         return;
       }
       callback({ isSuccess: response.ok });
@@ -261,7 +263,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const response = await fetch(`${API_URL}auth/verifyEmail`, options);
     if (response.ok) {
       if (response.status === EMAIL_VERIFIED) {
-        Router.push('/Dashboard/Index');
+        Router.push('/dashboard');
       }
       callback({ isSuccess: response.ok });
     } else {
@@ -279,7 +281,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log(response);
     if (response.ok) {
       await storePartialCredentialResult(await response.json());
-      Router.push('/Auth/Details');
+      Router.push('/auth/details');
     } else {
       callback({ isSuccess: response.ok, errorMessage: await response.text() });
     }
@@ -289,6 +291,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     login: EmailPasswordLogin,
     callback: (response: AuthenticationResponse) => void
   ) {
+    console.log(JSON.stringify({ ...login, purpose: 'email' }));
     const options = createFetchRequestOptions(
       JSON.stringify({ ...login, purpose: 'email' }),
       'POST'
@@ -296,16 +299,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const response = await fetch(`${API_URL}auth/login`, options);
 
     if (response.ok) {
+      console.log(response.status);
       if (response.status === 200) {
         await saveRegisterdUser(await response.json());
+        Router.push('/dashboard');
+        console.log('here');
       } else if (response.status === MUST_VERIFY_EMAIL) {
         // Go to Email Verficications Pge
         await saveRegisterdUser(await response.json());
-        Router.push('/Auth/RegisterEmail');
+        Router.push('/auth/registerEmail');
       } else if (response.status === MUST_ADD_DETAILS) {
         await storePartialCredentialResult(await response.json());
         //Go to Details Page
-        Router.push('/Auth/Details');
+        Router.push('/auth/details');
       }
       return;
     }

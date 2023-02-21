@@ -91,7 +91,7 @@ export function SendEmail({
                 aria-label="login"
                 sx={{ borderRadius: 1 }}
                 color="primary"
-                onClick={() => Router.push('/Auth/Login')}
+                onClick={() => Router.push('/auth/login')}
               >
                 {' '}
                 log in{' '}

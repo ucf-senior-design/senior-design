@@ -24,23 +24,24 @@ export const LoginForm = () => {
     password: '',
   });
   const { loading, toggleLoading } = useScreen();
-  //const { firebaseLogin, user } = useAuth();
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
 
   const { doEmailPasswordLogin } = useAuth();
-  // const history = useNavigate();
 
   async function handleSubmit() {
-    toggleLoading();
+    // toggleLoading();
     await doEmailPasswordLogin(loginInfo, (response) => {
+      if (loginInfo.email.length === 0 || loginInfo.password.length === 0) {
+        alert('invalid login info.');
+      }
       if (response.isSuccess) {
         Router.push('/');
       } else {
         setError('Incorrect username or password');
         setIsError(true);
       }
-      toggleLoading();
+      // toggleLoading();
     });
   }
 
@@ -121,7 +122,7 @@ export const LoginForm = () => {
               sx={{ marginBottom: 4, marginTop: 1 }}
             >
               <LinkButton
-                link="/Auth/PasswordReset"
+                link="/auth/passwordReset"
                 text="forgot your password?"
               />
             </Grid>
@@ -139,7 +140,7 @@ export const LoginForm = () => {
         </form>
         <p>
           <a style={{ paddingRight: 5 }}>don&apos;t have an account?</a>
-          <LinkButton link="/Auth/Register" text="sign up" />
+          <LinkButton link="/auth/register" text="sign up" />
         </p>
       </Grid>
       <Divider role="log in with google or facebook accounts">

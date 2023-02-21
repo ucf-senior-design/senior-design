@@ -30,10 +30,11 @@ export default function Screen({
     setMobileOpen((prevState) => !prevState);
   };
 
-  const landingTextColor = path === '/' ? 'white' : undefined;
-  const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
   const backgroundImage =
     path === '/About' ? "url('/Mountains.svg') 80% 80% " : undefined;
+  const landingTextColor = path === '/' ? 'white' : undefined;
+  const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
+
   function NavBarButton({
     path,
     text,
@@ -120,14 +121,14 @@ export default function Screen({
               }}
             >
               <NavBarButton path="/" text="home" variant="text" />
-              <NavBarButton path="/About" text="about" variant="text" />
+              <NavBarButton path="/about" text="about" variant="text" />
               <NavBarButton
-                path="/Auth/Login"
+                path="/auth/login"
                 text="login"
                 variant="contained"
               />
               <NavBarButton
-                path="/Auth/Register"
+                path="/auth/register"
                 text="register"
                 variant="outlined"
               />
