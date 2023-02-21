@@ -81,7 +81,6 @@ export default async function handler(
               });
             })
             .catch((e) => {
-              console.log(e);
               res
                 .status(400)
                 .send('Could not find joinable events user is in.');
@@ -89,7 +88,6 @@ export default async function handler(
             });
         })
         .catch((e) => {
-          console.log(e);
           res.status(400).send('Could not find events user is in.');
           return;
         });

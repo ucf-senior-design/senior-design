@@ -17,7 +17,6 @@ export default async function handler(
         .doc(tripID)
         .get()
         .then((value) => {
-          console.log(tripID, value.data());
           res.status(200).send(value.data());
         })
         .catch((e: any) => {
@@ -38,7 +37,6 @@ export default async function handler(
             res.status(200).send({});
           })
           .catch((e: any) => {
-            console.log(e);
             res.status(400).send('Could not delete trip.');
           });
       }
@@ -75,7 +73,6 @@ export default async function handler(
           }
           res.status(200).send('Success.');
         } catch (e: any) {
-          console.log(e);
           res.status(400).send('Error when updating trip.');
         }
         break;

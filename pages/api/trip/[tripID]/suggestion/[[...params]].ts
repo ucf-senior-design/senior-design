@@ -163,7 +163,6 @@ export default async function handler(
                       suggestions: s,
                     });
                   }
-                  console.log('here', suggestions);
                   res.status(200).send({ data: suggestions });
                 } catch (e) {
                   res.status(400).send('Error getting suggestion options');
