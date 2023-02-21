@@ -1,5 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAuth } from '../../../../../utility/firebase';
+import {
+  firebaseAuth,
+  unpackArrayResponse,
+} from '../../../../../utility/firebase';
 import firebaseAdmin from '../../../../../utility/firebaseAdmin';
 
 export default async function handler(
@@ -129,24 +132,77 @@ export default async function handler(
       break;
     }
 
-    case 'GET': {
-      if (params === undefined || params.length !== 1) {
-        res.status(400).send('Invalid Params');
-      } else {
-        firebaseAdmin
-          .firestore()
-          .collection(`Trips/${tripID}/suggestions`)
-          .doc(params[0])
-          .get()
-          .then((suggestion) => {
-            res.status(200).send({ uid: params[0], ...suggestion.data() });
-          })
-          .catch((e) => {
-            res.status(400).send('Could not get suggestion.');
-          });
+    case 'GET':
+      {
+        // Gets basic information about all suggestion widgets in the trip
+        if (params === undefined) {
+          await firebaseAdmin
+            .firestore()
+            .collection(`Trips/${tripID}/suggestions/`)
+            .get()
+            .then(async (value) => {
+              if (value.docs.length === 0) {
+                res.status(200).send({ data: [] });
+                return;
+              } else {
+                try {
+                  let suggestions: Array<Object> = [];
+                  for (let i = 0; i < value.docs.length; i++) {
+                    let doc = value.docs[i];
+                    const values = await firebaseAdmin
+                      .firestore()
+                      .collection(
+                        `Trips/${tripID}/suggestions/${doc.id}/options`
+                      )
+                      .get();
+                    let s = unpackArrayResponse(values.docs);
+
+                    suggestions.push({
+                      uid: doc.id,
+                      ...doc.data(),
+                      suggestions: s,
+                    });
+                  }
+                  res.status(200).send({ data: suggestions });
+                } catch (e) {
+                  res.status(400).send('Error getting suggestion options');
+                }
+              }
+            })
+            .catch((e) => {
+              res.status(400).send('Error getting suggestions');
+            });
+        } else {
+          await firebaseAdmin
+            .firestore()
+            .collection(`Trips/${tripID}/suggestions`)
+            .doc(params[0])
+            .get()
+            .then((suggestion) => {
+              firebaseAdmin
+                .firestore()
+                .collection(`Trips/${tripID}/suggestions/${params[0]}/options`)
+                .get()
+                .then((values) => {
+                  let suggestions = unpackArrayResponse(values.docs);
+                  res.status(200).send({
+                    uid: params[0],
+                    ...suggestion.data(),
+                    suggestions: suggestions,
+                  });
+                })
+                .catch((e) => {
+                  res.status(400).send('Error getting options');
+                  return;
+                });
+            })
+            .catch((e) => {
+              res.status(400).send('Could not get suggestion.');
+              return;
+            });
+        }
       }
       break;
-    }
 
     case 'DELETE': {
       if (params === undefined || params.length !== 1) {

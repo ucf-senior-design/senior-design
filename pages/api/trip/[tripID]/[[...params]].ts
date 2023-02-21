@@ -10,6 +10,20 @@ export default async function handler(
   const tripID = req.query.tripID as string;
   const params = req.query.params;
   switch (req.method) {
+    case 'GET': {
+      await firebaseAdmin
+        .firestore()
+        .collection(`Trips/`)
+        .doc(tripID)
+        .get()
+        .then((value) => {
+          res.status(200).send(value.data());
+        })
+        .catch((e: any) => {
+          res.status(400).send('Could not get trip.');
+        });
+      break;
+    }
     case 'DELETE': {
       if (tripID == undefined || tripID.length == 0) {
         res.status(400).send('tripID is undefined');
@@ -23,7 +37,6 @@ export default async function handler(
             res.status(200).send({});
           })
           .catch((e: any) => {
-            console.log(e);
             res.status(400).send('Could not delete trip.');
           });
       }
@@ -60,7 +73,6 @@ export default async function handler(
           }
           res.status(200).send('Success.');
         } catch (e: any) {
-          console.log(e);
           res.status(400).send('Error when updating trip.');
         }
         break;
