@@ -19,7 +19,6 @@ export default async function handler(
             res.status(200).send(JSON.stringify(team));
         } catch (e) {
             res.status(400).send('Error when executing team query.')
-            console.log(e)
         }
         break;
     }

@@ -18,7 +18,6 @@ export default async function handler(
             });
         } catch (e) {
             res.status(400).send('Error when loading teams');
-            console.log(e)
         }
         break;
     }
