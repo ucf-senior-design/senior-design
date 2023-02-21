@@ -140,15 +140,38 @@ export default async function handler(
             .firestore()
             .collection(`Trips/${tripID}/suggestions/`)
             .get()
-            .then((value) => {
+            .then(async (value) => {
               if (value.docs.length === 0) {
                 res.status(200).send({ data: [] });
+                return;
+              } else {
+                try {
+                  let suggestions: Array<Object> = [];
+                  for (let i = 0; i < value.docs.length; i++) {
+                    let doc = value.docs[i];
+                    const values = await firebaseAdmin
+                      .firestore()
+                      .collection(
+                        `Trips/${tripID}/suggestions/${doc.id}/options`
+                      )
+                      .get();
+                    let s = unpackArrayResponse(values.docs);
+
+                    suggestions.push({
+                      uid: doc.id,
+                      ...doc.data(),
+                      suggestions: s,
+                    });
+                  }
+                  console.log('here', suggestions);
+                  res.status(200).send({ data: suggestions });
+                } catch (e) {
+                  res.status(400).send('Error getting suggestion options');
+                }
               }
-              const suggestions = unpackArrayResponse(value.docs);
-              res.status(200).send({ data: suggestions });
             })
             .catch((e) => {
-              res.status(400).send('Error getting polls');
+              res.status(400).send('Error getting suggestions');
             });
         } else {
           await firebaseAdmin
