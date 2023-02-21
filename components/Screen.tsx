@@ -16,7 +16,6 @@ import * as React from 'react';
 import theme from '../styles/theme/Theme';
 import { useScreen } from '../utility/hooks/screen';
 import LoggedOutDrawer from './LoggedOutDrawer';
-import Page from './Page';
 
 export default function Screen({
   children,
@@ -31,6 +30,8 @@ export default function Screen({
     setMobileOpen((prevState) => !prevState);
   };
 
+  const backgroundImage =
+    path === '/About' ? "url('/Mountains.svg') 80% 80% " : undefined;
   const landingTextColor = path === '/' ? 'white' : undefined;
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
 
@@ -163,7 +164,17 @@ export default function Screen({
           <></>
         )}
       </nav>
-      <Page path={path}>{children}</Page>
+      <div
+        style={{
+          height: '100vh',
+          width: '100vw',
+          padding: 10,
+          backgroundColor: theme.palette.background.default,
+          background: backgroundImage,
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }
