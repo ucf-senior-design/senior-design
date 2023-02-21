@@ -11,7 +11,6 @@ export default async function handler(
   const params = req.query.params;
   switch (req.method) {
     case 'GET': {
-      console.log('tripID', tripID);
       await firebaseAdmin
         .firestore()
         .collection(`Trips/`)
