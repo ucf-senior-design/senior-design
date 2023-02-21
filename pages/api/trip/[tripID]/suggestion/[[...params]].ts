@@ -192,7 +192,7 @@ export default async function handler(
                   });
                 })
                 .catch((e) => {
-                  res.status(400).send('Error getting Options');
+                  res.status(400).send('Error getting options');
                   return;
                 });
             })

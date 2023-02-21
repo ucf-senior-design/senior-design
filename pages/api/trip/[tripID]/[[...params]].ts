@@ -20,7 +20,7 @@ export default async function handler(
           res.status(200).send(value.data());
         })
         .catch((e: any) => {
-          res.status(400).send('Could not get rip.');
+          res.status(400).send('Could not get trip.');
         });
       break;
     }
