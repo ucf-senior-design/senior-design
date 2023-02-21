@@ -1,5 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAuth } from '../../../../../utility/firebase';
+import {
+  firebaseAuth,
+  unpackArrayResponse,
+} from '../../../../../utility/firebase';
 import firebaseAdmin from '../../../../../utility/firebaseAdmin';
 
 export default async function handler(
@@ -130,16 +133,43 @@ export default async function handler(
     }
 
     case 'GET': {
-      if (params === undefined || params.length !== 1) {
-        res.status(400).send('Invalid Params');
-      } else {
+      // Gets basic information about all suggestion widgets in the trip
+      if (params === undefined) {
+        await firebaseAdmin
+          .firestore()
+          .collection(`Trips/${tripID}/suggestions/`)
+          .get()
+          .then((value) => {
+            const suggestions = unpackArrayResponse(value.docs);
+            res.status(200).send(suggestions);
+          })
+          .catch((e) => {
+            res.status(400).send('Error getting polls');
+          });
+      }
+      // Gets all informaiton about a suggestion widget in the trip
+      else {
         firebaseAdmin
           .firestore()
           .collection(`Trips/${tripID}/suggestions`)
           .doc(params[0])
           .get()
           .then((suggestion) => {
-            res.status(200).send({ uid: params[0], ...suggestion.data() });
+            firebaseAdmin
+              .firestore()
+              .collection(`Trips/${tripID}/suggestions/${params[0]}/options`)
+              .get()
+              .then((values) => {
+                let suggestions = unpackArrayResponse(values.docs);
+                res.status(200).send({
+                  uid: params[0],
+                  ...suggestion.data(),
+                  suggestions: suggestions,
+                });
+              })
+              .catch((e) => {
+                res.status(400).send('Error getting Options');
+              });
           })
           .catch((e) => {
             res.status(400).send('Could not get suggestion.');
