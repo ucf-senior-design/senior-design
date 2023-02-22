@@ -7,6 +7,7 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
+import React from 'react';
 import { useState } from 'react';
 import PasswordStrengthBar from 'react-password-strength-bar';
 import theme from '../../../styles/theme/Theme';
@@ -24,9 +25,9 @@ export const RegisterForm = () => {
     confirmPassword: '',
   });
 
-  const [error, setError] = useState('');
-  const [isError, setIsError] = useState(false);
-  const { loading, toggleLoading } = useScreen();
+  const [error, setError] = useState<string | undefined>();
+  const { doEmailPasswordRegister } = useAuth();
+  const { loading, updateLoading } = useScreen();
   const isValidEmail =
     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(registerInfo.email) ===
     false;
@@ -39,9 +40,12 @@ export const RegisterForm = () => {
   // /[!#*$@_%+=&?]+/g.test(registerInfo.password) === false ||
   // /[-~’/`<>^(){}[\]|;:”\\.,]+/g.test(registerInfo.password) === true;
 
-  const { doEmailPasswordRegister } = useAuth();
+  React.useEffect(() => {
+    updateLoading(false);
+  }, [error]);
+
   async function maybeRegister() {
-    // toggleLoading();
+    updateLoading(false);
     await doEmailPasswordRegister(
       {
         email: registerInfo.email,
@@ -51,7 +55,6 @@ export const RegisterForm = () => {
         setError(response.errorMessage as string); // currently this is not displayed
       }
     );
-    // toggleLoading();
   }
 
   return (
