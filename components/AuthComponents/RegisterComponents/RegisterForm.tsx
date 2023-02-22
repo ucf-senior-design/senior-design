@@ -45,7 +45,7 @@ export const RegisterForm = () => {
   }, [error]);
 
   async function maybeRegister() {
-    updateLoading(false);
+    updateLoading(true);
     await doEmailPasswordRegister(
       {
         email: registerInfo.email,
