@@ -9,7 +9,7 @@ import {
   LinearProgress,
   Stack,
   Toolbar,
-  Typography,
+  Typography
 } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
@@ -29,6 +29,9 @@ export default function Screen({
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+
+  // TODO: Add logic for checking whether a user is logged in
+  const [isAuth, setIsAuth] = React.useState(true);
 
   const backgroundImage =
     path === '/About' ? "url('/Mountains.svg') 80% 80% " : undefined;
@@ -120,18 +123,28 @@ export default function Screen({
                 textAlign: 'right',
               }}
             >
-              <NavBarButton path="/" text="home" variant="text" />
-              <NavBarButton path="/about" text="about" variant="text" />
-              <NavBarButton
-                path="/auth/login"
-                text="login"
-                variant="contained"
-              />
-              <NavBarButton
-                path="/auth/register"
-                text="register"
-                variant="outlined"
-              />
+              {isAuth ? 
+              <>
+                <NavBarButton path="/dashboard/Overview" text="dashboard" variant="text"/>
+                <NavBarButton path="/" text="teams" variant="text"/>
+                <NavBarButton path="/" text="user.id" variant="text"/>
+              </> :
+              <>
+                <NavBarButton path="/" text="home" variant="text" />
+                <NavBarButton path="/about" text="about" variant="text" />
+                <NavBarButton
+                  path="/auth/login"
+                  text="login"
+                  variant="contained"
+                />
+                <NavBarButton
+                  path="/auth/register"
+                  text="register"
+                  variant="outlined"
+                />
+              </>
+              }
+              
             </Stack>
           </Toolbar>
         </AppBar>
