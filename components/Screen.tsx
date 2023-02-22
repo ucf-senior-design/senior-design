@@ -14,10 +14,9 @@ import {
 import Link from 'next/link';
 import * as React from 'react';
 import theme from '../styles/theme/Theme';
-import { useAuth } from '../utility/hooks/authentication';
+import { DashboardProvider } from '../utility/hooks/dashboard';
 import { useScreen } from '../utility/hooks/screen';
 import LoggedOutDrawer from './LoggedOutDrawer';
-import Page from './Page';
 
 export default function Screen({
   children,
@@ -34,6 +33,8 @@ export default function Screen({
 
   const landingTextColor = path === '/' ? 'white' : undefined;
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
+  const backgroundImage =
+    path === '/about' ? "url('/Mountains.svg') 80% 80% " : undefined;
 
   function NavBarButton({
     path,
@@ -164,7 +165,17 @@ export default function Screen({
           <></>
         )}
       </nav>
-      <Page path={path}>{children}</Page>
+      <div
+        style={{
+          height: '100vh',
+          width: '100vw',
+          padding: 10,
+          backgroundColor: theme.palette.background.default,
+          background: backgroundImage,
+        }}
+      >
+        <DashboardProvider> {children}</DashboardProvider>
+      </div>
     </div>
   );
 }
