@@ -1,8 +1,9 @@
+import { stat } from 'fs';
 import React from 'react';
 
 interface ScreenContext {
   loading: boolean;
-  toggleLoading: () => void;
+  updateLoading: (status: boolean) => void;
 }
 const ScreenContext = React.createContext<ScreenContext>({} as ScreenContext);
 
@@ -18,12 +19,12 @@ export function useScreen(): ScreenContext {
 export function ScreenProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  function toggleLoading() {
-    setLoading(!loading);
+  function updateLoading(status: boolean) {
+    setLoading(status);
   }
 
   return (
-    <ScreenContext.Provider value={{ loading, toggleLoading }}>
+    <ScreenContext.Provider value={{ loading, updateLoading }}>
       {children}
     </ScreenContext.Provider>
   );

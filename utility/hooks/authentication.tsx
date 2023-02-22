@@ -15,7 +15,6 @@ import { createFetchRequestOptions } from '../fetch';
 import { firebaseAuth } from '../firebase';
 import { User } from '../types/user';
 import { User as FirebaseUser } from 'firebase/auth';
-import firebaseAdmin from '../firebaseAdmin';
 
 interface EmailPasswordLogin {
   email: string;
@@ -240,6 +239,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // TODO: redirect to dashboard
         Router.push('/dashboard/');
         return;
+      } else {
+        Router.push('/auth/registerEmail');
       }
       callback({ isSuccess: response.ok });
       return;
@@ -256,12 +257,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function sendEmailVerification(
     callback: (response: AuthenticationResponse) => void
   ) {
-    const user = localUser;
-
     const options = createFetchRequestOptions(JSON.stringify({}), 'POST');
 
     const response = await fetch(`${API_URL}auth/verifyEmail`, options);
     if (response.ok) {
+      console.log(response.status);
       if (response.status === EMAIL_VERIFIED) {
         Router.push('/dashboard');
       }
@@ -278,7 +278,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const options = createFetchRequestOptions(JSON.stringify(register), 'POST');
     const response = await fetch(`${API_URL}auth/register`, options);
 
-    console.log(response);
     if (response.ok) {
       await storePartialCredentialResult(await response.json());
       Router.push('/auth/details');
