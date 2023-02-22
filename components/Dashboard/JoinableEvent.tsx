@@ -8,7 +8,6 @@ export default function JoinableEvent({ event }: { event: Event }) {
     <Paper
       onClick={() => {
         // TODO: Handle Clicking on Join Event
-        console.log('event clicked', event);
       }}
       sx={{
         padding: '20px',
