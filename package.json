@@ -25,7 +25,7 @@
     "@emotion/styled": "^11.10.5",
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.10.9",
-    "@mui/material": "^5.10.13",
+    "@mui/material": "^5.11.9",
     "@react-poll-widget/ui": "^0.0.21",
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.0",
