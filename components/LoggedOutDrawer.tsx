@@ -57,34 +57,36 @@ const navItem4 = {
 
 const authItem1 = {
   id: 0,
+  link: '/',
+  name: 'my account',
+  buttonLabel: 'user account button',
+  icon: AccountCircleIcon,
+  iconLabel: 'user account'
+}
+
+const authItem2 = {
+  id: 1,
   link: '/dashboard/Overview',
   name: 'dashboard',
   buttonLabel: 'dashboard button',
   icon: DashboardIcon,
   iconLabel: 'dashboard'
 }
-const authItem2 = {
-  id: 1,
+const authItem3 = {
+  id: 2,
   link: '/',
   name: 'teams',
   buttonLabel: 'teams button',
   icon: GroupsIcon,
   iconLabel: 'teams'
 }
-const authItem3 = {
-  id: 2,
-  link: '/',
-  name: 'settings',
-  buttonLabel: 'settings button',
-  icon: AccountCircleIcon,
-  iconLabel: 'settings'
-}
 
 export const LoggedOutDrawer = () => {
   const navItems = [navItem1, navItem2, navItem3, navItem4];
   const authNavItems = [authItem1, authItem2, authItem3];
   //TODO: add logic for checking if a user is already logged in/active session
-  const [isAuth, setisAuth] = React.useState(true);
+    // Set this to true to see authenticated drawer
+  const [isAuth, setisAuth] = React.useState(false);
 
   return (
     <>

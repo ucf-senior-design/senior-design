@@ -4,9 +4,13 @@ import {
   AppBar,
   Box,
   Button,
+  ClickAwayListener,
   Drawer,
+  Grow,
   IconButton,
   LinearProgress,
+  MenuItem,
+  MenuList, Paper, Popper,
   Stack,
   Toolbar,
   Typography
@@ -31,7 +35,42 @@ export default function Screen({
   };
 
   // TODO: Add logic for checking whether a user is logged in
-  const [isAuth, setIsAuth] = React.useState(true);
+  // Set this to true to see authenticated toolbar
+  const [isAuth, setIsAuth] = React.useState(false);
+
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef<HTMLButtonElement>(null);
+
+  const handleMenuToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleMenuClose = (event: Event | React.SyntheticEvent) => {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
+      return;
+    }
+    setOpen(false);
+  }
+
+  function handleListKeyDown(event: React.KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === 'Escape') {
+      setOpen(false)
+    }
+  }
+
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current!.focus();
+    }
+    prevOpen.current = open;
+  }, [open])
 
   const backgroundImage =
     path === '/About' ? "url('/Mountains.svg') 80% 80% " : undefined;
@@ -127,7 +166,52 @@ export default function Screen({
               <>
                 <NavBarButton path="/dashboard/Overview" text="dashboard" variant="text"/>
                 <NavBarButton path="/" text="teams" variant="text"/>
-                <NavBarButton path="/" text="user.id" variant="text"/>
+                <Button
+                  ref={anchorRef}
+                  color='secondary'
+                  variant='outlined'
+                  aria-label='user setings'
+                  aria-controls={open ? 'composition-menu' : undefined}
+                  aria-expanded={open ? 'true' : undefined}
+                  area-haspopup='true'
+                  onClick={handleMenuToggle}
+                >
+                  name stuff
+                </Button>
+                <Popper
+                  open={open}
+                  anchorEl={anchorRef.current}
+                  role={undefined}
+                  placement='bottom-start'
+                  transition
+                  disablePortal
+                >
+                  {({ TransitionProps, placement}) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{
+                        transformOrigin:
+                          placement === 'bottom-start' ? 'left top' : 'left bottom'
+                      }}
+                      >
+                        <Paper>
+                          <ClickAwayListener onClickAway={handleMenuClose}>
+                            <MenuList
+                              autoFocusItem={open}
+                              id="composition-menu"
+                              aria-labelledby="composition-button"
+                              onKeyDown={handleListKeyDown}
+                            >
+                              {/* TODO: Add logic */}
+                              <MenuItem onClick={handleMenuClose}>my account</MenuItem>
+                              <MenuItem onClick={handleMenuClose}>logout</MenuItem>
+                            </MenuList>
+                          </ClickAwayListener>
+                        </Paper>
+
+                    </Grow>
+                  )}
+                </Popper>
               </> :
               <>
                 <NavBarButton path="/" text="home" variant="text" />
