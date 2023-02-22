@@ -6,8 +6,8 @@ import WeatherWidget from '../../components/Dashboard/Widgets/WeatherWidget';
 export default function Overview() {
   const [weatherwidget, setweatherwidget] = useState(false);
   const layout = [
-    { i: 'weatherComponent', x: 0, y: 0, w: 3, h: 2, isResizable: false },
-    { i: 'tripComponent', x: 3, y: 0, w: 8, h:4, isResizable: false },
+    { i: 'tripComponent', x: 4, y: 0, w: 8, h:4, isResizable: false },
+    { i: 'weatherComponent', x: 0, y: 0, w: 4, h: 2, isResizable: false },
   ];
   // TODO: adjust 'h' to the amount of components coming from trips/events, right now this is a fixed value
   //  Will try and implement once that api is working
@@ -51,19 +51,27 @@ export default function Overview() {
       cols={cols}
       autoSize={true}
       compactType='vertical'
+      style={{
+        overflowY: 'auto',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+      }}
     >
-      <div key="weatherComponent" style={$wrapper}>
-        <Paper
-          square={false}
-          style={{
-            display: 'inline-block',
-            borderRadius: 5,
-            backgroundColor: '#E1E2DE',
-          }}
-        >
-          {weatherwidget ? <WeatherWidget /> : <></>}
-        </Paper>
-      </div>
+      {weatherwidget ? 
+        <div key="weatherComponent" style={$wrapper}>
+          <Paper
+            square={false}
+            style={{
+              display: 'inline-block',
+              borderRadius: 5,
+              backgroundColor: '#E1E2DE',
+            }}
+          >
+            <WeatherWidget />
+          </Paper>
+        </div> : <></>
+      }
       <div key="tripComponent" style={$wrapper}>
         <Paper
           square={false}

@@ -66,7 +66,7 @@ const authItem1 = {
 
 const authItem2 = {
   id: 1,
-  link: '/dashboard/Overview',
+  link: '/dashboard/overview',
   name: 'dashboard',
   buttonLabel: 'dashboard button',
   icon: DashboardIcon,
