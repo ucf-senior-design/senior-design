@@ -7,7 +7,8 @@ interface Response {
   errorMessage?: string;
 }
 
-interface Trip {
+export interface Trip {
+  name: string,
   attendees: Array<string>;
   lastUpdated: Date;
 }
