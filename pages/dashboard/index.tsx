@@ -5,11 +5,8 @@ import { useAuth } from '../../utility/hooks/authentication';
 import { useDashboard } from '../../utility/hooks/dashboard';
 
 export default function Index() {
-  const { user } = useAuth();
   const { trips, getTrips } = useDashboard();
   const router = useRouter();
-
-  console.log(trips);
 
   React.useEffect(() => {
     getTrips();

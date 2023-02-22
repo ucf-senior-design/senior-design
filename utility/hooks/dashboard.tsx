@@ -69,7 +69,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
             tTrips.set(trip.uid, trip);
           });
         });
-        console.log(tTrips);
+
         setTrips(tTrips);
       }
     });

@@ -161,7 +161,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const response = await fetch(`${API_URL}auth/loginWithCred`, options);
 
     if (response.ok) {
-      console.log(response.status);
       if (response.status === 200) {
         await saveRegisterdUser(await response.json());
       }
@@ -188,7 +187,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (credential !== null && credential?.accessToken !== null) {
           if (providerType === 'google') {
-            console.log(credential);
             await doLoginWithCredentials(
               'google',
               credential.idToken ?? '',
@@ -278,7 +276,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const options = createFetchRequestOptions(JSON.stringify(register), 'POST');
     const response = await fetch(`${API_URL}auth/register`, options);
 
-    console.log(response);
     if (response.ok) {
       await storePartialCredentialResult(await response.json());
       Router.push('/auth/details');
@@ -291,7 +288,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     login: EmailPasswordLogin,
     callback: (response: AuthenticationResponse) => void
   ) {
-    console.log(JSON.stringify({ ...login, purpose: 'email' }));
     const options = createFetchRequestOptions(
       JSON.stringify({ ...login, purpose: 'email' }),
       'POST'
@@ -299,11 +295,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const response = await fetch(`${API_URL}auth/login`, options);
 
     if (response.ok) {
-      console.log(response.status);
       if (response.status === 200) {
         await saveRegisterdUser(await response.json());
         Router.push('/dashboard');
-        console.log('here');
       } else if (response.status === MUST_VERIFY_EMAIL) {
         // Go to Email Verficications Pge
         await saveRegisterdUser(await response.json());

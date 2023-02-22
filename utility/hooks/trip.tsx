@@ -166,13 +166,12 @@ export function TripProvider({
 
     if (response.ok) {
       let data = await response.json();
-      console.log('event data', data);
+
       const {
         joinable,
         itinerary,
       }: { joinable: Array<Event>; itinerary: Array<Event> } = data;
 
-      console.log(itinerary, joinable);
       // Determine actualy joinable events
       let joinableIndex = 0;
 
@@ -216,7 +215,6 @@ export function TripProvider({
     }
 
     if (response.ok) {
-      console.log(userEvents, joinableEvents);
       return { userEvents, joinableEvents };
     }
     return null;
