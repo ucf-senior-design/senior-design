@@ -51,7 +51,6 @@ export default async function handler(
       }
     })
     .catch((error: auth.AuthError) => {
-      console.log(error);
       switch (error.code) {
         case AuthErrorCodes.INVALID_EMAIL:
           res.status(ERROR).send('Invalid email.');
