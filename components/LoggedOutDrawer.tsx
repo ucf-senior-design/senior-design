@@ -55,6 +55,7 @@ const navItem4 = {
   iconLabel: 'register icon',
 };
 
+// TODO: add correct pages once they have been created
 const authItem1 = {
   id: 0,
   link: '/',

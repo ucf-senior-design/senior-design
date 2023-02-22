@@ -164,6 +164,7 @@ export default function Screen({
             >
               {isAuth ? 
               <>
+                {/* TODO: add correct pages once they have been created */}
                 <NavBarButton path="/dashboard/Overview" text="dashboard" variant="text"/>
                 <NavBarButton path="/" text="teams" variant="text"/>
                 <Button
