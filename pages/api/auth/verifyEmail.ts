@@ -18,7 +18,8 @@ export default async function handler(
   // This should only be called when the user is logged in, otherwerise the user will be null.
   if (user !== null) {
     // Accounts with Google or Facebook login do not need their emails to be verified.
-    if (user.emailVerified || user.providerId !== 'password') {
+
+    if (user.emailVerified) {
       res.status(EMAIL_VERIFIED).send('Email is Verified');
       return;
     }

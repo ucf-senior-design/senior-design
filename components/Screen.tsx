@@ -14,6 +14,7 @@ import {
 import Link from 'next/link';
 import * as React from 'react';
 import theme from '../styles/theme/Theme';
+import { DashboardProvider } from '../utility/hooks/dashboard';
 import { useScreen } from '../utility/hooks/screen';
 import LoggedOutDrawer from './LoggedOutDrawer';
 
@@ -33,7 +34,8 @@ export default function Screen({
   const landingTextColor = path === '/' ? 'white' : undefined;
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
   const backgroundImage =
-    path === '/About' ? "url('/Mountains.svg') 80% 80% " : undefined;
+    path === '/about' ? "url('/Mountains.svg') 80% 80% " : undefined;
+
   function NavBarButton({
     path,
     text,
@@ -120,14 +122,14 @@ export default function Screen({
               }}
             >
               <NavBarButton path="/" text="home" variant="text" />
-              <NavBarButton path="/About" text="about" variant="text" />
+              <NavBarButton path="/about" text="about" variant="text" />
               <NavBarButton
-                path="/Auth/Login"
+                path="/auth/login"
                 text="login"
                 variant="contained"
               />
               <NavBarButton
-                path="/Auth/Register"
+                path="/auth/register"
                 text="register"
                 variant="outlined"
               />
@@ -154,18 +156,25 @@ export default function Screen({
           </Drawer>
         </Box>
 
-        {loading ? <LinearProgress color='inherit' sx={{color:theme.palette.highlight.main}} /> : <></>}
+        {loading ? (
+          <LinearProgress
+            color="inherit"
+            sx={{ color: theme.palette.highlight.main }}
+          />
+        ) : (
+          <></>
+        )}
       </nav>
       <div
         style={{
-          height: '100%',
-          width: '100%',
+          height: '100vh',
+          width: '100vw',
           padding: 10,
           backgroundColor: theme.palette.background.default,
           background: backgroundImage,
         }}
       >
-        {children}
+        <DashboardProvider> {children}</DashboardProvider>
       </div>
     </div>
   );

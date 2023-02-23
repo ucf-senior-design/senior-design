@@ -2,6 +2,7 @@ import { getAuth } from 'firebase/auth';
 import firebase from 'firebase/compat/app';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
+import firebaseAdmin from './firebaseAdmin';
 
 const firebaseConfig =
   process.env.REACT_APP_FIREBASE_API_KEY !== undefined
@@ -34,6 +35,16 @@ const app =
     ? firebase.initializeApp(firebaseConfig)
     : firebase.apps[0];
 
+export function unpackArrayResponse(
+  docs: firebaseAdmin.firestore.QueryDocumentSnapshot<firebaseAdmin.firestore.DocumentData>[]
+) {
+  const a: Array<any> = [];
+  docs.forEach((doc) => {
+    a.push({ ...doc.data(), uid: doc.id });
+  });
+
+  return a;
+}
 export const firebaseAuth = getAuth(app);
 export const firebaseStorage = getStorage(app);
 export const firebaseDatbase = getFirestore(app);

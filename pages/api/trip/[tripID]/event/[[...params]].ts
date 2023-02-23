@@ -1,5 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAuth } from '../../../../../utility/firebase';
+import {
+  firebaseAuth,
+  unpackArrayResponse,
+} from '../../../../../utility/firebase';
 import firebaseAdmin from '../../../../../utility/firebaseAdmin';
 
 /**
@@ -33,6 +36,63 @@ export default async function handler(
         .catch(() => {
           res.status(400).send('Could not create event.');
         });
+      break;
+    }
+    /**
+     * GET /api/trip/{tripID}
+     * Gets all events in a user's itinerary and any events they are able to join as well.
+     */
+    case 'GET': {
+      if (params !== undefined) {
+        res.status(500).send('Endpoint does not exist :(');
+        return;
+      }
+
+      if (firebaseAuth.currentUser === null) {
+        res.status(400).send('User is not logged in');
+        return;
+      }
+
+      const userID = firebaseAuth.currentUser.uid;
+      let joinableEvents: Array<any> = [];
+      let itineraryEvents: Array<any> = [];
+
+      await firebaseAdmin
+        .firestore()
+        .collection(`Trips/${tripID}/events`)
+        .where('attendees', 'array-contains', userID)
+        .orderBy('duration.start')
+        .get()
+        .then(async (value) => {
+          itineraryEvents = unpackArrayResponse(value.docs);
+
+          await firebaseAdmin
+            .firestore()
+            .collection(`Trips/${tripID}/events`)
+            .orderBy('attendees')
+            .where('attendees', 'not-in', [[userID]])
+            .orderBy('duration.start')
+            .get()
+            .then(async (value) => {
+              joinableEvents = unpackArrayResponse(value.docs);
+
+              res.status(200).send({
+                joinable: joinableEvents ?? [],
+                itinerary: itineraryEvents ?? [],
+              });
+            })
+            .catch((e) => {
+              res
+                .status(400)
+                .send('Could not find joinable events user is in.');
+              return;
+            });
+        })
+        .catch((e) => {
+          res.status(400).send('Could not find events user is in.');
+          return;
+        });
+
       break;
     }
 

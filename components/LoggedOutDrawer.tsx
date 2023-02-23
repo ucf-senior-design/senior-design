@@ -27,7 +27,7 @@ const navItem1 = {
 };
 const navItem2 = {
   id: 2,
-  link: '/About',
+  link: '/about',
   name: 'about',
   buttonLabel: 'about button',
   icon: InfoIcon,
@@ -35,7 +35,7 @@ const navItem2 = {
 };
 const navItem3 = {
   id: 3,
-  link: '/Auth/Login',
+  link: '/auth/login',
   name: 'login',
   buttonLabel: 'login button',
   icon: LoginIcon,
@@ -43,7 +43,7 @@ const navItem3 = {
 };
 const navItem4 = {
   id: 4,
-  link: '/Auth/Register',
+  link: '/auth/register',
   name: 'new user',
   buttonLabel: 'register button',
   icon: AddIcon,
