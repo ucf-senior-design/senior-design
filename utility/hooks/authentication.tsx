@@ -182,7 +182,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         Router.push('auth/details');
       }
     } else {
-      updateErrorToast('Try logging in later.');
+      updateErrorToast(await response.text());
     }
   }
 
