@@ -1,12 +1,11 @@
 import { stat } from 'fs';
 import React from 'react';
 
-type RedirectToast = 'login' | 'details' | undefined;
 interface ScreenContext {
   loading: boolean;
   updateLoading: (status: boolean) => void;
-  updateRedirectToast: (status: RedirectToast) => void;
-  redirectToast: RedirectToast;
+  updateErrorToast: (status: string | undefined) => void;
+  errorToast: string | undefined;
 }
 const ScreenContext = React.createContext<ScreenContext>({} as ScreenContext);
 
@@ -21,19 +20,19 @@ export function useScreen(): ScreenContext {
 
 export function ScreenProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [redirectToast, setRedirectToast] = React.useState<RedirectToast>();
+  const [errorToast, setErrorToast] = React.useState<string | undefined>();
 
   function updateLoading(status: boolean) {
     setLoading(status);
   }
 
-  function updateRedirectToast(status: RedirectToast) {
-    setRedirectToast(status);
+  function updateErrorToast(status: string | undefined) {
+    setErrorToast(status);
   }
 
   return (
     <ScreenContext.Provider
-      value={{ loading, updateLoading, updateRedirectToast, redirectToast }}
+      value={{ loading, updateLoading, updateErrorToast, errorToast }}
     >
       {children}
     </ScreenContext.Provider>

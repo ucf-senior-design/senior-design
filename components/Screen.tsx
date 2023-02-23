@@ -13,9 +13,8 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast, ToastOptions } from 'react-toastify';
 import theme from '../styles/theme/Theme';
-import { DashboardProvider } from '../utility/hooks/dashboard';
 import { useScreen } from '../utility/hooks/screen';
 import LoggedOutDrawer from './LoggedOutDrawer';
 import 'react-toastify/dist/ReactToastify.css';
@@ -28,7 +27,7 @@ export default function Screen({
   children: React.ReactNode;
 }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { loading, redirectToast, updateRedirectToast } = useScreen();
+  const { loading, errorToast, updateErrorToast } = useScreen();
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -37,35 +36,23 @@ export default function Screen({
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
   const backgroundImage =
     path === '/about' ? "url('/Mountains.svg') 80% 80% " : undefined;
+  const errorToastOptions: ToastOptions = {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: 'colored',
+  };
 
   React.useEffect(() => {
-    if (redirectToast !== undefined) {
-      if (redirectToast === 'login') {
-        toast.error('please login before using the application!', {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
-      } else if (redirectToast === 'details') {
-        toast.error('please finish registering before using the application!', {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
-      }
-      updateRedirectToast(undefined);
+    if (errorToast !== undefined) {
+      toast.error(errorToast, errorToastOptions);
+      updateErrorToast(undefined);
     }
-  }, [redirectToast]);
+  }, [errorToast]);
 
   function NavBarButton({
     path,
@@ -205,19 +192,8 @@ export default function Screen({
           background: backgroundImage,
         }}
       >
-        <ToastContainer
-          position="top-center"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-        <DashboardProvider> {children}</DashboardProvider>
+        <ToastContainer />
+        {children}
       </div>
     </div>
   );

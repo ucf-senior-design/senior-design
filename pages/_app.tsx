@@ -31,14 +31,14 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={defaultTheme}>
-        <AuthProvider>
-          <ScreenProvider>
-            <CssBaseline />
+        <ScreenProvider>
+          <AuthProvider>
             <Screen path={props.router.asPath}>
+              <CssBaseline />
               <Component {...pageProps} />
             </Screen>
-          </ScreenProvider>
-        </AuthProvider>
+          </AuthProvider>
+        </ScreenProvider>
       </ThemeProvider>
     </CacheProvider>
   );
