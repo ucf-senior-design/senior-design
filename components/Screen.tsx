@@ -15,6 +15,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import { ToastContainer } from 'react-toastify';
 import theme from '../styles/theme/Theme';
+import { DashboardProvider } from '../utility/hooks/dashboard';
 import { useScreen } from '../utility/hooks/screen';
 import LoggedOutDrawer from './LoggedOutDrawer';
 
@@ -31,10 +32,10 @@ export default function Screen({
     setMobileOpen((prevState) => !prevState);
   };
 
-  const backgroundImage =
-    path === '/About' ? "url('/Mountains.svg') 80% 80% " : undefined;
   const landingTextColor = path === '/' ? 'white' : undefined;
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
+  const backgroundImage =
+    path === '/about' ? "url('/Mountains.svg') 80% 80% " : undefined;
 
   
   function NavBarButton({
@@ -176,7 +177,7 @@ export default function Screen({
           background: backgroundImage,
         }}
       >
-        {children}
+        <DashboardProvider> {children}</DashboardProvider>
       </div>
     </div>
   );

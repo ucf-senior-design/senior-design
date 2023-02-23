@@ -17,20 +17,25 @@ import ThirdPartyAuth from '../ThirdPartyAuth';
 
 import Router from 'next/router';
 import { useScreen } from '../../../utility/hooks/screen';
+import React from 'react';
 
 export const LoginForm = () => {
   const [loginInfo, sLoginInfo] = useState({
     email: '',
     password: '',
   });
-  const { loading, toggleLoading } = useScreen();
-  const [error, setError] = useState('');
-  const [isError, setIsError] = useState(false);
+  const { loading, updateLoading } = useScreen();
+  const [error, setError] = useState<string | undefined>();
 
   const { doEmailPasswordLogin } = useAuth();
 
+  console.log('loading', loading);
+  React.useEffect(() => {
+    updateLoading(false);
+  }, [error]);
+
   async function handleSubmit() {
-    // toggleLoading();
+    updateLoading(true);
     await doEmailPasswordLogin(loginInfo, (response) => {
       if (loginInfo.email.length === 0 || loginInfo.password.length === 0) {
         alert('invalid login info.');
@@ -39,9 +44,7 @@ export const LoginForm = () => {
         Router.push('/');
       } else {
         setError('Incorrect username or password');
-        setIsError(true);
       }
-      // toggleLoading();
     });
   }
 
@@ -85,7 +88,7 @@ export const LoginForm = () => {
             alignItems="stretch"
           >
             <FormTextField
-              error={isError}
+              error={error !== undefined}
               helperText=""
               id="emailInput"
               value={loginInfo.email}
@@ -100,7 +103,7 @@ export const LoginForm = () => {
             />
 
             <PasswordTextField
-              error={isError}
+              error={error !== undefined}
               helperText={error}
               id="passwordInput"
               value={loginInfo.password}
