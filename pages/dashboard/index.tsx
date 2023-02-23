@@ -36,8 +36,8 @@ export default function Index() {
     return <> {tripCards} </>;
   }
   return (
-    <SecurePage>
+    <>
       <GetTripCards />
-    </SecurePage>
+    </>
   );
 }
