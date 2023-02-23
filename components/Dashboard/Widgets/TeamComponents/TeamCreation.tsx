@@ -1,17 +1,15 @@
-import {
-  Button, Grid, Paper,
-  Typography
-} from '@mui/material';
+import { Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import theme from '../../../../styles/theme/Theme';
-import { FormTextField } from '../../../AuthComponents/FormTextField';
-import LinkButton from '../../../AuthComponents/LinkButton';
 
 
   export const TeamCreation = () => {
     const [teamInfo, sTeamInfo] = useState({
         members: [],
       });
+    const item1 = {username:'username', id:'123', name:'noriyuki'}
+    const item2 = {username:'username2', id:'456', name:'minoru'}
+    const example = [item1, item2]
   
     return (
       <Paper
@@ -41,9 +39,9 @@ import LinkButton from '../../../AuthComponents/LinkButton';
             create your team
           </Typography>
           <Typography
-            style={{ color: theme.palette.secondary.main, paddingBottom: 15 }}
+            style={{ color: theme.palette.secondary.main, paddingBottom: 15, fontSize:18}}
           >
-            currently added members
+            currently added members:
           </Typography>
           <form>
             <Grid
@@ -52,72 +50,37 @@ import LinkButton from '../../../AuthComponents/LinkButton';
               justifyContent="center"
               alignItems="stretch"
             >
-              <FormTextField
-                id="currentlyAddedMembers"
-                value={""}
-                placeholder="no currently added members"
-              />
-  
-              {/* <PasswordTextField
-                error={isPasswordInvalid ? true : false}
-                helperText={
-                  isPasswordInvalid
-                    ? 'password must be at least 8 characters'
-                    : ''
-                }
-                id="registerPasswordInput"
-                value={registerInfo.password}
-                label="password"
-                placeholder="password"
-                onChange={(e: { target: { value: string } }) =>
-                  sRegisterInfo((registerInfo) => ({
-                    ...registerInfo,
-                    password: e.target.value,
-                  }))
-                }
-              />
-  
-              <PasswordStrengthBar password={registerInfo.password} />
-  
-              <PasswordTextField
-                error={isConfirmPasswordInvalid ? true : false}
-                helperText={
-                  isConfirmPasswordInvalid ? 'passwords must match' : ''
-                }
-                id="confirmPasswordInput"
-                value={registerInfo.confirmPassword}
-                label="confirm password"
-                placeholder="confirm password"
-                onChange={(e: { target: { value: string } }) =>
-                  sRegisterInfo((registerInfo) => ({
-                    ...registerInfo,
-                    confirmPassword: e.target.value,
-                  }))
-                }
-              /> */}
-              <Button
-                // disabled={
-                //   isValidEmail ||
-                //   isConfirmPasswordInvalid ||
-                //   isPasswordInvalid ||
-                //   loading
-                // }
-                // variant="contained"
-                // color="primary"
-                // sx={{ borderRadius: 1, mt: 5 }}
-                // aria-label="Sign up button"
-                // onClick={async () => maybeRegister()}
-               >
-                 {/* {loading ? <CircularProgress size={25} /> : 'sign up now'} */}
-              </Button>
+                {example.map((item) => (
+                <Paper
+                key={item.id}
+                square={false}
+                style={{
+                  display: 'inline-block',
+                  borderRadius: 5,
+                  backgroundColor: '#efefef',
+                  borderColor: '#3f3e55',
+                  borderStyle: 'solid',
+                  borderWidth: 2,
+                  width:'100%',
+                  padding: 10,
+                  margin: 5
+                }}
+                >
+                  <Typography style={{fontSize: 15}}><img src="/user.svg" alt="user image" width={15} height={15} style={{display: 'inline-block',}}/> {item.name}</Typography>
+                </Paper>))}
+             <p>
+          <Typography
+            style={{ color: theme.palette.secondary.main, paddingBottom: 15, fontSize:18}}
+          >
+            search users by username:
+          </Typography>
+          <p>
+          <TextField id="outlined-basic" label="Outlined" variant="outlined" /></p>
+          <Button variant="outlined" >add to team</Button>
+             </p>
             </Grid>
           </form>
-          <p>
-            <a style={{ paddingRight: 5 }}>search users by username</a>
-          <p>
-          <LinkButton link="/" text="add to team" />
-          </p>
-          </p>
+
         </Grid>
       </Paper>
     );
