@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
+import { ToastContainer } from 'react-toastify';
 import theme from '../styles/theme/Theme';
 import { useScreen } from '../utility/hooks/screen';
 import LoggedOutDrawer from './LoggedOutDrawer';
@@ -35,6 +36,7 @@ export default function Screen({
   const landingTextColor = path === '/' ? 'white' : undefined;
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
 
+  
   function NavBarButton({
     path,
     text,
@@ -64,6 +66,7 @@ export default function Screen({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <ToastContainer />
       <nav aria-label="navigational bar">
         <AppBar position="static" color="secondary" sx={{ boxShadow: 'none' }}>
           <Toolbar

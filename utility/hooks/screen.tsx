@@ -17,10 +17,13 @@ export function useScreen(): ScreenContext {
 
 export function ScreenProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = React.useState<boolean>(false);
-
+ 
+  
   function toggleLoading() {
     setLoading(!loading);
   }
+
+
 
   return (
     <ScreenContext.Provider value={{ loading, toggleLoading }}>
