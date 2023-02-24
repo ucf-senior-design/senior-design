@@ -17,6 +17,8 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
+import { toast, ToastContainer, ToastOptions } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import theme from '../styles/theme/Theme';
 import { useScreen } from '../utility/hooks/screen';
 import LoggedOutDrawer from './LoggedOutDrawer';
@@ -29,7 +31,7 @@ export default function Screen({
   children: React.ReactNode;
 }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { loading } = useScreen();
+  const { loading, errorToast, updateErrorToast } = useScreen();
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -72,10 +74,27 @@ export default function Screen({
     prevOpen.current = open;
   }, [open])
 
-  const backgroundImage =
-    path === '/About' ? "url('/Mountains.svg') 80% 80% " : undefined;
   const landingTextColor = path === '/' ? 'white' : undefined;
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
+  const backgroundImage =
+    path === '/about' ? "url('/Mountains.svg') 80% 80% " : undefined;
+  const errorToastOptions: ToastOptions = {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: 'colored',
+  };
+
+  React.useEffect(() => {
+    if (errorToast !== undefined) {
+      toast.error(errorToast, errorToastOptions);
+      updateErrorToast(undefined);
+    }
+  }, [errorToast]);
 
   function NavBarButton({
     path,
@@ -271,6 +290,7 @@ export default function Screen({
           background: backgroundImage,
         }}
       >
+        <ToastContainer />
         {children}
       </div>
     </div>

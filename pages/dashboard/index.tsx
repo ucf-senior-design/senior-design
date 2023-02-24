@@ -1,8 +1,10 @@
-import { useAuth } from '../../utility/hooks/authentication';
+import React from 'react';
+import { DashboardProvider } from '../../utility/hooks/dashboard';
 
 export default function Index() {
-  const { user } = useAuth();
   return (
-    <p>{user?.uid + '\t' + user?.name + '\t' + user?.medicalInfo + '\t'}</p>
+    <DashboardProvider>
+      <> </>
+    </DashboardProvider>
   );
 }

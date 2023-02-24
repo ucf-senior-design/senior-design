@@ -1,15 +1,59 @@
 import { Box, Button, Grid, Paper, TextField, Typography } from '@mui/material';
-import { SuggestionOption } from '../../../utility/types/trip';
+import {
+  SuggestionOption,
+  SuggestionWidget,
+} from '../../../utility/types/trip';
 import WidgetHeader from './WidgetHeader';
 import { Add, Favorite, FavoriteBorder } from '@mui/icons-material';
-import { useSuggestionHook } from '../../../utility/hooks/suggestion';
+import useSuggestion from '../../../utility/hooks/suggestion';
 import React from 'react';
 import { BackdropModal } from '../../BackdropModal';
+import { useTrip } from '../../../utility/hooks/trip';
 
-export default function Suggestions({
-  useSuggestion,
+export function SuggestionWidgets() {
+  const { trip } = useTrip();
+
+  const [suggestions, setSuggestions] = React.useState<React.ReactNode>(<></>);
+  React.useEffect(() => {
+    setSuggestions(getSuggestions);
+  }, [trip.suggestions]);
+
+  function getSuggestions() {
+    const s: Array<React.ReactNode> = [];
+    trip.suggestions?.forEach((suggestion) => {
+      s.push(
+        <Suggestions
+          key={suggestion.uid}
+          suggestionWidget={suggestion}
+          tripID={trip.uid}
+        />
+      );
+    });
+
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyItems: 'center',
+          flexDirection: 'column',
+          gap: 5,
+        }}
+      >
+        {s}
+      </div>
+    );
+  }
+
+  return <> {suggestions}</>;
+}
+
+function Suggestions({
+  suggestionWidget,
+  tripID,
 }: {
-  useSuggestion: useSuggestionHook;
+  tripID: string;
+  suggestionWidget: SuggestionWidget;
 }) {
   const {
     doesUserOwn,
@@ -22,11 +66,11 @@ export default function Suggestions({
     deleteSuggestion,
     addSuggestion,
     toggleShowAllSuggestionsPopUp,
-  } = useSuggestion;
+  } = useSuggestion(suggestionWidget);
 
   function Suggestion({ suggestion }: { suggestion: SuggestionOption }) {
     return (
-      <Grid container>
+      <Grid key={suggestion.uid} container>
         {/** TODO: Ensure Trip Hook has a way to store owner information and get the user's name from this. */}
         <Grid
           item
@@ -127,7 +171,7 @@ export default function Suggestions({
       </BackdropModal>
       <Paper sx={{ padding: '20px', width: '80vw', maxWidth: '300px' }}>
         <WidgetHeader
-          owner={useSuggestion.suggestion.owner}
+          owner={suggestion.owner}
           rightAccessory={
             <Button onClick={() => toggleAddPopUp()}>
               <Add />

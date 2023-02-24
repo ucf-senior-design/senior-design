@@ -36,6 +36,7 @@
     "firebase-admin": "^11.3.0",
     "mocha": "^10.1.0",
     "next": "12.3.1",
+    "next-session": "^4.0.5",
     "node-mocks-http": "^1.12.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -43,6 +44,7 @@
     "react-leaf-polls": "^1.1.6",
     "react-password-strength-bar": "^0.4.1",
     "react-polls": "^1.2.0",
+    "react-toastify": "8.0.0",
     "react-use-storage": "^0.5.1"
   },
   "testMatch": [
