@@ -1,6 +1,6 @@
 import React from 'react';
 import { createFetchRequestOptions } from '../fetch';
-import { SuggestionOption, SuggestionWidget, Trip, Event } from '../types/trip';
+import { Event, SuggestionOption, SuggestionWidget, Trip } from '../types/trip';
 interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>;
   joinableEvents: Array<Array<Event>>;
@@ -22,7 +22,17 @@ interface TripContext {
   // handle weather widget
   createWeather: () => Promise<void>;
   deleteWeather: (uid: string) => Promise<void>;
+
+  // handle events
+  createEvent: (event: Event, callback: (response: Response)) => Promise<void>;
 }
+
+// TODO: probably should import this 
+interface Response {
+  result?: any;
+  isSuccess: boolean;
+  errorMessage?: string;
+}  
 
 const TripContext = React.createContext<TripContext>({} as TripContext);
 
@@ -250,6 +260,19 @@ export function TripProvider({
   // TODO: Allow a user to delete an availabillity widget for the trip
   async function deleteAvailabillityWidget() {}
 
+  async function createEvent(event: Event, callback: (response: Response) => void) {
+    const options = createFetchRequestOptions(JSON.stringify(trip), 'POST');
+    const response = await fetch(`${API_URL}/trip/event`, options);
+
+    if (response.ok) {
+      callback({ isSuccess: response.ok, result: response.json() });
+
+    } else {
+      callback({ isSuccess: response.ok, errorMessage: await response.text() });
+
+    }
+  }
+
   React.useEffect(() => {
     console.log('getting data for trip:', id);
     initilizeTrip();
@@ -266,6 +289,7 @@ export function TripProvider({
         deletePoll,
         createWeather,
         deleteWeather,
+        createEvent,
       }}
     >
       {children}
