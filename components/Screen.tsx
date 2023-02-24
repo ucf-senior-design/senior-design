@@ -27,7 +27,13 @@ export default function Screen({
   children: React.ReactNode;
 }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { loading, errorToast, updateErrorToast } = useScreen();
+  const {
+    loading,
+    errorToast,
+    updateErrorToast,
+    updateAutoPadding,
+    autoPadding,
+  } = useScreen();
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -187,7 +193,7 @@ export default function Screen({
         style={{
           height: '100vh',
           width: '100vw',
-          padding: 10,
+          padding: autoPadding ? 10 : 0,
           backgroundColor: theme.palette.background.default,
           background: backgroundImage,
         }}

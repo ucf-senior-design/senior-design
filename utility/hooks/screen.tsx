@@ -3,9 +3,11 @@ import React from 'react';
 
 interface ScreenContext {
   loading: boolean;
+  errorToast: string | undefined;
+  autoPadding: boolean;
   updateLoading: (status: boolean) => void;
   updateErrorToast: (status: string | undefined) => void;
-  errorToast: string | undefined;
+  updateAutoPadding: (status: boolean) => void;
 }
 const ScreenContext = React.createContext<ScreenContext>({} as ScreenContext);
 
@@ -21,6 +23,7 @@ export function useScreen(): ScreenContext {
 export function ScreenProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [errorToast, setErrorToast] = React.useState<string | undefined>();
+  const [autoPadding, setAutoPadding] = React.useState(true);
 
   function updateLoading(status: boolean) {
     setLoading(status);
@@ -30,9 +33,20 @@ export function ScreenProvider({ children }: { children: React.ReactNode }) {
     setErrorToast(status);
   }
 
+  function updateAutoPadding(status: boolean) {
+    setAutoPadding(status);
+  }
+
   return (
     <ScreenContext.Provider
-      value={{ loading, updateLoading, updateErrorToast, errorToast }}
+      value={{
+        loading,
+        updateLoading,
+        updateErrorToast,
+        errorToast,
+        updateAutoPadding,
+        autoPadding,
+      }}
     >
       {children}
     </ScreenContext.Provider>
