@@ -24,7 +24,7 @@ interface TripContext {
   deleteWeather: (uid: string) => Promise<void>;
 
   // handle events
-  createEvent: (event: Event, callback: (response: Response)) => Promise<void>;
+  createEvent: (event: Event, callback: (response: Response) => void) => Promise<void>;
 }
 
 // TODO: probably should import this 
