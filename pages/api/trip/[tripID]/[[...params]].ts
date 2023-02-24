@@ -47,7 +47,7 @@ export default async function handler(
       if (
         params === undefined ||
         firebaseAuth.currentUser === null ||
-        (params[0] !== 'join' && params[0] !== 'leave')
+        (params[0] !== 'join' && params[0] !== 'leave' && params[0] !== 'modify')
       ) {
         res.status(400).send('Invalid purpose');
         return;
@@ -69,6 +69,19 @@ export default async function handler(
                 attendees: arrayRemove(userID),
               });
               break;
+            }
+            case 'modify': {
+              const details = req.body;
+              if (req.body.title !== null) {
+                await updateDoc(docRef, {
+                  title: req.body.title
+                })
+              }
+              if (req.body.destination !== null) {
+                await updateDoc(docRef, {
+                  destination: req.body.destination
+                })
+              }
             }
           }
           res.status(200).send('Success.');

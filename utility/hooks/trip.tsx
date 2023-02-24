@@ -269,7 +269,18 @@ export function TripProvider({
 
     } else {
       callback({ isSuccess: response.ok, errorMessage: await response.text() });
+    }
+  }
 
+  async function modifyTrip(trip: Trip, callback: (response: Response) => void) {
+    const options = createFetchRequestOptions(JSON.stringify(trip), 'PUT');
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options);
+
+    if (response.ok) {
+      callback({ isSuccess: response.ok, result: response.json() });
+
+    } else {
+      callback({ isSuccess: response.ok, errorMessage: await response.text() });
     }
   }
 
