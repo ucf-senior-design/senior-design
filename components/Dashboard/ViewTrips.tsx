@@ -96,7 +96,9 @@ export default function ViewTrips() {
           groupBy={(option) => option.start}
           getOptionLabel={(option) => option.destination}
           sx={{ width: { xs: '100%', md: 300 }, margin: '10px' }}
-          renderInput={(params) => <TextField {...params} label="find trip" />}
+          renderInput={(params) => (
+            <TextField {...params} label="find trip" color="secondary" />
+          )}
         />
       </Paper>
       <CreateTripCards />
