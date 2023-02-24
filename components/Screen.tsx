@@ -13,10 +13,11 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
+import { ToastContainer, toast, ToastOptions } from 'react-toastify';
 import theme from '../styles/theme/Theme';
-import { DashboardProvider } from '../utility/hooks/dashboard';
 import { useScreen } from '../utility/hooks/screen';
 import LoggedOutDrawer from './LoggedOutDrawer';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Screen({
   children,
@@ -26,7 +27,7 @@ export default function Screen({
   children: React.ReactNode;
 }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { loading } = useScreen();
+  const { loading, errorToast, updateErrorToast } = useScreen();
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -35,6 +36,23 @@ export default function Screen({
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
   const backgroundImage =
     path === '/about' ? "url('/Mountains.svg') 80% 80% " : undefined;
+  const errorToastOptions: ToastOptions = {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: 'colored',
+  };
+
+  React.useEffect(() => {
+    if (errorToast !== undefined) {
+      toast.error(errorToast, errorToastOptions);
+      updateErrorToast(undefined);
+    }
+  }, [errorToast]);
 
   function NavBarButton({
     path,
@@ -174,7 +192,8 @@ export default function Screen({
           background: backgroundImage,
         }}
       >
-        <DashboardProvider> {children}</DashboardProvider>
+        <ToastContainer />
+        {children}
       </div>
     </div>
   );

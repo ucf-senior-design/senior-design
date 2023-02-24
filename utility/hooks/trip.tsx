@@ -1,4 +1,5 @@
 import React from 'react';
+import SecurePage from '../../components/SecurePage';
 import { createFetchRequestOptions } from '../fetch';
 import { SuggestionOption, SuggestionWidget, Trip, Event } from '../types/trip';
 interface TripUseState extends Trip {
@@ -268,7 +269,7 @@ export function TripProvider({
         deleteWeather,
       }}
     >
-      {children}
+      <SecurePage>{children}</SecurePage>
     </TripContext.Provider>
   );
 }
