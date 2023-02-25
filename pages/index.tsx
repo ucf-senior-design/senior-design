@@ -1,9 +1,9 @@
-import { Button, Grid,  Stack, Typography } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Button, Grid, Stack, Typography } from '@mui/material';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const Home: NextPage = () => {
   return (
@@ -45,7 +45,7 @@ const Home: NextPage = () => {
             a collaborative approach to group planning.
           </Typography>
 
-          <Link href="/Auth/Register" passHref>
+          <Link href="/auth/register" passHref>
             <Button
               variant="outlined"
               endIcon={<ArrowForwardIcon />}
