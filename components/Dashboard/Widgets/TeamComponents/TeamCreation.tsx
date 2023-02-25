@@ -19,7 +19,7 @@ import theme from '../../../../styles/theme/Theme';
           width: '80vw',
           background: theme.palette.background.paper,
           padding: 20,
-          paddingBottom: 40,
+          paddingBottom: 20,
         }}
       >
         <Grid
@@ -27,6 +27,7 @@ import theme from '../../../../styles/theme/Theme';
           direction="column"
           justifyContent="center"
           alignItems="center"
+          display="flex"
         >
           <Typography
             variant="h4"
@@ -48,7 +49,8 @@ import theme from '../../../../styles/theme/Theme';
               container
               direction="column"
               justifyContent="center"
-              alignItems="stretch"
+              alignItems="center"
+              display="flex"
             >
                 {example.map((item) => (
                 <Paper
@@ -60,24 +62,38 @@ import theme from '../../../../styles/theme/Theme';
                   backgroundColor: '#efefef',
                   borderColor: '#3f3e55',
                   borderStyle: 'solid',
-                  borderWidth: 2,
+                  borderWidth: 1.5,
                   width:'100%',
                   padding: 10,
                   margin: 5
                 }}
                 >
-                  <Typography style={{fontSize: 15}}><img src="/user.svg" alt="user image" width={15} height={15} style={{display: 'inline-block',}}/> {item.name}</Typography>
+                  <Grid container direction="row" alignItems="center">
+                  <img src="/user.svg" alt="user image" width={13} height={13} style={{display: 'inline-block',}}/>
+                  <Typography style={{fontSize: 15}}>&nbsp;&nbsp;{item.name}</Typography>
+                  </Grid>
                 </Paper>))}
-             <p>
-          <Typography
-            style={{ color: theme.palette.secondary.main, paddingBottom: 15, fontSize:18}}
-          >
-            search users by username:
-          </Typography>
-          <p>
-          <TextField id="outlined-basic" label="Outlined" variant="outlined" /></p>
-          <Button variant="outlined" >add to team</Button>
-             </p>
+
+                <p>
+                  <Typography
+                  style={{ color: theme.palette.secondary.main, fontSize:18, paddingBottom: 15}}
+                  >
+                  search users by username:
+                  </Typography>
+                  <form>
+                  <TextField
+                    color="secondary"
+                  />
+                  </form>
+                </p>
+                    <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ borderRadius: 1 }}
+                  aria-label="add to team"
+                  > add to team
+                  </Button>
+
             </Grid>
           </form>
 

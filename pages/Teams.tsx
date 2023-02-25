@@ -1,5 +1,4 @@
 import { Grid, Stack } from '@mui/material';
-import Image from 'next/image';
 import { TeamCreation } from '../components/Dashboard/Widgets/TeamComponents/TeamCreation';
 
 
@@ -22,7 +21,6 @@ export default function Teams() {
                 zIndex: 1,
               }}
             >
-              <Image src="/teams.svg" alt="Photos" width={700} height={700} />
             </Stack>
           </Grid>
         </div>
