@@ -73,8 +73,8 @@ import theme from '../../../../styles/theme/Theme';
                   <Typography style={{fontSize: 15}}>&nbsp;&nbsp;{item.name}</Typography>
                   </Grid>
                 </Paper>))}
-
-                <p>
+                
+                <p></p>
                   <Typography
                   style={{ color: theme.palette.secondary.main, fontSize:18, paddingBottom: 15}}
                   >
@@ -83,16 +83,29 @@ import theme from '../../../../styles/theme/Theme';
                   <form>
                   <TextField
                     color="secondary"
+                    size="small"
+                    sx={{ paddingBottom:1 }}
                   />
                   </form>
-                </p>
+                  
                     <Button
-                  variant="contained"
-                  color="primary"
+                  variant="outlined"
                   sx={{ borderRadius: 1 }}
+                  size="small"
                   aria-label="add to team"
                   > add to team
                   </Button>
+                <p></p>
+                <p>
+                  <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  sx={{ borderRadius: 1 }}
+                  aria-label="create team"
+                  > create team
+                  </Button>
+                </p>
 
             </Grid>
           </form>
