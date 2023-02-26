@@ -4,6 +4,7 @@ import Router from 'next/router';
 import React, { useState } from 'react';
 import theme from '../../../styles/theme/Theme';
 import { useAuth } from '../../../utility/hooks/authentication';
+import { useScreen } from '../../../utility/hooks/screen';
 
 export function SendEmail({
   purpose,
@@ -12,6 +13,7 @@ export function SendEmail({
   purpose: 'emailVerify' | 'passwordReset';
   email?: string;
 }) {
+  const { updateErrorToast, updateSuccessToast } = useScreen();
   const { sendEmailVerification, sendPasswordReset } = useAuth();
   const [emailForgottenPW, setEmailForgottenPW] = useState("");
   const title = purpose === 'emailVerify' ? 'almost there!' : 'password reset';
@@ -29,16 +31,18 @@ export function SendEmail({
     if (purpose === 'emailVerify') {
       sendEmailVerification((response) => {
         if (!response.isSuccess) {
-          alert(response.errorMessage);
+          updateErrorToast(response.errorMessage);
+        } else {
+          updateSuccessToast('email verification email sent.');
         }
       });
     }
     if (purpose === 'passwordReset') {
       sendPasswordReset(emailForgottenPW, (response) => {
         if (!response.isSuccess) {
-          alert(response.errorMessage);
+          updateErrorToast(response.errorMessage);
         } else {
-          alert('Password reset email sent.');
+          updateSuccessToast('password reset email sent.');
         }
       });
     }
