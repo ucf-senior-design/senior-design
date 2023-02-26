@@ -44,6 +44,11 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   const [trips, setTrips] = React.useState<Map<string, Trip>>();
   const { user } = useAuth();
 
+  React.useEffect(() => {
+    console.log('getting user trips....');
+    getTrips();
+  }, []);
+
   return (
     <DashboardContext.Provider
       value={{
@@ -66,6 +71,8 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
       if (response.ok) {
         await response.json().then((uTrips) => {
           uTrips.forEach((trip: Trip) => {
+            trip.duration.start = new Date(trip.duration.start);
+            trip.duration.end = new Date(trip.duration.end);
             trip.attendees = new Set(trip.attendees);
             tTrips.set(trip.uid, trip);
           });
