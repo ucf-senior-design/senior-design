@@ -4,6 +4,7 @@ import TripCard from './TripCard';
 import { Autocomplete, Button, Paper, TextField } from '@mui/material';
 import { Trip } from '../../utility/types/trip';
 import { Add } from '@mui/icons-material';
+import { useRouter } from 'next/router';
 
 type TripSearchOption = {
   destination: string;
@@ -11,6 +12,7 @@ type TripSearchOption = {
   id: string;
 };
 export default function ViewTrips() {
+  const router = useRouter();
   const monthNames = [
     'January',
     'February',
@@ -92,6 +94,14 @@ export default function ViewTrips() {
           padding: '10px',
         }}
       >
+        <Button
+          sx={{ margin: '10px' }}
+          variant="contained"
+          color="primary"
+          onClick={() => router.push('/dashboard/trip/create')}
+        >
+          New Trip
+        </Button>
         <Autocomplete
           options={tripSearchOptions}
           groupBy={(option) => option.start}

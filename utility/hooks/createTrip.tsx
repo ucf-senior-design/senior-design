@@ -62,6 +62,7 @@ export default function useCreateTrip() {
     newOptions.add(attendee);
     newAttendees.add(attendee);
 
+    
     setCreateTrip({
       ...createTrip,
       attendees: getAttendeeOptionsArray(newAttendees),
