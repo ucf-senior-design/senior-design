@@ -5,9 +5,11 @@ interface ScreenContext {
   loading: boolean;
   errorToast: string | undefined;
   autoPadding: boolean;
+  successToast: string | undefined;
   updateLoading: (status: boolean) => void;
   updateErrorToast: (status: string | undefined) => void;
   updateAutoPadding: (status: boolean) => void;
+  updateSuccessToast: (status: string | undefined) => void;
 }
 const ScreenContext = React.createContext<ScreenContext>({} as ScreenContext);
 
@@ -24,6 +26,7 @@ export function ScreenProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [errorToast, setErrorToast] = React.useState<string | undefined>();
   const [autoPadding, setAutoPadding] = React.useState(true);
+  const [successToast, setSuccessToast] = React.useState<string | undefined>();
 
   function updateLoading(status: boolean) {
     setLoading(status);
@@ -37,6 +40,10 @@ export function ScreenProvider({ children }: { children: React.ReactNode }) {
     setAutoPadding(status);
   }
 
+  function updateSuccessToast(status: string | undefined) {
+    setSuccessToast(status);
+  }
+
   return (
     <ScreenContext.Provider
       value={{
@@ -46,6 +53,8 @@ export function ScreenProvider({ children }: { children: React.ReactNode }) {
         errorToast,
         updateAutoPadding,
         autoPadding,
+        successToast,
+        updateSuccessToast,
       }}
     >
       {children}

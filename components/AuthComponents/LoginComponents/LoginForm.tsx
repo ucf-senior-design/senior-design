@@ -24,12 +24,11 @@ export const LoginForm = () => {
     email: '',
     password: '',
   });
-  const { loading, updateLoading } = useScreen();
+  const { loading, updateLoading, updateErrorToast } = useScreen();
   const [error, setError] = useState<string | undefined>();
 
   const { doEmailPasswordLogin } = useAuth();
 
-  console.log('loading', loading);
   React.useEffect(() => {
     updateLoading(false);
   }, [error]);
@@ -38,7 +37,7 @@ export const LoginForm = () => {
     updateLoading(true);
     await doEmailPasswordLogin(loginInfo, (response) => {
       if (loginInfo.email.length === 0 || loginInfo.password.length === 0) {
-        alert('invalid login info.');
+        updateErrorToast('invalid login info.');
       }
       if (response.isSuccess) {
         Router.push('/');

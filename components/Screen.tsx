@@ -33,6 +33,9 @@ export default function Screen({
     updateErrorToast,
     updateAutoPadding,
     autoPadding,
+    updateLoading,
+    successToast,
+    updateSuccessToast,
   } = useScreen();
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -42,7 +45,7 @@ export default function Screen({
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
   const backgroundImage =
     path === '/about' ? "url('/Mountains.svg') 80% 80% " : undefined;
-  const errorToastOptions: ToastOptions = {
+  const msgToastOptions: ToastOptions = {
     position: 'top-center',
     autoClose: 5000,
     hideProgressBar: false,
@@ -53,12 +56,26 @@ export default function Screen({
     theme: 'colored',
   };
 
+  // Resets error toast after being shown.
   React.useEffect(() => {
     if (errorToast !== undefined) {
-      toast.error(errorToast, errorToastOptions);
+      toast.error(errorToast, msgToastOptions);
       updateErrorToast(undefined);
     }
   }, [errorToast]);
+
+  // Resets success toast after being shown.
+  React.useEffect(() => {
+    if (successToast !== undefined) {
+      toast.success(successToast, msgToastOptions);
+      updateSuccessToast(undefined);
+    }
+  }, [successToast]);
+
+  // Resets loading when user switches pages after loading
+  React.useEffect(() => {
+    updateLoading(false);
+  }, [path]);
 
   function NavBarButton({
     path,
