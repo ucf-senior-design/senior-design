@@ -1,4 +1,4 @@
-import { Button, Grid,  Stack, Typography } from '@mui/material';
+import { Button, Grid, Stack, Typography } from '@mui/material';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -45,7 +45,7 @@ const Home: NextPage = () => {
             a collaborative approach to group planning.
           </Typography>
 
-          <Link href="/Auth/Register" passHref>
+          <Link href="/auth/register" passHref>
             <Button
               variant="outlined"
               endIcon={<ArrowForwardIcon />}
