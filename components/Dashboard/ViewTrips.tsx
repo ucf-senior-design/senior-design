@@ -57,6 +57,7 @@ export default function ViewTrips() {
           <TripCard
             key={trip.uid}
             uid={trip.uid}
+            imageURI={trip.photoURL}
             destination={trip.destination}
           />
         );

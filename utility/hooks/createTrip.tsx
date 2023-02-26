@@ -3,6 +3,7 @@ import React from 'react';
 import { useState } from 'react';
 import { createFetchRequestOptions } from '../fetch';
 import { Trip } from '../types/trip';
+import { useAuth } from './authentication';
 import { useScreen } from './screen';
 
 interface TCreateTrip extends Omit<Trip, 'uid' | 'attendees'> {
@@ -14,8 +15,7 @@ interface TCreateTrip extends Omit<Trip, 'uid' | 'attendees'> {
 export interface AttendeeOption {
   type: 'team' | 'person';
   name: string;
-  uid
-  : string;
+  uid: string;
 }
 export default function useCreateTrip() {
   const [createTrip, setCreateTrip] = useState<TCreateTrip>({
@@ -31,6 +31,7 @@ export default function useCreateTrip() {
   });
 
   const router = useRouter();
+  const { user } = useAuth();
   const { updateErrorToast } = useScreen();
 
   React.useEffect(() => {
@@ -164,6 +165,8 @@ export default function useCreateTrip() {
       return;
     }
 
+    let attendees = createAttendeesArray();
+    attendees.push(user !== undefined ? user.uid : '');
     const options = createFetchRequestOptions(
       JSON.stringify({
         duration: {
@@ -172,7 +175,7 @@ export default function useCreateTrip() {
         },
         photoURL: photoURL,
         destination: createTrip.destination,
-        attendees: createAttendeesArray(),
+        attendees: attendees,
       }),
       'POST'
     );
