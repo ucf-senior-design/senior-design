@@ -16,18 +16,6 @@ export default async function handler(
     )
     .then(async (response) => {
       if (response.status === 200) {
-        console.log('here', response.data.result.photos[0].photo_reference);
-        // await axios
-        //   .get(
-        //     `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${response.data.result.photos[0].photo_reference}&key=${APIKey}`
-        //   )
-        //   .then((responsePhoto) => {
-        //     res.status(responsePhoto.status).send(responsePhoto.data);
-        //   })
-        //   .catch((e) => {
-        //     console.log(e);
-        //     res.status(400).send({ e });
-        //   });
         res.status(200).send(response.data.result.photos[0].photo_reference);
       }
     })

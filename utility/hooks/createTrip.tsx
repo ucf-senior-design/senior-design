@@ -1,4 +1,3 @@
-import ta from 'date-fns/esm/locale/ta/index.js';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useState } from 'react';
@@ -15,7 +14,8 @@ interface TCreateTrip extends Omit<Trip, 'uid' | 'attendees'> {
 export interface AttendeeOption {
   type: 'team' | 'person';
   name: string;
-  uid: string;
+  uid
+  : string;
 }
 export default function useCreateTrip() {
   const [createTrip, setCreateTrip] = useState<TCreateTrip>({
@@ -148,9 +148,7 @@ export default function useCreateTrip() {
 
   async function maybeCreateTrip() {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    console.log(
-      createTrip.destination.length === 0 || createTrip.placeID.length === 0
-    );
+
     if (
       createTrip.destination.length === 0 ||
       createTrip.placeID.length === 0
@@ -181,10 +179,8 @@ export default function useCreateTrip() {
 
     const response = await fetch(`${API_URL}/trip`, options);
 
-    console.log('hello', response.ok);
     if (response.ok) {
       let newTrip = await response.json();
-      console.log(newTrip);
       router.push(`/trip/`, {
         query: { id: newTrip.uid },
         pathname: 'dashboard/trip/',

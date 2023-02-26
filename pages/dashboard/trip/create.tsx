@@ -26,51 +26,13 @@ export default function CreateTrip() {
   } = useCreateTrip();
 
   return (
-    <div
-      style={{
-        display: 'flex',
-
-        padding: '20px',
-        width: '100%',
-        alignItems: 'center',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }}
-    >
-      <Paper
-        sx={{
-          borderRadius: '10px',
-          padding: '20px',
-          display: 'flex',
-          maxWidth: '600px',
-          width: '100%',
-          alignContent: 'center',
-          flexDirection: 'column',
-          justifyContent: 'center',
-
-          gap: 2,
-        }}
-      >
-        <Typography
-          variant="h4"
-          style={{
-            textAlign: 'center',
-            fontWeight: 500,
-            color: theme.palette.secondary.main,
-            padding: 5,
-          }}
-        >
+    <div style={$centerForm}>
+      <Paper sx={$container}>
+        <Typography variant="h4" style={$labelStyle}>
           create trip
         </Typography>
-        <Typography
-          variant="h6"
-          style={{
-            textAlign: 'left',
-            fontWeight: 500,
-            color: theme.palette.secondary.main,
-            padding: 5,
-          }}
-        >
+        {/* Find Destination */}
+        <Typography variant="h6" style={$labelStyle}>
           destination
         </Typography>
         <PlacesSearch
@@ -79,13 +41,12 @@ export default function CreateTrip() {
           setPlace={(placeID, place) => updateDestination(placeID, place)}
         />
 
+        {/** Find Attendees */}
         <Typography
           variant="h6"
           style={{
+            ...$labelStyle,
             textAlign: 'left',
-            fontWeight: 500,
-            color: theme.palette.secondary.main,
-            padding: 5,
           }}
         >
           attendees
@@ -98,12 +59,7 @@ export default function CreateTrip() {
         <Divider>or</Divider>
         <Typography
           variant="body1"
-          style={{
-            textAlign: 'center',
-            fontWeight: 500,
-
-            padding: 5,
-          }}
+          style={{ ...$labelStyle, color: undefined }}
         >
           add attendee by username
         </Typography>
@@ -114,6 +70,7 @@ export default function CreateTrip() {
           }
         />
 
+        {/** Choose duration */}
         <Typography
           variant="h6"
           style={{
@@ -144,3 +101,31 @@ export default function CreateTrip() {
     </div>
   );
 }
+
+const $centerForm: React.CSSProperties = {
+  display: 'flex',
+  padding: '20px',
+  width: '100%',
+  alignItems: 'center',
+  flexDirection: 'column',
+  justifyContent: 'center',
+};
+
+const $container = {
+  borderRadius: '10px',
+  padding: '20px',
+  display: 'flex',
+  maxWidth: '600px',
+  width: '100%',
+  alignContent: 'center',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  gap: 2,
+};
+
+const $labelStyle: React.CSSProperties = {
+  textAlign: 'center',
+  fontWeight: 500,
+  color: theme.palette.secondary.main,
+  padding: 5,
+};
