@@ -17,6 +17,9 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import '../styles/globals.css';
 
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }

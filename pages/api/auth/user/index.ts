@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAuth } from '../../../utility/firebase';
+import { firebaseAuth } from '../../../../utility/firebase';
 
 export default async function handler(
   req: NextApiRequest,
