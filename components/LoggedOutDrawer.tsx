@@ -1,6 +1,6 @@
 import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
 import {
-  Divider,
+  Button, Divider,
   Grid,
   IconButton,
   List,
@@ -8,14 +8,19 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography,
+  Typography
 } from '@mui/material';
 import Link from 'next/link';
+import React from 'react';
 
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AddIcon from '@mui/icons-material/Add';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import GroupsIcon from '@mui/icons-material/Groups';
 import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import LoginIcon from '@mui/icons-material/Login';
+
 
 const navItem1 = {
   id: 1,
@@ -50,8 +55,39 @@ const navItem4 = {
   iconLabel: 'register icon',
 };
 
+// TODO: add correct pages once they have been created
+const authItem1 = {
+  id: 0,
+  link: '/',
+  name: 'my account',
+  buttonLabel: 'user account button',
+  icon: AccountCircleIcon,
+  iconLabel: 'user account'
+}
+
+const authItem2 = {
+  id: 1,
+  link: '/dashboard/overview',
+  name: 'dashboard',
+  buttonLabel: 'dashboard button',
+  icon: DashboardIcon,
+  iconLabel: 'dashboard'
+}
+const authItem3 = {
+  id: 2,
+  link: '/',
+  name: 'teams',
+  buttonLabel: 'teams button',
+  icon: GroupsIcon,
+  iconLabel: 'teams'
+}
+
 export const LoggedOutDrawer = () => {
   const navItems = [navItem1, navItem2, navItem3, navItem4];
+  const authNavItems = [authItem1, authItem2, authItem3];
+  //TODO: add logic for checking if a user is already logged in/active session
+    // Set this to true to see authenticated drawer
+  const [isAuth, setisAuth] = React.useState(false);
 
   return (
     <>
@@ -63,18 +99,45 @@ export const LoggedOutDrawer = () => {
       </Grid>
       <Divider />
       <List>
-        {navItems.map((item) => (
-          <Link href={item.link} key={item.id} passHref>
-            <ListItem component="a" disablePadding sx={{ color: 'white' }}>
-              <ListItemButton aria-label={item.buttonLabel}>
-                <ListItemIcon aria-label={item.iconLabel}>
-                  <item.icon sx={{ color: 'white' }} />
-                </ListItemIcon>
-                <ListItemText primary={item.name} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-        ))}
+        {isAuth ?
+        <>
+          {authNavItems.map((item) => (
+            <Link href={item.link} key={item.id} passHref>
+              <ListItem component="a" disablePadding sx={{ color: 'white' }}>
+                <ListItemButton aria-label={item.buttonLabel}>
+                  <ListItemIcon aria-label={item.iconLabel}>
+                    <item.icon sx={{ color: 'white' }} />
+                  </ListItemIcon>
+                  <ListItemText primary={item.name} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          ))}
+          <div>
+            <Divider sx={{marginTop:4}}/>
+            {/* TODO: Logout functionality */}
+            <Button 
+            variant='outlined'
+            color='warning'
+            sx={{width:'100%'}}
+            >Log Out</Button>
+          </div>
+        </> :
+        <>
+          {navItems.map((item) => (
+            <Link href={item.link} key={item.id} passHref>
+              <ListItem component="a" disablePadding sx={{ color: 'white' }}>
+                <ListItemButton aria-label={item.buttonLabel}>
+                  <ListItemIcon aria-label={item.iconLabel}>
+                    <item.icon sx={{ color: 'white' }} />
+                  </ListItemIcon>
+                  <ListItemText primary={item.name} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          ))}
+        </>
+        }
       </List>
     </>
   );
