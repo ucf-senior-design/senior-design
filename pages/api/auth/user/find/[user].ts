@@ -8,7 +8,6 @@ export default async function handler(
   const user = req.query.user as string;
   switch (req.method) {
     case 'GET': {
-      console.log('USER', user);
       await firebaseAdmin
         .firestore()
         .collection('Users')

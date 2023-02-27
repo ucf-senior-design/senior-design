@@ -4,6 +4,7 @@ import React from 'react';
 import { useState } from 'react';
 import { createFetchRequestOptions } from '../fetch';
 import { Trip } from '../types/trip';
+import { useAuth } from './authentication';
 import { useScreen } from './screen';
 
 interface TCreateTrip extends Omit<Trip, 'uid' | 'attendees'> {
@@ -30,6 +31,7 @@ export default function useCreateTrip() {
     attendeeOptions: [],
   });
 
+  const { user } = useAuth();
   const router = useRouter();
   const { updateErrorToast } = useScreen();
 
@@ -139,7 +141,7 @@ export default function useCreateTrip() {
       method: 'GET',
     });
     if (response.ok) {
-      return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=2800&photoreference=${await response.text()}&key=${
+      return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1400&photoreference=${await response.text()}&key=${
         process.env.NEXT_PUBLIC_PLACES_KEY
       }`;
     }
@@ -148,9 +150,7 @@ export default function useCreateTrip() {
 
   async function maybeCreateTrip() {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    console.log(
-      createTrip.destination.length === 0 || createTrip.placeID.length === 0
-    );
+
     if (
       createTrip.destination.length === 0 ||
       createTrip.placeID.length === 0
@@ -166,6 +166,13 @@ export default function useCreateTrip() {
       return;
     }
 
+    if (user === undefined) {
+      updateErrorToast('Please try again later.');
+      return;
+    }
+    let attendees = createAttendeesArray();
+    attendees.push(user.uid);
+    
     const options = createFetchRequestOptions(
       JSON.stringify({
         duration: {
@@ -174,17 +181,16 @@ export default function useCreateTrip() {
         },
         photoURL: photoURL,
         destination: createTrip.destination,
-        attendees: createAttendeesArray(),
+        attendees: attendees,
       }),
       'POST'
     );
 
     const response = await fetch(`${API_URL}/trip`, options);
 
-    console.log('hello', response.ok);
     if (response.ok) {
       let newTrip = await response.json();
-      console.log(newTrip);
+
       router.push(`/trip/`, {
         query: { id: newTrip.uid },
         pathname: 'dashboard/trip/',

@@ -26,51 +26,15 @@ export default function CreateTrip() {
   } = useCreateTrip();
 
   return (
-    <div
-      style={{
-        display: 'flex',
-
-        padding: '20px',
-        width: '100%',
-        alignItems: 'center',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }}
-    >
-      <Paper
-        sx={{
-          borderRadius: '10px',
-          padding: '20px',
-          display: 'flex',
-          maxWidth: '600px',
-          width: '100%',
-          alignContent: 'center',
-          flexDirection: 'column',
-          justifyContent: 'center',
-
-          gap: 2,
-        }}
-      >
+    <div style={$containerStyle}>
+      <Paper sx={$paperStyle}>
         <Typography
           variant="h4"
-          style={{
-            textAlign: 'center',
-            fontWeight: 500,
-            color: theme.palette.secondary.main,
-            padding: 5,
-          }}
+          style={{ ...$headerStyle, textAlign: 'center' }}
         >
           create trip
         </Typography>
-        <Typography
-          variant="h6"
-          style={{
-            textAlign: 'left',
-            fontWeight: 500,
-            color: theme.palette.secondary.main,
-            padding: 5,
-          }}
-        >
+        <Typography variant="h6" style={{ ...$headerStyle, textAlign: 'left' }}>
           destination
         </Typography>
         <PlacesSearch
@@ -79,15 +43,7 @@ export default function CreateTrip() {
           setPlace={(placeID, place) => updateDestination(placeID, place)}
         />
 
-        <Typography
-          variant="h6"
-          style={{
-            textAlign: 'left',
-            fontWeight: 500,
-            color: theme.palette.secondary.main,
-            padding: 5,
-          }}
-        >
+        <Typography variant="h6" style={{ ...$headerStyle, textAlign: 'left' }}>
           attendees
         </Typography>
         <SelectAttendees
@@ -98,12 +54,7 @@ export default function CreateTrip() {
         <Divider>or</Divider>
         <Typography
           variant="body1"
-          style={{
-            textAlign: 'center',
-            fontWeight: 500,
-
-            padding: 5,
-          }}
+          style={{ ...$headerStyle, textAlign: 'center', color: undefined }}
         >
           add attendee by username
         </Typography>
@@ -114,15 +65,7 @@ export default function CreateTrip() {
           }
         />
 
-        <Typography
-          variant="h6"
-          style={{
-            textAlign: 'left',
-            fontWeight: 500,
-            color: theme.palette.secondary.main,
-            padding: 5,
-          }}
-        >
+        <Typography variant="h6" style={{ ...$headerStyle, textAlign: 'left' }}>
           duration
         </Typography>
         <DateRange
@@ -144,3 +87,30 @@ export default function CreateTrip() {
     </div>
   );
 }
+
+const $containerStyle: React.CSSProperties = {
+  display: 'flex',
+  padding: '20px',
+  width: '100%',
+  alignItems: 'center',
+  flexDirection: 'column',
+  justifyContent: 'center',
+};
+
+const $paperStyle: React.CSSProperties = {
+  borderRadius: '10px',
+  padding: '20px',
+  display: 'flex',
+  maxWidth: '600px',
+  width: '100%',
+  alignContent: 'center',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  gap: 2,
+};
+
+const $headerStyle: React.CSSProperties = {
+  fontWeight: 500,
+  color: theme.palette.secondary.main,
+  padding: 5,
+};

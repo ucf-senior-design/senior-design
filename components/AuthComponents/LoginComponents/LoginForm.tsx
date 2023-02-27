@@ -29,7 +29,6 @@ export const LoginForm = () => {
 
   const { doEmailPasswordLogin } = useAuth();
 
-  console.log('loading', loading);
   React.useEffect(() => {
     updateLoading(false);
   }, [error]);
