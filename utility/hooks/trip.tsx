@@ -55,6 +55,7 @@ export function TripProvider({
     suggestions: new Map<string, SuggestionWidget>(),
     itinerary: [],
     joinableEvents: [],
+    photoURL: '',
   });
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 

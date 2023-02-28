@@ -1,9 +1,10 @@
-export type Trip = {
+export interface Trip {
   uid: string;
   attendees: Set<string>;
   duration: Duration;
   destination: string;
-};
+  photoURL: string;
+}
 
 export type ActivityPrefField =
   | 'SPORTS'

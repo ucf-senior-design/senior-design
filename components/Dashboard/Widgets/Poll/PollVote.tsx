@@ -22,7 +22,6 @@ function PollOption({
       }}
       onClick={(e) => {
         // TODO: Handle the user selecting on a poll option.
-        console.log('clicked');
       }}
     >
       {selected ? <Circle /> : <CircleOutlined />} {option}

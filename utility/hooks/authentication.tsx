@@ -53,6 +53,7 @@ interface AuthContext {
     callback: (response: AuthenticationResponse) => void
   ) => Promise<void>;
   maybeLoadPersistedUser: () => Promise<void>;
+  doSearch: (search: string, onSuccess: (user: User) => void) => Promise<void>;
 }
 
 // Use this to handle any authentication processes
@@ -97,6 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         sendEmailVerification,
         sendPasswordReset,
         maybeLoadPersistedUser,
+        doSearch,
       }}
     >
       {children}
@@ -133,6 +135,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
     );
+  }
+
+  async function doSearch(search: string, onSuccess: (user: User) => void) {
+    await fetch(`${API_URL}auth/user/find/${search}`, {
+      method: 'GET',
+    }).then(async (response) => {
+      console.log(response.status);
+      if (response.ok) {
+        let user = await response.json();
+        onSuccess(user);
+      } else {
+        updateErrorToast(await response.text());
+      }
+    });
   }
 
   async function doLogout() {
