@@ -1,5 +1,5 @@
 import { Grid, Stack } from '@mui/material';
-import { TeamEdit } from '../components/Dashboard/Widgets/TeamComponents/TeamEditForm';
+import { TeamForm } from '../../components/Dashboard/Widgets/TeamComponents/TeamForm';
 
 
 export default function Teams() {
@@ -11,7 +11,7 @@ export default function Teams() {
             justifyContent="center"
             alignItems="center"
           >
-            <TeamEdit />
+            <TeamForm purpose="create" />
             <Stack
               sx={{ display: { xs: 'none', md: 'block' } }}
               style={{

@@ -1,8 +1,19 @@
 import { Grid, Stack } from '@mui/material';
-import { TeamCreation } from '../components/Dashboard/Widgets/TeamComponents/TeamCreationForm';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { TeamForm } from '../../components/Dashboard/Widgets/TeamComponents/TeamForm';
 
 
 export default function Teams() {
+  const router = useRouter();
+  const [teamID, setTeamID] = React.useState<string | undefined>(undefined);
+
+  React.useEffect(() => {
+    const { id } = router.query;
+
+    setTeamID(id as string | undefined);
+  }, [router]);
+
     return (
         <div style={$wrapper}>
           <Grid
@@ -11,7 +22,7 @@ export default function Teams() {
             justifyContent="center"
             alignItems="center"
           >
-            <TeamCreation />
+            <TeamForm purpose="view" />
             <Stack
               sx={{ display: { xs: 'none', md: 'block' } }}
               style={{
