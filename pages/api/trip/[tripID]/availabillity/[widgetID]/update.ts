@@ -1,12 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAuth } from '../../../../../utility/firebase';
-import firebaseAdmin from '../../../../../utility/firebaseAdmin';
+import { firebaseAuth } from '../../../../../../utility/firebase';
+import firebaseAdmin from '../../../../../../utility/firebaseAdmin';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const tripID = req.query.tripID as string;
+  const widgetID = req.query.widgetID as string;
+
   const user = firebaseAuth.currentUser;
   switch (req.method) {
     case 'PUT': {
@@ -17,7 +19,7 @@ export default async function handler(
 
       await firebaseAdmin
         .firestore()
-        .collection(`Trips/${tripID}/availabillity/${req.body.uid}/users`)
+        .collection(`Trips/${tripID}/availabillity/${widgetID}/users`)
         .doc(user.uid)
         .update({
           availabillities: req.body.dates,

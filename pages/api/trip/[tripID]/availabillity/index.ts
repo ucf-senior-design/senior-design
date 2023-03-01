@@ -88,7 +88,6 @@ export default async function handler(
             });
           }
 
-          console.log('FINA:', widgetData);
           res.status(200).send({
             data: widgetData,
           });
