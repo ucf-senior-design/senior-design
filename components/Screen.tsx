@@ -4,15 +4,21 @@ import {
   AppBar,
   Box,
   Button,
+  ClickAwayListener,
   Drawer,
+  Grow,
   IconButton,
   LinearProgress,
+  MenuItem,
+  MenuList, Paper, Popper,
   Stack,
   Toolbar,
-  Typography,
+  Typography
 } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
+import { toast, ToastContainer, ToastOptions } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import theme from '../styles/theme/Theme';
 import { useScreen } from '../utility/hooks/screen';
 import LoggedOutDrawer from './LoggedOutDrawer';
@@ -25,15 +31,94 @@ export default function Screen({
   children: React.ReactNode;
 }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { loading } = useScreen();
+  const {
+    loading,
+    errorToast,
+    updateErrorToast,
+    updateAutoPadding,
+    autoPadding,
+    updateLoading,
+    successToast,
+    updateSuccessToast,
+  } = useScreen();
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
+  // TODO: Add logic for checking whether a user is logged in
+  // Set this to true to see authenticated toolbar
+  const [isAuth, setIsAuth] = React.useState(false);
+
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef<HTMLButtonElement>(null);
+
+  const handleMenuToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleMenuClose = (event: Event | React.SyntheticEvent) => {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
+      return;
+    }
+    setOpen(false);
+  }
+
+  function handleListKeyDown(event: React.KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === 'Escape') {
+      setOpen(false)
+    }
+  }
+
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current!.focus();
+    }
+    prevOpen.current = open;
+  }, [open])
+
   const landingTextColor = path === '/' ? 'white' : undefined;
   const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
   const backgroundImage =
-    path === '/About' ? "url('/Mountains.svg') 80% 80% " : undefined;
+    path === '/about' ? "url('/Mountains.svg') 80% 80% " : undefined;
+  const msgToastOptions: ToastOptions = {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: 'colored',
+  };
+
+  // Resets error toast after being shown.
+  React.useEffect(() => {
+    if (errorToast !== undefined) {
+      toast.error(errorToast, msgToastOptions);
+      updateErrorToast(undefined);
+    }
+  }, [errorToast]);
+
+  // Resets success toast after being shown.
+  React.useEffect(() => {
+    if (successToast !== undefined) {
+      toast.success(successToast, msgToastOptions);
+      updateSuccessToast(undefined);
+    }
+  }, [successToast]);
+
+  // Resets loading when user switches pages after loading
+  React.useEffect(() => {
+    updateLoading(false);
+  }, [path]);
+
   function NavBarButton({
     path,
     text,
@@ -119,18 +204,74 @@ export default function Screen({
                 textAlign: 'right',
               }}
             >
-              <NavBarButton path="/" text="home" variant="text" />
-              <NavBarButton path="/About" text="about" variant="text" />
-              <NavBarButton
-                path="/Auth/Login"
-                text="login"
-                variant="contained"
-              />
-              <NavBarButton
-                path="/Auth/Register"
-                text="register"
-                variant="outlined"
-              />
+              {isAuth ? 
+              <>
+                {/* TODO: add correct pages once they have been created */}
+                <NavBarButton path="/dashboard/Overview" text="dashboard" variant="text"/>
+                <NavBarButton path="/" text="teams" variant="text"/>
+                <Button
+                  ref={anchorRef}
+                  color='secondary'
+                  variant='outlined'
+                  aria-label='user setings'
+                  aria-controls={open ? 'composition-menu' : undefined}
+                  aria-expanded={open ? 'true' : undefined}
+                  area-haspopup='true'
+                  onClick={handleMenuToggle}
+                >
+                  name stuff
+                </Button>
+                <Popper
+                  open={open}
+                  anchorEl={anchorRef.current}
+                  role={undefined}
+                  placement='bottom-start'
+                  transition
+                  disablePortal
+                >
+                  {({ TransitionProps, placement}) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{
+                        transformOrigin:
+                          placement === 'bottom-start' ? 'left top' : 'left bottom'
+                      }}
+                      >
+                        <Paper>
+                          <ClickAwayListener onClickAway={handleMenuClose}>
+                            <MenuList
+                              autoFocusItem={open}
+                              id="composition-menu"
+                              aria-labelledby="composition-button"
+                              onKeyDown={handleListKeyDown}
+                            >
+                              {/* TODO: Add logic */}
+                              <MenuItem onClick={handleMenuClose}>my account</MenuItem>
+                              <MenuItem onClick={handleMenuClose}>logout</MenuItem>
+                            </MenuList>
+                          </ClickAwayListener>
+                        </Paper>
+
+                    </Grow>
+                  )}
+                </Popper>
+              </> :
+              <>
+                <NavBarButton path="/" text="home" variant="text" />
+                <NavBarButton path="/about" text="about" variant="text" />
+                <NavBarButton
+                  path="/auth/login"
+                  text="login"
+                  variant="contained"
+                />
+                <NavBarButton
+                  path="/auth/register"
+                  text="register"
+                  variant="outlined"
+                />
+              </>
+              }
+              
             </Stack>
           </Toolbar>
         </AppBar>
@@ -154,17 +295,25 @@ export default function Screen({
           </Drawer>
         </Box>
 
-        {loading ? <LinearProgress color='inherit' sx={{color:theme.palette.highlight.main}} /> : <></>}
+        {loading ? (
+          <LinearProgress
+            color="inherit"
+            sx={{ color: theme.palette.highlight.main }}
+          />
+        ) : (
+          <></>
+        )}
       </nav>
       <div
         style={{
-          height: '100%',
-          width: '100%',
-          padding: 10,
+          height: '100vh',
+          width: '100vw',
+          padding: autoPadding ? 10 : 0,
           backgroundColor: theme.palette.background.default,
           background: backgroundImage,
         }}
       >
+        <ToastContainer />
         {children}
       </div>
     </div>

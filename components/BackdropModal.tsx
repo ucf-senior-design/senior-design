@@ -7,7 +7,7 @@ interface BackdropModalProps {
 }
 /**
  * Creates a modal with a backdrop.
- * @param {boolean} isVisible whether or not modal is visible
+ * @param {boolean} isOpen whether or not modal is visible
  * @param {Function} toggleShow toggles the modal from being visible
  * @param {React.ReactNode} children React element to appear within the modal
  */
@@ -25,7 +25,6 @@ export function BackdropModal(props: BackdropModalProps) {
         }}
         open={isOpen}
         onClose={() => {
-          console.log('shown');
           toggleShow();
         }}
       >

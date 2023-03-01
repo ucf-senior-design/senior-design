@@ -14,6 +14,8 @@ import {
 import { createFetchRequestOptions } from '../fetch';
 import { firebaseAuth } from '../firebase';
 import { User } from '../types/user';
+import { User as FirebaseUser } from 'firebase/auth';
+import { useScreen } from './screen';
 
 interface EmailPasswordLogin {
   email: string;
@@ -50,6 +52,8 @@ interface AuthContext {
     email: string,
     callback: (response: AuthenticationResponse) => void
   ) => Promise<void>;
+  maybeLoadPersistedUser: () => Promise<void>;
+  doSearch: (search: string, onSuccess: (user: User) => void) => Promise<void>;
 }
 
 // Use this to handle any authentication processes
@@ -68,6 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<
     User & { didFinishRegister: boolean }
   >();
+  const { updateErrorToast } = useScreen();
 
   const [localUser, saveLocalUser, removeLocalUser] = useLocalStorage<
     undefined | (User & { didFinishRegister: boolean })
@@ -75,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   React.useEffect(() => {
+    console.log('loading user....');
     maybeLoadPersistedUser();
   }, []);
 
@@ -91,6 +97,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         doLogout,
         sendEmailVerification,
         sendPasswordReset,
+        maybeLoadPersistedUser,
+        doSearch,
       }}
     >
       {children}
@@ -98,11 +106,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   async function maybeLoadPersistedUser() {
-    const user = localUser;
+    await fetch(`${API_URL}auth/user`, { method: 'GET' }).then(
+      async (response) => {
+        if (response.ok) {
+          let currentUser: FirebaseUser = await response.json();
+          setUser({
+            username: localUser?.username ?? '',
+            medicalInfo: localUser?.medicalInfo ?? [],
+            allergies: localUser?.allergies ?? [],
+            didFinishRegister: localUser?.didFinishRegister ?? false,
+            uid: currentUser.uid,
+            email: currentUser.email ?? '',
+            name: currentUser.displayName ?? '',
+            profilePic: currentUser.photoURL ?? '',
+          });
+        } else {
+          removeLocalUser();
+          setUser({
+            username: localUser?.username ?? '',
+            medicalInfo: localUser?.medicalInfo ?? [],
+            allergies: localUser?.allergies ?? [],
+            didFinishRegister: localUser?.didFinishRegister ?? false,
+            uid: '',
+            email: '',
+            name: '',
+            profilePic: '',
+          });
+        }
+      }
+    );
+  }
 
-    if (user !== undefined && user !== null) {
-      setUser(user);
-    }
+  async function doSearch(search: string, onSuccess: (user: User) => void) {
+    await fetch(`${API_URL}auth/user/find/${search}`, {
+      method: 'GET',
+    }).then(async (response) => {
+      console.log(response.status);
+      if (response.ok) {
+        let user = await response.json();
+        onSuccess(user);
+      } else {
+        updateErrorToast(await response.text());
+      }
+    });
   }
 
   async function doLogout() {
@@ -127,68 +173,63 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function doLoginWithCredentials(
     provider: 'google' | 'facebook' | 'twitter',
-    idToken: string
+
+    idToken: string,
+    accessToken?: string
   ) {
     const options = createFetchRequestOptions(
       JSON.stringify({
         provider: provider,
         idToken: idToken,
+        accessToken: accessToken,
       }),
       'POST'
     );
 
     const response = await fetch(`${API_URL}auth/loginWithCred`, options);
 
-    if ((response.ok, response.status)) {
+    if (response.ok) {
       if (response.status === 200) {
         await saveRegisterdUser(await response.json());
+        Router.push('/dashboard');
       }
       if (response.status === 202) {
         await storePartialCredentialResult(await response.json());
+        Router.push('auth/details');
       }
     } else {
-      alert(await response.text());
+      updateErrorToast(await response.text());
     }
   }
 
   function doThirdPartyLogin(
     providerType: 'facebook' | 'google',
-    provider: GoogleAuthProvider | FacebookAuthProvider,
-    callback: (isSuccess: boolean) => void
+    provider: GoogleAuthProvider | FacebookAuthProvider
   ) {
-    signInWithPopup(firebaseAuth, provider)
-      .then(async (result) => {
-        const user = result.user;
-        const credential =
-          providerType === 'facebook'
-            ? FacebookAuthProvider.credentialFromResult(result)
-            : GoogleAuthProvider.credentialFromResult(result);
+    signInWithPopup(firebaseAuth, provider).then(async (result) => {
+      const credential =
+        providerType === 'facebook'
+          ? FacebookAuthProvider.credentialFromResult(result)
+          : GoogleAuthProvider.credentialFromResult(result);
 
-        if (credential !== null && credential?.accessToken !== null) {
-          if (providerType === 'google') {
-            await doLoginWithCredentials('google', credential.accessToken ?? '')
-              .then(() => callback(true))
-              .catch(() => callback(false));
-          } else {
-            await doLoginWithCredentials(
-              'facebook',
-              credential.accessToken ?? ''
-            )
-              .then(() => callback(true))
-              .catch(() => callback(false));
-          }
+      if (credential !== null && credential?.accessToken !== null) {
+        if (providerType === 'google') {
+          await doLoginWithCredentials(
+            'google',
+            credential.idToken ?? '',
+            credential.accessToken ?? ''
+          );
+        } else {
+          await doLoginWithCredentials(
+            'facebook',
+            credential.accessToken ?? ''
+          );
         }
-      })
-      .catch((error) => {
-        // TODO: Do something to handle Errors
-        callback(false);
-      });
+      }
+    });
   }
   async function doFacebookLogin() {
-    doThirdPartyLogin('facebook', new FacebookAuthProvider(), (isSuccess) => {
-      // TODO: Handle Success and Errors
-      alert('Facebook Login Succesful?: ' + isSuccess);
-    });
+    doThirdPartyLogin('facebook', new FacebookAuthProvider());
   }
 
   async function saveRegisterdUser(user: User) {
@@ -211,8 +252,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.status === EMAIL_VERIFIED) {
         saveRegisterdUser(user);
         // TODO: redirect to dashboard
-        Router.push('/Dashboard/Index');
+        Router.push('/dashboard/');
         return;
+      } else {
+        Router.push('/auth/registerEmail');
       }
       callback({ isSuccess: response.ok });
       return;
@@ -221,22 +264,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function doGoogleLogin() {
-    doThirdPartyLogin('google', new GoogleAuthProvider(), (isSuccess) => {
-      alert('Google Login Succesful?: ' + isSuccess);
-    });
+    doThirdPartyLogin('google', new GoogleAuthProvider());
   }
 
   async function sendEmailVerification(
     callback: (response: AuthenticationResponse) => void
   ) {
-    const user = localUser;
-
     const options = createFetchRequestOptions(JSON.stringify({}), 'POST');
 
     const response = await fetch(`${API_URL}auth/verifyEmail`, options);
     if (response.ok) {
       if (response.status === EMAIL_VERIFIED) {
-        Router.push('/Dashboard/Index');
+        Router.push('/dashboard');
       }
       callback({ isSuccess: response.ok });
     } else {
@@ -253,8 +292,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (response.ok) {
       await storePartialCredentialResult(await response.json());
-      // TODO: Create Details Page
-      Router.push('/Auth/Details');
+      Router.push('/auth/details');
     } else {
       callback({ isSuccess: response.ok, errorMessage: await response.text() });
     }
@@ -273,13 +311,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (response.ok) {
       if (response.status === 200) {
         await saveRegisterdUser(await response.json());
+        Router.push('/dashboard');
       } else if (response.status === MUST_VERIFY_EMAIL) {
         // Go to Email Verficications Pge
-        Router.push('/Auth/RegisterEmail');
+        await saveRegisterdUser(await response.json());
+        Router.push('/auth/registerEmail');
       } else if (response.status === MUST_ADD_DETAILS) {
         await storePartialCredentialResult(await response.json());
-        // Go to Details Page
-        Router.push('/Auth/Details');
+        //Go to Details Page
+        Router.push('/auth/details');
       }
       return;
     }

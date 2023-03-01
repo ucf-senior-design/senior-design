@@ -30,7 +30,8 @@ export default function WidgetHeader({
           gap: 1,
         }}
       >
-        <Avatar name={owner} size={30} />
+        {/** TODO: Get actual owners name */}
+        <Avatar name={'owner'} size={30} />
         <Typography sx={{ fontWeight: 600 }}>by {owner} </Typography>
       </Grid>
       <Grid

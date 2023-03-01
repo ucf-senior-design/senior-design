@@ -17,30 +17,33 @@ import ThirdPartyAuth from '../ThirdPartyAuth';
 
 import Router from 'next/router';
 import { useScreen } from '../../../utility/hooks/screen';
+import React from 'react';
 
 export const LoginForm = () => {
   const [loginInfo, sLoginInfo] = useState({
     email: '',
     password: '',
   });
-  const { loading, toggleLoading } = useScreen();
-  //const { firebaseLogin, user } = useAuth();
-  const [error, setError] = useState('');
-  const [isError, setIsError] = useState(false);
+  const { loading, updateLoading, updateErrorToast } = useScreen();
+  const [error, setError] = useState<string | undefined>();
 
   const { doEmailPasswordLogin } = useAuth();
-  // const history = useNavigate();
+
+  React.useEffect(() => {
+    updateLoading(false);
+  }, [error]);
 
   async function handleSubmit() {
-    toggleLoading();
+    updateLoading(true);
     await doEmailPasswordLogin(loginInfo, (response) => {
+      if (loginInfo.email.length === 0 || loginInfo.password.length === 0) {
+        updateErrorToast('invalid login info.');
+      }
       if (response.isSuccess) {
         Router.push('/');
       } else {
         setError('Incorrect username or password');
-        setIsError(true);
       }
-      toggleLoading();
     });
   }
 
@@ -84,7 +87,7 @@ export const LoginForm = () => {
             alignItems="stretch"
           >
             <FormTextField
-              error={isError}
+              error={error !== undefined}
               helperText=""
               id="emailInput"
               value={loginInfo.email}
@@ -99,7 +102,7 @@ export const LoginForm = () => {
             />
 
             <PasswordTextField
-              error={isError}
+              error={error !== undefined}
               helperText={error}
               id="passwordInput"
               value={loginInfo.password}
@@ -121,7 +124,7 @@ export const LoginForm = () => {
               sx={{ marginBottom: 4, marginTop: 1 }}
             >
               <LinkButton
-                link="/Auth/PasswordReset"
+                link="/auth/passwordReset"
                 text="forgot your password?"
               />
             </Grid>
@@ -139,7 +142,7 @@ export const LoginForm = () => {
         </form>
         <p>
           <a style={{ paddingRight: 5 }}>don&apos;t have an account?</a>
-          <LinkButton link="/Auth/Register" text="sign up" />
+          <LinkButton link="/auth/register" text="sign up" />
         </p>
       </Grid>
       <Divider role="log in with google or facebook accounts">

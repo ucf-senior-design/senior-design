@@ -1,5 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAuth } from '../../../../../utility/firebase';
+import {
+  firebaseAuth,
+  unpackArrayResponse,
+} from '../../../../../utility/firebase';
 import firebaseAdmin from '../../../../../utility/firebaseAdmin';
 import { Poll } from '../../../../../utility/types/trip';
 
@@ -38,6 +41,36 @@ export default async function handler(
         .catch(() => {
           res.status(400).send('Could not create poll.');
         });
+      break;
+    }
+
+    case 'GET': {
+      if (params === undefined) {
+        await firebaseAdmin
+          .firestore()
+          .collection(`Trips/${tripID}/polls`)
+          .get()
+          .then((value) => {
+            const polls = unpackArrayResponse(value.docs);
+            res.status(200).send(polls);
+          })
+          .catch((e) => {
+            res.status(400).send('Error getting polls');
+          });
+      } else {
+        await firebaseAdmin
+          .firestore()
+          .collection(`Trips/${tripID}/polls/${params[0]}`)
+          .get()
+          .then((value) => {
+            const polls = unpackArrayResponse(value.docs);
+            res.status(200).send(polls);
+          })
+          .catch((e) => {
+            res.status(400).send('Error getting polls');
+          });
+      }
+
       break;
     }
 

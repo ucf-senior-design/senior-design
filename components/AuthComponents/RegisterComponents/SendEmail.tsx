@@ -1,9 +1,10 @@
-import { Button, Grid, Paper, Typography } from '@mui/material';
+import { Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import Router from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import theme from '../../../styles/theme/Theme';
 import { useAuth } from '../../../utility/hooks/authentication';
+import { useScreen } from '../../../utility/hooks/screen';
 
 export function SendEmail({
   purpose,
@@ -12,30 +13,36 @@ export function SendEmail({
   purpose: 'emailVerify' | 'passwordReset';
   email?: string;
 }) {
+  const { updateErrorToast, updateSuccessToast } = useScreen();
   const { sendEmailVerification, sendPasswordReset } = useAuth();
+  const [emailForgottenPW, setEmailForgottenPW] = useState("");
   const title = purpose === 'emailVerify' ? 'almost there!' : 'password reset';
   const message =
     purpose === 'emailVerify'
       ? 'Check your email and click on the link we sent to activate your account.'
-      : 'Check your email for a link to reset your password.';
+      : 'type your email and we\'ll send you a link to reset your password.';
   React.useEffect(() => {
-    handleEmailSend();
+    if (purpose === 'emailVerify') {
+      handleEmailSend();
+    }
   }, []);
 
   async function handleEmailSend() {
     if (purpose === 'emailVerify') {
       sendEmailVerification((response) => {
         if (!response.isSuccess) {
-          alert(response.errorMessage);
+          updateErrorToast(response.errorMessage);
+        } else {
+          updateSuccessToast('email verification email sent.');
         }
       });
     }
     if (purpose === 'passwordReset') {
-      sendPasswordReset(email ?? '', (response) => {
+      sendPasswordReset(emailForgottenPW, (response) => {
         if (!response.isSuccess) {
-          alert(response.errorMessage);
+          updateErrorToast(response.errorMessage);
         } else {
-          alert('Password reset email sent.');
+          updateSuccessToast('password reset email sent.');
         }
       });
     }
@@ -91,20 +98,28 @@ export function SendEmail({
                 aria-label="login"
                 sx={{ borderRadius: 1 }}
                 color="primary"
-                onClick={() => Router.push('/Auth/Login')}
+                onClick={() => Router.push('/auth/login')}
               >
                 {' '}
                 log in{' '}
               </Button>
             )}
+            {purpose === 'passwordReset' && (
+              <TextField
+              value={emailForgottenPW}
+              onChange={(e) => setEmailForgottenPW(e.target.value)}
+              size="small"
+              placeholder='john@email.com'/>
+
+            )}
             <Button
               variant="contained"
-              aria-label="resend email"
+              aria-label={purpose === 'emailVerify' ? "resend email" : "reset password"}
               sx={{ borderRadius: 1 }}
               color="primary"
               onClick={() => handleEmailSend()}
             >
-              resend email
+              {purpose === 'emailVerify' ? "resend email" : "reset password"}
             </Button>
           </Grid>
         </Grid>
