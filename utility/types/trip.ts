@@ -13,6 +13,7 @@ export type UserAvailabillity = {
 
 export type Availabillity = {
   owner: string;
+  uid: string;
   title: string;
   availabillities: Map<string, UserAvailabillity>;
 };
