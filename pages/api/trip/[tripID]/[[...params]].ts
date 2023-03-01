@@ -71,13 +71,12 @@ export default async function handler(
               break;
             }
             case 'modify': {
-              const details = req.body;
-              if (req.body.title !== null) {
+              if (req.body.title !== undefined) {
                 await updateDoc(docRef, {
                   title: req.body.title
                 })
               }
-              if (req.body.destination !== null) {
+              if (req.body.destination !== undefined) {
                 await updateDoc(docRef, {
                   destination: req.body.destination
                 })
@@ -86,6 +85,7 @@ export default async function handler(
           }
           res.status(200).send('Success.');
         } catch (e: any) {
+          console.log(e)
           res.status(400).send('Error when updating trip.');
         }
         break;
