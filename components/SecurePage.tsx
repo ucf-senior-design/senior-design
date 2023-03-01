@@ -23,7 +23,7 @@ export default function SecurePage({
     }
 
     // Logged in users have a valid uid.
-    if (user?.uid.length === 0) {
+    if (user.uid.length === 0) {
       updateErrorToast('please login before using the application!');
       router.push('/auth/login');
       return;
