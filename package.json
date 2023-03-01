@@ -25,11 +25,8 @@
     "@emotion/styled": "^11.10.5",
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.10.9",
-    "@mui/material": "^5.11.9",
-=======
     "@mui/material": "^5.10.13",
     "@mui/x-date-pickers-pro": "^5.0.20",
->>>>>>> a48fe3007b24b8f466a93e4a0d2f81d8e72055fa
     "@react-poll-widget/ui": "^0.0.21",
     "@types/autosuggest-highlight": "^3.2.0",
     "@types/chai": "^4.3.4",
