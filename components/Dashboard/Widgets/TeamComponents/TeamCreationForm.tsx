@@ -1,12 +1,16 @@
+import DeleteIcon from '@mui/icons-material/Delete';
+import PersonIcon from '@mui/icons-material/Person';
 import { Button, Grid, Paper, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
 import theme from '../../../../styles/theme/Theme';
 
 
   export const TeamCreation = () => {
-    const [teamInfo, sTeamInfo] = useState({
-        members: [],
-      });
     const item1 = {username:'username', id:'123', name:'noriyuki'}
     const item2 = {username:'username2', id:'456', name:'minoru'}
     const example = [item1, item2]
@@ -59,7 +63,6 @@ import theme from '../../../../styles/theme/Theme';
                 style={{
                   display: 'inline-block',
                   borderRadius: 5,
-                  backgroundColor: '#efefef',
                   borderColor: '#3f3e55',
                   borderStyle: 'solid',
                   borderWidth: 1.5,
@@ -68,10 +71,24 @@ import theme from '../../../../styles/theme/Theme';
                   margin: 5
                 }}
                 >
-                  <Grid container direction="row" alignItems="center">
-                  <img src="/user.svg" alt="user image" width={13} height={13} style={{display: 'inline-block',}}/>
-                  <Typography style={{fontSize: 15}}>&nbsp;&nbsp;{item.name}</Typography>
-                  </Grid>
+                  <List>
+                <ListItem
+                  secondaryAction={
+                    <IconButton edge="end" aria-label="delete">
+                      <DeleteIcon />
+                    </IconButton>
+                  }
+                >
+                  <ListItemAvatar>
+                    <Avatar sx={{ bgcolor: "secondary" }}>
+                      <PersonIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={item.name}
+                  />
+                </ListItem>
+                </List>
                 </Paper>))}
                 
                 <p></p>

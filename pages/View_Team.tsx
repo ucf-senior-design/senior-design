@@ -1,5 +1,5 @@
 import { Grid, Stack } from '@mui/material';
-import { TeamCreation } from '../components/Dashboard/Widgets/TeamComponents/TeamCreation';
+import { TeamView } from '../components/Dashboard/Widgets/TeamComponents/TeamViewForm';
 
 
 export default function Teams() {
@@ -11,7 +11,7 @@ export default function Teams() {
             justifyContent="center"
             alignItems="center"
           >
-            <TeamCreation />
+            <TeamView />
             <Stack
               sx={{ display: { xs: 'none', md: 'block' } }}
               style={{
