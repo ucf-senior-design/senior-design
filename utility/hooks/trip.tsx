@@ -262,7 +262,7 @@ export function TripProvider({
 
   async function createEvent(event: Event, callback: (response: Response) => void) {
     const options = createFetchRequestOptions(JSON.stringify(trip), 'POST');
-    const response = await fetch(`${API_URL}/trip/event`, options);
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/event`, options);
 
     if (response.ok) {
       callback({ isSuccess: response.ok, result: response.json() });
