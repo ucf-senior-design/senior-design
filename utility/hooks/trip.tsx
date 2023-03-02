@@ -25,6 +25,7 @@ interface TripContext {
 
   // handle events
   createEvent: (event: Event, callback: (response: Response) => void) => Promise<void>;
+  modifyTrip: (callback: (response: Response) => void) => Promise<void>;
 }
 
 // TODO: probably should import this 
@@ -272,7 +273,7 @@ export function TripProvider({
     }
   }
 
-  async function modifyTrip(trip: Trip, callback: (response: Response) => void) {
+  async function modifyTrip( callback: (response: Response) => void) {
     const options = createFetchRequestOptions(JSON.stringify(trip), 'PUT');
     const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options);
 
@@ -301,6 +302,7 @@ export function TripProvider({
         createWeather,
         deleteWeather,
         createEvent,
+        modifyTrip,
       }}
     >
       {children}
