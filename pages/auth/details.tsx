@@ -133,12 +133,12 @@ export default function Details() {
 
             <SelectChipList
               hook={foodAllergies}
-              label="allergies"
+              label="diet restrictions and allergies"
               propertyName="allergy"
             />
             <SelectChipList
               hook={medicalCond}
-              label="medical conditions"
+              label="health preferences"
               propertyName="medical condition"
             />
 

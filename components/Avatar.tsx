@@ -1,4 +1,3 @@
-import { PhotoSizeSelectActual } from '@mui/icons-material';
 import { Avatar as MuiAvatar } from '@mui/material';
 export default function Avatar({
   name,
@@ -45,6 +44,7 @@ export default function Avatar({
   if (image) {
     return (
       <MuiAvatar
+
         alt={name}
         src={image}
         sx={size ? { width: size, height: size } : undefined}
