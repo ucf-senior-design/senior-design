@@ -1,14 +1,15 @@
 import { auth } from "firebase-admin"
 import React from "react"
+import SecurePage from "../../components/SecurePage"
 import { API_URL } from "../constants"
 import { createFriendPairing } from "../helper"
-import { Friendship } from "../types/user"
+import { Friendship, User } from "../types/user"
 import { useAuth } from "./authentication"
 import { useScreen } from "./screen"
 
 interface FriendContext {
   friendList: Map<string, Friendship> | undefined
-  sendFriendRequest: (username: string) => Promise<void>
+  sendFriendRequest: (user: User) => Promise<void>
   acceptFriendRequest: (uid: string) => Promise<void>
   removeFriendRequest: (uid: string) => Promise<void>
 }
@@ -23,7 +24,7 @@ export function useFriend(): FriendContext {
   return context
 }
 
-export function FriendProvider() {
+export function FriendProvider({ children }: { children: React.ReactNode }) {
   const { doSearch, user } = useAuth()
   const { updateErrorToast } = useScreen()
   const [friendList, setFriendList] = React.useState<Map<string, Friendship>>()
@@ -34,24 +35,24 @@ export function FriendProvider() {
   return (
     <FriendContext.Provider
       value={{ sendFriendRequest, acceptFriendRequest, removeFriendRequest, friendList }}
-    ></FriendContext.Provider>
+    >
+      <SecurePage>{children}</SecurePage>
+    </FriendContext.Provider>
   )
 
-  async function sendFriendRequest(username: string) {
-    await doSearch(username, async (user) => {
-      await fetch(`${API_URL}friends/${user.uid}/request`, { method: "POST" }).then(
-        async (result) => {
-          if (result.ok) {
-            const request = await result.json()
-            const tfriendList = new Map<string, Friendship>(friendList)
-            tfriendList.set(request.uid, request)
-            setFriendList(tfriendList)
-          } else {
-            updateErrorToast("could not add friend.")
-          }
-        },
-      )
-    })
+  async function sendFriendRequest(user: User) {
+    await fetch(`${API_URL}friends/${user.uid}/request`, { method: "POST" }).then(
+      async (result) => {
+        if (result.ok) {
+          const request = await result.json()
+          const tfriendList = new Map<string, Friendship>(friendList)
+          tfriendList.set(request.uid, request)
+          setFriendList(tfriendList)
+        } else {
+          updateErrorToast("could not add friend.")
+        }
+      },
+    )
   }
 
   async function acceptFriendRequest(uid: string) {
