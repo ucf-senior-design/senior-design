@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .where("pairing", "array-contains", user.uid)
       .get()
       .then((value) => {
-        res.status(200).send(unpackArrayResponse(value.docs))
+        res.status(200).send({ friends: unpackArrayResponse(value.docs) })
       })
       .catch((e) => {
         res.status(400).send(e)

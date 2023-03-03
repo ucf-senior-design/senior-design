@@ -23,7 +23,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       })
       .then(() => {
-        res.status(200).send({})
+        res.status(200).send({
+          status: {
+            state: "accepted",
+            modifier: user?.uid,
+          },
+        })
       })
       .catch((e) => {
         res.status(400).send(e)
