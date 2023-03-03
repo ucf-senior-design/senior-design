@@ -14,7 +14,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prettier": "prettier --write .",
+    "prettier": "prettier --write . --ignore-unknown",
     "test": "jest --watch"
   },
   "dependencies": {
@@ -64,7 +64,7 @@
   "testMatch": [
     "**/__tests__/*.+(ts|tsx|js)"
   ],
-   "prettier": {
+  "prettier": {
     "printWidth": 100,
     "semi": false,
     "singleQuote": false,

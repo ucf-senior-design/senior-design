@@ -1,5 +1,5 @@
-import { Autocomplete, SxProps, TextField, Theme } from '@mui/material';
-import { AttendeeOption } from '../../utility/hooks/createTrip';
+import { Autocomplete, SxProps, TextField, Theme } from "@mui/material"
+import { AttendeeOption } from "../../utility/hooks/createTrip"
 
 export default function SelectAttendees({
   selectedAttendees,
@@ -7,10 +7,10 @@ export default function SelectAttendees({
   updateAttendees,
   sx,
 }: {
-  sx?: SxProps<Theme>;
-  selectedAttendees: Array<AttendeeOption>;
-  options: Array<AttendeeOption>;
-  updateAttendees: (attendees: Array<AttendeeOption>) => void;
+  sx?: SxProps<Theme>
+  selectedAttendees: Array<AttendeeOption>
+  options: Array<AttendeeOption>
+  updateAttendees: (attendees: Array<AttendeeOption>) => void
 }) {
   return (
     <Autocomplete
@@ -18,20 +18,15 @@ export default function SelectAttendees({
       multiple
       id="multiple-limit-tags"
       isOptionEqualToValue={(option, value) => {
-        return option.uid === value.uid;
+        return option.uid === value.uid
       }}
       options={options}
       onChange={(e, value) => updateAttendees(value)}
       getOptionLabel={(option) => option.name}
       renderInput={(params) => (
-        <TextField
-          {...params}
-          color="secondary"
-          label="attendees"
-          placeholder="attendees"
-        />
+        <TextField {...params} color="secondary" label="attendees" placeholder="attendees" />
       )}
       sx={sx}
     />
-  );
+  )
 }
