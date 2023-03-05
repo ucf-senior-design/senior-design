@@ -29,12 +29,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .collection("Friends/")
       .doc(uid)
       .set(pairingData)
-      .then((value) => {
+      .then(async (value) => {
+        let friendDetais = await firebaseAdmin.firestore().collection("Users").doc(friendID).get()
+
+        let friendData = friendDetais.data()
+
         res.status(200).send({
           uid: uid,
+          friend: {
+            name: friendData === undefined ? undefined : friendData.name,
+            photoURL: friendData === undefined ? undefined : friendData.photoURL,
+          },
           ...pairingData,
         })
       })
+
       .catch((e) => {
         res.status(400).send(e)
       })

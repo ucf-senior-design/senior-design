@@ -1,8 +1,8 @@
 import { Luggage, LuggageRounded } from "@mui/icons-material"
 import { Grid, Typography } from "@mui/material"
-import TripCard from "./TripCard"
+import TripCard from "./Dashboard/TripCard"
 
-export default function DashboardHeader({ icon, title }: { icon: React.ReactNode; title: string }) {
+export default function Header({ icon, title }: { icon: React.ReactNode; title: string }) {
   return (
     <>
       <Grid

@@ -7,9 +7,11 @@ import { User } from "../../utility/types/user"
 export default function UserSearch({
   handleFoundUser,
   sx,
+  placeholder,
 }: {
   handleFoundUser: (user: User) => void
   sx?: SxProps<Theme>
+  placeholder?: string
 }) {
   const [search, setSearch] = useState("")
   const { doSearch } = useAuth()
@@ -37,7 +39,7 @@ export default function UserSearch({
           // @ts-ignore
           setSearch(e.target.value)
         }}
-        label="search by username"
+        label={placeholder === undefined ? "search by username" : placeholder}
       />
     </Box>
   )

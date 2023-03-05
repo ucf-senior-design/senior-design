@@ -54,9 +54,14 @@ export type ProviderLoginRequest = Override<
 export type LoginRequest = Override<NextApiRequest, { body: UserLogin }>
 
 export type Friendship = {
+  uid: string
   pairing: Array<string>
   status: {
     state: "accepted" | "pending"
-    modifer: string
+    modifier: string
+  }
+  friend: {
+    name: string | undefined
+    photoURL: string | undefined
   }
 }
