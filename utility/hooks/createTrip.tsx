@@ -1,10 +1,10 @@
-import ta from "date-fns/esm/locale/ta/index.js"
 import { useRouter } from "next/router"
 import React from "react"
 import { useState } from "react"
 import { createFetchRequestOptions } from "../fetch"
 import { Trip } from "../types/trip"
 import { useAuth } from "./authentication"
+import { useFriend } from "./friends"
 import { useScreen } from "./screen"
 
 interface TCreateTrip extends Omit<Trip, "uid" | "attendees"> {
@@ -31,13 +31,14 @@ export default function useCreateTrip() {
     attendeeOptions: [],
   })
 
+  const { friendList } = useFriend()
   const { user } = useAuth()
   const router = useRouter()
   const { updateErrorToast } = useScreen()
 
   React.useEffect(() => {
     createAttendeeOptions()
-  }, [])
+  }, [friendList])
 
   function updateDestination(placeID: string, city: string) {
     setCreateTrip({
@@ -104,25 +105,18 @@ export default function useCreateTrip() {
     })
   }
 
-  // TODO: after teams are implemented get all the user's teammates / ppl they know.
   function createAttendeeOptions() {
-    let options: Array<AttendeeOption> = [
-      {
-        type: "person",
-        uid: "person1",
-        name: "bob",
-      },
-      {
-        type: "person",
-        uid: "person2",
-        name: "sue",
-      },
-      {
-        type: "team",
-        uid: "team1",
-        name: "family",
-      },
-    ]
+    let options: Array<AttendeeOption> = []
+
+    if (friendList !== undefined) {
+      friendList.forEach((friendship) => {
+        options.push({
+          name: friendship.friend.name ?? "no name",
+          uid: user?.uid === friendship.pairing[0] ? friendship.pairing[1] : friendship.pairing[0],
+          type: "person",
+        })
+      })
+    }
 
     setCreateTrip({ ...createTrip, attendeeOptions: options })
   }
