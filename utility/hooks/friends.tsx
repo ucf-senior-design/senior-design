@@ -89,6 +89,7 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     await fetch(`${API_URL}friends`, { method: "GET" }).then(async (result) => {
       if (result.ok) {
         const { friends } = await result.json()
+        console.log("getFriends()", friends)
         friends.forEach((friend: Friendship) => {
           tfriendList.set(friend.uid, friend)
         })

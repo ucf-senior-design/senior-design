@@ -58,6 +58,10 @@ export type Friendship = {
   pairing: Array<string>
   status: {
     state: "accepted" | "pending"
-    modifer: string
+    modifier: string
+  }
+  friend: {
+    name: string | undefined
+    photoURL: string | undefined
   }
 }

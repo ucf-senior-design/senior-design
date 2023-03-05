@@ -1,4 +1,4 @@
-import { Button, Divider,  Paper, Typography } from "@mui/material"
+import { Button, Divider, Paper, Typography } from "@mui/material"
 import DateRange from "../../../components/Form/DateRange"
 import React from "react"
 import useCreateTrip from "../../../utility/hooks/createTrip"
