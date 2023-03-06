@@ -76,7 +76,11 @@ export default async function handler(
               if (req.body.title !== undefined) {
                 await updateDoc(docRef, {
                   title: req.body.title,
-                  destination: req.body.destination,
+                });
+              }
+              if (req.body.destination !== undefined) {
+                await updateDoc(docRef, {
+                  title: req.body.destination,
                 });
               }
             }
