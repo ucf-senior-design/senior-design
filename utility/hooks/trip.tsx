@@ -1,11 +1,17 @@
 import React from 'react';
 import SecurePage from '../../components/SecurePage';
 import { createFetchRequestOptions } from '../fetch';
-import { SuggestionOption, SuggestionWidget, Trip, Event } from '../types/trip';
+import { Duration, Event, SuggestionOption, SuggestionWidget, Trip } from '../types/trip';
 interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>;
   joinableEvents: Array<Array<Event>>;
   itinerary: Array<Array<Event>>;
+  destination: string;
+}
+
+interface TripDetails {
+  duration: Duration;
+  destination: string;
 }
 
 interface TripContext {
@@ -23,7 +29,18 @@ interface TripContext {
   // handle weather widget
   createWeather: () => Promise<void>;
   deleteWeather: (uid: string) => Promise<void>;
+
+  // handle events
+  createEvent: (event: Event, callback: (response: Response) => void) => Promise<void>;
+  modifyTrip: (details: TripDetails, callback: (response: Response) => void) => Promise<void>;
 }
+
+// TODO: probably should import this 
+interface Response {
+  result?: any;
+  isSuccess: boolean;
+  errorMessage?: string;
+}  
 
 const TripContext = React.createContext<TripContext>({} as TripContext);
 
@@ -252,6 +269,37 @@ export function TripProvider({
   // TODO: Allow a user to delete an availabillity widget for the trip
   async function deleteAvailabillityWidget() {}
 
+  async function createEvent(event: Event, callback: (response: Response) => void) {
+    const options = createFetchRequestOptions(JSON.stringify(trip), 'POST');
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/event`, options);
+
+    if (response.ok) {
+      callback({ isSuccess: response.ok, result: response.json() });
+      setTrip({
+        ...trip,
+        joinableEvents: Array.from(addEventToList(trip.joinableEvents, event)),
+      });
+    } else {
+      callback({ isSuccess: response.ok, errorMessage: await response.text() });
+    }
+  }
+
+  async function modifyTrip(details: TripDetails, callback: (response: Response) => void) {
+    const options = createFetchRequestOptions(JSON.stringify(details), 'PUT');
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options);
+
+    if (response.ok) {
+      callback({ isSuccess: response.ok, result: response.json() });
+      setTrip({
+        ...trip,
+        destination: details.destination,
+        duration: details.duration
+      });
+    } else {
+      callback({ isSuccess: response.ok, errorMessage: await response.text() });
+    }
+  }
+
   React.useEffect(() => {
     console.log('getting data for trip:', id);
     initilizeTrip();
@@ -268,6 +316,8 @@ export function TripProvider({
         deletePoll,
         createWeather,
         deleteWeather,
+        createEvent,
+        modifyTrip,
       }}
     >
       <SecurePage>{children}</SecurePage>

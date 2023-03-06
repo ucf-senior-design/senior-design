@@ -47,7 +47,9 @@ export default async function handler(
       if (
         params === undefined ||
         firebaseAuth.currentUser === null ||
-        (params[0] !== 'join' && params[0] !== 'leave')
+        (params[0] !== 'join' &&
+          params[0] !== 'leave' &&
+          params[0] !== 'modify')
       ) {
         res.status(400).send('Invalid purpose');
         return;
@@ -70,9 +72,18 @@ export default async function handler(
               });
               break;
             }
+            case 'modify': {
+              if (req.body !== null && req.body !== undefined) {
+                await updateDoc(docRef, {
+                  destination: req.body.destination,
+                  duration: req.body.duration
+                });
+              }
+            }
           }
           res.status(200).send('Success.');
         } catch (e: any) {
+          console.log(e);
           res.status(400).send('Error when updating trip.');
         }
         break;
