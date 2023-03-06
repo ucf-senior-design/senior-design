@@ -1,29 +1,20 @@
 import React from 'react';
-import { createFetchRequestOptions } from '../fetch';
 import { Poll } from '../types/trip';
 import { useAuth } from './authentication';
 import { useTrip } from './trip';
 
 interface PollUseState extends Poll {
-    showAddPopUp: boolean;
-    showAllPollsPopUp: boolean;
-    newPoll: string;
     voted: boolean;
-}
-
-interface ResultState{
-    totalEach: {
-        optionValue: string
-        voterCount: number
-    }[];
+    option: string;
+    opTotal: number;
 }
 
 export type usePollHook = {
     doesUserOwn: () => boolean;
-    didUserVote: () => boolean;
-    submit: (selectedOption: string, select: boolean) => Promise<void>;
-    getOption: (grabbedPoll: Poll) => string | undefined;
-    results: () => void;
+    didUserVote: () => string | undefined;
+    submit: (selectedOption: string) => Promise<void>;
+    toggleSelect: (selectedOption: string) => void;
+    pollResults: () => Array<number> | undefined;
 }
 
 export default function usePoll(s: Poll):
@@ -36,18 +27,32 @@ usePollHook {
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [poll, setPoll] = React.useState<PollUseState>({
-        showAddPopUp: false,
-        showAllPollsPopUp: false,
-        newPoll: '',
         voted: false,
+        option: '',
+        opTotal: 0,
         ...s,
     });
+    const [totalVotes, setTotalVotes] = React.useState(0)
+    const [result, setResult] = React.useState<Array<number>>([]);
 
-    const [pollResult, setPollResults] = React.useState<ResultState>({
-        totalEach: []
-    })
-    
-    const [option, setOption] = React.useState('');
+    // making sure variables are changed and properly stored on update
+    React.useEffect(() => {}, [poll])
+
+    React.useEffect(() => {
+        if (poll.voted) {
+            // store total results
+            const total = poll.options.reduce(
+                (acc, optionVal) => acc + optionVal.voters.length, 0
+            )
+            setTotalVotes(total);
+
+            // store results per option
+            const totalPerOption = poll.options.map((op) => {
+                return (op.voters.length / totalVotes) * 100
+            })
+            setResult(totalPerOption);
+        }
+    }, [poll, totalVotes])
 
     /**
      * Checks to see if a user owns a poll
@@ -60,40 +65,36 @@ usePollHook {
 
     /**
      * Checks if user voted.
-     * @param option uid for the poll.
-     * @returns true if the user has voted and false otherwise.
+     * @returns the selected option if user voted.
      */
     function didUserVote() {
         const isVoted = poll.options.some(option => option.voters.includes(userID))
-        return isVoted !== undefined ? isVoted : false;
+        return isVoted ? poll.option : undefined
     }
 
     /**
    * Allows a user to vote on an option
-   * @param selectedOption the uid of the option/value the user wants to select.
    */
-    async function submit(selectedOption: string, select: boolean) {
-        const options = createFetchRequestOptions(JSON.stringify({}), 'PUT');
-        if (select && option !== '') {
+    async function submit() {
+        if (poll.option !== '') {
+
+            const index = poll.options.findIndex(optionVal => optionVal.value === poll.option)
+
             await fetch(
-                `${API_URL}trip/${tripID}/polls/vote/${poll.uid}/${selectedOption}`,
-                options
+                `${API_URL}trip/${tripID}/polls/vote/${poll.uid}/${index}`
             ).then ((response) => {
                 if(response.ok) {
-                    // store option locally
-                    const idx = poll.options.findIndex(option => option.value === selectedOption)
-                    const newPoll = poll.options
-                    const pollOption = newPoll[idx]
 
-                    setPoll((option) => {
-                        if (pollOption) {
-                            pollOption.voters.push(userID);
-                        } return {
-                            ...option,
-                            option: newPoll,
-                            voted: true
-                        }
+                    // just add user to list of voters
+                    const pollVoters = poll.options[index];
+                    pollVoters.voters.push(userID);
+
+                    setPoll({
+                        ...poll,
+                        voted: true,
+                        opTotal: pollVoters.voters.length
                     })
+
                 } else {
                     alert('try again later');
                 }
@@ -106,62 +107,28 @@ usePollHook {
 
     /**
      * @param selectedOption the option/value the user selected
-     * @param select boolean if the current option is selected
      * if user leaves page without submitting, poll option only stored locally, api will only be called once the user submits
      */
-    function toggleSelect(selectedOption: string, select: boolean) {
-        // don't have to toggle on/off, just save the new option the user selects
-        if (select && selectedOption !== '') {
-            setOption(selectedOption)
-            // store option locally
-            const idx = poll.options.findIndex(option => option.value === selectedOption)
-            const newPoll = poll.options
-            const pollOption = newPoll[idx]
-
-            setPoll((option) => {
-                if (pollOption) {
-                    pollOption.voters.push(userID);
-                } return {
-                    ...option,
-                    option: newPoll
-                }
-            })
-        } else {
-            alert('try again later');
-        }
+    function toggleSelect(selectedOption: string) {
+        setPoll({
+            ...poll,
+            option: selectedOption
+        })
     }
 
     /**
-     * @param grabbedPoll the poll to find out what the user selected
-     * @returns the option the user selected, otherwise undefined
+     * 
+     * @returns result array if it exists
      */
-    function getOption(grabbedPoll: Poll): string | undefined {
-        // iterate through options, searching if userid exists
-        return didUserVote() ? grabbedPoll.options.find(option => option.voters.includes(userID))?.value : undefined
-    }
-
-    /**
-     * counts number of voters for each option and sets it into pollResults
-     */
-    function results() {
-        const total = poll.options.map((option) =>{
-            const count = option.voters.reduce((acc) => acc + 1, 0);
-            return {
-                optionValue: option.value,
-                voterCount: count
-            }
-        })
-
-        setPollResults({
-            totalEach: total
-        })
+    function pollResults() {
+        return result ? result : undefined
     }
 
     return {
         doesUserOwn,
         didUserVote,
         submit,
-        getOption,
-        results
+        toggleSelect,
+        pollResults
     };
 }
