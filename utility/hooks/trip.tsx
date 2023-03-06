@@ -5,6 +5,12 @@ interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>;
   joinableEvents: Array<Array<Event>>;
   itinerary: Array<Array<Event>>;
+  destination: string;
+}
+
+interface TripDetails {
+  title: string;
+  destination: string;
 }
 
 interface TripContext {
@@ -25,7 +31,7 @@ interface TripContext {
 
   // handle events
   createEvent: (event: Event, callback: (response: Response) => void) => Promise<void>;
-  modifyTrip: (callback: (response: Response) => void) => Promise<void>;
+  modifyTrip: (details: TripDetails, callback: (response: Response) => void) => Promise<void>;
 }
 
 // TODO: probably should import this 
@@ -267,19 +273,25 @@ export function TripProvider({
 
     if (response.ok) {
       callback({ isSuccess: response.ok, result: response.json() });
-
+      setTrip({
+        ...trip,
+        joinableEvents: addEventToList(trip.joinableEvents, event),
+      });
     } else {
       callback({ isSuccess: response.ok, errorMessage: await response.text() });
     }
   }
 
-  async function modifyTrip( callback: (response: Response) => void) {
-    const options = createFetchRequestOptions(JSON.stringify(trip), 'PUT');
+  async function modifyTrip(details: TripDetails, callback: (response: Response) => void) {
+    const options = createFetchRequestOptions(JSON.stringify(details), 'PUT');
     const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options);
 
     if (response.ok) {
       callback({ isSuccess: response.ok, result: response.json() });
-
+      setTrip({
+        ...trip,
+        destination: details.destination,
+      });
     } else {
       callback({ isSuccess: response.ok, errorMessage: await response.text() });
     }
