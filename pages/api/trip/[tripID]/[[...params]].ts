@@ -73,14 +73,10 @@ export default async function handler(
               break;
             }
             case 'modify': {
-              if (req.body.title !== undefined) {
+              if (req.body !== null && req.body !== undefined) {
                 await updateDoc(docRef, {
-                  title: req.body.title,
-                });
-              }
-              if (req.body.destination !== undefined) {
-                await updateDoc(docRef, {
-                  title: req.body.destination,
+                  destination: req.body.destination,
+                  duration: req.body.duration
                 });
               }
             }

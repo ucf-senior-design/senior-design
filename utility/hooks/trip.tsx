@@ -1,6 +1,6 @@
 import React from 'react';
 import { createFetchRequestOptions } from '../fetch';
-import { Event, SuggestionOption, SuggestionWidget, Trip } from '../types/trip';
+import { Duration, Event, SuggestionOption, SuggestionWidget, Trip } from '../types/trip';
 interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>;
   joinableEvents: Array<Array<Event>>;
@@ -9,7 +9,7 @@ interface TripUseState extends Trip {
 }
 
 interface TripDetails {
-  title: string;
+  duration: Duration;
   destination: string;
 }
 
@@ -275,7 +275,7 @@ export function TripProvider({
       callback({ isSuccess: response.ok, result: response.json() });
       setTrip({
         ...trip,
-        joinableEvents: addEventToList(trip.joinableEvents, event),
+        joinableEvents: Array.from(addEventToList(trip.joinableEvents, event)),
       });
     } else {
       callback({ isSuccess: response.ok, errorMessage: await response.text() });
@@ -291,6 +291,7 @@ export function TripProvider({
       setTrip({
         ...trip,
         destination: details.destination,
+        duration: details.duration
       });
     } else {
       callback({ isSuccess: response.ok, errorMessage: await response.text() });
