@@ -44,6 +44,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   const [trips, setTrips] = React.useState<Map<string, Trip>>();
   const { user } = useAuth();
 
+
   React.useEffect(() => {
     console.log('getting user trips....');
     getTrips();
