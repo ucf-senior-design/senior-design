@@ -1,134 +1,134 @@
 import React from 'react';
 import { Poll } from '../types/trip';
 import { useAuth } from './authentication';
+import { useScreen } from './screen';
 import { useTrip } from './trip';
 
 interface PollUseState extends Poll {
-    voted: boolean;
-    option: string;
-    opTotal: number;
+  vote: number | undefined;
+  totalVotes: number;
+  didSubmit: boolean;
 }
 
 export type usePollHook = {
-    doesUserOwn: () => boolean;
-    didUserVote: () => string | undefined;
-    submit: (selectedOption: string) => Promise<void>;
-    toggleSelect: (selectedOption: string) => void;
-    pollResults: () => Array<number> | undefined;
-}
+  doesUserOwn: () => boolean;
+  didUserVote: (index: number) => boolean;
+  doVote: () => Promise<void>;
+  showResults: () => boolean;
+  selectOption: (index: number) => void;
+  pollResults: (index: number) => number;
+};
 
-export default function usePoll(s: Poll):
-usePollHook {
-    const {user} = useAuth();
-    const {trip} = useTrip();
+export default function usePoll(p: Poll): usePollHook {
+  const { user } = useAuth();
+  const { trip } = useTrip();
+  const { updateErrorToast } = useScreen();
 
-    const userID = user?.uid ?? '';
-    const tripID = trip.uid;
+  const userID = user?.uid ?? '';
+  const tripID = trip.uid;
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    const [poll, setPoll] = React.useState<PollUseState>({
-        voted: false,
-        option: '',
-        opTotal: 0,
-        ...s,
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const [poll, setPoll] = React.useState<PollUseState>({
+    didSubmit: false,
+    vote: undefined,
+    totalVotes: 1,
+    ...p,
+  });
+
+  React.useEffect(() => {
+    let totalVotes = 0;
+    let vote: string | undefined = undefined;
+    p.options.forEach((option) => {
+      totalVotes += option.voters.length;
+      vote =
+        option.voters.find((voter) => {
+          return voter == userID;
+        }) !== undefined
+          ? option.value
+          : undefined;
     });
-    const [totalVotes, setTotalVotes] = React.useState(0)
-    const [result, setResult] = React.useState<Array<number>>([]);
 
-    // making sure variables are changed and properly stored on update
-    React.useEffect(() => {}, [poll])
+    setPoll({
+      didSubmit: vote === undefined ? false : true,
+      vote: vote,
+      totalVotes: totalVotes,
+      ...p,
+    });
+  }, []);
 
-    React.useEffect(() => {
-        if (poll.voted) {
-            // store total results
-            const total = poll.options.reduce(
-                (acc, optionVal) => acc + optionVal.voters.length, 0
-            )
-            setTotalVotes(total);
+  /**
+   * Checks to see if a user owns a poll
+   */
+  function doesUserOwn() {
+    return poll.owner === userID;
+  }
 
-            // store results per option
-            const totalPerOption = poll.options.map((op) => {
-                return (op.voters.length / totalVotes) * 100
-            })
-            setResult(totalPerOption);
-        }
-    }, [poll, totalVotes])
+  /**
+   * Checks if user voted.
+   */
+  function didUserVote(index: number) {
+    return poll.vote === undefined ? false : poll.vote === index;
+  }
 
-    /**
-     * Checks to see if a user owns a poll
-     * @param owner uid for the poll
-     * @returnstrue if the user owns the poll and false otherwise
-     */
-    function doesUserOwn() {
-        return poll.owner === userID;
-    }
-
-    /**
-     * Checks if user voted.
-     * @returns the selected option if user voted.
-     */
-    function didUserVote() {
-        const isVoted = poll.options.some(option => option.voters.includes(userID))
-        return isVoted ? poll.option : undefined
-    }
-
-    /**
+  /**
    * Allows a user to vote on an option
    */
-    async function submit() {
-        if (poll.option !== '') {
-
-            const index = poll.options.findIndex(optionVal => optionVal.value === poll.option)
-
-            await fetch(
-                `${API_URL}trip/${tripID}/polls/vote/${poll.uid}/${index}`
-            ).then ((response) => {
-                if(response.ok) {
-
-                    // just add user to list of voters
-                    const pollVoters = poll.options[index];
-                    pollVoters.voters.push(userID);
-
-                    setPoll({
-                        ...poll,
-                        voted: true,
-                        opTotal: pollVoters.voters.length
-                    })
-
-                } else {
-                    alert('try again later');
-                }
-            })
-            .catch(() => {})
-        } else {
-            alert('please select an option')
-        }
+  async function doVote() {
+    if (poll.vote === undefined) {
+      updateErrorToast('Must select an option to vote.');
+      return;
     }
+    let vote = poll.vote;
+    await fetch(`${API_URL}trip/${tripID}/polls/vote/${poll.uid}/${vote}`).then(
+      (response) => {
+        if (response.ok) {
+          let tOptions = Array.from(p.options);
+          tOptions[vote].voters.push(userID);
 
-    /**
-     * @param selectedOption the option/value the user selected
-     * if user leaves page without submitting, poll option only stored locally, api will only be called once the user submits
-     */
-    function toggleSelect(selectedOption: string) {
-        setPoll({
+          setPoll({
             ...poll,
-            option: selectedOption
-        })
-    }
+            didSubmit: true,
+            vote: vote,
+            options: tOptions,
+            totalVotes: (poll.totalVotes += 1),
+          });
+        } else {
+          updateErrorToast('Could not cast vote at the time.');
+        }
+      }
+    );
+  }
 
-    /**
-     * 
-     * @returns result array if it exists
-     */
-    function pollResults() {
-        return result ? result : undefined
-    }
+  /**
+   * Stores the user vote before submitting.
+   */
+  function selectOption(index: number) {
+    setPoll({
+      ...poll,
+      vote: index,
+    });
+  }
 
-    return {
-        doesUserOwn,
-        didUserVote,
-        submit,
-        toggleSelect,
-        pollResults
-    };
+  /**
+   * Calculates results for a certain option
+   */
+  function pollResults(index: number) {
+    return poll.options[index].voters.length / poll.totalVotes;
+  }
+
+  /**
+   * Show the results if the user has voted.
+   */
+  function showResults() {
+    return poll.didSubmit === true;
+  }
+
+  return {
+    doesUserOwn,
+    didUserVote,
+    doVote,
+    selectOption,
+    pollResults,
+    showResults,
+  };
 }
