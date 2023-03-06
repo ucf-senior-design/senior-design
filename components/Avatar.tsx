@@ -1,4 +1,4 @@
-import { Avatar as MuiAvatar } from '@mui/material';
+import { Avatar as MuiAvatar } from "@mui/material"
 export default function Avatar({
   name,
   image,
@@ -43,13 +43,8 @@ export default function Avatar({
   }
   if (image) {
     return (
-      <MuiAvatar
-
-        alt={name}
-        src={image}
-        sx={size ? { width: size, height: size } : undefined}
-      />
-    );
+      <MuiAvatar alt={name} src={image} sx={size ? { width: size, height: size } : undefined} />
+    )
   }
   return <MuiAvatar {...stringAvatar(name)} />
 }

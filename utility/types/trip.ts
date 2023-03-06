@@ -7,16 +7,16 @@ export interface Trip {
 }
 
 export type UserAvailabillity = {
-  uid: string;
-  dates: Array<Duration>;
-};
+  uid: string
+  dates: Array<Duration>
+}
 
 export type Availabillity = {
-  owner: string;
-  uid: string;
-  title: string;
-  availabillities: Map<string, UserAvailabillity>;
-};
+  owner: string
+  uid: string
+  title: string
+  availabillities: Map<string, UserAvailabillity>
+}
 
 export type ActivityPrefField =
   | "SPORTS"
