@@ -19,10 +19,10 @@ export default function SecurePage({ children }: { children: React.ReactNode }) 
     }
 
     // Logged in users have a valid uid.
-    if (user?.uid.length === 0) {
-      updateErrorToast("please login before using the application!")
-      router.push("/auth/login")
-      return
+    if (user.uid.length === 0) {
+      updateErrorToast('please login before using the application!');
+      router.push('/auth/login');
+      return;
     }
 
     // Need to finish adding additional details.
