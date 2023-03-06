@@ -1,13 +1,9 @@
-import { Box, Button } from '@mui/material';
-import Link from 'next/link';
 import * as React from 'react';
 import { toast, ToastContainer, ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import theme from '../styles/theme/Theme';
 import { useScreen } from '../utility/hooks/screen';
-import LoggedOutDrawer from './NavBar/LoggedOutDrawer';
 import NavBar from './NavBar/NavBar';
-import LoggedOutNav from './NavBar/NavBar';
 
 export default function Screen({
   children,
@@ -24,6 +20,7 @@ export default function Screen({
     successToast,
     updateSuccessToast,
     nav,
+    loading,
   } = useScreen();
 
   const backgroundImage =
@@ -59,28 +56,6 @@ export default function Screen({
   React.useEffect(() => {
     updateLoading(false);
   }, [path]);
-
-  function NavBarButton({
-    path,
-    text,
-    variant,
-  }: {
-    path: string;
-    text: string;
-    variant: 'text' | 'outlined' | 'contained';
-  }) {
-    return (
-      <Link href={path} passHref>
-        <Button
-          color={path === '/' ? 'landing' : 'secondary'}
-          variant={variant}
-          aria-label={`${text}-button`}
-        >
-          {text}
-        </Button>
-      </Link>
-    );
-  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
