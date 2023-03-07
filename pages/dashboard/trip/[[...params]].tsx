@@ -2,8 +2,8 @@ import { useRouter } from "next/router"
 import React from "react"
 import Schedule from "../../../components/Dashboard/Schedule"
 import { SuggestionWidgets } from "../../../components/Dashboard/Widgets/Suggestions"
-import { useScreen } from "../../../utility/hooks/screen"
 import { TripProvider } from "../../../utility/hooks/trip"
+import { useScreen } from "../../../utility/hooks/screen"
 
 export default function Trip() {
   const router = useRouter()

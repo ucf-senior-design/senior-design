@@ -14,9 +14,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prettier": "prettier --write .",
-    "test": "jest --watch",
-    "prettier": "prettier --write . --ignore-unknown"
+    "prettier": "prettier --write . --ignore-unknown",
+    "test": "jest --watch"
   },
   "dependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.18.9",
