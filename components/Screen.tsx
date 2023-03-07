@@ -1,5 +1,5 @@
-import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
-import MenuIcon from '@mui/icons-material/Menu';
+import AirportShuttleIcon from "@mui/icons-material/AirportShuttle"
+import MenuIcon from "@mui/icons-material/Menu"
 import {
   AppBar,
   Box,
@@ -10,27 +10,23 @@ import {
   IconButton,
   LinearProgress,
   MenuItem,
-  MenuList, Paper, Popper,
+  MenuList,
+  Paper,
+  Popper,
   Stack,
   Toolbar,
-  Typography
-} from '@mui/material';
-import Link from 'next/link';
-import * as React from 'react';
-import { toast, ToastContainer, ToastOptions } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import theme from '../styles/theme/Theme';
-import { useScreen } from '../utility/hooks/screen';
-import LoggedOutDrawer from './LoggedOutDrawer';
+  Typography,
+} from "@mui/material"
+import Link from "next/link"
+import * as React from "react"
+import { toast, ToastContainer, ToastOptions } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import theme from "../styles/theme/Theme"
+import { useScreen } from "../utility/hooks/screen"
+import LoggedOutDrawer from "./LoggedOutDrawer"
 
-export default function Screen({
-  children,
-  path,
-}: {
-  path: string;
-  children: React.ReactNode;
-}) {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+export default function Screen({ children, path }: { path: string; children: React.ReactNode }) {
+  const [mobileOpen, setMobileOpen] = React.useState(false)
   const {
     loading,
     errorToast,
@@ -40,116 +36,112 @@ export default function Screen({
     updateLoading,
     successToast,
     updateSuccessToast,
-  } = useScreen();
+  } = useScreen()
   const handleDrawerToggle = () => {
-    setMobileOpen((prevState) => !prevState);
-  };
+    setMobileOpen((prevState) => !prevState)
+  }
 
   // TODO: Add logic for checking whether a user is logged in
   // Set this to true to see authenticated toolbar
-  const [isAuth, setIsAuth] = React.useState(false);
+  const [isAuth, setIsAuth] = React.useState(false)
 
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = React.useState(false)
+  const anchorRef = React.useRef<HTMLButtonElement>(null)
 
   const handleMenuToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
+    setOpen((prevOpen) => !prevOpen)
+  }
 
   const handleMenuClose = (event: Event | React.SyntheticEvent) => {
-    if (
-      anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return;
+    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+      return
     }
-    setOpen(false);
+    setOpen(false)
   }
 
   function handleListKeyDown(event: React.KeyboardEvent) {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      setOpen(false);
-    } else if (event.key === 'Escape') {
+    if (event.key === "Tab") {
+      event.preventDefault()
+      setOpen(false)
+    } else if (event.key === "Escape") {
       setOpen(false)
     }
   }
 
-  const prevOpen = React.useRef(open);
+  const prevOpen = React.useRef(open)
   React.useEffect(() => {
     if (prevOpen.current === true && open === false) {
-      anchorRef.current!.focus();
+      anchorRef.current!.focus()
     }
-    prevOpen.current = open;
+    prevOpen.current = open
   }, [open])
 
-  const landingTextColor = path === '/' ? 'white' : undefined;
-  const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
-  const backgroundImage =
-    path === '/about' ? "url('/Mountains.svg') 80% 80% " : undefined;
+  const landingTextColor = path === "/" ? "white" : undefined
+  const landingBackgroundColor = path === "/" ? "#5F9DF7" : undefined
+  const backgroundImage = path === "/about" ? "url('/Mountains.svg') 80% 80% " : undefined
   const msgToastOptions: ToastOptions = {
-    position: 'top-center',
+    position: "top-center",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: false,
     draggable: true,
     progress: undefined,
-    theme: 'colored',
-  };
+    theme: "colored",
+  }
 
   // Resets error toast after being shown.
   React.useEffect(() => {
     if (errorToast !== undefined) {
-      toast.error(errorToast, msgToastOptions);
-      updateErrorToast(undefined);
+      toast.error(errorToast, msgToastOptions)
+      updateErrorToast(undefined)
     }
-  }, [errorToast]);
+  }, [errorToast])
 
   // Resets success toast after being shown.
   React.useEffect(() => {
     if (successToast !== undefined) {
-      toast.success(successToast, msgToastOptions);
-      updateSuccessToast(undefined);
+      toast.success(successToast, msgToastOptions)
+      updateSuccessToast(undefined)
     }
-  }, [successToast]);
+  }, [successToast])
 
   // Resets loading when user switches pages after loading
   React.useEffect(() => {
-    updateLoading(false);
-  }, [path]);
+    updateLoading(false)
+  }, [path])
 
   function NavBarButton({
     path,
     text,
     variant,
   }: {
-    path: string;
-    text: string;
-    variant: 'text' | 'outlined' | 'contained';
+    path: string
+    text: string
+    variant: "text" | "outlined" | "contained"
   }) {
     return (
       <Link href={path} passHref>
         <Button
-          color={path === '/' ? 'landing' : 'secondary'}
+          color={path === "/" ? "landing" : "secondary"}
           variant={variant}
           aria-label={`${text}-button`}
         >
           {text}
         </Button>
       </Link>
-    );
+    )
   }
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ m: 2 }}>
       <LoggedOutDrawer />
     </Box>
-  );
+  )
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <nav aria-label="navigational bar">
-        <AppBar position="static" color="secondary" sx={{ boxShadow: 'none' }}>
+        <AppBar position="static" color="secondary" sx={{ boxShadow: "none" }}>
           <Toolbar
             style={{
               zIndex: 2,
@@ -161,22 +153,22 @@ export default function Screen({
               onClick={handleDrawerToggle}
               edge="start"
               aria-label="menu toggle"
-              sx={{ display: { sm: 'none' } }}
+              sx={{ display: { sm: "none" } }}
               color="inherit"
             >
-              <MenuIcon sx={{ fontSize: '38px', color: landingTextColor }} />
+              <MenuIcon sx={{ fontSize: "38px", color: landingTextColor }} />
             </IconButton>
             <div
               style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyItems: 'center',
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyItems: "center",
               }}
             >
               <AirportShuttleIcon
                 sx={{
-                  display: { xs: 'none', sm: 'block' },
+                  display: { xs: "none", sm: "block" },
                   marginRight: 1,
                 }}
                 color="inherit"
@@ -187,7 +179,7 @@ export default function Screen({
                 noWrap={true}
                 sx={{
                   flexGrow: 1,
-                  display: { xs: 'none', sm: 'block' },
+                  display: { xs: "none", sm: "block" },
                   fontWeight: 700,
                 }}
               >
@@ -198,44 +190,44 @@ export default function Screen({
               direction="row"
               spacing={2}
               sx={{
-                display: { xs: 'none', sm: 'block' },
-                width: '100%',
-                justifyContent: 'end',
-                textAlign: 'right',
+                display: { xs: "none", sm: "block" },
+                width: "100%",
+                justifyContent: "end",
+                textAlign: "right",
               }}
             >
-              {isAuth ? 
-              <>
-                {/* TODO: add correct pages once they have been created */}
-                <NavBarButton path="/dashboard/Overview" text="dashboard" variant="text"/>
-                <NavBarButton path="/" text="teams" variant="text"/>
-                <Button
-                  ref={anchorRef}
-                  color='secondary'
-                  variant='outlined'
-                  aria-label='user setings'
-                  aria-controls={open ? 'composition-menu' : undefined}
-                  aria-expanded={open ? 'true' : undefined}
-                  area-haspopup='true'
-                  onClick={handleMenuToggle}
-                >
-                  name stuff
-                </Button>
-                <Popper
-                  open={open}
-                  anchorEl={anchorRef.current}
-                  role={undefined}
-                  placement='bottom-start'
-                  transition
-                  disablePortal
-                >
-                  {({ TransitionProps, placement}) => (
-                    <Grow
-                      {...TransitionProps}
-                      style={{
-                        transformOrigin:
-                          placement === 'bottom-start' ? 'left top' : 'left bottom'
-                      }}
+              {isAuth ? (
+                <>
+                  {/* TODO: add correct pages once they have been created */}
+                  <NavBarButton path="/dashboard/Overview" text="dashboard" variant="text" />
+                  <NavBarButton path="/" text="teams" variant="text" />
+                  <Button
+                    ref={anchorRef}
+                    color="secondary"
+                    variant="outlined"
+                    aria-label="user setings"
+                    aria-controls={open ? "composition-menu" : undefined}
+                    aria-expanded={open ? "true" : undefined}
+                    area-haspopup="true"
+                    onClick={handleMenuToggle}
+                  >
+                    name stuff
+                  </Button>
+                  <Popper
+                    open={open}
+                    anchorEl={anchorRef.current}
+                    role={undefined}
+                    placement="bottom-start"
+                    transition
+                    disablePortal
+                  >
+                    {({ TransitionProps, placement }) => (
+                      <Grow
+                        {...TransitionProps}
+                        style={{
+                          transformOrigin:
+                            placement === "bottom-start" ? "left top" : "left bottom",
+                        }}
                       >
                         <Paper>
                           <ClickAwayListener onClickAway={handleMenuClose}>
@@ -251,27 +243,18 @@ export default function Screen({
                             </MenuList>
                           </ClickAwayListener>
                         </Paper>
-
-                    </Grow>
-                  )}
-                </Popper>
-              </> :
-              <>
-                <NavBarButton path="/" text="home" variant="text" />
-                <NavBarButton path="/about" text="about" variant="text" />
-                <NavBarButton
-                  path="/auth/login"
-                  text="login"
-                  variant="contained"
-                />
-                <NavBarButton
-                  path="/auth/register"
-                  text="register"
-                  variant="outlined"
-                />
-              </>
-              }
-              
+                      </Grow>
+                    )}
+                  </Popper>
+                </>
+              ) : (
+                <>
+                  <NavBarButton path="/" text="home" variant="text" />
+                  <NavBarButton path="/about" text="about" variant="text" />
+                  <NavBarButton path="/auth/login" text="login" variant="contained" />
+                  <NavBarButton path="/auth/register" text="register" variant="outlined" />
+                </>
+              )}
             </Stack>
           </Toolbar>
         </AppBar>
@@ -280,11 +263,11 @@ export default function Screen({
             variant="temporary"
             PaperProps={{
               sx: {
-                backgroundColor: 'rgba(44, 42, 60, 0.79);',
-                backdropFilter: 'blur(8px)',
+                backgroundColor: "rgba(44, 42, 60, 0.79);",
+                backdropFilter: "blur(8px)",
                 padding: 2,
-                width: '70vw',
-                maxWidth: '300px',
+                width: "70vw",
+                maxWidth: "300px",
               },
             }}
             open={mobileOpen}
@@ -296,18 +279,15 @@ export default function Screen({
         </Box>
 
         {loading ? (
-          <LinearProgress
-            color="inherit"
-            sx={{ color: theme.palette.highlight.main }}
-          />
+          <LinearProgress color="inherit" sx={{ color: theme.palette.highlight.main }} />
         ) : (
           <></>
         )}
       </nav>
       <div
         style={{
-          height: '100vh',
-          width: '100vw',
+          height: "100vh",
+          width: "100vw",
           padding: autoPadding ? 10 : 0,
           backgroundColor: theme.palette.background.default,
           background: backgroundImage,
@@ -317,5 +297,5 @@ export default function Screen({
         {children}
       </div>
     </div>
-  );
+  )
 }

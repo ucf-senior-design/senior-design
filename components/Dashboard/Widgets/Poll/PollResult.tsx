@@ -1,24 +1,20 @@
-import { Box, Grid, LinearProgress, Typography } from '@mui/material';
-import { PollOption as PollOptionType } from '../../../../utility/types/trip';
+import { Box, Grid, LinearProgress, Typography } from "@mui/material"
+import { PollOption as PollOptionType } from "../../../../utility/types/trip"
 function OptionResults({ option }: { option: PollOptionType }) {
   // TODO:  Helper function to store percentage */}
   return (
     <LinearProgress
-      sx={{ borderRadius: '2px', height: '10px' }}
+      sx={{ borderRadius: "2px", height: "10px" }}
       variant="determinate"
       color="secondary"
       value={50}
     />
-  );
+  )
 }
 
-export default function PollResult({
-  options,
-}: {
-  options: Array<PollOptionType>;
-}) {
+export default function PollResult({ options }: { options: Array<PollOptionType> }) {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       <>
         {/** TODO: Handle whether the option is selected or not. */}
         {options.map((option, index) => {
@@ -26,22 +22,20 @@ export default function PollResult({
             <>
               <Grid container>
                 <Grid item xs={10}>
-                  <Typography sx={{ fontWeight: 'bold' }}>
-                    {option.value}
-                  </Typography>
+                  <Typography sx={{ fontWeight: "bold" }}>{option.value}</Typography>
                 </Grid>
                 <Grid
                   item
                   xs={2}
                   style={{
-                    display: 'flex',
+                    display: "flex",
                   }}
                 >
                   <Typography
                     style={{
-                      textAlign: 'right',
-                      width: '100%',
-                      fontSize: '12px',
+                      textAlign: "right",
+                      width: "100%",
+                      fontSize: "12px",
                     }}
                   >
                     {/* TODO: Helper function to store percentage */}
@@ -51,9 +45,9 @@ export default function PollResult({
               </Grid>
               <OptionResults key={index} option={option} />
             </>
-          );
+          )
         })}
       </>
     </Box>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-import { getAuth } from 'firebase/auth';
-import firebase from 'firebase/compat/app';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
-import firebaseAdmin from './firebaseAdmin';
+import { getAuth } from "firebase/auth"
+import firebase from "firebase/compat/app"
+import { getFirestore } from "firebase/firestore"
+import { getStorage } from "firebase/storage"
+import firebaseAdmin from "./firebaseAdmin"
 
 const firebaseConfig =
   process.env.REACT_APP_FIREBASE_API_KEY !== undefined
@@ -28,23 +28,20 @@ const firebaseConfig =
         storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
         messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
         appId: process.env.NEXT_PUBLIC_APP_ID,
-      };
+      }
 
-const app =
-  firebase.apps.length === 0
-    ? firebase.initializeApp(firebaseConfig)
-    : firebase.apps[0];
+const app = firebase.apps.length === 0 ? firebase.initializeApp(firebaseConfig) : firebase.apps[0]
 
 export function unpackArrayResponse(
-  docs: firebaseAdmin.firestore.QueryDocumentSnapshot<firebaseAdmin.firestore.DocumentData>[]
+  docs: firebaseAdmin.firestore.QueryDocumentSnapshot<firebaseAdmin.firestore.DocumentData>[],
 ) {
-  const a: Array<any> = [];
+  const a: Array<any> = []
   docs.forEach((doc) => {
-    a.push({ ...doc.data(), uid: doc.id });
-  });
+    a.push({ ...doc.data(), uid: doc.id })
+  })
 
-  return a;
+  return a
 }
-export const firebaseAuth = getAuth(app);
-export const firebaseStorage = getStorage(app);
-export const firebaseDatbase = getFirestore(app);
+export const firebaseAuth = getAuth(app)
+export const firebaseStorage = getStorage(app)
+export const firebaseDatbase = getFirestore(app)
