@@ -1,88 +1,73 @@
-import {
-  FacebookAuthProvider,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from 'firebase/auth';
-import Router from 'next/router';
-import React from 'react';
-import { useLocalStorage } from 'react-use-storage';
-import {
-  EMAIL_VERIFIED,
-  MUST_ADD_DETAILS,
-  MUST_VERIFY_EMAIL,
-} from '../constants';
-import { createFetchRequestOptions } from '../fetch';
-import { firebaseAuth } from '../firebase';
-import { User } from '../types/user';
-import { User as FirebaseUser } from 'firebase/auth';
-import { useScreen } from './screen';
+import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
+import Router from "next/router"
+import React from "react"
+import { useLocalStorage } from "react-use-storage"
+import { EMAIL_VERIFIED, MUST_ADD_DETAILS, MUST_VERIFY_EMAIL } from "../constants"
+import { createFetchRequestOptions } from "../fetch"
+import { firebaseAuth } from "../firebase"
+import { User } from "../types/user"
+import { User as FirebaseUser } from "firebase/auth"
+import { useScreen } from "./screen"
 
 interface EmailPasswordLogin {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 interface AuthenticationResponse {
-  isSuccess: boolean;
-  errorMessage?: string;
+  isSuccess: boolean
+  errorMessage?: string
 }
 
 interface AuthContext {
-  user?: User & { didFinishRegister: boolean };
-  saveRegisterdUser: (user: User) => Promise<void>;
-  doFacebookLogin: () => Promise<void>;
-  doGoogleLogin: () => Promise<void>;
+  user?: User & { didFinishRegister: boolean }
+  saveRegisterdUser: (user: User) => Promise<void>
+  doFacebookLogin: () => Promise<void>
+  doGoogleLogin: () => Promise<void>
   doEmailPasswordLogin: (
     login: EmailPasswordLogin,
-    callback: (response: AuthenticationResponse) => void
-  ) => Promise<void>;
+    callback: (response: AuthenticationResponse) => void,
+  ) => Promise<void>
   doEmailPasswordRegister: (
     register: { email: string; password: string },
-    callback: (response: AuthenticationResponse) => void
-  ) => Promise<void>;
-  doLogout: () => Promise<void>;
-  addDetails: (
-    user: User,
-    callback: (response: AuthenticationResponse) => void
-  ) => Promise<void>;
-  sendEmailVerification: (
-    callback: (response: AuthenticationResponse) => void
-  ) => Promise<void>;
+    callback: (response: AuthenticationResponse) => void,
+  ) => Promise<void>
+  doLogout: () => Promise<void>
+  addDetails: (user: User, callback: (response: AuthenticationResponse) => void) => Promise<void>
+  sendEmailVerification: (callback: (response: AuthenticationResponse) => void) => Promise<void>
   sendPasswordReset: (
     email: string,
-    callback: (response: AuthenticationResponse) => void
-  ) => Promise<void>;
-  maybeLoadPersistedUser: () => Promise<void>;
-  doSearch: (search: string, onSuccess: (user: User) => void) => Promise<void>;
+    callback: (response: AuthenticationResponse) => void,
+  ) => Promise<void>
+  maybeLoadPersistedUser: () => Promise<void>
+  doSearch: (search: string, onSuccess: (user: User) => void) => Promise<void>
 }
 
 // Use this to handle any authentication processes
-const AuthContext = React.createContext<AuthContext>({} as AuthContext);
+const AuthContext = React.createContext<AuthContext>({} as AuthContext)
 
 export function useAuth(): AuthContext {
-  const context = React.useContext(AuthContext);
+  const context = React.useContext(AuthContext)
 
   if (!context) {
-    throw Error('useAuth must be used within an AuthProvider');
+    throw Error("useAuth must be used within an AuthProvider")
   }
-  return context;
+  return context
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = React.useState<
-    User & { didFinishRegister: boolean }
-  >();
-  const { updateErrorToast } = useScreen();
+  const [user, setUser] = React.useState<User & { didFinishRegister: boolean }>()
+  const { updateErrorToast } = useScreen()
 
   const [localUser, saveLocalUser, removeLocalUser] = useLocalStorage<
     undefined | (User & { didFinishRegister: boolean })
-  >('user', undefined);
+  >("user", undefined)
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
   React.useEffect(() => {
-    console.log('loading user....');
-    maybeLoadPersistedUser();
-  }, []);
+    console.log("loading user....")
+    maybeLoadPersistedUser()
+  }, [])
 
   return (
     <AuthContext.Provider
@@ -103,79 +88,77 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
     </AuthContext.Provider>
-  );
+  )
 
   async function maybeLoadPersistedUser() {
-    await fetch(`${API_URL}auth/user`, { method: 'GET' }).then(
-      async (response) => {
-        if (response.ok) {
-          let currentUser: FirebaseUser = await response.json();
-          setUser({
-            username: localUser?.username ?? '',
-            medicalInfo: localUser?.medicalInfo ?? [],
-            allergies: localUser?.allergies ?? [],
-            didFinishRegister: localUser?.didFinishRegister ?? false,
-            uid: currentUser.uid,
-            email: currentUser.email ?? '',
-            name: currentUser.displayName ?? '',
-            profilePic: currentUser.photoURL ?? '',
-          });
-        } else {
-          removeLocalUser();
-          setUser({
-            username: localUser?.username ?? '',
-            medicalInfo: localUser?.medicalInfo ?? [],
-            allergies: localUser?.allergies ?? [],
-            didFinishRegister: localUser?.didFinishRegister ?? false,
-            uid: '',
-            email: '',
-            name: '',
-            profilePic: '',
-          });
-        }
+    await fetch(`${API_URL}auth/user`, { method: "GET" }).then(async (response) => {
+      if (response.ok) {
+        let currentUser: FirebaseUser = await response.json()
+        setUser({
+          username: localUser?.username ?? "",
+          medicalInfo: localUser?.medicalInfo ?? [],
+          allergies: localUser?.allergies ?? [],
+          didFinishRegister: localUser?.didFinishRegister ?? false,
+          uid: currentUser.uid,
+          email: currentUser.email ?? "",
+          name: currentUser.displayName ?? "",
+          profilePic: currentUser.photoURL ?? "",
+        })
+      } else {
+        removeLocalUser()
+        setUser({
+          username: localUser?.username ?? "",
+          medicalInfo: localUser?.medicalInfo ?? [],
+          allergies: localUser?.allergies ?? [],
+          didFinishRegister: localUser?.didFinishRegister ?? false,
+          uid: "",
+          email: "",
+          name: "",
+          profilePic: "",
+        })
       }
-    );
+    })
   }
 
   async function doSearch(search: string, onSuccess: (user: User) => void) {
     await fetch(`${API_URL}auth/user/find/${search}`, {
-      method: 'GET',
+      method: "GET",
     }).then(async (response) => {
-      console.log(response.status);
+      console.log(response.status)
       if (response.ok) {
-        let user = await response.json();
-        onSuccess(user);
+        let user = await response.json()
+        onSuccess(user)
       } else {
-        updateErrorToast(await response.text());
+        updateErrorToast(await response.text())
       }
-    });
+    })
   }
 
   async function doLogout() {
-    removeLocalUser();
-    setUser(undefined);
+    removeLocalUser()
+    setUser(undefined)
   }
 
   async function storePartialCredentialResult(u: any) {
     const user = {
-      username: '',
+      username: "",
       medicalInfo: [],
       allergies: [],
-      uid: u.uid ?? '',
-      email: u.email ?? '',
-      name: u.name ?? '',
-      profilePic: u.photo ?? '',
+      uid: u.uid ?? "",
+      email: u.email ?? "",
+      name: u.name ?? "",
+      profilePic: u.photo ?? "",
       didFinishRegister: false,
-    };
-    saveLocalUser(user);
-    setUser(user);
+    }
+    saveLocalUser(user)
+    setUser(user)
   }
 
   async function doLoginWithCredentials(
-    provider: 'google' | 'facebook' | 'twitter',
+    provider: "google" | "facebook" | "twitter",
 
     idToken: string,
-    accessToken?: string
+    accessToken?: string,
   ) {
     const options = createFetchRequestOptions(
       JSON.stringify({
@@ -183,164 +166,153 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         idToken: idToken,
         accessToken: accessToken,
       }),
-      'POST'
-    );
+      "POST",
+    )
 
-    const response = await fetch(`${API_URL}auth/loginWithCred`, options);
+    const response = await fetch(`${API_URL}auth/loginWithCred`, options)
 
     if (response.ok) {
       if (response.status === 200) {
-        await saveRegisterdUser(await response.json());
-        Router.push('/dashboard');
+        await saveRegisterdUser(await response.json())
+        Router.push("/dashboard")
       }
       if (response.status === 202) {
-        await storePartialCredentialResult(await response.json());
-        Router.push('auth/details');
+        await storePartialCredentialResult(await response.json())
+        Router.push("auth/details")
       }
     } else {
-      updateErrorToast(await response.text());
+      updateErrorToast(await response.text())
     }
   }
 
   function doThirdPartyLogin(
-    providerType: 'facebook' | 'google',
-    provider: GoogleAuthProvider | FacebookAuthProvider
+    providerType: "facebook" | "google",
+    provider: GoogleAuthProvider | FacebookAuthProvider,
   ) {
     signInWithPopup(firebaseAuth, provider).then(async (result) => {
       const credential =
-        providerType === 'facebook'
+        providerType === "facebook"
           ? FacebookAuthProvider.credentialFromResult(result)
-          : GoogleAuthProvider.credentialFromResult(result);
+          : GoogleAuthProvider.credentialFromResult(result)
 
       if (credential !== null && credential?.accessToken !== null) {
-        if (providerType === 'google') {
+        if (providerType === "google") {
           await doLoginWithCredentials(
-            'google',
-            credential.idToken ?? '',
-            credential.accessToken ?? ''
-          );
+            "google",
+            credential.idToken ?? "",
+            credential.accessToken ?? "",
+          )
         } else {
-          await doLoginWithCredentials(
-            'facebook',
-            credential.accessToken ?? ''
-          );
+          await doLoginWithCredentials("facebook", credential.accessToken ?? "")
         }
       }
-    });
+    })
   }
   async function doFacebookLogin() {
-    doThirdPartyLogin('facebook', new FacebookAuthProvider());
+    doThirdPartyLogin("facebook", new FacebookAuthProvider())
   }
 
   async function saveRegisterdUser(user: User) {
     saveLocalUser({
       ...user,
       didFinishRegister: true,
-    });
-    setUser({ ...user, didFinishRegister: true });
+    })
+    setUser({ ...user, didFinishRegister: true })
   }
 
-  async function addDetails(
-    user: User,
-    callback: (response: AuthenticationResponse) => void
-  ) {
-    const options = createFetchRequestOptions(JSON.stringify(user), 'POST');
-    const response = await fetch(`${API_URL}auth/details`, options);
-    const result = await response.text();
+  async function addDetails(user: User, callback: (response: AuthenticationResponse) => void) {
+    const options = createFetchRequestOptions(JSON.stringify(user), "POST")
+    const response = await fetch(`${API_URL}auth/details`, options)
+    const result = await response.text()
 
     if (response.ok) {
       if (response.status === EMAIL_VERIFIED) {
-        saveRegisterdUser(user);
+        saveRegisterdUser(user)
         // TODO: redirect to dashboard
-        Router.push('/dashboard/');
-        return;
+        Router.push("/dashboard/")
+        return
       } else {
-        Router.push('/auth/registerEmail');
+        Router.push("/auth/registerEmail")
       }
-      callback({ isSuccess: response.ok });
-      return;
+      callback({ isSuccess: response.ok })
+      return
     }
-    callback({ isSuccess: response.ok, errorMessage: result });
+    callback({ isSuccess: response.ok, errorMessage: result })
   }
 
   async function doGoogleLogin() {
-    doThirdPartyLogin('google', new GoogleAuthProvider());
+    doThirdPartyLogin("google", new GoogleAuthProvider())
   }
 
-  async function sendEmailVerification(
-    callback: (response: AuthenticationResponse) => void
-  ) {
-    const options = createFetchRequestOptions(JSON.stringify({}), 'POST');
+  async function sendEmailVerification(callback: (response: AuthenticationResponse) => void) {
+    const options = createFetchRequestOptions(JSON.stringify({}), "POST")
 
-    const response = await fetch(`${API_URL}auth/verifyEmail`, options);
+    const response = await fetch(`${API_URL}auth/verifyEmail`, options)
     if (response.ok) {
       if (response.status === EMAIL_VERIFIED) {
-        Router.push('/dashboard');
+        Router.push("/dashboard")
       }
-      callback({ isSuccess: response.ok });
+      callback({ isSuccess: response.ok })
     } else {
-      callback({ isSuccess: response.ok, errorMessage: await response.text() });
+      callback({ isSuccess: response.ok, errorMessage: await response.text() })
     }
   }
 
   async function doEmailPasswordRegister(
     register: { email: string; password: string },
-    callback: (response: AuthenticationResponse) => void
+    callback: (response: AuthenticationResponse) => void,
   ) {
-    const options = createFetchRequestOptions(JSON.stringify(register), 'POST');
-    const response = await fetch(`${API_URL}auth/register`, options);
+    const options = createFetchRequestOptions(JSON.stringify(register), "POST")
+    const response = await fetch(`${API_URL}auth/register`, options)
 
     if (response.ok) {
-      await storePartialCredentialResult(await response.json());
-      Router.push('/auth/details');
+      await storePartialCredentialResult(await response.json())
+      Router.push("/auth/details")
     } else {
-      callback({ isSuccess: response.ok, errorMessage: await response.text() });
+      callback({ isSuccess: response.ok, errorMessage: await response.text() })
     }
   }
 
   async function doEmailPasswordLogin(
     login: EmailPasswordLogin,
-    callback: (response: AuthenticationResponse) => void
+    callback: (response: AuthenticationResponse) => void,
   ) {
     const options = createFetchRequestOptions(
-      JSON.stringify({ ...login, purpose: 'email' }),
-      'POST'
-    );
-    const response = await fetch(`${API_URL}auth/login`, options);
+      JSON.stringify({ ...login, purpose: "email" }),
+      "POST",
+    )
+    const response = await fetch(`${API_URL}auth/login`, options)
 
     if (response.ok) {
       if (response.status === 200) {
-        await saveRegisterdUser(await response.json());
-        Router.push('/dashboard');
+        await saveRegisterdUser(await response.json())
+        Router.push("/dashboard")
       } else if (response.status === MUST_VERIFY_EMAIL) {
         // Go to Email Verficications Pge
-        await saveRegisterdUser(await response.json());
-        Router.push('/auth/registerEmail');
+        await saveRegisterdUser(await response.json())
+        Router.push("/auth/registerEmail")
       } else if (response.status === MUST_ADD_DETAILS) {
-        await storePartialCredentialResult(await response.json());
+        await storePartialCredentialResult(await response.json())
         //Go to Details Page
-        Router.push('/auth/details');
+        Router.push("/auth/details")
       }
-      return;
+      return
     }
-    const result = await response.text();
-    callback({ isSuccess: response.ok, errorMessage: result });
+    const result = await response.text()
+    callback({ isSuccess: response.ok, errorMessage: result })
   }
 
   async function sendPasswordReset(
     email: string,
-    callback: (response: AuthenticationResponse) => void
+    callback: (response: AuthenticationResponse) => void,
   ) {
-    const options = createFetchRequestOptions(
-      JSON.stringify({ email: email }),
-      'POST'
-    );
-    const response = await fetch(`${API_URL}auth/passwordReset`, options);
+    const options = createFetchRequestOptions(JSON.stringify({ email: email }), "POST")
+    const response = await fetch(`${API_URL}auth/passwordReset`, options)
 
     if (response.ok) {
-      callback({ isSuccess: response.ok });
+      callback({ isSuccess: response.ok })
     } else {
-      callback({ isSuccess: response.ok, errorMessage: await response.text() });
+      callback({ isSuccess: response.ok, errorMessage: await response.text() })
     }
   }
 }

@@ -15,7 +15,8 @@
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier --write .",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "prettier": "prettier --write . --ignore-unknown"
   },
   "dependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.18.9",
@@ -64,6 +65,12 @@
   "testMatch": [
     "**/__tests__/*.+(ts|tsx|js)"
   ],
+  "prettier": {
+    "printWidth": 100,
+    "semi": false,
+    "singleQuote": false,
+    "trailingComma": "all"
+  },
   "devDependencies": {
     "@babel/core": "^7.20.2",
     "@types/jest": "^29.2.3",

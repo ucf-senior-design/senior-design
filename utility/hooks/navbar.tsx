@@ -1,44 +1,41 @@
-import React from 'react';
+import React from "react"
 
 export default function useNavBar() {
-  const [open, setOpen] = React.useState(false);
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = React.useState(false)
+  const [mobileOpen, setMobileOpen] = React.useState(false)
+  const anchorRef = React.useRef<HTMLButtonElement>(null)
 
   function toggleMenu() {
-    setOpen((prevOpen) => !prevOpen);
+    setOpen((prevOpen) => !prevOpen)
   }
 
-  const prevOpen = React.useRef(open);
+  const prevOpen = React.useRef(open)
   React.useEffect(() => {
     if (prevOpen.current === true && open === false) {
-      anchorRef.current!.focus();
+      anchorRef.current!.focus()
     }
-    prevOpen.current = open;
-  }, [open]);
+    prevOpen.current = open
+  }, [open])
 
   function handleListKeyDown(event: React.KeyboardEvent) {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      setOpen(false);
-    } else if (event.key === 'Escape') {
-      setOpen(false);
+    if (event.key === "Tab") {
+      event.preventDefault()
+      setOpen(false)
+    } else if (event.key === "Escape") {
+      setOpen(false)
     }
   }
 
   const handleMenuClose = (event: Event | React.SyntheticEvent) => {
-    if (
-      anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return;
+    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+      return
     }
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   const handleDrawerToggle = () => {
-    setMobileOpen((prevState) => !prevState);
-  };
+    setMobileOpen((prevState) => !prevState)
+  }
 
   return {
     open,
@@ -48,5 +45,5 @@ export default function useNavBar() {
     toggleMenu,
     handleDrawerToggle,
     anchorRef,
-  };
+  }
 }

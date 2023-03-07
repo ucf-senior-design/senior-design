@@ -1,31 +1,27 @@
-import { Search } from '@mui/icons-material';
-import { Box, IconButton, SxProps, TextField, Theme } from '@mui/material';
-import { useState } from 'react';
-import { useAuth } from '../../utility/hooks/authentication';
-import { User } from '../../utility/types/user';
+import { Search } from "@mui/icons-material"
+import { Box, IconButton, SxProps, TextField, Theme } from "@mui/material"
+import { useState } from "react"
+import { useAuth } from "../../utility/hooks/authentication"
+import { User } from "../../utility/types/user"
 
 export default function UserSearch({
   handleFoundUser,
   sx,
 }: {
-  handleFoundUser: (user: User) => void;
-  sx?: SxProps<Theme>;
+  handleFoundUser: (user: User) => void
+  sx?: SxProps<Theme>
 }) {
-  const [search, setSearch] = useState('');
-  const { doSearch } = useAuth();
+  const [search, setSearch] = useState("")
+  const { doSearch } = useAuth()
 
   return (
-    <Box
-      sx={{ ...sx, display: 'flex' }}
-      alignContent={'start'}
-      flexDirection={'row'}
-    >
+    <Box sx={{ ...sx, display: "flex" }} alignContent={"start"} flexDirection={"row"}>
       <IconButton
         onClick={async () => {
           await doSearch(search, (user) => {
-            handleFoundUser(user);
-            setSearch('');
-          });
+            handleFoundUser(user)
+            setSearch("")
+          })
         }}
       >
         <Search />
@@ -39,10 +35,10 @@ export default function UserSearch({
         className="text"
         onInput={(e) => {
           // @ts-ignore
-          setSearch(e.target.value);
+          setSearch(e.target.value)
         }}
         label="search by username"
       />
     </Box>
-  );
+  )
 }

@@ -1,17 +1,11 @@
-import * as React from 'react';
-import { toast, ToastContainer, ToastOptions } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import theme from '../styles/theme/Theme';
-import { useScreen } from '../utility/hooks/screen';
-import NavBar from './NavBar/NavBar';
+import * as React from "react"
+import { toast, ToastContainer, ToastOptions } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import theme from "../styles/theme/Theme"
+import { useScreen } from "../utility/hooks/screen"
+import NavBar from "./NavBar/NavBar"
 
-export default function Screen({
-  children,
-  path,
-}: {
-  path: string;
-  children: React.ReactNode;
-}) {
+export default function Screen({ children, path }: { path: string; children: React.ReactNode }) {
   const {
     errorToast,
     updateErrorToast,
@@ -21,44 +15,43 @@ export default function Screen({
     updateSuccessToast,
     nav,
     loading,
-  } = useScreen();
+  } = useScreen()
 
-  const backgroundImage =
-    path === '/about' ? "url('/Mountains.svg') 80% 80% " : undefined;
+  const backgroundImage = path === "/about" ? "url('/Mountains.svg') 80% 80% " : undefined
   const msgToastOptions: ToastOptions = {
-    position: 'top-center',
+    position: "top-center",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: false,
     draggable: true,
     progress: undefined,
-    theme: 'colored',
-  };
+    theme: "colored",
+  }
 
   // Resets error toast after being shown.
   React.useEffect(() => {
     if (errorToast !== undefined) {
-      toast.error(errorToast, msgToastOptions);
-      updateErrorToast(undefined);
+      toast.error(errorToast, msgToastOptions)
+      updateErrorToast(undefined)
     }
-  }, [errorToast]);
+  }, [errorToast])
 
   // Resets success toast after being shown.
   React.useEffect(() => {
     if (successToast !== undefined) {
-      toast.success(successToast, msgToastOptions);
-      updateSuccessToast(undefined);
+      toast.success(successToast, msgToastOptions)
+      updateSuccessToast(undefined)
     }
-  }, [successToast]);
+  }, [successToast])
 
   // Resets loading when user switches pages after loading
   React.useEffect(() => {
-    updateLoading(false);
-  }, [path]);
+    updateLoading(false)
+  }, [path])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <div style={nav.style}>
         <NavBar path={path} />
         {nav.children}
@@ -66,8 +59,8 @@ export default function Screen({
 
       <div
         style={{
-          height: '100vh',
-          width: '100vw',
+          height: "100vh",
+          width: "100vw",
           padding: autoPadding ? 10 : 0,
           backgroundColor: theme.palette.background.default,
           background: backgroundImage,
@@ -77,5 +70,5 @@ export default function Screen({
         {children}
       </div>
     </div>
-  );
+  )
 }
