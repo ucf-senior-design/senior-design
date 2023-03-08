@@ -1,9 +1,10 @@
 import { useRouter } from "next/router"
 import React from "react"
 import Schedule from "../../../components/Dashboard/Schedule"
+import { TripHeader } from "../../../components/Dashboard/TripHeader"
 import { SuggestionWidgets } from "../../../components/Dashboard/Widgets/Suggestions"
-import { TripProvider } from "../../../utility/hooks/trip"
 import { useScreen } from "../../../utility/hooks/screen"
+import { TripProvider } from "../../../utility/hooks/trip"
 
 export default function Trip() {
   const router = useRouter()
@@ -16,7 +17,10 @@ export default function Trip() {
     updateNav(
       { backgroundColor: "red" },
       "transparent",
-      <div style={{ height: "500px" }}> stuff goes here</div>,
+      <div style={{ height: "300px" }}>
+        {" "}
+        <TripHeader></TripHeader>
+      </div>,
     )
   }, [router])
 
