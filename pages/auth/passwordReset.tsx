@@ -1,18 +1,17 @@
-
-import { SendEmail } from '../../components/AuthComponents/RegisterComponents/SendEmail';
+import { SendEmail } from "../../components/AuthComponents/RegisterComponents/SendEmail"
 
 export default function PasswordReset() {
   return (
     <div style={$wrapper}>
-      <SendEmail purpose='passwordReset'/>
+      <SendEmail purpose="passwordReset" />
     </div>
-  );
+  )
 }
- 
+
 const $wrapper: React.CSSProperties = {
-  width: '100%',
-  height: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
+  width: "100%",
+  height: "100%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}

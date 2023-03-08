@@ -1,26 +1,26 @@
-import { Button, Grid, Paper, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { SelectChipList } from '../../components/SelectChipList';
-import theme from '../../styles/theme/Theme';
-import { useAuth } from '../../utility/hooks/authentication';
-import { SelectListHook } from '../../utility/hooks/selectList';
-import { User } from '../../utility/types/user';
+import { Button, Grid, Paper, TextField, Typography } from "@mui/material"
+import React, { useState } from "react"
+import { SelectChipList } from "../../components/SelectChipList"
+import theme from "../../styles/theme/Theme"
+import { useAuth } from "../../utility/hooks/authentication"
+import { SelectListHook } from "../../utility/hooks/selectList"
+import { User } from "../../utility/types/user"
 
 export default function Details() {
-  const { addDetails, user } = useAuth();
+  const { addDetails, user } = useAuth()
   const [details, sDetails] = useState<User>({
-    uid: '',
-    email: '',
-    name: '',
-    profilePic: '',
-    username: '',
+    uid: "",
+    email: "",
+    name: "",
+    profilePic: "",
+    username: "",
     medicalInfo: [],
     allergies: [],
-  });
+  })
 
   React.useEffect(() => {
     if (user === undefined || user === null) {
-      return;
+      return
     }
     sDetails((details) => ({
       ...details,
@@ -28,23 +28,23 @@ export default function Details() {
       email: user.email,
       profilePic: user.profilePic,
       name: user.name,
-    }));
-  }, [details.uid, user]);
+    }))
+  }, [details.uid, user])
 
   const foodAllergies = SelectListHook({
-    options: ['egg', 'peanuts', 'tree nuts', 'milk', 'vegan'],
-  });
+    options: ["egg", "peanuts", "tree nuts", "milk", "vegan"],
+  })
   const medicalCond = SelectListHook({
     options: [
-      'avoid crowds',
-      'avoid unstable terrain',
-      'avoid extended activity',
-      'avoid flashing',
-      'avoid loud noises',
+      "avoid crowds",
+      "avoid unstable terrain",
+      "avoid extended activity",
+      "avoid flashing",
+      "avoid loud noises",
     ],
-  });
-  const isUsernameInvalid = details.username.length === 0;
-  const isNameInvalid = details.name.length === 0;
+  })
+  const isUsernameInvalid = details.username.length === 0
+  const isNameInvalid = details.name.length === 0
 
   // TODO: Implement this uploading profile picture.
 
@@ -53,12 +53,12 @@ export default function Details() {
       ...details,
       medicalInfo: Array.from(medicalCond.values.selected),
       allergies: Array.from(foodAllergies.values.selected),
-    };
+    }
     await addDetails(user, (response) => {
       if (!response.isSuccess) {
-        alert(response.errorMessage);
+        alert(response.errorMessage)
       }
-    });
+    })
   }
 
   return (
@@ -66,24 +66,19 @@ export default function Details() {
       <Paper
         elevation={3}
         style={{
-          width: '90%',
-          maxWidth: '600px',
+          width: "90%",
+          maxWidth: "600px",
           background: theme.palette.background.paper,
           padding: 20,
           paddingBottom: 40,
         }}
       >
-        <Grid
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-        >
+        <Grid container direction="column" justifyContent="center" alignItems="center">
           <div style={$container}>
             <Typography
               variant="h4"
               style={{
-                textAlign: 'center',
+                textAlign: "center",
                 fontWeight: 500,
                 color: theme.palette.secondary.main,
                 padding: 5,
@@ -93,7 +88,7 @@ export default function Details() {
             </Typography>
             <Typography
               style={{
-                textAlign: 'center',
+                textAlign: "center",
                 color: theme.palette.secondary.main,
                 paddingBottom: 15,
               }}
@@ -103,9 +98,9 @@ export default function Details() {
 
             <TextField
               color="secondary"
-              sx={{ width: '100%', marginTop: 2, marginBottom: 2 }}
+              sx={{ width: "100%", marginTop: 2, marginBottom: 2 }}
               error={isNameInvalid}
-              placeholder={isNameInvalid ? 'missing name' : undefined}
+              placeholder={isNameInvalid ? "missing name" : undefined}
               value={details.name}
               label="name"
               onChange={(e) =>
@@ -118,9 +113,9 @@ export default function Details() {
 
             <TextField
               color="secondary"
-              sx={{ width: '100%', marginTop: 2, marginBottom: 2 }}
+              sx={{ width: "100%", marginTop: 2, marginBottom: 2 }}
               error={isUsernameInvalid}
-              placeholder={isUsernameInvalid ? 'invalid username' : undefined}
+              placeholder={isUsernameInvalid ? "invalid username" : undefined}
               label="username"
               value={details.username}
               onChange={(e) =>
@@ -144,7 +139,7 @@ export default function Details() {
 
             <Button
               sx={{
-                width: '100%',
+                width: "100%",
                 paddingTop: 2,
                 paddingBottom: 2,
               }}
@@ -152,7 +147,7 @@ export default function Details() {
               variant="contained"
               disabled={isNameInvalid || isUsernameInvalid}
               onClick={async () => {
-                await maybeFinishRegister();
+                await maybeFinishRegister()
               }}
             >
               Continue
@@ -161,25 +156,25 @@ export default function Details() {
         </Grid>
       </Paper>
     </div>
-  );
+  )
 }
 
 const $wrapper: React.CSSProperties = {
-  width: '100%',
-  height: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
+  width: "100%",
+  height: "100%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}
 
 const $container: React.CSSProperties = {
-  overflowY: 'auto',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
-  maxHeight: '90%',
+  overflowY: "auto",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  maxHeight: "90%",
   paddingRight: 10,
-  alignContent: 'center',
+  alignContent: "center",
   flexGrow: 1,
-  flexDirection: 'column',
-};
+  flexDirection: "column",
+}
