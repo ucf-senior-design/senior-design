@@ -15,11 +15,10 @@ export default function Trip() {
     const { id } = router.query
     setTripID(id as string | undefined)
     updateNav(
-      { backgroundColor: "red" },
+      { background: "url('/header.svg') 100% 100%" },
       "transparent",
-      <div style={{ height: "300px" }}>
-        {" "}
-        <TripHeader></TripHeader>
+      <div style={{ height: "250px" }}>
+        <TripHeader />
       </div>,
     )
   }, [router])
