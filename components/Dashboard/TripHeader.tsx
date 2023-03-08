@@ -1,8 +1,17 @@
+export const TripHeader = (props: any) => {
+  const trip_details = {
+    location: "Orlando",
+    date_start: "October 1",
+    date_end: "October 3",
+    participants: [
+      ["hajime", "username"],
+      ["noriyuki", "username2"],
+      ["minoru", "username3"],
+    ],
+  }
 
-export const TripHeader = (props:any) => {
-    const trip_details = {location:'Orlando', date_start: 'October 1', date_end: 'October 3', participants:[['hajime', 'username'], ['noriyuki', 'username2'], ['minoru', 'username3']]}
-    
-    return <></>}
+  return <></>
+}
 //         <Grid
 //         container
 //         style={{
@@ -35,12 +44,10 @@ export const TripHeader = (props:any) => {
 
 //         {trip_details.participants.map((item) => (
 //             <Avatar name={item.username}
-            
-//         ))}
 
+//         ))}
 
 //         </Grid>
 //     </Grid>
 //     );
 // };
-
