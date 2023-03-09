@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .doc(tripID)
         .get()
         .then((value) => {
-          res.status(200).send(value.data())
+          res.status(200).send({ uid: value.id, ...value.data() })
         })
         .catch((e: any) => {
           res.status(400).send("Could not get trip.")
