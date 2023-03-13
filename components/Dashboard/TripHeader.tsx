@@ -1,18 +1,15 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
-import EditIcon from "@mui/icons-material/Edit"
 import { Grid } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import Avatar from "../../components/Avatar"
+import { useTrip } from "../../utility/hooks/trip"
+import { Trip } from "../../utility/types/trip"
 
-export const TripHeader = (props: any) => {
+export default function TripHeader ({ trip_details }: { trip_details: Trip }) {
+  const { trip } = useTrip()
   const item1 = { username: "username", id: "123", name: "noriyuki" }
   const item2 = { username: "username2", id: "456", name: "minoru" }
-  const trip_details = {
-    location: "Orlando",
-    date_start: "October 1",
-    date_end: "October 3",
-    participants: [item1, item2],
-  }
+  const example = [item1, item2]
 
   return (
     <div>
@@ -48,11 +45,13 @@ export const TripHeader = (props: any) => {
           }}
         >
           <Typography sx={{ color: "white", fontWeight: "700", fontSize: "40px" }}>
-            {trip_details.location} <EditIcon sx={{ color: "white" }} />
+            {/* {trip_details.destination} <EditIcon sx={{ color: "white" }} /> */}
           </Typography>
 
           <Typography sx={{ color: "white", fontWeight: "400", fontSize: "20px" }}>
-            {trip_details.date_start} - {trip_details.date_end}
+            {/* {{trip_details.duration.start}.toLocaleDateString("en-US", {
+                year: 'numeric', month: 'long', day: 'numeric'
+            })} */}trip
           </Typography>
           <Grid
             container
@@ -62,12 +61,11 @@ export const TripHeader = (props: any) => {
               gap: 2,
             }}
           >
-            {trip_details.participants.map((item) => (
+            {example.map((item) => (
               <Avatar key={item.id} name={item.username} />
             ))}
           </Grid>
         </Grid>
-        {/* <img src="/header.svg" alt="header" layout={"fill"} objectFit={"cover"} /> */}
       </Grid>
     </div>
   )

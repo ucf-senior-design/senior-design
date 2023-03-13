@@ -1,7 +1,9 @@
 import { useRouter } from "next/router"
 import React from "react"
+import { EventReschedule } from "../../../components/Dashboard/EventReschedule"
 import Schedule from "../../../components/Dashboard/Schedule"
-import { TripHeader } from "../../../components/Dashboard/TripHeader"
+import { CalendarWidget } from "../../../components/Dashboard/Widgets/Calendar"
+import { PreferencesWidget } from "../../../components/Dashboard/Widgets/Preferences"
 import { SuggestionWidgets } from "../../../components/Dashboard/Widgets/Suggestions"
 import { useScreen } from "../../../utility/hooks/screen"
 import { TripProvider } from "../../../utility/hooks/trip"
@@ -18,7 +20,7 @@ export default function Trip() {
       { background: "url('/header.svg') 100% 100%" },
       "transparent",
       <div style={{ height: "250px" }}>
-        <TripHeader />
+        {/* <TripHeader /> */}
       </div>,
     )
   }, [router])
@@ -26,7 +28,10 @@ export default function Trip() {
   return tripID !== undefined ? (
     <TripProvider id={tripID}>
       <SuggestionWidgets />
+      <PreferencesWidget />
+      <CalendarWidget />
       <Schedule />
+      <EventReschedule />
     </TripProvider>
   ) : (
     <div> loading</div>
