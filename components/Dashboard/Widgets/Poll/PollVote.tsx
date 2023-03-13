@@ -1,12 +1,18 @@
-import { Circle, CircleOutlined } from "@mui/icons-material";
-import { Box, Button } from "@mui/material";
-import usePoll from "../../../../utility/hooks/polls";
-import { Poll as PollType, PollOption as PollOptionType } from "../../../../utility/types/trip";
+import { Circle, CircleOutlined } from "@mui/icons-material"
+import { Box, Button } from "@mui/material"
+import usePoll from "../../../../utility/hooks/polls"
+import { Poll as PollType, PollOption as PollOptionType } from "../../../../utility/types/trip"
 
-function PollOption({ option, selected, poll }: { option: string; selected: boolean, poll: PollType }) {
-  const {
-    selectOption,
-  } = usePoll(poll)
+function PollOption({
+  option,
+  selected,
+  poll,
+}: {
+  option: string
+  selected: boolean
+  poll: PollType
+}) {
+  const { selectOption } = usePoll(poll)
 
   return (
     <div
@@ -28,19 +34,28 @@ function PollOption({ option, selected, poll }: { option: string; selected: bool
   )
 }
 
-export default function PollVote({ options, pollWidget }: { options: Array<PollOptionType>, pollWidget: PollType }) {
-  const {
-    doVote,
-    getIndex,
-    poll
-  } = usePoll(pollWidget)
+export default function PollVote({
+  options,
+  pollWidget,
+}: {
+  options: Array<PollOptionType>
+  pollWidget: PollType
+}) {
+  const { doVote, getIndex, poll } = usePoll(pollWidget)
 
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <>
           {options.map((option, index) => {
-            return <PollOption key={index} option={option.value} selected={getIndex(option.value) === poll.vote ? true : false} poll={poll}/>
+            return (
+              <PollOption
+                key={index}
+                option={option.value}
+                selected={getIndex(option.value) === poll.vote ? true : false}
+                poll={poll}
+              />
+            )
           })}
         </>
       </Box>
@@ -48,9 +63,7 @@ export default function PollVote({ options, pollWidget }: { options: Array<PollO
       <Button
         variant="contained"
         sx={{ width: "100%", marginTop: "10px" }}
-        onClick={() =>
-          doVote()
-        }
+        onClick={() => doVote()}
       >
         Submit
       </Button>
