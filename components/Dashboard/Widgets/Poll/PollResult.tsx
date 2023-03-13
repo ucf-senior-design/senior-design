@@ -1,27 +1,14 @@
 import { Box, Grid, LinearProgress, Typography } from "@mui/material"
-import React from "react"
 import theme from "../../../../styles/theme/Theme"
 import usePoll from "../../../../utility/hooks/polls"
 import { Poll as PollType, PollOption as PollOptionType } from "../../../../utility/types/trip"
 
-function OptionResults({
-  option,
-  pollWidget,
-  value,
-}: {
-  option: PollOptionType
-  pollWidget: PollType
-  value: number
-}) {
-  const { getIndex, poll } = usePoll(pollWidget)
-
+function OptionResults({ value, didUserVote }: { value: number; didUserVote: boolean }) {
   return (
     <LinearProgress
       sx={{ borderRadius: "2px", height: "10px" }}
       variant="determinate"
-      color={
-        getIndex(option.value) === poll.vote ? (theme.palette.highlight.main as any) : "secondary"
-      } // highlights the option if the user voted for it
+      color={didUserVote ? (theme.palette.highlight.main as any) : "secondary"} // highlights the option if the user voted for it
       value={value}
     />
   )
@@ -34,15 +21,12 @@ export default function PollResult({
   options: Array<PollOptionType>
   pollWidget: PollType
 }) {
-  const { pollResults, getIndex } = usePoll(pollWidget)
-  const [percent, setPercent] = React.useState(0)
+  const { pollResults, didUserVote } = usePoll(pollWidget)
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       <>
         {options.map((option, index) => {
-          setPercent(pollResults(getIndex(option.value)))
-
           return (
             <>
               <Grid container>
@@ -63,11 +47,15 @@ export default function PollResult({
                       fontSize: "12px",
                     }}
                   >
-                    {percent}%
+                    {pollResults(index)}%
                   </Typography>
                 </Grid>
               </Grid>
-              <OptionResults key={index} option={option} pollWidget={pollWidget} value={percent} />
+              <OptionResults
+                key={index}
+                value={pollResults(index)}
+                didUserVote={didUserVote(index)}
+              />
             </>
           )
         })}

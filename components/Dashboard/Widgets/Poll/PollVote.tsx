@@ -6,14 +6,14 @@ import { Poll as PollType, PollOption as PollOptionType } from "../../../../util
 function PollOption({
   option,
   selected,
-  poll,
+  index,
+  selectOption,
 }: {
   option: string
   selected: boolean
-  poll: PollType
+  index: number
+  selectOption: (index: number) => void
 }) {
-  const { selectOption } = usePoll(poll)
-
   return (
     <div
       style={{
@@ -26,7 +26,7 @@ function PollOption({
         borderRadius: "5px",
       }}
       onClick={(e) => {
-        selectOption(option)
+        selectOption(index)
       }}
     >
       {selected ? <Circle /> : <CircleOutlined />} {option}
@@ -41,7 +41,7 @@ export default function PollVote({
   options: Array<PollOptionType>
   pollWidget: PollType
 }) {
-  const { doVote, getIndex, poll } = usePoll(pollWidget)
+  const { doVote, didUserVote, selectOption } = usePoll(pollWidget)
 
   return (
     <>
@@ -52,8 +52,9 @@ export default function PollVote({
               <PollOption
                 key={index}
                 option={option.value}
-                selected={getIndex(option.value) === poll.vote ? true : false}
-                poll={poll}
+                selected={didUserVote(index) !== undefined ? true : false}
+                index={index}
+                selectOption={selectOption}
               />
             )
           })}
