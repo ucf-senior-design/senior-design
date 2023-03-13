@@ -12,11 +12,13 @@ interface PollUseState extends Poll {
 
 export type usePollHook = {
   doesUserOwn: () => boolean
-  didUserVote: (index: number) => boolean
+  didUserVote: (index: string) => boolean
   doVote: () => Promise<void>
   showResults: () => boolean
-  selectOption: (index: number) => void
+  poll: PollUseState
+  selectOption: (selectedOption: string) => void
   pollResults: (index: number) => number
+  getIndex: (selectedOption: string) => number
 }
 
 export default function usePoll(p: Poll): usePollHook {
@@ -57,6 +59,14 @@ export default function usePoll(p: Poll): usePollHook {
   }, [])
 
   /**
+   * @param selectedOption the option the user selected
+   * @returns the index of the option
+   */
+  function getIndex(selectedOption: string) {
+    return poll.options.findIndex((optionVal) => optionVal.value === selectedOption)
+  }
+
+  /**
    * Checks to see if a user owns a poll
    */
   function doesUserOwn() {
@@ -66,7 +76,8 @@ export default function usePoll(p: Poll): usePollHook {
   /**
    * Checks if user voted.
    */
-  function didUserVote(index: number) {
+  function didUserVote(selectedOption: string) {
+    let index = getIndex(selectedOption)
     return poll.vote === undefined ? false : poll.vote === index
   }
 
@@ -100,7 +111,8 @@ export default function usePoll(p: Poll): usePollHook {
   /**
    * Stores the user vote before submitting.
    */
-  function selectOption(index: number) {
+  function selectOption(selectedOption: string) {
+    let index = getIndex(selectedOption)
     setPoll({
       ...poll,
       vote: index,
@@ -128,5 +140,7 @@ export default function usePoll(p: Poll): usePollHook {
     selectOption,
     pollResults,
     showResults,
+    getIndex,
+    poll,
   }
 }

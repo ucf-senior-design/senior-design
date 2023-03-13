@@ -37,7 +37,6 @@ export default function PollResult({
   const { pollResults, getIndex } = usePoll(pollWidget)
   const [percent, setPercent] = React.useState(0)
 
-
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       <>
