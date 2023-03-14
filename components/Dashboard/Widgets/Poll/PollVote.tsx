@@ -6,13 +6,11 @@ import { Poll as PollType, PollOption as PollOptionType } from "../../../../util
 function PollOption({
   option,
   selected,
-  index,
-  selectOption,
+  handleSelect,
 }: {
   option: string
   selected: boolean
-  index: number
-  selectOption: (index: number) => void
+  handleSelect: () => void
 }) {
   return (
     <div
@@ -26,7 +24,7 @@ function PollOption({
         borderRadius: "5px",
       }}
       onClick={(e) => {
-        selectOption(index)
+        handleSelect()
       }}
     >
       {selected ? <Circle /> : <CircleOutlined />} {option}
@@ -52,9 +50,8 @@ export default function PollVote({
               <PollOption
                 key={index}
                 option={option.value}
-                selected={didUserVote(index) !== undefined ? true : false}
-                index={index}
-                selectOption={selectOption}
+                selected={didUserVote(index)}
+                handleSelect={() => selectOption(index)}
               />
             )
           })}

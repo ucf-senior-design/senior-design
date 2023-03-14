@@ -111,7 +111,7 @@ export default function usePoll(p: Poll): usePollHook {
    * Calculates results for a certain option
    */
   function pollResults(index: number) {
-    return poll.options[index].voters.length / poll.totalVotes
+    return (poll.options[index].voters.length / poll.totalVotes) * 100
   }
 
   /**
