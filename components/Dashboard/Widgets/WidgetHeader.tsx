@@ -15,8 +15,7 @@ export default function WidgetHeader({
         alignItems: "center",
         flexDirection: "row",
         gap: 1,
-        width: "80vw",
-        maxWidth: "300px",
+        width: "100%",
       }}
     >
       <Grid
@@ -38,8 +37,10 @@ export default function WidgetHeader({
         item
         xs={4}
         sx={{
+          width: "100%",
           display: "flex",
           alignItems: "center",
+          justifyContent: "end",
           flexDirection: "row",
           gap: 1,
         }}

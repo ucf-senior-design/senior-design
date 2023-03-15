@@ -68,6 +68,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     joinableEvents: [],
     photoURL: "",
   })
+  console.log(trip.suggestions)
   const API_URL = process.env.NEXT_PUBLIC_API_URL
 
   async function initilizeTrip() {

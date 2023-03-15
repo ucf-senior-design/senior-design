@@ -1,5 +1,9 @@
+import { useTheme } from "@emotion/react"
+import { Grid } from "@mui/material"
 import React from "react"
 import { SortableContainer, SortableElement } from "react-sortable-hoc"
+import Widget from "../../components/Widget"
+import { useTrip } from "./trip"
 
 interface DashboardContent {
   title: string
@@ -18,18 +22,38 @@ export function useDashboardContent() {
 
 export function DashboardContentProvder({ children }: { children: React.ReactNode }) {
   let title = "title"
+  const { trip } = useTrip()
 
-  const [items, setItems] = React.useState([
-    "Item 1",
-    "Item 2",
-    "Item 3",
-    "Item 4",
-    "Item 5",
-    "Item 6",
-  ])
+  let widgets: Array<React.ReactNode> = [
+    <Widget
+      key={"1"}
+      widget={{
+        key: "suggestion:5SIaabTavwsmKGPrfTGy",
+        size: 0,
+        index: 0,
+      }}
+    />,
+    <Widget
+      key={"2"}
+      widget={{
+        key: "suggestion:6iTldrtHhzzysFMhOgRM",
+        size: 0,
+        index: 0,
+      }}
+    />,
+    <Widget
+      key={"3"}
+      widget={{
+        key: "suggestion:F5UkHGJPJtCNNM3c0nIv",
+        size: 0,
+        index: 0,
+      }}
+    />,
+  ]
+  const [items, setItems] = React.useState(widgets)
 
   function moveArray(oldIndex: number, newIndex: number) {
-    let a: Array<string> = []
+    let a: Array<React.ReactNode> = []
     for (let i = 0; i < items.length; i++) {
       if (i === newIndex) {
         if (oldIndex < newIndex) {
@@ -49,35 +73,24 @@ export function DashboardContentProvder({ children }: { children: React.ReactNod
     setItems(moveArray(oldIndex, newIndex))
   }
 
-  const SortableItem = SortableElement(({ children }: { children: React.ReactNode }) => (
-    <>{children}</>
+  const SortableItem = SortableElement(({ value }: { value: React.ReactNode }) => (
+    <>{value}</>
   )) as any
 
   const SortableList = SortableContainer(() => {
     return (
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 4,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <Grid container gap={1} alignItems={"center"} justifyContent={"center"}>
         {items.map((value, index) => (
-          <SortableItem key={`item-${value}`} index={index}>
-            <div style={{ width: "300px", height: "300px", backgroundColor: "yellow" }}>
-              {`item-${value}`}{" "}
-            </div>
-          </SortableItem>
+          <SortableItem key={`item-${index}`} index={index} value={value} />
         ))}
-      </div>
+      </Grid>
     )
   })
 
   return (
     <DashboardContentContext.Provider value={{ title }}>
-      <SortableList axis="xy" onSortEnd={onSortEnd} />;{children}
+      {trip.suggestions.size === 3 && <SortableList axis="xy" onSortEnd={onSortEnd} />}
+      {children}
     </DashboardContentContext.Provider>
   )
 }

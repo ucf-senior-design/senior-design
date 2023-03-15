@@ -39,7 +39,7 @@ export function SuggestionWidgets() {
   return <> {suggestions}</>
 }
 
-function Suggestions({
+export function Suggestions({
   suggestionWidget,
   tripID,
 }: {
@@ -146,7 +146,7 @@ function Suggestions({
           </Button>
         </div>
       </BackdropModal>
-      <Paper sx={{ padding: "20px", width: "80vw", maxWidth: "300px" }}>
+      <Paper sx={{ padding: "20px", width: "100%" }}>
         <WidgetHeader
           owner={suggestion.owner}
           rightAccessory={
