@@ -1,7 +1,7 @@
 import { Box, Button, Divider, InputLabel, Paper, Typography } from "@mui/material"
 import DateRange from "../../../components/Form/DateRange"
 import React from "react"
-import useCreateTrip from "../../../utility/hooks/createTrip"
+import useCreateTrip from "../../../utility/hooks/create/createTrip"
 import PlacesSearch from "../../../components/Form/PlacesSearch"
 import SelectAttendees from "../../../components/Form/SelectAttendees"
 import UserSearch from "../../../components/Form/UserSearch"

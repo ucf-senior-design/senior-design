@@ -2,6 +2,12 @@ import React from "react"
 import Widget from "../../components/Widget"
 import { StoredLocation } from "../types/trip"
 import { useLocalStorage } from "react-use-storage"
+
+type ResizableUseState = {
+  size: Map<string, number> // stores the size of each item <key,size>
+  order: Array<string> // stores the order of each item [key]
+  widgets: Map<string, React.ReactNode> // stores each widget <key, React.ReactNode>
+}
 interface Resizable {
   doIncreaseSize: (key: string) => void
   doDecreaseSize: (key: string) => void
@@ -9,9 +15,9 @@ interface Resizable {
   handleItemUpdate: (dashboardItem: Array<string>) => void
   readLayout: (layout: Array<StoredLocation>) => void
   resizable: ResizableUseState
-
   getWidget: (key: string) => React.ReactNode
   onSortEnd: ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => void
+  addItem: (key: string) => void
 }
 
 const ResizableContext = React.createContext<Resizable | null>(null)
@@ -20,17 +26,14 @@ export function useResizable() {
   const context = React.useContext(ResizableContext)
 
   if (!context) {
-    throw Error("useDashboardContent must be used within an AuthProvider")
+    throw Error("useResizable  must be used within an ResizableProvider")
   }
   return context
 }
 
-type ResizableUseState = {
-  size: Map<string, number>
-  order: Array<string>
-  widgets: Map<string, React.ReactNode>
-}
-
+/**
+ * Creates an envionrment of dashboard elements to be repositioned and resized dynamically.
+ */
 export function ResizableProvider({ children }: { children: React.ReactNode }) {
   const [resizable, setResizable] = React.useState<ResizableUseState>({
     size: new Map<string, number>(),
@@ -41,14 +44,33 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     "localLayout",
     [],
   )
-  const sizes = [3, 5, 8, 12]
+  const DEFAULT_SIZE_INDEX = 1
+  const SIZES = [3, 5, 8, 12]
+
+  // Allows local layout to be stored whenever there are changes
   React.useEffect(() => {
     setLocalLayout(getStorableLayout())
   }, [resizable.size, resizable.order])
-  function updateOrder(order: Array<string>) {
+
+  /**
+   * @param key adds a new widget to be rendered by key
+   */
+  function addItem(key: string) {
+    // Create a duplicate of the current state.
+    let size = new Map<string, number>(resizable.size)
+    let widgets = new Map<string, React.ReactNode>(resizable.widgets)
+    let order: Array<string> = Array.from(resizable.order)
+
+    // Add the new widget to the bottom of the page w/ default size.
+    size.set(key, DEFAULT_SIZE_INDEX)
+    widgets.set(key, <Widget key={key} widget={{ key: key }} />)
+    order.push(key)
+
+    // Store the changes.
     setResizable({
-      ...resizable,
+      size: size,
       order: order,
+      widgets: widgets,
     })
   }
 
@@ -56,6 +78,9 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     return resizable.widgets.get(key)
   }
 
+  /**
+   * Handles reading the layout from the database. 
+   */
   function readLayout(layout: Array<StoredLocation>) {
     let size = new Map<string, number>()
     let widgets = new Map<string, React.ReactNode>()
@@ -73,6 +98,9 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     })
   }
 
+  /**
+   * Creates an array that represents the state of the current layout so it can be stored locally and later in the database.
+   */
   function getStorableLayout() {
     let layout: Array<StoredLocation> = []
 
@@ -107,7 +135,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     if (size === undefined) {
       return false
     }
-    return size + 1 < sizes.length
+    return size + 1 < SIZES.length
   }
 
   function canDecreaseSize(key: string) {
@@ -118,6 +146,9 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     return size > 0
   }
 
+  /**
+   * If possible, increase the size of the widget
+   */
   function doIncreaseSize(key: string) {
     if (canIncreaseSize(key)) {
       let oldSize = resizable.size.get(key) ?? 0
@@ -131,9 +162,12 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  /**
+   * If possible, decrease the size of the widget
+   */
   function doDecreaseSize(key: string) {
     if (canDecreaseSize(key)) {
-      let oldSize = resizable.size.get(key) ?? sizes.length
+      let oldSize = resizable.size.get(key) ?? SIZES.length
       let map = new Map(resizable.size)
       map.set(key, oldSize - 1)
       setResizable({
@@ -145,7 +179,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
 
   function getSize(key: string) {
     let sizeIndex = resizable.size.get(key) ?? 0
-    return sizes[sizeIndex]
+    return SIZES[sizeIndex]
   }
 
   function moveArray(oldIndex: number, newIndex: number) {
@@ -168,8 +202,12 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     }
     return a
   }
+
   function onSortEnd({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) {
-    updateOrder(moveArray(oldIndex, newIndex))
+    setResizable({
+      ...resizable,
+      order: moveArray(oldIndex, newIndex),
+    })
   }
 
   return (
@@ -183,6 +221,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
         resizable,
         onSortEnd,
         getWidget,
+        addItem,
       }}
     >
       {children}

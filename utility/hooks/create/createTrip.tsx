@@ -1,11 +1,11 @@
 import { useRouter } from "next/router"
 import React from "react"
 import { useState } from "react"
-import { createFetchRequestOptions } from "../fetch"
-import { Trip } from "../types/trip"
-import { useAuth } from "./authentication"
-import { useFriend } from "./friends"
-import { useScreen } from "./screen"
+import { createFetchRequestOptions } from "../../fetch"
+import { Trip } from "../../types/trip"
+import { useAuth } from "../authentication"
+import { useFriend } from "../friends"
+import { useScreen } from "../screen"
 
 interface TCreateTrip extends Omit<Trip, "uid" | "attendees"> {
   attendees: Array<AttendeeOption>
@@ -29,6 +29,7 @@ export default function useCreateTrip() {
       end: new Date(),
     },
     attendeeOptions: [],
+    layout: [],
   })
 
   const { friendList } = useFriend()
