@@ -2,12 +2,10 @@ import { WbSunny } from "@mui/icons-material"
 import React, { useTransition } from "react"
 import Day from "../../components/Dashboard/Day"
 import { Suggestions, SuggestionWidgets } from "../../components/Dashboard/Widgets/Suggestions"
-import { Widget } from "../types/dashboard"
+import { Widget } from "../types/trip"
 import { SuggestionWidget } from "../types/trip"
 import { useTrip } from "./trip"
 export default function useWidget(w: Widget) {
-  const sizes = [3, 6, 12]
-  const [widget, setWidget] = React.useState<Widget>(w)
   const [popup, setPopup] = React.useState(false)
   const { trip } = useTrip()
 
@@ -23,7 +21,6 @@ export default function useWidget(w: Widget) {
     }
     if (splitKey[0] === "day") {
       let day = trip.days[parseInt(splitKey[1])]
-      console.log("day", day, trip.days, parseInt(splitKey[1]))
       return (
         <Day
           day={new Date(day.date)}
@@ -37,14 +34,8 @@ export default function useWidget(w: Widget) {
     return <></>
   }
 
-  function getGridSize() {
-    return sizes[widget.size]
-  }
-
   return {
     getWidgetUI,
     popup,
-    getGridSize,
-    widget,
   }
 }

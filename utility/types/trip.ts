@@ -4,8 +4,16 @@ export interface Trip {
   duration: Duration
   destination: string
   photoURL: string
+  layout: Array<StoredLocation>
+}
+export type StoredLocation = {
+  key: string
+  size: number
 }
 
+export interface Widget {
+  key: string
+}
 export type UserAvailabillity = {
   uid: string
   dates: Array<Duration>

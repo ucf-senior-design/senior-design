@@ -1,6 +1,6 @@
 import { Button, Grid } from "@mui/material"
 import useWidget from "../utility/hooks/widget"
-import { Widget as TWidget } from "../utility/types/dashboard"
+import { Widget as TWidget } from "../utility/types/trip"
 import React from "react"
 import { useResizable } from "../utility/hooks/resizable"
 

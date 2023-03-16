@@ -4,8 +4,8 @@ import Schedule from "../../../components/Dashboard/Schedule"
 import { SuggestionWidgets } from "../../../components/Dashboard/Widgets/Suggestions"
 import { TripProvider } from "../../../utility/hooks/trip"
 import { useScreen } from "../../../utility/hooks/screen"
-import { DashboardContentProvder } from "../../../utility/hooks/dashboardContent"
 import { ResizableProvider } from "../../../utility/hooks/resizable"
+import Content from "../../../components/Dashboard/Content"
 
 export default function Trip() {
   const router = useRouter()
@@ -23,13 +23,11 @@ export default function Trip() {
   }, [router])
 
   return tripID !== undefined ? (
-    <TripProvider id={tripID}>
-      <ResizableProvider>
-        <DashboardContentProvder>
-          <></>
-        </DashboardContentProvder>
-      </ResizableProvider>
-    </TripProvider>
+    <ResizableProvider>
+      <TripProvider id={tripID}>
+        <Content />
+      </TripProvider>
+    </ResizableProvider>
   ) : (
     <div> loading</div>
   )

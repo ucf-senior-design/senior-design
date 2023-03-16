@@ -1,7 +1,17 @@
 import React from "react"
+import { Beforeunload } from "react-beforeunload"
+import { useLocalStorage } from "react-use-storage"
 import SecurePage from "../../components/SecurePage"
 import { createFetchRequestOptions } from "../fetch"
-import { Duration, Event, SuggestionOption, SuggestionWidget, Trip } from "../types/trip"
+import {
+  Duration,
+  Event,
+  StoredLocation,
+  SuggestionOption,
+  SuggestionWidget,
+  Trip,
+} from "../types/trip"
+import { useResizable } from "./resizable"
 
 export type Day = {
   date: Date
@@ -14,6 +24,7 @@ interface TripUseState extends Trip {
   itinerary: Array<Array<Event>>
   destination: string
   days: Array<Day>
+  didReadLayout: boolean
 }
 
 interface TripDetails {
@@ -60,8 +71,11 @@ export function useTrip(): TripContext {
   return context
 }
 export function TripProvider({ children, id }: { children: React.ReactNode; id: string }) {
-  // TODO: remove this and read in the trip in the initilizeTrip() function
-
+  const [localLayout, setLocalLayout, removeLocalLayout] = useLocalStorage<Array<StoredLocation>>(
+    "localLayout",
+    [],
+  )
+  const { readLayout } = useResizable()
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: "",
     attendees: new Set(),
@@ -69,12 +83,14 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
       start: new Date(),
       end: new Date(),
     },
+    layout: [],
     destination: "",
     suggestions: new Map<string, SuggestionWidget>(),
     itinerary: [],
     joinableEvents: [],
     photoURL: "",
     days: [],
+    didReadLayout: false,
   })
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -86,6 +102,15 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     })
   }, [trip.joinableEvents, trip.itinerary])
 
+  React.useEffect(() => {
+    if (!trip.didReadLayout && trip.uid.length >= 0) {
+      console.log("initializing layout....")
+
+      readLayout(trip.layout)
+      setTrip({ ...trip, didReadLayout: true })
+    }
+  }, [trip])
+
   function getEventsByDay() {
     let dayMilli = 1000 * 3600 * 24
     let days: Array<Day> = []
@@ -93,7 +118,6 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     let iIndex = 0
     let jIndex = 0
 
-    console.log("duration", trip.duration)
     for (
       let day = trip.duration.start.getTime();
       day <= trip.duration.end.getTime();
@@ -144,6 +168,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
       itinerary: eventData.userEvents,
       joinableEvents: eventData.joinableEvents,
       days: getEventsByDay(),
+      didReadLayout: false,
     })
   }
 
@@ -327,6 +352,16 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     }
   }
 
+  async function storeLayout() {
+    const options = createFetchRequestOptions(JSON.stringify({ layout: localLayout }), "PUT")
+
+    const response = await fetch(`${API_URL}/trip/${id}/layout`, options)
+
+    // TODO: Allow user to choose to not leave page when this happens
+    if (!response.ok) {
+      alert("Unable to save layout changes")
+    }
+  }
   async function modifyTrip(details: TripDetails, callback: (response: Response) => void) {
     const options = createFetchRequestOptions(JSON.stringify(details), "PUT")
     const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options)
@@ -363,7 +398,10 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
         modifyTrip,
       }}
     >
-      <SecurePage>{children}</SecurePage>
+      <SecurePage>
+        <Beforeunload onBeforeunload={async (event) => await storeLayout()} />
+        {children}
+      </SecurePage>
     </TripContext.Provider>
   )
 }
