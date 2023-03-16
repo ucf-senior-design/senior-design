@@ -1,4 +1,6 @@
+import { WbSunny } from "@mui/icons-material"
 import React, { useTransition } from "react"
+import Day from "../../components/Dashboard/Day"
 import { Suggestions, SuggestionWidgets } from "../../components/Dashboard/Widgets/Suggestions"
 import { Widget } from "../types/dashboard"
 import { SuggestionWidget } from "../types/trip"
@@ -8,40 +10,6 @@ export default function useWidget(w: Widget) {
   const [widget, setWidget] = React.useState<Widget>(w)
   const [popup, setPopup] = React.useState(false)
   const { trip } = useTrip()
-
-  function canIncreaseSize() {
-    return widget.size + 1 < sizes.length
-  }
-
-  function canDecreaseSize() {
-    return widget.size > 0
-  }
-
-  function showPopUp() {
-    setPopup(true)
-  }
-
-  function hidePopUp() {
-    setPopup(false)
-  }
-
-  function doIncreaseSize() {
-    console.log(widget.size, canIncreaseSize())
-    if (canIncreaseSize())
-      setWidget({
-        ...widget,
-        size: widget.size + 1,
-      })
-  }
-
-  function doDecreaseSize() {
-    console.log(w.size, canDecreaseSize())
-    if (canDecreaseSize())
-      setWidget({
-        ...widget,
-        size: widget.size - 1,
-      })
-  }
 
   function getWidgetUI(): React.ReactNode {
     let splitKey = w.key.split(":")
@@ -53,6 +21,19 @@ export default function useWidget(w: Widget) {
         />
       )
     }
+    if (splitKey[0] === "day") {
+      let day = trip.days[parseInt(splitKey[1])]
+      console.log("day", day, trip.days, parseInt(splitKey[1]))
+      return (
+        <Day
+          day={new Date(day.date)}
+          events={day.itinerary}
+          joinableEvents={day.joinable}
+          weatherIcon={<WbSunny />}
+          temperature={30}
+        />
+      )
+    }
     return <></>
   }
 
@@ -61,14 +42,8 @@ export default function useWidget(w: Widget) {
   }
 
   return {
-    canIncreaseSize,
-    canDecreaseSize,
-    doIncreaseSize,
-    doDecreaseSize,
     getWidgetUI,
     popup,
-    showPopUp,
-    hidePopUp,
     getGridSize,
     widget,
   }

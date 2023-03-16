@@ -14,8 +14,6 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
         </Head>
-        <script type="text/javascript" src="https://unpkg.com/default-passive-events"></script>
-
         <body>
           <Main />
           <NextScript />

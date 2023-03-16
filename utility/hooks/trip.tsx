@@ -2,11 +2,18 @@ import React from "react"
 import SecurePage from "../../components/SecurePage"
 import { createFetchRequestOptions } from "../fetch"
 import { Duration, Event, SuggestionOption, SuggestionWidget, Trip } from "../types/trip"
+
+export type Day = {
+  date: Date
+  itinerary: Array<Event>
+  joinable: Array<Event>
+}
 interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>
   joinableEvents: Array<Array<Event>>
   itinerary: Array<Array<Event>>
   destination: string
+  days: Array<Day>
 }
 
 interface TripDetails {
@@ -67,10 +74,59 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     itinerary: [],
     joinableEvents: [],
     photoURL: "",
+    days: [],
   })
-  console.log(trip.suggestions)
+
   const API_URL = process.env.NEXT_PUBLIC_API_URL
 
+  React.useEffect(() => {
+    setTrip({
+      ...trip,
+      days: getEventsByDay(),
+    })
+  }, [trip.joinableEvents, trip.itinerary])
+
+  function getEventsByDay() {
+    let dayMilli = 1000 * 3600 * 24
+    let days: Array<Day> = []
+
+    let iIndex = 0
+    let jIndex = 0
+
+    console.log("duration", trip.duration)
+    for (
+      let day = trip.duration.start.getTime();
+      day <= trip.duration.end.getTime();
+      day += dayMilli
+    ) {
+      days.push({
+        date: new Date(day),
+        itinerary: [],
+        joinable: [],
+      })
+      if (iIndex < trip.itinerary.length) {
+        if (
+          trip.itinerary[iIndex][0].duration.start.toLocaleDateString() ===
+          new Date(day).toLocaleDateString()
+        ) {
+          days[days.length - 1].itinerary = trip.itinerary[iIndex]
+          iIndex += 1
+        }
+      }
+
+      if (jIndex < trip.joinableEvents.length) {
+        if (
+          trip.joinableEvents[jIndex][0].duration.start.toLocaleDateString() ===
+          new Date(day).toLocaleDateString()
+        ) {
+          days[days.length - 1].joinable = trip.joinableEvents[jIndex]
+          jIndex += 1
+        }
+      }
+    }
+
+    return days
+  }
   async function initilizeTrip() {
     let trip = await getTrip()
     let suggestionWidgets = await getSuggestionWidgetData()
@@ -87,6 +143,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
       suggestions: suggestionWidgets,
       itinerary: eventData.userEvents,
       joinableEvents: eventData.joinableEvents,
+      days: getEventsByDay(),
     })
   }
 
@@ -121,12 +178,19 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
   }
   async function getTrip() {
     const options = createFetchRequestOptions(null, "GET")
-    let t = null
+
     const response = await fetch(`${API_URL}trip/${id}`, options)
     if (response.ok) {
-      t = (await response.json()) as Trip
+      let t = (await response.json()) as Trip
+      return {
+        ...t,
+        duration: {
+          start: new Date(t?.duration.start),
+          end: new Date(t?.duration.end),
+        },
+      }
     }
-    return t
+    return null
   }
 
   function addEventToList(list: Array<Array<Event>>, event: Event) {

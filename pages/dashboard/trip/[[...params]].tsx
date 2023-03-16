@@ -5,6 +5,7 @@ import { SuggestionWidgets } from "../../../components/Dashboard/Widgets/Suggest
 import { TripProvider } from "../../../utility/hooks/trip"
 import { useScreen } from "../../../utility/hooks/screen"
 import { DashboardContentProvder } from "../../../utility/hooks/dashboardContent"
+import { ResizableProvider } from "../../../utility/hooks/resizable"
 
 export default function Trip() {
   const router = useRouter()
@@ -23,12 +24,11 @@ export default function Trip() {
 
   return tripID !== undefined ? (
     <TripProvider id={tripID}>
-      {/* <SuggestionWidgets />
-      <Schedule /> */}
-      <Schedule />
-      <DashboardContentProvder>
-        <></>
-      </DashboardContentProvder>
+      <ResizableProvider>
+        <DashboardContentProvder>
+          <></>
+        </DashboardContentProvder>
+      </ResizableProvider>
     </TripProvider>
   ) : (
     <div> loading</div>
