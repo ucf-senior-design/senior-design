@@ -79,7 +79,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
   }
 
   /**
-   * Handles reading the layout from the database. 
+   * Handles reading the layout from the database.
    */
   function readLayout(layout: Array<StoredLocation>) {
     let size = new Map<string, number>()
