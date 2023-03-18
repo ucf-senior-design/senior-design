@@ -5,7 +5,10 @@ export default function allowCors(
 ): (req: NextApiRequest, res: NextApiResponse) => void {
   return (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader("Access-Control-Allow-Credentials", "true")
-    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      "https://we-tinerary-git-fix-cors-ucf-senior-design.vercel.app/",
+    )
     res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT")
     res.setHeader(
       "Access-Control-Allow-Headers",
