@@ -30,6 +30,7 @@
     "@react-poll-widget/ui": "^0.0.21",
     "@types/autosuggest-highlight": "^3.2.0",
     "@types/chai": "^4.3.4",
+    "@types/cors": "^2.8.13",
     "@types/mocha": "^10.0.0",
     "@types/react-date-range": "^1.4.4",
     "@types/react-datetime-picker": "^3.4.1",
