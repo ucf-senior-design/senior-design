@@ -282,7 +282,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       "POST",
     )
     const response = await fetch(
-      `https://we-tinerary-git-fix-cors-ucf-senior-design.vercel.app/auth/login`,
+      `https://we-tinerary-git-fix-cors-ucf-senior-design.vercel.app/api/auth/login`,
       options,
     )
 
