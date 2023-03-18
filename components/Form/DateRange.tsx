@@ -1,41 +1,26 @@
 import { Paper } from "@mui/material"
-import { maxWidth } from "@mui/system"
-import { DateRange as ReactDateRange } from "react-date-range"
+import { DatePicker } from "antd"
+import dayjs from "dayjs"
 
 export default function DateRange({
   startDate,
   endDate,
   updateDates,
+  showTime,
 }: {
   startDate: Date
   endDate: Date
   updateDates(startDate: Date, endDate: Date): void
+  showTime?: boolean
 }) {
   return (
-    <Paper
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-        justifyContent: "center",
-        gap: 2,
+    <DatePicker.RangePicker
+      style={{ width: "100%", padding: "15px" }}
+      showTime={showTime}
+      onChange={(e) => {
+        if (e !== null) console.log(e[0]?.toDate())
+        if (e !== null) updateDates(e[0]?.toDate() ?? new Date(), e[1]?.toDate() ?? new Date())
       }}
-    >
-      <ReactDateRange
-        direction="horizontal"
-        months={1}
-        rangeColors={["#3F3D56", "#545270", "#DEDBFF"]}
-        ranges={[
-          {
-            key: "selection",
-            startDate: startDate,
-            endDate: endDate,
-          },
-        ]}
-        onChange={(e) =>
-          updateDates(e.selection.startDate ?? new Date(), e.selection.endDate ?? new Date())
-        }
-      />
-    </Paper>
+    />
   )
 }

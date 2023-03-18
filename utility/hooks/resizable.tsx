@@ -1,7 +1,8 @@
 import React from "react"
 import Widget from "../../components/Widget"
-import { StoredLocation } from "../types/trip"
+import { StoredLocation, WidgetType } from "../types/trip"
 import { useLocalStorage } from "react-use-storage"
+import { ConstructionOutlined } from "@mui/icons-material"
 
 type ResizableUseState = {
   size: Map<string, number> // stores the size of each item <key,size>
@@ -15,6 +16,7 @@ interface Resizable {
   handleItemUpdate: (dashboardItem: Array<string>) => void
   readLayout: (layout: Array<StoredLocation>) => void
   resizable: ResizableUseState
+  createKey: (type: WidgetType, uid: string) => string
   getWidget: (key: string) => React.ReactNode
   onSortEnd: ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => void
   addItem: (key: string) => void
@@ -40,6 +42,8 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     order: [],
     widgets: new Map<string, React.ReactNode>(),
   })
+
+
   const [localLayout, setLocalLayout, removeLocalLayout] = useLocalStorage<Array<StoredLocation>>(
     "localLayout",
     [],
@@ -78,6 +82,10 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     return resizable.widgets.get(key)
   }
 
+  function createKey(type: WidgetType, uid: string) {
+    return `${type}:${uid}`
+  }
+
   /**
    * Handles reading the layout from the database.
    */
@@ -85,6 +93,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     let size = new Map<string, number>()
     let widgets = new Map<string, React.ReactNode>()
     let order: Array<string> = []
+   
     layout.map((item) => {
       size.set(item.key, item.size)
       order.push(item.key)
@@ -216,6 +225,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
         doIncreaseSize,
         doDecreaseSize,
         getSize,
+        createKey,
         handleItemUpdate,
         readLayout,
         resizable,

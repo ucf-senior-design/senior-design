@@ -8,9 +8,6 @@ export default function Content() {
   const { getSize, resizable, onSortEnd, getWidget } = useResizable()
   const { trip } = useTrip()
 
-  if (trip.suggestions.size !== 3) {
-    return <></>
-  }
   const SortableItem = SortableElement(({ value }: { value: string }) => (
     <Grid item xs={12} md={getSize(value)}>
       {getWidget(value) ?? <></>}

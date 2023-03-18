@@ -28,6 +28,7 @@ export default function ViewTrips() {
   const [tripSearchOptions, setTripSearchOptions] = React.useState<Array<TripSearchOption>>([])
   const { trips } = useDashboard()
 
+  console.log(trips)
   React.useEffect(() => {
     let options: Array<TripSearchOption> = []
 
@@ -49,7 +50,14 @@ export default function ViewTrips() {
     let tripCards: Array<React.ReactNode> = []
     if (trips !== undefined) {
       trips.forEach((trip) => {
-        tripCards.push(<TripCard key={trip.uid} uid={trip.uid} destination={trip.destination} />)
+        tripCards.push(
+          <TripCard
+            key={trip.uid}
+            uid={trip.uid}
+            destination={trip.destination}
+            imageURI={trip.photoURL}
+          />,
+        )
       })
     }
 

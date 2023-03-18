@@ -2,14 +2,17 @@ import React from "react"
 import { Beforeunload } from "react-beforeunload"
 import { useLocalStorage } from "react-use-storage"
 import SecurePage from "../../components/SecurePage"
+import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
 import {
+  CreatedEvent,
   Duration,
   Event,
   StoredLocation,
   SuggestionOption,
   SuggestionWidget,
   Trip,
+  WidgetType,
 } from "../types/trip"
 import { useResizable } from "./resizable"
 
@@ -49,7 +52,7 @@ interface TripContext {
   deleteWeather: (uid: string) => Promise<void>
 
   // handle events
-  createEvent: (event: Event, callback: (response: Response) => void) => Promise<void>
+  createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
   modifyTrip: (details: TripDetails, callback: (response: Response) => void) => Promise<void>
 }
 
@@ -70,12 +73,13 @@ export function useTrip(): TripContext {
   }
   return context
 }
+
 export function TripProvider({ children, id }: { children: React.ReactNode; id: string }) {
   const [localLayout, setLocalLayout, removeLocalLayout] = useLocalStorage<Array<StoredLocation>>(
     "localLayout",
     [],
   )
-  const { readLayout } = useResizable()
+  const { readLayout, createKey, addItem } = useResizable()
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: "",
     attendees: new Set(),
@@ -93,8 +97,6 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     didReadLayout: false,
   })
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL
-
   React.useEffect(() => {
     setTrip({
       ...trip,
@@ -111,6 +113,10 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     }
   }, [trip])
 
+  function addNewWidget(type: WidgetType, uid: string) {
+    const key = createKey(type, uid)
+    addItem(key)
+  }
   function getEventsByDay() {
     let dayMilli = 1000 * 3600 * 24
     let days: Array<Day> = []
@@ -337,19 +343,18 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
   // TODO: Allow a user to delete an availabillity widget for the trip
   async function deleteAvailabillityWidget() {}
 
-  async function createEvent(event: Event, callback: (response: Response) => void) {
-    const options = createFetchRequestOptions(JSON.stringify(trip), "POST")
+  async function createEvent(event: CreatedEvent, callback: (isSuccess: boolean) => void) {
+    const options = createFetchRequestOptions(JSON.stringify(event), "POST")
     const response = await fetch(`${API_URL}/trip/${trip.uid}/event`, options)
 
     if (response.ok) {
-      callback({ isSuccess: response.ok, result: response.json() })
+      let createdEvent: Event = await response.json()
       setTrip({
         ...trip,
-        joinableEvents: Array.from(addEventToList(trip.joinableEvents, event)),
+        joinableEvents: Array.from(addEventToList(trip.joinableEvents, createdEvent)),
       })
-    } else {
-      callback({ isSuccess: response.ok, errorMessage: await response.text() })
     }
+    callback(response.ok)
   }
 
   async function storeLayout() {

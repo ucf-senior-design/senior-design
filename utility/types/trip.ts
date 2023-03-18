@@ -11,6 +11,8 @@ export type StoredLocation = {
   size: number
 }
 
+export type WidgetType = "suggestion" | "day" | "poll"
+
 export interface Widget {
   key: string
 }
@@ -55,13 +57,15 @@ export type Weather = {
   zipCode: string
 }
 
-export type Event = {
-  uid: string
+export interface CreatedEvent {
   title: string
   attendees: Array<string>
   duration: Duration
   location: string
   description: string
+}
+export interface Event extends CreatedEvent {
+  uid: string
 }
 
 export type PollOption = {

@@ -6,6 +6,7 @@ import { TripProvider } from "../../../utility/hooks/trip"
 import { useScreen } from "../../../utility/hooks/screen"
 import { ResizableProvider } from "../../../utility/hooks/resizable"
 import Content from "../../../components/Dashboard/Content"
+import { Box } from "@mui/material"
 
 export default function Trip() {
   const router = useRouter()

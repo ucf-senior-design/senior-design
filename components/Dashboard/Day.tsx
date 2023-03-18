@@ -1,4 +1,5 @@
 import { Typography, Box } from "@mui/material"
+import { join } from "path"
 import { Event as EventType } from "../../utility/types/trip"
 import Event from "./Event"
 import JoinableEvent from "./JoinableEvent"
@@ -16,6 +17,7 @@ export default function Day({
   weatherIcon: React.ReactNode
   temperature: number
 }) {
+  console.log(day, events, joinableEvents, weatherIcon, temperature)
   return (
     <Box sx={{ padding: "10px" }}>
       {/* Day header that includes date, weather icon, and temperature*/}
@@ -46,6 +48,18 @@ export default function Day({
           marginBottom: "10px",
         }}
       >
+        {events.length === 0 && (
+          <Box
+            style={{
+              fontWeight: "500",
+              fontSize: "20px",
+              width: "100%",
+              textAlign: "center",
+            }}
+          >
+            No Events{" "}
+          </Box>
+        )}
         {events.map((event, index) => {
           return <Event key={index} event={event} />
         })}
