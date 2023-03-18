@@ -281,7 +281,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       JSON.stringify({ ...login, purpose: "email" }),
       "POST",
     )
-    const response = await fetch(`${API_URL}auth/login`, options)
+    const response = await fetch(
+      `https://we-tinerary-git-fix-cors-ucf-senior-design.vercel.app/auth/login`,
+      options,
+    )
 
     if (response.ok) {
       if (response.status === 200) {
