@@ -4,7 +4,6 @@ import { ERROR, MUST_ADD_DETAILS, MUST_VERIFY_EMAIL, SUCCESS } from "../../../ut
 import { firebaseAuth } from "../../../utility/firebase"
 import firebaseAdmin from "../../../utility/firebaseAdmin"
 import { User } from "../../../utility/types/user"
-import allowCors from "../../../utility/middleware"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await signInWithEmailAndPassword(firebaseAuth, req.body.email, req.body.password)
