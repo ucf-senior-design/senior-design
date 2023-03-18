@@ -1,25 +1,26 @@
-import { NextApiResponse, NextApiRequest } from "next"
+import { NextRequest, NextResponse } from "next/server"
 
-export default function corsMiddleware(
-  req: NextApiRequest,
-  res: NextApiResponse,
-  next: () => void,
-) {
-  res.setHeader(
+export function middleware(request: NextRequest) {
+  // Clone the request headers and set a new header `x-hello-from-middleware1`
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set(
     "Access-Control-Allow-Origin",
     "https://we-tinerary-git-fix-cors-ucf-senior-design.vercel.app/",
   )
-  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT")
-  res.setHeader(
+  requestHeaders.set("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT")
+  requestHeaders.set(
     "Access-Control-Allow-Headers",
     "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept",
   )
-  res.setHeader("Access-Control-Allow-Credentials", "true")
+  requestHeaders.set("Access-Control-Allow-Credentials", "true")
 
-  if (req.method === "OPTIONS") {
-    res.status(200).end()
-    return
-  }
+  // You can also set request headers in NextResponse.rewrite
+  const response = NextResponse.next({
+    // @ts-ignore
+    request: {
+      headers: requestHeaders,
+    },
+  })
 
-  next()
+  return response
 }
