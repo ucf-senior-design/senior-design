@@ -11,7 +11,11 @@ export default function Poll({ poll, showResults }: { poll: PollType; showResult
       <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center" }}>
         {poll.title}
       </Typography>
-      {showResults ? <PollResult options={poll.options} /> : <PollVote options={poll.options} />}
+      {showResults ? (
+        <PollResult options={poll.options} pollWidget={poll} />
+      ) : (
+        <PollVote options={poll.options} pollWidget={poll} />
+      )}
     </Paper>
   )
 }
