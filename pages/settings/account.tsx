@@ -1,5 +1,4 @@
 import SettingsIcon from "@mui/icons-material/Settings"
-import { Typography } from "@mui/material"
 import Header from "../../components/Header"
 import PersonalInfo from "../../components/Settings/PersonalInfo"
 import SecurityInfo from "../../components/Settings/SecurityInfo"
@@ -20,13 +19,7 @@ export default function Account() {
         title="account settings"
       />
       <UserHeader />
-      <Typography variant="h5" sx={{ paddingBottom: 1, marginTop: 5 }}>
-        update personal details
-      </Typography>
       <PersonalInfo />
-      <Typography variant="h5" sx={{ paddingBottom: 1, marginTop: 5 }}>
-        update security details
-      </Typography>
       <SecurityInfo />
     </>
   )

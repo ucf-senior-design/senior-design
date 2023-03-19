@@ -1,6 +1,10 @@
-import { Avatar, Grid, Stack, Typography } from "@mui/material"
+import { Grid, Stack, Typography } from "@mui/material"
+import Avatar from "../../components/Avatar"
+import { useAuth } from "../../utility/hooks/authentication"
 
 export default function UserHeader() {
+  const { user } = useAuth()
+
   return (
     <Grid
       container
@@ -19,11 +23,11 @@ export default function UserHeader() {
           justifyContent: "start",
         }}
       >
-        <Avatar alt="placeholder icon" sx={{ width: 120, height: 120, marginRight: 5 }}>
-          J
-        </Avatar>
+        <Avatar name={user?.name ?? ""} size={120} />
         <Stack direction="column">
-          <Typography sx={{ fontWeight: "300", fontSize: "25px" }}>jane doe</Typography>
+          <Typography noWrap sx={{ fontWeight: "300", fontSize: "25px" }}>
+            {"placeholder name"} ({user?.username ?? ""})
+          </Typography>
           <Typography sx={{ fontSize: "13px" }}>emergency contact: (999) - 999 - 999</Typography>
         </Stack>
       </Grid>

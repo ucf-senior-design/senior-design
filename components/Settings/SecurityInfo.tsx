@@ -1,4 +1,5 @@
-import { Paper, Stack, TextField } from "@mui/material"
+import { Button, Divider, Paper, Stack, Typography } from "@mui/material"
+import Link from "next/link"
 
 export default function SecurityInfo() {
   function doNothing() {
@@ -16,25 +17,17 @@ export default function SecurityInfo() {
           width: "80vw",
         }}
       >
-        <TextField
-          id="nameInput"
-          value=""
-          label="display name"
-          placeholder="jane doe"
-          onChange={() => {
-            doNothing()
-          }}
-          sx={{ marginBottom: 2 }}
-        />
-        <TextField
-          id="contactInput"
-          value=""
-          label="emergency contact"
-          placeholder="xxx - xxx - xxssx"
-          onChange={() => {
-            doNothing()
-          }}
-        />
+        <Typography sx={{ fontSize: "15px" }}>security information</Typography>
+        <Divider />
+        <Link href="/settings/passwordUpdate" passHref>
+          <Button
+            variant="outlined"
+            aria-label="update password button"
+            sx={{ marginBottom: 2, marginTop: 2 }}
+          >
+            update password
+          </Button>
+        </Link>
       </Stack>
     </Paper>
   )

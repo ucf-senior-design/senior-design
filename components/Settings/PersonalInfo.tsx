@@ -16,7 +16,7 @@ export default function PersonalInfo() {
           width: "80vw",
         }}
       >
-        <Typography sx={{ fontSize: "12px" }}>identifying information</Typography>
+        <Typography sx={{ fontSize: "15px" }}>personal information</Typography>
         <Divider />
         <TextField
           id="nameInput"
