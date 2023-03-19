@@ -1,4 +1,5 @@
 import { Grid, Typography } from "@mui/material"
+import { useAuth } from "../../../utility/hooks/authentication"
 import Avatar from "../../Avatar"
 
 export default function WidgetHeader({
@@ -8,6 +9,14 @@ export default function WidgetHeader({
   owner: string
   rightAccessory?: React.ReactNode
 }) {
+  const { user } = useAuth()
+  function getOwnerString() {
+    if (user?.uid === owner) {
+      return user.name
+    }
+    return "tempName"
+  }
+
   return (
     <Grid
       sx={{
@@ -31,7 +40,7 @@ export default function WidgetHeader({
       >
         {/** TODO: Get actual owners name */}
         <Avatar name={"owner"} size={30} />
-        <Typography sx={{ fontWeight: 600 }}>by {owner} </Typography>
+        <Typography sx={{ fontWeight: 600 }}>by {getOwnerString()} </Typography>
       </Grid>
       <Grid
         item

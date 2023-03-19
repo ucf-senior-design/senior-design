@@ -28,7 +28,6 @@ export default function ViewTrips() {
   const [tripSearchOptions, setTripSearchOptions] = React.useState<Array<TripSearchOption>>([])
   const { trips } = useDashboard()
 
-  console.log(trips)
   React.useEffect(() => {
     let options: Array<TripSearchOption> = []
 

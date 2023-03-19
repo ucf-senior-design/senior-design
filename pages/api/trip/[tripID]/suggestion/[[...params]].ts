@@ -13,42 +13,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .add(req.body.details)
         .then(async (value) => {
           const widgetID = value.id
-          const suggestions: Array<any> = []
 
-          const user = "user"
-          req.body.suggestions
-            .forEach(async (suggestion: string, index: number) => {
+          const user = firebaseAuth.currentUser?.uid ?? ""
+
+          const suggestions = req.body.suggestions.map(
+            async (suggestion: string, index: number) => {
               const suggestionObj = {
                 owner: user,
                 likes: [user],
                 option: suggestion,
               }
-              await firebaseAdmin
+
+              let value = await firebaseAdmin
                 .firestore()
                 .collection(`Trips/${tripID}/suggestions/${widgetID}/options/`)
                 .add(suggestionObj)
-                .then((value) => {
-                  suggestions.push({
-                    uid: value.id,
-                    ...suggestionObj,
-                  })
-                })
-                .catch(() => {
-                  res.status(400).send("Error adding optinos")
-                })
-            })
-            .catch(() => {
-              res.status(400).send("Error adding suggestion details")
-            })
 
-          await firebaseAdmin.firestore().batch().commit()
-          res.status(200).send({
-            widget: {
-              uid: widgetID,
-              ...req.body.details,
+              return {
+                uid: value.id,
+                ...suggestionObj,
+              }
             },
-            suggestions: suggestions,
+          )
+
+          await Promise.all(suggestions).then((s) => {
+            res.status(200).send({
+              widget: {
+                uid: widgetID,
+                ...req.body.details,
+              },
+              suggestions: s,
+            })
           })
+        })
+        .catch(() => {
+          res.status(400).send("Error adding suggestion details")
         })
 
       break

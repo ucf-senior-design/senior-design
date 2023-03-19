@@ -1,7 +1,5 @@
 import { useRouter } from "next/router"
 import React from "react"
-import Schedule from "../../../components/Dashboard/Schedule"
-import { SuggestionWidgets } from "../../../components/Dashboard/Widgets/Suggestions"
 import type { MenuProps } from "antd"
 import { TripProvider } from "../../../utility/hooks/trip"
 import { useScreen } from "../../../utility/hooks/screen"
@@ -13,6 +11,7 @@ import { BackdropModal } from "../../../components/BackdropModal"
 import { Add } from "@mui/icons-material"
 import { Dropdown, Button as AButton } from "antd"
 import CreatePoll from "../../../components/Create/CreatePoll"
+import CreateSuggestion from "../../../components/Create/CreateSuggestion"
 
 export default function Trip() {
   const router = useRouter()
@@ -77,7 +76,7 @@ export default function Trip() {
             isOpen={showCreateSuggestion}
             toggleShow={() => setShowCreateSuggestion(!showCreateSuggestion)}
           >
-            <CreatePoll closeModal={() => setShowCreateSuggestion(false)} />
+            <CreateSuggestion closeModal={() => setShowCreateSuggestion(false)} />
           </BackdropModal>
         </div>
         <Content />

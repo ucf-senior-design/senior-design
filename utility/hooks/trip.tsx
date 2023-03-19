@@ -1,3 +1,5 @@
+import { Button } from "@mui/material"
+import { useRouter } from "next/router"
 import { Callbacks } from "rc-field-form/lib/interface"
 import React from "react"
 import { Beforeunload } from "react-beforeunload"
@@ -45,7 +47,11 @@ interface TripContext {
   initilizeTrip: () => Promise<void>
 
   // handle suggestions
-  createSuggestion: () => Promise<void>
+  createSuggestion: (
+    title: string,
+    options: Array<string>,
+    callback: (response: Response) => void,
+  ) => Promise<void>
   deleteSuggestion: (uid: string) => Promise<void>
 
   // handle polls
@@ -81,6 +87,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     "localLayout",
     [],
   )
+  const router = useRouter()
   const { readLayout, createKey, addItem } = useResizable()
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: "",
@@ -216,7 +223,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
         })
       }
     })
-    console.log(polls)
+
     return polls
   }
   async function getSuggestionWidgetData() {
@@ -354,8 +361,52 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     return null
   }
 
-  // TODO: Allow a user to create a suggestion widget for the trip.
-  async function createSuggestion() {}
+  async function createSuggestion(
+    title: string,
+    suggestions: Array<string>,
+    callback: (response: Response) => void,
+  ) {
+    if (user === undefined) {
+      callback({ isSuccess: false, errorMessage: "login and try again later." })
+      return
+    }
+
+    let suggestion = {
+      details: { owner: user.uid, title: title },
+      suggestions: suggestions,
+    }
+
+    const fetchoptions = createFetchRequestOptions(JSON.stringify(suggestion), "POST")
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/suggestion`, fetchoptions)
+
+    if (response.ok) {
+      let s = await response.json()
+
+      let suggestionWidgets = new Map(trip.suggestions)
+      const suggestions = new Map<string, SuggestionOption>()
+
+      s.suggestions.forEach((sug: SuggestionOption) => {
+        suggestions.set(sug.uid, {
+          ...sug,
+          likes: new Set(sug.likes),
+        } as SuggestionOption)
+      })
+
+      suggestionWidgets.set(s.widget.uid, {
+        ...s.widget,
+        suggestions: suggestions,
+      })
+
+      setTrip({
+        ...trip,
+        suggestions: suggestionWidgets,
+      })
+      addNewWidget("suggestion", s.widget.uid)
+      callback({ isSuccess: true })
+    } else {
+      callback({ isSuccess: response.ok, errorMessage: await response.text() })
+    }
+  }
 
   // TODO: Allow a user to delete a suggestion widget for the trip.
   async function deleteSuggestion(uid: string) {}
@@ -438,7 +489,8 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
   }
 
   async function storeLayout() {
-    console.log(localLayout)
+    alert("Attempting to store")
+
     if (localLayout.length === 0) {
       alert("Unable to save layout changes")
     }
@@ -470,6 +522,12 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
   React.useEffect(() => {
     console.log("getting data for trip:", id)
     initilizeTrip()
+    router.events.on("routeChangeStart", async () => {
+      console.log("updating layout..")
+
+      const options = createFetchRequestOptions(JSON.stringify({ layout: localLayout }), "PUT")
+      const response = await fetch(`${API_URL}/trip/${id}/layout`, options)
+    })
   }, [])
 
   return (
@@ -487,7 +545,6 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
         modifyTrip,
       }}
     >
-      <Beforeunload onBeforeunload={async (event) => await storeLayout()} />
       {children}
     </TripContext.Provider>
   )

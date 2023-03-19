@@ -3,6 +3,7 @@ import Widget from "../../components/Widget"
 import { StoredLocation, WidgetType } from "../types/trip"
 import { useLocalStorage } from "react-use-storage"
 import { ConstructionOutlined } from "@mui/icons-material"
+import { send } from "process"
 
 type ResizableUseState = {
   size: Map<string, number> // stores the size of each item <key,size>
@@ -54,6 +55,22 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
 
   // Allows local layout to be stored whenever there are changes
   React.useEffect(() => {
+    // TODO: find a better fix for when someotimes the widgets are dropped in the same place it gets added to the order
+    if (resizable.order.length !== resizable.size.size) {
+      let seen = new Set<string>()
+      let nOrder: Array<string> = []
+      resizable.order.map((value) => {
+        if (!seen.has(value)) {
+          seen.add(value)
+          nOrder.push(value)
+        }
+      })
+
+      setResizable({
+        ...resizable,
+        order: nOrder,
+      })
+    }
     setLocalLayout(getStorableLayout())
   }, [resizable.size, resizable.order])
 

@@ -48,7 +48,7 @@ export default function CreatePoll({ closeModal }: { closeModal: () => void }) {
             })
           }
         >
-          Create Poll
+          Create
         </Button>
       </Box>
     </CreateBox>

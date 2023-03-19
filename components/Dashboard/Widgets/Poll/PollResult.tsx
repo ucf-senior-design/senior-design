@@ -22,7 +22,7 @@ export default function PollResult({
   poll: usePollHook
 }) {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%", height: "100%" }}>
       <>
         {options.map((option, index) => {
           return (

@@ -1,5 +1,4 @@
 import { Box, Button, Divider, TextField, Typography } from "@mui/material"
-import DateTimePicker from "react-datetime-picker"
 import theme from "../../styles/theme/Theme"
 import useCreateEvent from "../../utility/hooks/create/createEvent"
 import DateRange from "../Form/DateRange"

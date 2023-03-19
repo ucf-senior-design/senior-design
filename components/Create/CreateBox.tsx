@@ -1,6 +1,8 @@
 import { Box } from "@mui/material"
 import React from "react"
 
+/** Wrapper for content within a popup for creating a widget
+ */
 export default function CreateBox({ children }: { children: React.ReactNode }) {
   return (
     <Box
