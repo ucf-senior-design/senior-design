@@ -1,8 +1,17 @@
 import { Circle, CircleOutlined } from "@mui/icons-material"
 import { Box, Button } from "@mui/material"
-import { PollOption as PollOptionType } from "../../../../utility/types/trip"
+import usePoll from "../../../../utility/hooks/polls"
+import { Poll as PollType, PollOption as PollOptionType } from "../../../../utility/types/trip"
 
-function PollOption({ option, selected }: { option: string; selected: boolean }) {
+function PollOption({
+  option,
+  selected,
+  handleSelect,
+}: {
+  option: string
+  selected: boolean
+  handleSelect: () => void
+}) {
   return (
     <div
       style={{
@@ -15,7 +24,7 @@ function PollOption({ option, selected }: { option: string; selected: boolean })
         borderRadius: "5px",
       }}
       onClick={(e) => {
-        // TODO: Handle the user selecting on a poll option.
+        handleSelect()
       }}
     >
       {selected ? <Circle /> : <CircleOutlined />} {option}
@@ -23,14 +32,28 @@ function PollOption({ option, selected }: { option: string; selected: boolean })
   )
 }
 
-export default function PollVote({ options }: { options: Array<PollOptionType> }) {
+export default function PollVote({
+  options,
+  pollWidget,
+}: {
+  options: Array<PollOptionType>
+  pollWidget: PollType
+}) {
+  const { doVote, didUserVote, selectOption } = usePoll(pollWidget)
+
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <>
-          {/** TODO: Handle whether the option is selected or not. */}
           {options.map((option, index) => {
-            return <PollOption key={index} option={option.value} selected={false} />
+            return (
+              <PollOption
+                key={index}
+                option={option.value}
+                selected={didUserVote(index)}
+                handleSelect={() => selectOption(index)}
+              />
+            )
           })}
         </>
       </Box>
@@ -38,10 +61,7 @@ export default function PollVote({ options }: { options: Array<PollOptionType> }
       <Button
         variant="contained"
         sx={{ width: "100%", marginTop: "10px" }}
-        onClick={() =>
-          // TODO: Create fetch request to vote on the poll.
-          console.log("submit vote")
-        }
+        onClick={() => doVote()}
       >
         Submit
       </Button>
