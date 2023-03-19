@@ -118,7 +118,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
   React.useEffect(() => {
     if (!trip.didReadLayout && trip.uid.length >= 0) {
       console.log("initializing layout....")
-      
+
       setLocalLayout(trip.layout)
       readLayout(trip.layout)
       setTrip({ ...trip, didReadLayout: true })

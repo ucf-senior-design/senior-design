@@ -13,7 +13,6 @@ export default function Widget({ widget }: { widget: TWidget }) {
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div
         style={{ display: "flex", width: "100%", flexDirection: "column" }}
-       
         onMouseEnter={() => setHandleSettings(true)}
         onMouseLeave={() => setHandleSettings(false)}
       >

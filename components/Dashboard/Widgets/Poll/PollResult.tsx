@@ -4,7 +4,6 @@ import usePoll, { usePollHook } from "../../../../utility/hooks/polls"
 import { Poll as PollType, PollOption as PollOptionType } from "../../../../utility/types/trip"
 
 function OptionResults({ value, didUserVote }: { value: number; didUserVote: boolean }) {
- 
   return (
     <LinearProgress
       sx={{ borderRadius: "2px", height: "10px" }}
