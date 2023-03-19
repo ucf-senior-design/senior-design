@@ -1,12 +1,27 @@
-import { Box, Button, Divider, Typography } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
 import React from "react"
 import theme from "../../styles/theme/Theme"
+import useCreateTrip from "../../utility/hooks/createTrip"
+import { useTrip } from "../../utility/hooks/trip"
+import { Duration } from "../../utility/types/trip"
 import DateRange from "./DateRange"
+import PlacesSearch from "./PlacesSearch"
 
 export default function ModifyTrip() {
   function closeModal() {
     throw new Error("Function not implemented.")
   }
+
+  const { trip } = useTrip()
+  const {
+    createTrip,
+    updateAttendees,
+    updateDuration,
+    updateDestination,
+    attendeeOptions,
+    maybeCreateTrip,
+    addAttendeeOption,
+  } = useCreateTrip()
 
   return (
     <Box
@@ -31,52 +46,29 @@ export default function ModifyTrip() {
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           destination
         </Typography>
-        {/* <PlacesSearch
-          place={event.location}
+        <PlacesSearch
+          place={trip.destination}
           types={[]}
-          setPlace={(_, place) => updateLocation(place)}
-        /> */}
-        <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-          attendees
-        </Typography>
-        {/* <SelectAttendees
-          selectedAttendees={event.attendees}
-          options={event.attendeeOptions}
-          updateAttendees={(a) => updateAttendees(a)}
-        /> */}
-        <Divider>or</Divider>
-        <Typography
-          variant="body1"
-          style={{ ...$headerStyle, textAlign: "center", color: undefined }}
-        >
-          add attendee by username
-        </Typography>
-
-        {/* <UserSearch
-          sx={{ width: "100%", marginBottom: "10px" }}
-          handleFoundUser={(user) => addAttendeeOption("person", user.uid, user.name)}
-        /> */}
-
+          setPlace={(_, place) => updateDestination(_, place)}
+        />
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           duration
+          {/* // Need to add widget for adding day // addNewWidget */}
         </Typography>
         <DateRange
-          startDate={new Date()}
-          endDate={new Date()}
-          // startDate={event.duration.start}
-          // endDate={event.duration.end}
-          // updateDates={(startDate, endDate) => updateDuration(startDate, endDate)}
-          updateDates={() => {}}
+          startDate={trip.duration.start}
+          endDate={trip.duration.end}
+          updateDates={(startDate, endDate) => updateDuration(startDate, endDate)}
         />
         <Button
           sx={{ width: "100%", marginTop: "10px" }}
           color={"primary"}
           variant="contained"
-          // onClick={() =>
-          //   create((isSuccess: any) => {
-          //     if (isSuccess) closeModal()
-          //   })
-          // }
+          //   onClick={() =>
+          //     create((isSuccess: any) => {
+          //       if (isSuccess) closeModal()
+          //     })
+          //   }
         >
           Save Changes
         </Button>
@@ -90,13 +82,9 @@ const $headerStyle: React.CSSProperties = {
   color: theme.palette.secondary.main,
   padding: 5,
 }
-function useCreateEvent(): {
-  trip: any
-  create: any
-  updateDuration: any
-  updateAttendees: any
-  updateLocation: any
-  addAttendeeOption: any
-} {
-  throw new Error("Function not implemented.")
+
+function changeDayWidgets(oldDuration: Duration, start: Date, end: Date) {
+  if (oldDuration.start == start && oldDuration.end == end) {
+    return
+  }
 }
