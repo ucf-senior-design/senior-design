@@ -5,7 +5,6 @@ import PlacesSearch from "../../../components/Form/PlacesSearch"
 import SelectAttendees from "../../../components/Form/SelectAttendees"
 import UserSearch from "../../../components/Form/UserSearch"
 import theme from "../../../styles/theme/Theme"
-import SecurePage from "../../../components/SecurePage"
 import DateRange from "../../../components/Form/DateRange"
 
 export default function CreateTrip() {
