@@ -4,7 +4,6 @@ import { Widget as TWidget } from "../utility/types/trip"
 import React from "react"
 import { useResizable } from "../utility/hooks/resizable"
 
-
 export default function Widget({ widget }: { widget: TWidget }) {
   const hook = useWidget(widget)
   const [handleSettings, setHandleSettings] = React.useState(false)

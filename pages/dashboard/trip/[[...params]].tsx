@@ -20,7 +20,7 @@ export default function Trip() {
 
   // Handle showing the create popups for different wigets
   const [showCreateEvent, setShowCreateEvent] = React.useState(false)
-  const [showCreatePoll, setShowCreatePoll] = React.useState(false)
+  const [showCreatePoll, setShowCreatePoll] = React.useState(true)
   const [showCreateSuggestion, setShowCreateSuggestion] = React.useState(false)
 
   // For each create popup add an item to the menu
@@ -43,11 +43,6 @@ export default function Trip() {
   React.useEffect(() => {
     const { id } = router.query
     setTripID(id as string | undefined)
-    updateNav(
-      { backgroundColor: "red" },
-      "transparent",
-      <div style={{ height: "20px" }}> stuff goes here</div>,
-    )
   }, [router])
 
   return tripID !== undefined ? (

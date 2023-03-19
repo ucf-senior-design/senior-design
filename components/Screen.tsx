@@ -15,6 +15,7 @@ export default function Screen({ children, path }: { path: string; children: Rea
     updateSuccessToast,
     nav,
     loading,
+    updateNav,
   } = useScreen()
 
   const backgroundImage = path === "/about" ? "url('/Mountains.svg') 80% 80% " : undefined
@@ -29,6 +30,12 @@ export default function Screen({ children, path }: { path: string; children: Rea
     theme: "colored",
   }
 
+  // Resets View Trip Header UI on non view trip pages
+  React.useEffect(() => {
+    const viewTripURL = "/dashboard/trip?id"
+    if (path.length >= viewTripURL.length && path.slice(0, viewTripURL.length) !== viewTripURL)
+      updateNav(undefined, undefined, <></>)
+  }, [])
   // Resets error toast after being shown.
   React.useEffect(() => {
     if (errorToast !== undefined) {

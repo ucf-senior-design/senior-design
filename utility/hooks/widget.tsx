@@ -1,6 +1,7 @@
 import { WbSunny } from "@mui/icons-material"
 import React, { useTransition } from "react"
 import Day from "../../components/Dashboard/Day"
+import Poll from "../../components/Dashboard/Widgets/Poll/Poll"
 import { Suggestions, SuggestionWidgets } from "../../components/Dashboard/Widgets/Suggestions"
 import { Widget } from "../types/trip"
 import { SuggestionWidget } from "../types/trip"
@@ -31,6 +32,10 @@ export default function useWidget(w: Widget) {
           temperature={30}
         />
       )
+    }
+
+    if (splitKey[0] === "poll") {
+      return <Poll poll={trip.polls.get(splitKey[1]) as any} showResults={false} />
     }
     return <></>
   }

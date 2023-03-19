@@ -1,19 +1,24 @@
+import { Callbacks } from "rc-field-form/lib/interface"
 import React from "react"
 import { Beforeunload } from "react-beforeunload"
 import { useLocalStorage } from "react-use-storage"
 import SecurePage from "../../components/SecurePage"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
+import { Response } from "../types/helper"
 import {
   CreatedEvent,
   Duration,
   Event,
+  Poll,
+  PollOption,
   StoredLocation,
   SuggestionOption,
   SuggestionWidget,
   Trip,
   WidgetType,
 } from "../types/trip"
+import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
 
 export type Day = {
@@ -23,6 +28,7 @@ export type Day = {
 }
 interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>
+  polls: Map<string, Poll>
   joinableEvents: Array<Array<Event>>
   itinerary: Array<Array<Event>>
   destination: string
@@ -44,23 +50,20 @@ interface TripContext {
   deleteSuggestion: (uid: string) => Promise<void>
 
   // handle polls
-  createPoll: () => Promise<void>
+  createPoll: (
+    title: string,
+    options: Array<string>,
+    callback: (response: Response) => void,
+  ) => Promise<void>
   deletePoll: (uid: string) => Promise<void>
 
-  // handle weather widget
+  // handle weather widgetcreateP
   createWeather: () => Promise<void>
   deleteWeather: (uid: string) => Promise<void>
 
   // handle events
   createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
   modifyTrip: (details: TripDetails, callback: (response: Response) => void) => Promise<void>
-}
-
-// TODO: probably should import this
-interface Response {
-  result?: any
-  isSuccess: boolean
-  errorMessage?: string
 }
 
 const TripContext = React.createContext<TripContext>({} as TripContext)
@@ -89,6 +92,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     },
     layout: [],
     destination: "",
+    polls: new Map<string, Poll>(),
     suggestions: new Map<string, SuggestionWidget>(),
     itinerary: [],
     joinableEvents: [],
@@ -96,6 +100,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     days: [],
     didReadLayout: false,
   })
+  const { user } = useAuth()
 
   React.useEffect(() => {
     if (trip.uid.length !== 0)
@@ -178,6 +183,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     console.log("initializing trip....")
     setTrip({
       ...trip,
+      polls: new Map(),
       suggestions: suggestionWidgets,
       itinerary: eventData.userEvents,
       joinableEvents: eventData.joinableEvents,
@@ -332,8 +338,47 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
   // TODO: Allow a user to delete a suggestion widget for the trip.
   async function deleteSuggestion(uid: string) {}
 
-  // TODO: Allow a user to create a poll widget for the trip.
-  async function createPoll() {}
+  async function createPoll(
+    title: string,
+    options: Array<string>,
+    callback: (response: Response) => void,
+  ) {
+    let pollOptions: Array<PollOption> = []
+
+    options.map((option) => {
+      pollOptions.push({
+        value: option,
+        voters: [],
+      })
+    })
+
+    if (user === undefined) {
+      callback({ isSuccess: false, errorMessage: "login and try again later." })
+      return
+    }
+    let poll = {
+      owner: user.uid,
+      title: title,
+      options: pollOptions,
+    }
+
+    const fetchoptions = createFetchRequestOptions(JSON.stringify(poll), "POST")
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/event`, fetchoptions)
+
+    if (response.ok) {
+      let createdPoll: Poll = await response.json()
+      let nPolls = new Map(trip.polls)
+      nPolls.set(createdPoll.uid, createdPoll)
+      setTrip({
+        ...trip,
+        polls: nPolls,
+      })
+      addNewWidget("poll", createdPoll.uid)
+      callback({ isSuccess: true })
+    } else {
+      callback({ isSuccess: response.ok, errorMessage: await response.text() })
+    }
+  }
 
   // TODO: Allow a user to delete a poll widget for the trip.
   async function deletePoll(uid: string) {}
