@@ -1,53 +1,77 @@
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Stack,
-  Button,
-  Popper,
-  Grow,
-  Paper,
-  ClickAwayListener,
-  MenuList,
-  MenuItem,
-  Box,
-  Drawer,
-  LinearProgress,
-} from "@mui/material"
-import theme from "../../styles/theme/Theme"
-import { NavBarButton } from "./NavButton"
-import React from "react"
 import AirportShuttleIcon from "@mui/icons-material/AirportShuttle"
 import MenuIcon from "@mui/icons-material/Menu"
-import LoggedOutDrawer from "./LoggedOutDrawer"
+import {
+  AppBar,
+  Box,
+  Button,
+  ClickAwayListener,
+  Drawer,
+  Grow,
+  IconButton,
+  LinearProgress,
+  MenuItem,
+  MenuList,
+  Paper,
+  Popper,
+  Stack,
+  Toolbar,
+  Typography,
+} from "@mui/material"
+import { useRouter } from "next/router"
+import React from "react"
+import theme from "../../styles/theme/Theme"
 import { useAuth } from "../../utility/hooks/authentication"
-import { useScreen } from "../../utility/hooks/screen"
 import useNavBar from "../../utility/hooks/navbar"
+import { useScreen } from "../../utility/hooks/screen"
+import LoggedOutDrawer from "./LoggedOutDrawer"
+import { NavBarButton } from "./NavButton"
 
 export default function NavBar({ path }: { path: string }) {
   const landingTextColor = path === "/" ? "white" : ""
   const landingBackgroundColor = path === "/" ? "#5F9DF7" : "#3F3D56"
   const { user, doLogout } = useAuth()
   const { loading } = useScreen()
+  const { updateErrorToast } = useScreen()
+  const router = useRouter()
+  const [username, setUsername] = React.useState("")
+
   const {
     handleMenuClose,
     handleListKeyDown,
     handleDrawerToggle,
-    toggleMenu,
+    handleToggle,
     anchorRef,
     open,
     mobileOpen,
   } = useNavBar()
 
   const { nav } = useScreen()
+
+  const handleLogout = (): void => {
+    doLogout()
+    handleMenuClose
+  }
+
+  React.useEffect(() => {
+    // Occurs if we haven't attempted to see if the user is logged in.
+    if (user === undefined) {
+      return
+    }
+
+    if (user.uid.length !== 0 && user.didFinishRegister) {
+      setUsername(user.username)
+      router.push("/dashboard/overview")
+    } else {
+      router.push("/")
+    }
+  }, [user])
+
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ m: 2 }}>
-      <LoggedOutDrawer />
+      <LoggedOutDrawer user={user} />
     </Box>
   )
 
-  const isAuth = false
   return (
     <>
       <nav aria-label="navigational bar">
@@ -114,22 +138,22 @@ export default function NavBar({ path }: { path: string }) {
                 textAlign: "right",
               }}
             >
-              {isAuth ? (
+              {user === undefined ? (
                 <>
                   {/* TODO: add correct pages once they have been created */}
-                  <NavBarButton path="/dashboard/Overview" text="dashboard" variant="text" />
-                  <NavBarButton path="/" text="teams" variant="text" />
+                  <NavBarButton path="/dashboard/trips" text="dashboard" variant="text" />
+                  <NavBarButton path="/teams" text="teams" variant="text" />
                   <Button
                     ref={anchorRef}
                     color="secondary"
                     variant="outlined"
-                    aria-label="user setings"
+                    aria-label={"user"}
                     aria-controls={open ? "composition-menu" : undefined}
                     aria-expanded={open ? "true" : undefined}
                     area-haspopup="true"
-                    onClick={() => doLogout()}
+                    onClick={handleToggle}
                   >
-                    logout
+                    {username ?? ""}
                   </Button>
                   <Popper
                     open={open}
@@ -155,9 +179,9 @@ export default function NavBar({ path }: { path: string }) {
                               aria-labelledby="composition-button"
                               onKeyDown={handleListKeyDown}
                             >
-                              {/* TODO: Add logic */}
+                              {/* TODO: Add logic for settings page*/}
                               <MenuItem onClick={handleMenuClose}>my account</MenuItem>
-                              <MenuItem onClick={handleMenuClose}>logout</MenuItem>
+                              <MenuItem onClick={handleLogout}>logout</MenuItem>
                             </MenuList>
                           </ClickAwayListener>
                         </Paper>
