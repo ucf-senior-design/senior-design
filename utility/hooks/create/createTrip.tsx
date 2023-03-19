@@ -142,7 +142,7 @@ export default function useCreateTrip() {
     let attendees = createAttendeesArray(createTrip.attendees)
     attendees.push(user.uid)
 
-    const timeDiff = createTrip.duration.start.getTime() - createTrip.duration.end.getTime() //get the difference in milliseconds
+    const timeDiff = createTrip.duration.end.getTime() - createTrip.duration.start.getTime() //get the difference in milliseconds
     const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) //convert milliseconds to days
     let layout: Array<StoredLocation> = []
 
@@ -150,6 +150,8 @@ export default function useCreateTrip() {
     for (let i = 0; i < Math.max(1, dayDiff); i++) {
       layout.push({ key: `day:${i}`, size: 3 })
     }
+
+    
 
     const options = createFetchRequestOptions(
       JSON.stringify({

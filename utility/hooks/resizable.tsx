@@ -43,7 +43,6 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     widgets: new Map<string, React.ReactNode>(),
   })
 
-
   const [localLayout, setLocalLayout, removeLocalLayout] = useLocalStorage<Array<StoredLocation>>(
     "localLayout",
     [],
@@ -93,7 +92,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     let size = new Map<string, number>()
     let widgets = new Map<string, React.ReactNode>()
     let order: Array<string> = []
-   
+
     layout.map((item) => {
       size.set(item.key, item.size)
       order.push(item.key)

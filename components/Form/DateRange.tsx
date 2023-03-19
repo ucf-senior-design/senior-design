@@ -15,8 +15,17 @@ export default function DateRange({
 }) {
   return (
     <DatePicker.RangePicker
+      getPopupContainer={(triggerNode) => {
+        return triggerNode.parentNode as any
+      }}
       style={{ width: "100%", padding: "15px" }}
-      showTime={showTime}
+      showTime={
+        showTime
+          ? {
+              format: "HH:mm",
+            }
+          : undefined
+      }
       onChange={(e) => {
         if (e !== null) console.log(e[0]?.toDate())
         if (e !== null) updateDates(e[0]?.toDate() ?? new Date(), e[1]?.toDate() ?? new Date())

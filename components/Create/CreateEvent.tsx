@@ -1,76 +1,117 @@
-import { Box, Button, TextField, Typography } from "@mui/material"
+import { Box, Button, Divider, TextField, Typography } from "@mui/material"
 import DateTimePicker from "react-datetime-picker"
 import theme from "../../styles/theme/Theme"
 import useCreateEvent from "../../utility/hooks/create/createEvent"
+import DateRange from "../Form/DateRange"
 import PlacesSearch from "../Form/PlacesSearch"
 import SelectAttendees from "../Form/SelectAttendees"
+import UserSearch from "../Form/UserSearch"
 
-export default function CreateEvent() {
+export default function CreateEvent({ closeModal }: { closeModal: () => void }) {
   const {
     event,
     create,
     updateTitle,
-    updateStart,
-    updateEnd,
+    updateDuration,
     updateAttendees,
     updateDescription,
     updateLocation,
+    addAttendeeOption,
   } = useCreateEvent()
 
   return (
-    <Box>
-      <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
-        create event
-      </Typography>
-      <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-        title
-      </Typography>
-      <TextField value={event.title} onChange={(e) => updateTitle(e.target.value)} />
+    <Box
+      sx={{
+        backgroundColor: "white",
+        borderRadius: "10px",
+        padding: "20px",
+        display: "flex",
+        maxWidth: "750px",
+        overflowY: "auto",
+        width: "80vw",
+        height: "100%",
+        alignContent: "center",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
+      <Box style={{ overflowY: "auto", maxHeight: "850px", width: "100%", gap: 2 }}>
+        <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
+          create event
+        </Typography>
+        <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
+          title
+        </Typography>
+        <TextField
+          color={"secondary"}
+          sx={{ width: "100%" }}
+          value={event.title}
+          onChange={(e) => updateTitle(e.target.value)}
+        />
 
-      <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-        description
-      </Typography>
-      <TextField value={event.description} onChange={(e) => updateDescription(e.target.value)} />
-      <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-        destination
-      </Typography>
-      <PlacesSearch
-        place={event.location}
-        types={["(cities)"]}
-        setPlace={(_, place) => updateLocation(place)}
-      />
-      <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-        attendees
-      </Typography>
-      <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-        duration
-      </Typography>
-      <DateTimePicker value={event.duration.start} onChange={(newValue) => updateStart(newValue)} />
-      <DateTimePicker value={event.duration.end} onChange={(newValue) => updateEnd(newValue)} />
-      <Button onClick={() => create()} />
+        <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
+          description
+        </Typography>
+        <TextField
+          color={"secondary"}
+          sx={{ width: "100%" }}
+          value={event.description}
+          onChange={(e) => updateDescription(e.target.value)}
+        />
+        <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
+          destination
+        </Typography>
+        <PlacesSearch
+          place={event.location}
+          types={[]}
+          setPlace={(_, place) => updateLocation(place)}
+        />
+        <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
+          attendees
+        </Typography>
+        <SelectAttendees
+          selectedAttendees={event.attendees}
+          options={event.attendeeOptions}
+          updateAttendees={(a) => updateAttendees(a)}
+        />
+        <Divider>or</Divider>
+        <Typography
+          variant="body1"
+          style={{ ...$headerStyle, textAlign: "center", color: undefined }}
+        >
+          add attendee by username
+        </Typography>
+
+        <UserSearch
+          sx={{ width: "100%", marginBottom: "10px" }}
+          handleFoundUser={(user) => addAttendeeOption("person", user.uid, user.name)}
+        />
+
+        <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
+          duration
+        </Typography>
+        <DateRange
+          showTime
+          startDate={event.duration.start}
+          endDate={event.duration.end}
+          updateDates={(startDate, endDate) => updateDuration(startDate, endDate)}
+        />
+        <Button
+          sx={{ width: "100%", marginTop: "10px" }}
+          color={"primary"}
+          variant="contained"
+          onClick={() =>
+            create((isSuccess) => {
+              if (isSuccess) closeModal()
+            })
+          }
+        >
+          {" "}
+          create
+        </Button>
+      </Box>
     </Box>
   )
-}
-
-const $containerStyle: React.CSSProperties = {
-  display: "flex",
-  padding: "20px",
-  width: "100%",
-  alignItems: "center",
-  flexDirection: "column",
-  justifyContent: "center",
-}
-
-const $paperStyle: React.CSSProperties = {
-  borderRadius: "10px",
-  padding: "20px",
-  display: "flex",
-  maxWidth: "600px",
-  width: "100%",
-  alignContent: "center",
-  flexDirection: "column",
-  justifyContent: "center",
-  gap: 2,
 }
 
 const $headerStyle: React.CSSProperties = {

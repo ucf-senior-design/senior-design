@@ -38,23 +38,12 @@ export default function useCreateEvent() {
       title: title,
     })
   }
-
-  function updateStart(startDate: Date) {
+  function updateDuration(startDate: Date, endDate: Date) {
     setEvent({
       ...event,
       duration: {
-        start: startDate,
-        end: new Date(Math.max(startDate.getTime(), event.duration.end.getTime())),
-      },
-    })
-  }
-
-  function updateEnd(endDate: Date) {
-    setEvent({
-      ...event,
-      duration: {
-        start: new Date(Math.min(endDate.getTime(), event.duration.start.getTime())),
-        end: endDate,
+        start: new Date(startDate),
+        end: new Date(endDate),
       },
     })
   }
@@ -73,7 +62,25 @@ export default function useCreateEvent() {
     })
   }
 
-  async function create() {
+  function addAttendeeOption(type: "person" | "team", uid: string, name: string) {
+    let newOptions = new Set(event.attendeeOptions)
+    let newAttendees = new Set(event.attendees)
+    let attendee: AttendeeOption = {
+      type: type,
+      uid: uid,
+      name: name,
+    }
+
+    newOptions.add(attendee)
+    newAttendees.add(attendee)
+
+    setEvent({
+      ...event,
+      attendees: getAttendeeOptionsArray(newAttendees),
+      attendeeOptions: getAttendeeOptionsArray(newOptions),
+    })
+  }
+  async function create(callback: (isSuccess: boolean) => void) {
     if (user === undefined) {
       updateErrorToast("Please try again later.")
       return
@@ -91,10 +98,7 @@ export default function useCreateEvent() {
         attendees: attendees,
       },
       (isSuccess) => {
-        if (isSuccess) {
-        } else {
-          updateErrorToast("Cannot create event.")
-        }
+        callback(isSuccess)
       },
     )
   }
@@ -103,10 +107,10 @@ export default function useCreateEvent() {
     event,
     create,
     updateTitle,
-    updateStart,
-    updateEnd,
+    updateDuration,
     updateAttendees,
     updateDescription,
     updateLocation,
+    addAttendeeOption,
   }
 }

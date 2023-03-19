@@ -98,16 +98,23 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
   })
 
   React.useEffect(() => {
-    setTrip({
-      ...trip,
-      days: getEventsByDay(),
-    })
+    if (trip.uid.length !== 0)
+      setTrip({
+        ...trip,
+        days: getEventsByDay(
+          trip.duration.start,
+          trip.duration.end,
+          trip.itinerary,
+          trip.joinableEvents,
+        ),
+      })
   }, [trip.joinableEvents, trip.itinerary])
 
   React.useEffect(() => {
     if (!trip.didReadLayout && trip.uid.length >= 0) {
       console.log("initializing layout....")
 
+      setLocalLayout(trip.layout)
       readLayout(trip.layout)
       setTrip({ ...trip, didReadLayout: true })
     }
@@ -117,39 +124,40 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     const key = createKey(type, uid)
     addItem(key)
   }
-  function getEventsByDay() {
+  function getEventsByDay(
+    start: Date,
+    end: Date,
+    itinerary: Array<Array<Event>>,
+    joinableEvents: Array<Array<Event>>,
+  ) {
     let dayMilli = 1000 * 3600 * 24
     let days: Array<Day> = []
 
     let iIndex = 0
     let jIndex = 0
 
-    for (
-      let day = trip.duration.start.getTime();
-      day <= trip.duration.end.getTime();
-      day += dayMilli
-    ) {
+    for (let day = start.getTime(); day <= end.getTime(); day += dayMilli) {
       days.push({
         date: new Date(day),
         itinerary: [],
         joinable: [],
       })
-      if (iIndex < trip.itinerary.length) {
+      if (iIndex < itinerary.length) {
         if (
-          trip.itinerary[iIndex][0].duration.start.toLocaleDateString() ===
+          itinerary[iIndex][0].duration.start.toLocaleDateString() ===
           new Date(day).toLocaleDateString()
         ) {
-          days[days.length - 1].itinerary = trip.itinerary[iIndex]
+          days[days.length - 1].itinerary = itinerary[iIndex]
           iIndex += 1
         }
       }
 
-      if (jIndex < trip.joinableEvents.length) {
+      if (jIndex < joinableEvents.length) {
         if (
-          trip.joinableEvents[jIndex][0].duration.start.toLocaleDateString() ===
+          joinableEvents[jIndex][0].duration.start.toLocaleDateString() ===
           new Date(day).toLocaleDateString()
         ) {
-          days[days.length - 1].joinable = trip.joinableEvents[jIndex]
+          days[days.length - 1].joinable = joinableEvents[jIndex]
           jIndex += 1
         }
       }
@@ -173,7 +181,12 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
       suggestions: suggestionWidgets,
       itinerary: eventData.userEvents,
       joinableEvents: eventData.joinableEvents,
-      days: getEventsByDay(),
+      days: getEventsByDay(
+        trip.duration.start,
+        trip.duration.end,
+        eventData.userEvents,
+        eventData.joinableEvents,
+      ),
       didReadLayout: false,
     })
   }
@@ -351,13 +364,17 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
       let createdEvent: Event = await response.json()
       setTrip({
         ...trip,
-        joinableEvents: Array.from(addEventToList(trip.joinableEvents, createdEvent)),
+        itinerary: Array.from(addEventToList(trip.itinerary, createdEvent)),
       })
     }
     callback(response.ok)
   }
 
   async function storeLayout() {
+    console.log(localLayout)
+    if (localLayout.length === 0) {
+      alert("Unable to save layout changes")
+    }
     const options = createFetchRequestOptions(JSON.stringify({ layout: localLayout }), "PUT")
 
     const response = await fetch(`${API_URL}/trip/${id}/layout`, options)
@@ -388,6 +405,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     initilizeTrip()
   }, [])
 
+  console.log(trip)
   return (
     <TripContext.Provider
       value={{
@@ -403,10 +421,8 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
         modifyTrip,
       }}
     >
-      <SecurePage>
-        <Beforeunload onBeforeunload={async (event) => await storeLayout()} />
-        {children}
-      </SecurePage>
+      <Beforeunload onBeforeunload={async (event) => await storeLayout()} />
+      {children}
     </TripContext.Provider>
   )
 }
