@@ -12,6 +12,8 @@ type ResizableUseState = {
 interface Resizable {
   doIncreaseSize: (key: string) => void
   doDecreaseSize: (key: string) => void
+  canIncreaseSize: (key: string) => boolean
+  canDecreaseSize: (key: string) => boolean
   getSize: (key: string) => number
   handleItemUpdate: (dashboardItem: Array<string>) => void
   readLayout: (layout: Array<StoredLocation>) => void
@@ -231,6 +233,8 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
         onSortEnd,
         getWidget,
         addItem,
+        canDecreaseSize,
+        canIncreaseSize,
       }}
     >
       {children}

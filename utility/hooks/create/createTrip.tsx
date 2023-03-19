@@ -151,8 +151,6 @@ export default function useCreateTrip() {
       layout.push({ key: `day:${i}`, size: 3 })
     }
 
-    
-
     const options = createFetchRequestOptions(
       JSON.stringify({
         duration: {

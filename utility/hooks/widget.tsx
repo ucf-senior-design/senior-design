@@ -38,5 +38,6 @@ export default function useWidget(w: Widget) {
   return {
     getWidgetUI,
     popup,
+    setPopup,
   }
 }
