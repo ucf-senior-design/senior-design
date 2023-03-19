@@ -60,9 +60,6 @@ export default function NavBar({ path }: { path: string }) {
 
     if (user.uid.length !== 0 && user.didFinishRegister) {
       setUsername(user.username)
-      router.push("/dashboard/index")
-    } else {
-      router.push("/")
     }
   }, [user])
 
