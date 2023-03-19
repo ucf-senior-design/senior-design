@@ -1,43 +1,50 @@
-import { Button, Grid, Paper, Typography } from '@mui/material';
-import Image from 'next/image';
-import Router from 'next/router';
-import React from 'react';
-import theme from '../../../styles/theme/Theme';
-import { useAuth } from '../../../utility/hooks/authentication';
+import { Button, Grid, Paper, TextField, Typography } from "@mui/material"
+import Image from "next/image"
+import Router from "next/router"
+import React, { useState } from "react"
+import theme from "../../../styles/theme/Theme"
+import { useAuth } from "../../../utility/hooks/authentication"
+import { useScreen } from "../../../utility/hooks/screen"
 
 export function SendEmail({
   purpose,
   email,
 }: {
-  purpose: 'emailVerify' | 'passwordReset';
-  email?: string;
+  purpose: "emailVerify" | "passwordReset"
+  email?: string
 }) {
-  const { sendEmailVerification, sendPasswordReset } = useAuth();
-  const title = purpose === 'emailVerify' ? 'almost there!' : 'password reset';
+  const { updateErrorToast, updateSuccessToast } = useScreen()
+  const { sendEmailVerification, sendPasswordReset } = useAuth()
+  const [emailForgottenPW, setEmailForgottenPW] = useState("")
+  const title = purpose === "emailVerify" ? "almost there!" : "password reset"
   const message =
-    purpose === 'emailVerify'
-      ? 'Check your email and click on the link we sent to activate your account.'
-      : 'Check your email for a link to reset your password.';
+    purpose === "emailVerify"
+      ? "Check your email and click on the link we sent to activate your account."
+      : "type your email and we'll send you a link to reset your password."
   React.useEffect(() => {
-    handleEmailSend();
-  }, []);
+    if (purpose === "emailVerify") {
+      handleEmailSend()
+    }
+  }, [])
 
   async function handleEmailSend() {
-    if (purpose === 'emailVerify') {
+    if (purpose === "emailVerify") {
       sendEmailVerification((response) => {
         if (!response.isSuccess) {
-          alert(response.errorMessage);
-        }
-      });
-    }
-    if (purpose === 'passwordReset') {
-      sendPasswordReset(email ?? '', (response) => {
-        if (!response.isSuccess) {
-          alert(response.errorMessage);
+          updateErrorToast(response.errorMessage)
         } else {
-          alert('Password reset email sent.');
+          updateSuccessToast("email verification email sent.")
         }
-      });
+      })
+    }
+    if (purpose === "passwordReset") {
+      sendPasswordReset(emailForgottenPW, (response) => {
+        if (!response.isSuccess) {
+          updateErrorToast(response.errorMessage)
+        } else {
+          updateSuccessToast("password reset email sent.")
+        }
+      })
     }
   }
   return (
@@ -45,7 +52,7 @@ export function SendEmail({
       item
       justifyContent="space-evenly"
       alignItems="stretch"
-      sx={{ minWidth: '300px', width: '90%', maxWidth: '600px' }}
+      sx={{ minWidth: "300px", width: "90%", maxWidth: "600px" }}
       xs={5}
       md={3}
     >
@@ -57,12 +64,7 @@ export function SendEmail({
           paddingBottom: 40,
         }}
       >
-        <Grid
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-        >
+        <Grid container direction="column" justifyContent="center" alignItems="center">
           <Typography
             variant="h4"
             style={{
@@ -73,42 +75,43 @@ export function SendEmail({
           >
             {title}
           </Typography>
-          <Typography
-            style={{ color: theme.palette.secondary.main, paddingBottom: 15 }}
-          >
+          <Typography style={{ color: theme.palette.secondary.main, paddingBottom: 15 }}>
             {message}
           </Typography>
-          <Grid
-            container
-            direction="column"
-            justifyContent="space-evenly"
-            alignItems="stretch"
-          >
+          <Grid container direction="column" justifyContent="space-evenly" alignItems="stretch">
             <Image src="/email.svg" alt="Email" width={400} height={400} />
-            {purpose === 'emailVerify' && (
+            {purpose === "emailVerify" && (
               <Button
                 variant="outlined"
                 aria-label="login"
                 sx={{ borderRadius: 1 }}
                 color="primary"
-                onClick={() => Router.push('/auth/login')}
+                onClick={() => Router.push("/auth/login")}
               >
-                {' '}
-                log in{' '}
+                {" "}
+                log in{" "}
               </Button>
+            )}
+            {purpose === "passwordReset" && (
+              <TextField
+                value={emailForgottenPW}
+                onChange={(e) => setEmailForgottenPW(e.target.value)}
+                size="small"
+                placeholder="john@email.com"
+              />
             )}
             <Button
               variant="contained"
-              aria-label="resend email"
+              aria-label={purpose === "emailVerify" ? "resend email" : "reset password"}
               sx={{ borderRadius: 1 }}
               color="primary"
               onClick={() => handleEmailSend()}
             >
-              resend email
+              {purpose === "emailVerify" ? "resend email" : "reset password"}
             </Button>
           </Grid>
         </Grid>
       </Paper>
     </Grid>
-  );
+  )
 }

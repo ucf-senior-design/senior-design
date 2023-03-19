@@ -6,65 +6,59 @@ import {
   LinearProgress,
   Paper,
   Typography,
-} from '@mui/material';
-import { useState } from 'react';
-import theme from '../../../styles/theme/Theme';
-import { useAuth } from '../../../utility/hooks/authentication';
-import { FormTextField } from '../FormTextField';
-import LinkButton from '../LinkButton';
-import { PasswordTextField } from '../PasswordTextField';
-import ThirdPartyAuth from '../ThirdPartyAuth';
+} from "@mui/material"
+import { useState } from "react"
+import theme from "../../../styles/theme/Theme"
+import { useAuth } from "../../../utility/hooks/authentication"
+import { FormTextField } from "../FormTextField"
+import LinkButton from "../LinkButton"
+import { PasswordTextField } from "../PasswordTextField"
+import ThirdPartyAuth from "../ThirdPartyAuth"
 
-import Router from 'next/router';
-import { useScreen } from '../../../utility/hooks/screen';
-import React from 'react';
+import Router from "next/router"
+import { useScreen } from "../../../utility/hooks/screen"
+import React from "react"
 
 export const LoginForm = () => {
   const [loginInfo, sLoginInfo] = useState({
-    email: '',
-    password: '',
-  });
-  const { loading, updateLoading } = useScreen();
-  const [error, setError] = useState<string | undefined>();
+    email: "",
+    password: "",
+  })
+  const { loading, updateLoading, updateErrorToast } = useScreen()
+  const [error, setError] = useState<string | undefined>()
 
-  const { doEmailPasswordLogin } = useAuth();
+  const { doEmailPasswordLogin } = useAuth()
 
-  console.log('loading', loading);
   React.useEffect(() => {
-    updateLoading(false);
-  }, [error]);
+    updateLoading(false)
+  }, [error])
 
   async function handleSubmit() {
-    updateLoading(true);
+    updateLoading(true)
     await doEmailPasswordLogin(loginInfo, (response) => {
       if (loginInfo.email.length === 0 || loginInfo.password.length === 0) {
-        alert('invalid login info.');
+        updateErrorToast("invalid login info.")
       }
       if (response.isSuccess) {
-        Router.push('/');
+        Router.push("/")
       } else {
-        setError('Incorrect username or password');
+        setError("Incorrect username or password")
       }
-    });
+    })
   }
 
   return (
     <Paper
       elevation={3}
       style={{
-        maxWidth: '400px',
-        width: '80vw',
+        maxWidth: "400px",
+        width: "80vw",
         background: theme.palette.background.paper,
         padding: 20,
         paddingBottom: 40,
       }}
     >
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-      >
+      <Grid container direction="column" justifyContent="center" alignItems="center">
         <Typography
           variant="h4"
           style={{
@@ -75,18 +69,11 @@ export const LoginForm = () => {
         >
           login
         </Typography>
-        <Typography
-          style={{ color: theme.palette.secondary.main, paddingBottom: 15 }}
-        >
+        <Typography style={{ color: theme.palette.secondary.main, paddingBottom: 15 }}>
           enter your details to log in
         </Typography>
         <form>
-          <Grid
-            container
-            direction="column"
-            justifyContent="space-evenly"
-            alignItems="stretch"
-          >
+          <Grid container direction="column" justifyContent="space-evenly" alignItems="stretch">
             <FormTextField
               error={error !== undefined}
               helperText=""
@@ -124,10 +111,7 @@ export const LoginForm = () => {
               alignItems="center"
               sx={{ marginBottom: 4, marginTop: 1 }}
             >
-              <LinkButton
-                link="/auth/passwordReset"
-                text="forgot your password?"
-              />
+              <LinkButton link="/auth/passwordReset" text="forgot your password?" />
             </Grid>
             <Button
               variant="contained"
@@ -137,7 +121,7 @@ export const LoginForm = () => {
               aria-label="Sign in button"
               onClick={() => handleSubmit()}
             >
-              {loading ? <CircularProgress size={25} /> : 'sign in'}
+              {loading ? <CircularProgress size={25} /> : "sign in"}
             </Button>
           </Grid>
         </form>
@@ -151,5 +135,5 @@ export const LoginForm = () => {
       </Divider>
       <ThirdPartyAuth />
     </Paper>
-  );
-};
+  )
+}

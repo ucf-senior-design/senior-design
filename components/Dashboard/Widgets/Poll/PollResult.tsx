@@ -1,59 +1,65 @@
-import { Box, Grid, LinearProgress, Typography } from '@mui/material';
-import { PollOption as PollOptionType } from '../../../../utility/types/trip';
-function OptionResults({ option }: { option: PollOptionType }) {
-  // TODO:  Helper function to store percentage */}
+import { Box, Grid, LinearProgress, Typography } from "@mui/material"
+import theme from "../../../../styles/theme/Theme"
+import usePoll from "../../../../utility/hooks/polls"
+import { Poll as PollType, PollOption as PollOptionType } from "../../../../utility/types/trip"
+
+function OptionResults({ value, didUserVote }: { value: number; didUserVote: boolean }) {
   return (
     <LinearProgress
-      sx={{ borderRadius: '2px', height: '10px' }}
+      sx={{ borderRadius: "2px", height: "10px" }}
       variant="determinate"
-      color="secondary"
-      value={50}
+      color={didUserVote ? (theme.palette.highlight.main as any) : "secondary"} // highlights the option if the user voted for it
+      value={value}
     />
-  );
+  )
 }
 
 export default function PollResult({
   options,
+  pollWidget,
 }: {
-  options: Array<PollOptionType>;
+  options: Array<PollOptionType>
+  pollWidget: PollType
 }) {
+  const { pollResults, didUserVote } = usePoll(pollWidget)
+
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       <>
-        {/** TODO: Handle whether the option is selected or not. */}
         {options.map((option, index) => {
           return (
             <>
               <Grid container>
                 <Grid item xs={10}>
-                  <Typography sx={{ fontWeight: 'bold' }}>
-                    {option.value}
-                  </Typography>
+                  <Typography sx={{ fontWeight: "bold" }}>{option.value}</Typography>
                 </Grid>
                 <Grid
                   item
                   xs={2}
                   style={{
-                    display: 'flex',
+                    display: "flex",
                   }}
                 >
                   <Typography
                     style={{
-                      textAlign: 'right',
-                      width: '100%',
-                      fontSize: '12px',
+                      textAlign: "right",
+                      width: "100%",
+                      fontSize: "12px",
                     }}
                   >
-                    {/* TODO: Helper function to store percentage */}
-                    55%
+                    {pollResults(index)}%
                   </Typography>
                 </Grid>
               </Grid>
-              <OptionResults key={index} option={option} />
+              <OptionResults
+                key={index}
+                value={pollResults(index)}
+                didUserVote={didUserVote(index)}
+              />
             </>
-          );
+          )
         })}
       </>
     </Box>
-  );
+  )
 }

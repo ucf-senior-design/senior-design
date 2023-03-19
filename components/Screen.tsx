@@ -1,181 +1,74 @@
-import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
-import MenuIcon from '@mui/icons-material/Menu';
-import {
-  AppBar,
-  Box,
-  Button,
-  Drawer,
-  IconButton,
-  LinearProgress,
-  Stack,
-  Toolbar,
-  Typography,
-} from '@mui/material';
-import Link from 'next/link';
-import * as React from 'react';
-import theme from '../styles/theme/Theme';
-import { DashboardProvider } from '../utility/hooks/dashboard';
-import { useScreen } from '../utility/hooks/screen';
-import LoggedOutDrawer from './LoggedOutDrawer';
+import * as React from "react"
+import { toast, ToastContainer, ToastOptions } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import theme from "../styles/theme/Theme"
+import { useScreen } from "../utility/hooks/screen"
+import NavBar from "./NavBar/NavBar"
 
-export default function Screen({
-  children,
-  path,
-}: {
-  path: string;
-  children: React.ReactNode;
-}) {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { loading } = useScreen();
-  const handleDrawerToggle = () => {
-    setMobileOpen((prevState) => !prevState);
-  };
+export default function Screen({ children, path }: { path: string; children: React.ReactNode }) {
+  const {
+    errorToast,
+    updateErrorToast,
+    autoPadding,
+    updateLoading,
+    successToast,
+    updateSuccessToast,
+    nav,
+    loading,
+  } = useScreen()
 
-  const landingTextColor = path === '/' ? 'white' : undefined;
-  const landingBackgroundColor = path === '/' ? '#5F9DF7' : undefined;
-  const backgroundImage =
-    path === '/about' ? "url('/Mountains.svg') 80% 80% " : undefined;
-
-  function NavBarButton({
-    path,
-    text,
-    variant,
-  }: {
-    path: string;
-    text: string;
-    variant: 'text' | 'outlined' | 'contained';
-  }) {
-    return (
-      <Link href={path} passHref>
-        <Button
-          color={path === '/' ? 'landing' : 'secondary'}
-          variant={variant}
-          aria-label={`${text}-button`}
-        >
-          {text}
-        </Button>
-      </Link>
-    );
+  const backgroundImage = path === "/about" ? "url('/Mountains.svg') 80% 80% " : undefined
+  const msgToastOptions: ToastOptions = {
+    position: "top-center",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
   }
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ m: 2 }}>
-      <LoggedOutDrawer />
-    </Box>
-  );
+
+  // Resets error toast after being shown.
+  React.useEffect(() => {
+    if (errorToast !== undefined) {
+      toast.error(errorToast, msgToastOptions)
+      updateErrorToast(undefined)
+    }
+  }, [errorToast])
+
+  // Resets success toast after being shown.
+  React.useEffect(() => {
+    if (successToast !== undefined) {
+      toast.success(successToast, msgToastOptions)
+      updateSuccessToast(undefined)
+    }
+  }, [successToast])
+
+  // Resets loading when user switches pages after loading
+  React.useEffect(() => {
+    updateLoading(false)
+  }, [path])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <nav aria-label="navigational bar">
-        <AppBar position="static" color="secondary" sx={{ boxShadow: 'none' }}>
-          <Toolbar
-            style={{
-              zIndex: 2,
-              color: landingTextColor,
-              backgroundColor: landingBackgroundColor,
-            }}
-          >
-            <IconButton
-              onClick={handleDrawerToggle}
-              edge="start"
-              aria-label="menu toggle"
-              sx={{ display: { sm: 'none' } }}
-              color="inherit"
-            >
-              <MenuIcon sx={{ fontSize: '38px', color: landingTextColor }} />
-            </IconButton>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyItems: 'center',
-              }}
-            >
-              <AirportShuttleIcon
-                sx={{
-                  display: { xs: 'none', sm: 'block' },
-                  marginRight: 1,
-                }}
-                color="inherit"
-              />
-              <Typography
-                variant="h5"
-                component="div"
-                noWrap={true}
-                sx={{
-                  flexGrow: 1,
-                  display: { xs: 'none', sm: 'block' },
-                  fontWeight: 700,
-                }}
-              >
-                we-tinerary
-              </Typography>
-            </div>
-            <Stack
-              direction="row"
-              spacing={2}
-              sx={{
-                display: { xs: 'none', sm: 'block' },
-                width: '100%',
-                justifyContent: 'end',
-                textAlign: 'right',
-              }}
-            >
-              <NavBarButton path="/" text="home" variant="text" />
-              <NavBarButton path="/about" text="about" variant="text" />
-              <NavBarButton
-                path="/auth/login"
-                text="login"
-                variant="contained"
-              />
-              <NavBarButton
-                path="/auth/register"
-                text="register"
-                variant="outlined"
-              />
-            </Stack>
-          </Toolbar>
-        </AppBar>
-        <Box>
-          <Drawer
-            variant="temporary"
-            PaperProps={{
-              sx: {
-                backgroundColor: 'rgba(44, 42, 60, 0.79);',
-                backdropFilter: 'blur(8px)',
-                padding: 2,
-                width: '70vw',
-                maxWidth: '300px',
-              },
-            }}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            ModalProps={{ keepMounted: true }}
-          >
-            {drawer}
-          </Drawer>
-        </Box>
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+      <div style={nav.style}>
+        <NavBar path={path} />
+        {nav.children}
+      </div>
 
-        {loading ? (
-          <LinearProgress
-            color="inherit"
-            sx={{ color: theme.palette.highlight.main }}
-          />
-        ) : (
-          <></>
-        )}
-      </nav>
       <div
         style={{
-          height: '100vh',
-          width: '100vw',
-          padding: 10,
+          height: "100vh",
+          width: "100vw",
+          padding: autoPadding ? 10 : 0,
           backgroundColor: theme.palette.background.default,
           background: backgroundImage,
         }}
       >
-        <DashboardProvider> {children}</DashboardProvider>
+        <ToastContainer />
+        {children}
       </div>
     </div>
-  );
+  )
 }
