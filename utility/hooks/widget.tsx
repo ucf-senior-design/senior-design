@@ -12,7 +12,6 @@ export default function useWidget(w: Widget) {
 
   function getWidgetUI(): React.ReactNode {
     let splitKey = w.key.split(":")
-    console.log(splitKey)
     if (splitKey[0] === "suggestion") {
       return (
         <Suggestions

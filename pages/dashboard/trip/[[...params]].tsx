@@ -20,7 +20,7 @@ export default function Trip() {
 
   // Handle showing the create popups for different wigets
   const [showCreateEvent, setShowCreateEvent] = React.useState(false)
-  const [showCreatePoll, setShowCreatePoll] = React.useState(true)
+  const [showCreatePoll, setShowCreatePoll] = React.useState(false)
   const [showCreateSuggestion, setShowCreateSuggestion] = React.useState(false)
 
   // For each create popup add an item to the menu

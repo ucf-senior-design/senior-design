@@ -118,7 +118,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
   React.useEffect(() => {
     if (!trip.didReadLayout && trip.uid.length >= 0) {
       console.log("initializing layout....")
-
+      
       setLocalLayout(trip.layout)
       readLayout(trip.layout)
       setTrip({ ...trip, didReadLayout: true })
@@ -174,6 +174,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     let trip = await getTrip()
     let suggestionWidgets = await getSuggestionWidgetData()
     let eventData = await getEventData()
+    let pollWidgets = await getPollWidgetData()
 
     if (suggestionWidgets === null || trip === null || eventData == null) {
       alert("Cannot load trip.")
@@ -183,7 +184,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     console.log("initializing trip....")
     setTrip({
       ...trip,
-      polls: new Map(),
+      polls: pollWidgets,
       suggestions: suggestionWidgets,
       itinerary: eventData.userEvents,
       joinableEvents: eventData.joinableEvents,
@@ -197,6 +198,28 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     })
   }
 
+  async function getPollWidgetData() {
+    const polls = new Map<string, Poll>()
+
+    await fetch(`${API_URL}trip/${id}/polls/`, {
+      method: "GET",
+    }).then(async (response) => {
+      if (response.ok) {
+        const { data } = await response.json()
+
+        data.forEach((p: Poll) => {
+          polls.set(p.uid, {
+            uid: p.uid,
+            owner: p.owner,
+            title: p.title,
+            options: p.options,
+          })
+        })
+      }
+    })
+    console.log(polls)
+    return polls
+  }
   async function getSuggestionWidgetData() {
     const suggestionWidgets = new Map<string, SuggestionWidget>()
 
@@ -363,7 +386,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     }
 
     const fetchoptions = createFetchRequestOptions(JSON.stringify(poll), "POST")
-    const response = await fetch(`${API_URL}/trip/${trip.uid}/event`, fetchoptions)
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/polls`, fetchoptions)
 
     if (response.ok) {
       let createdPoll: Poll = await response.json()
@@ -450,7 +473,6 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     initilizeTrip()
   }, [])
 
-  console.log(trip)
   return (
     <TripContext.Provider
       value={{

@@ -17,7 +17,6 @@ export default function Day({
   weatherIcon: React.ReactNode
   temperature: number
 }) {
-  console.log(day, events, joinableEvents, weatherIcon, temperature)
   return (
     <Box sx={{ padding: "10px" }}>
       {/* Day header that includes date, weather icon, and temperature*/}

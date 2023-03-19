@@ -86,8 +86,6 @@ export default function useCreateEvent() {
       return
     }
 
-    
-
     let attendees = createAttendeesArray(event.attendees)
     attendees.push(user.uid)
 
