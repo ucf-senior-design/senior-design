@@ -133,7 +133,6 @@ export default function useCreateTrip() {
       return
     }
 
-    console.log(user)
     if (user === undefined) {
       updateErrorToast("Please login and try again later.")
       return

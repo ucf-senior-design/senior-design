@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from "next/server"
+import { firebaseAuth } from "./utility/firebase"
+import { API_URL } from "./utility/constants"
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+  let getUserResponse = await fetch(`${API_URL}auth/user`, { method: "GET" })
+
+  // Add checks for all authenticated pages here
+  if (!getUserResponse.ok) {
+    if (request.nextUrl.pathname.startsWith("/dashboard")) {
+      return NextResponse.redirect(new URL("/auth/login", request.url))
+    }
+  }
   // Clone the request headers and set a new header `x-hello-from-middleware1`
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set(
