@@ -15,9 +15,8 @@ import {
   Popper,
   Stack,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material"
-import { useRouter } from "next/router"
 import React from "react"
 import theme from "../../styles/theme/Theme"
 import { useAuth } from "../../utility/hooks/authentication"
@@ -32,7 +31,6 @@ export default function NavBar({ path }: { path: string }) {
   const { user, doLogout } = useAuth()
   const { loading } = useScreen()
   const { updateErrorToast } = useScreen()
-  const router = useRouter()
   const [username, setUsername] = React.useState("")
 
   const {
@@ -54,12 +52,8 @@ export default function NavBar({ path }: { path: string }) {
 
   React.useEffect(() => {
     // Occurs if we haven't attempted to see if the user is logged in.
-    if (user === undefined) {
-      return
-    }
-
-    if (user.uid.length !== 0 && user.didFinishRegister) {
-      setUsername(user.username)
+    if (user === undefined || user.uid.length === 0 || !user.didFinishRegister) {
+      return undefined
     }
   }, [user])
 
@@ -93,7 +87,7 @@ export default function NavBar({ path }: { path: string }) {
               sx={{ display: { sm: "none" } }}
               color="inherit"
             >
-              <MenuIcon sx={{ fontSize: "38px", color: landingTextColor }} />
+              <MenuIcon sx={{ fontSize: "38px", color: "white" }} />
             </IconButton>
             <div
               style={{
@@ -135,10 +129,10 @@ export default function NavBar({ path }: { path: string }) {
                 textAlign: "right",
               }}
             >
-              {user === undefined ? (
+              {user !== undefined ? (
                 <>
                   {/* TODO: add correct pages once they have been created */}
-                  <NavBarButton path="/dashboard/trips" text="dashboard" variant="text" />
+                  <NavBarButton path="/dashboard" text="dashboard" variant="text" />
                   <NavBarButton path="/teams" text="teams" variant="text" />
                   <Button
                     ref={anchorRef}
@@ -150,7 +144,7 @@ export default function NavBar({ path }: { path: string }) {
                     area-haspopup="true"
                     onClick={handleToggle}
                   >
-                    {username ?? ""}
+                    {user.username ?? "undefined"}
                   </Button>
                   <Popper
                     open={open}

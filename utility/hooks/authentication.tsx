@@ -1,4 +1,9 @@
-import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup, User as FirebaseUser } from "firebase/auth"
+import {
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  signInWithPopup,
+  User as FirebaseUser,
+} from "firebase/auth"
 import Router from "next/router"
 import React from "react"
 import { useLocalStorage } from "react-use-storage"
@@ -136,7 +141,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function doLogout() {
     removeLocalUser()
     setUser(undefined)
-    Router.push('/')
   }
 
   async function storePartialCredentialResult(u: any) {
