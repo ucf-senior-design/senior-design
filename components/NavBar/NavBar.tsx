@@ -15,7 +15,7 @@ import {
   Popper,
   Stack,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material"
 import { useRouter } from "next/router"
 import React from "react"
@@ -60,7 +60,7 @@ export default function NavBar({ path }: { path: string }) {
 
     if (user.uid.length !== 0 && user.didFinishRegister) {
       setUsername(user.username)
-      router.push("/dashboard/overview")
+      router.push("/dashboard/index")
     } else {
       router.push("/")
     }
