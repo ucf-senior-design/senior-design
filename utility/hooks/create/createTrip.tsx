@@ -121,37 +121,28 @@ export default function useCreateTrip() {
   }
 
   async function maybeCreateTrip() {
-    let create = {
-      attendeeOptions: [],
-      attendees: [],
-      destination: "Miami, FL, USA",
-      duration: { start: new Date(), end: new Date() },
-      layout: [],
-      photoURL: "",
-      placeID: "ChIJEcHIDqKw2YgRZU-t3XHylv8",
-    }
-    console.log("creating...", create)
-    if (create.destination.length === 0 || create.placeID.length === 0) {
+    if (createTrip.destination.length === 0 || createTrip.placeID.length === 0) {
       updateErrorToast("please select a desintation.")
       return
     }
 
-    // let photoURL = await getPhotoURL()
+    let photoURL = await getPhotoURL()
 
-    // if (photoURL === undefined) {
-    //   updateErrorToast("cannot create trip at this time.")
-    //   return
-    // }
-
-    if (user === undefined) {
-      updateErrorToast("Please try again later.")
+    if (photoURL === undefined) {
+      updateErrorToast("cannot get location details at this time.")
       return
     }
 
-    let attendees = createAttendeesArray(create.attendees)
+    console.log(user)
+    if (user === undefined) {
+      updateErrorToast("Please login and try again later.")
+      return
+    }
+
+    let attendees = createAttendeesArray(createTrip.attendees)
     attendees.push(user.uid)
 
-    const timeDiff = create.duration.start.getTime() - create.duration.end.getTime() //get the difference in milliseconds
+    const timeDiff = createTrip.duration.start.getTime() - createTrip.duration.end.getTime() //get the difference in milliseconds
     const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) //convert milliseconds to days
     let layout: Array<StoredLocation> = []
 
@@ -163,7 +154,7 @@ export default function useCreateTrip() {
     const options = createFetchRequestOptions(
       JSON.stringify({
         duration: {
-          start: create.duration.start,
+          start: createTrip.duration.start,
           end: createTrip.duration.end,
         },
         photoURL: "",

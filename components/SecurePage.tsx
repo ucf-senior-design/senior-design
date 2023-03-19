@@ -8,11 +8,12 @@ import { useScreen } from "../utility/hooks/screen"
  */
 export default function SecurePage({ children }: { children: React.ReactNode }) {
   const [content, setContent] = React.useState<React.ReactNode>(<></>)
-  const { user } = useAuth()
+  const { user, maybeLoadPersistedUser } = useAuth()
   const router = useRouter()
   const { updateErrorToast } = useScreen()
 
   React.useEffect(() => {
+    console.log("loading user....")
     // Occurs if we haven't attempted to see if the user is logged in.
     if (user === undefined) {
       return
@@ -34,7 +35,7 @@ export default function SecurePage({ children }: { children: React.ReactNode }) 
 
     // Only allow content to be returned if user is logged in.
     setContent(children)
-  }, [user])
+  }, [])
 
   return <>{content}</>
 }
