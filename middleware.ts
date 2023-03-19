@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 
-export function middleware(request: NextRequest) {
-  // Clone the request headers and set a new header `x-hello-from-middleware1`
+export default function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set(
     "Access-Control-Allow-Origin",
-    "https://we-tinerary-middle-ucf-senior-design.vercel.app/",
+    "https://we-tinerary-ucf-senior-design.vercel.app/",
   )
   requestHeaders.set("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT")
   requestHeaders.set(
@@ -14,7 +13,6 @@ export function middleware(request: NextRequest) {
   )
   requestHeaders.set("Access-Control-Allow-Credentials", "true")
 
-  // You can also set request headers in NextResponse.rewrite
   const response = NextResponse.next({
     // @ts-ignore
     request: {
