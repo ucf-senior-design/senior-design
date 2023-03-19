@@ -1,7 +1,7 @@
 import { Grid, Stack } from "@mui/material"
 import { useRouter } from "next/router"
 import React from "react"
-import { TeamForm } from "../../components/Dashboard/Widgets/TeamComponents/TeamForm"
+import { TeamForm } from "../../../components/Dashboard/Widgets/TeamComponents/TeamForm"
 
 export default function Teams() {
   const router = useRouter()

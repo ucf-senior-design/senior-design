@@ -7,7 +7,10 @@ export async function middleware(request: NextRequest) {
 
   // Add checks for all authenticated pages here
   if (!getUserResponse.ok) {
-    if (request.nextUrl.pathname.startsWith("/dashboard")) {
+    if (
+      request.nextUrl.pathname.startsWith("/dashboard") ||
+      request.nextUrl.pathname.startsWith("/settings")
+    ) {
       return NextResponse.redirect(new URL("/auth/login", request.url))
     }
   }
