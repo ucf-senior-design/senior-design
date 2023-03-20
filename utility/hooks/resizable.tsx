@@ -23,6 +23,7 @@ interface Resizable {
   getWidget: (key: string) => React.ReactNode
   onSortEnd: ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => void
   addItem: (key: string) => void
+  getStorableLayout: (order: Array<string>) => void
 }
 
 const ResizableContext = React.createContext<Resizable | null>(null)
@@ -71,7 +72,6 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
         order: nOrder,
       })
     }
-    setLocalLayout(getStorableLayout())
   }, [resizable.size, resizable.order])
 
   /**
@@ -128,7 +128,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
   /**
    * Creates an array that represents the state of the current layout so it can be stored locally and later in the database.
    */
-  function getStorableLayout() {
+  function getStorableLayout(order: Array<string>) {
     let layout: Array<StoredLocation> = []
 
     resizable.order.map((key) => {
@@ -252,6 +252,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
         addItem,
         canDecreaseSize,
         canIncreaseSize,
+        getStorableLayout,
       }}
     >
       {children}

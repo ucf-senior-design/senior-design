@@ -91,7 +91,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   )
   const router = useRouter()
 
-  const { readLayout, createKey, addItem } = useResizable()
+  const { readLayout, createKey, addItem, resizable, getStorableLayout } = useResizable()
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: "",
     attendees: new Set(),
@@ -111,6 +111,11 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   })
   const { user } = useAuth()
 
+  React.useEffect(() => {
+    if (resizable.order.length !== 0) {
+      storeLayout()
+    }
+  }, [resizable])
   React.useEffect(() => {
     if (window !== undefined && window.location !== undefined) {
       const { id } = queryString.parse(window.location.search)
@@ -499,12 +504,11 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function storeLayout() {
-    alert("Attempting to store")
-
-    if (localLayout.length === 0) {
-      alert("Unable to save layout changes")
-    }
-    const options = createFetchRequestOptions(JSON.stringify({ layout: localLayout }), "PUT")
+    console.log("storing layout...")
+    const options = createFetchRequestOptions(
+      JSON.stringify({ layout: getStorableLayout(resizable.order) }),
+      "PUT",
+    )
 
     const response = await fetch(`${API_URL}/trip/${id}/layout`, options)
 
@@ -513,6 +517,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       alert("Unable to save layout changes")
     }
   }
+
   async function modifyTrip(details: TripDetails, callback: (response: Response) => void) {
     const options = createFetchRequestOptions(JSON.stringify(details), "PUT")
     const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options)
@@ -528,15 +533,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       callback({ isSuccess: response.ok, errorMessage: await response.text() })
     }
   }
-
-  React.useEffect(() => {
-    router.events.on("routeChangeStart", async () => {
-      console.log("updating layout..")
-
-      const options = createFetchRequestOptions(JSON.stringify({ layout: localLayout }), "PUT")
-      const response = await fetch(`${API_URL}/trip/${id}/layout`, options)
-    })
-  }, [])
 
   React.useEffect(() => {
     console.log("getting data for trip:", id)
