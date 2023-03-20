@@ -20,6 +20,7 @@ export default function DateRange({
       getPopupContainer={(triggerNode) => {
         return triggerNode.parentNode as any
       }}
+      format={"MMMM DD, hh:mm a"}
       style={{ width: "100%", padding: "15px" }}
       showTime={
         showTime

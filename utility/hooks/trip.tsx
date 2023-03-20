@@ -1,5 +1,6 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, Button, CircularProgress } from "@mui/material"
+import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import queryString from "query-string"
 import React from "react"
@@ -174,8 +175,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       })
       if (iIndex < itinerary.length) {
         if (
-          itinerary[iIndex][0].duration.start.toLocaleDateString() ===
-          new Date(day).toLocaleDateString()
+          itinerary[iIndex][0].duration.start.getDay() === new Date(day).getDay() &&
+          itinerary[iIndex][0].duration.start.getMonth() === new Date(day).getMonth()
         ) {
           days[days.length - 1].itinerary = itinerary[iIndex]
           iIndex += 1
@@ -184,8 +185,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
       if (jIndex < joinableEvents.length) {
         if (
-          joinableEvents[jIndex][0].duration.start.toLocaleDateString() ===
-          new Date(day).toLocaleDateString()
+          joinableEvents[jIndex][0].duration.start.getDay() === new Date(day).getDay() &&
+          joinableEvents[jIndex][0].duration.start.getMonth() === new Date(day).getMonth()
         ) {
           days[days.length - 1].joinable = joinableEvents[jIndex]
           jIndex += 1
