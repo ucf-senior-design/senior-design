@@ -1,53 +1,37 @@
 import { Button, Divider, Paper, Stack, TextField, Typography } from "@mui/material"
 import { MuiChipsInput } from "mui-chips-input"
 import React from "react"
+import { useAuth } from "../../utility/hooks/authentication"
 import { useScreen } from "../../utility/hooks/screen"
 import updateUser from "../../utility/hooks/settings"
 import { User as UserType } from "../../utility/types/user"
 
-export default function PersonalInfo({
-  user,
-}: {
-  user: (UserType & { didFinishRegister: boolean }) | undefined
-}) {
-  const [medicalInfo, setMedicalInfo] = React.useState<Array<string>>(user?.medicalInfo ?? [])
-  const [allergies, setAllergies] = React.useState<Array<string>>(user?.allergies ?? [])
-  const [displayName, setDisplayName] = React.useState(user?.name ?? "")
+export default function PersonalInfo() {
+  const { user } = useAuth()
   const { loading, updateLoading, updateErrorToast, updateSuccessToast } = useScreen()
 
+  console.log(user)
   const [info, setInfo] = React.useState<{
     medicalInfo: Array<string>
     allergies: Array<string>
-    displayName: string
+    name: string
   }>({
     medicalInfo: user?.medicalInfo ?? [],
     allergies: user?.allergies ?? [],
-    displayName: user?.name ?? "",
+    name: user?.name ?? "",
   })
 
   async function handleUpdate() {
     updateLoading(true)
-    await updateUser(
-      { medicalInfo: medicalInfo, allergies: allergies, name: displayName },
-      (response) => {
-        if (response.isSuccess) {
-          updateSuccessToast("information successfully updated!")
-        } else {
-          updateErrorToast("error updating. try again later")
-        }
-      },
-    )
+    await updateUser(info, (response) => {
+      if (response.isSuccess) {
+        updateSuccessToast("information successfully updated!")
+      } else {
+        updateErrorToast("error updating. try again later")
+      }
+    })
     updateLoading(false)
   }
-
-  // tries and loads current info in before page loads
-  React.useEffect(() => {
-    setInfo({
-      medicalInfo: user?.medicalInfo ?? [],
-      allergies: user?.allergies ?? [],
-      displayName: user?.name ?? "",
-    })
-  }, [user])
 
   return (
     <Paper>
@@ -64,7 +48,7 @@ export default function PersonalInfo({
         <Divider />
         <TextField
           id="nameInput"
-          value={info.displayName}
+          value={info.name}
           label="display name"
           placeholder="ex. jane doe"
           onChange={(e: { target: { value: string } }) =>
