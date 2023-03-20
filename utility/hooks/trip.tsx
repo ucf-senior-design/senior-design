@@ -2,11 +2,13 @@ import React from "react"
 import SecurePage from "../../components/SecurePage"
 import { createFetchRequestOptions } from "../fetch"
 import { Duration, Event, SuggestionOption, SuggestionWidget, Trip } from "../types/trip"
+import { User } from "../types/user"
 interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>
   joinableEvents: Array<Array<Event>>
   itinerary: Array<Array<Event>>
   destination: string
+  userData: Array<User> | undefined
 }
 
 interface TripDetails {
@@ -67,6 +69,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     itinerary: [],
     joinableEvents: [],
     photoURL: "",
+    userData: []
   })
   const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -79,6 +82,16 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
       alert("Cannot load trip.")
       return
     }
+    
+    let attendees = Array.from( trip.attendees );
+
+    let userData: User[] = await Promise.all(attendees.map(async (uid) => {
+      const options = createFetchRequestOptions(null, "GET")
+      const response = await fetch(`${API_URL}auth/user/getUserByID/${uid}`, options)
+      if (response.ok) {
+        return await response.json();
+      }
+    }));
 
     console.log("initializing trip....")
     setTrip({
@@ -86,6 +99,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
       suggestions: suggestionWidgets,
       itinerary: eventData.userEvents,
       joinableEvents: eventData.joinableEvents,
+      userData: userData
     })
   }
 
