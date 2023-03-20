@@ -94,7 +94,9 @@ export default function CreateEvent({ closeModal }: { closeModal: () => void }) 
         </Typography>
         <DateRange
           disabledDate={(date) => {
-            return dayjs(trip.duration.start).isAfter(date) || dayjs(trip.duration.end).isBefore(date)
+            return (
+              dayjs(trip.duration.start).isAfter(date) || dayjs(trip.duration.end).isBefore(date)
+            )
           }}
           showTime
           startDate={event.duration.start}
