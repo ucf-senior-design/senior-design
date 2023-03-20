@@ -33,7 +33,6 @@ export default function Screen({ children, path }: { path: string; children: Rea
 
   // Resets View Trip Header UI on non view trip pages
   React.useEffect(() => {
-    console.log(router.pathname)
     if (!router.pathname.startsWith("/dashboard/trip/[[...params]]"))
       updateNav(undefined, undefined, <></>)
   }, [router])
