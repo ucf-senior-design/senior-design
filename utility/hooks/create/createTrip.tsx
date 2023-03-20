@@ -156,7 +156,7 @@ export default function useCreateTrip() {
           start: createTrip.duration.start,
           end: createTrip.duration.end,
         },
-        photoURL: "",
+        photoURL: photoURL,
         destination: createTrip.destination,
         attendees: attendees,
         layout: layout,
