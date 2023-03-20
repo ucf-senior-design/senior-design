@@ -1,29 +1,28 @@
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Stack,
-  Button,
-  Popper,
-  Grow,
-  Paper,
-  ClickAwayListener,
-  MenuList,
-  MenuItem,
-  Box,
-  Drawer,
-  LinearProgress,
-} from "@mui/material"
-import theme from "../../styles/theme/Theme"
-import { NavBarButton } from "./NavButton"
-import React from "react"
 import AirportShuttleIcon from "@mui/icons-material/AirportShuttle"
 import MenuIcon from "@mui/icons-material/Menu"
-import LoggedOutDrawer from "./LoggedOutDrawer"
+import {
+  AppBar,
+  Box,
+  Button,
+  ClickAwayListener,
+  Drawer,
+  Grow,
+  IconButton,
+  LinearProgress,
+  MenuItem,
+  MenuList,
+  Paper,
+  Popper,
+  Stack,
+  Toolbar,
+  Typography,
+} from "@mui/material"
+import theme from "../../styles/theme/Theme"
 import { useAuth } from "../../utility/hooks/authentication"
-import { useScreen } from "../../utility/hooks/screen"
 import useNavBar from "../../utility/hooks/navbar"
+import { useScreen } from "../../utility/hooks/screen"
+import LoggedOutDrawer from "./LoggedOutDrawer"
+import { NavBarButton } from "./NavButton"
 
 export default function NavBar({ path }: { path: string }) {
   const landingTextColor = path === "/" ? "white" : ""

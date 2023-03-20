@@ -10,7 +10,7 @@ export function SendEmail({
   purpose,
   email,
 }: {
-  purpose: "emailVerify" | "passwordReset" | "updatePassword"
+  purpose: "emailVerify" | "passwordReset"
   email?: string
 }) {
   const { updateErrorToast, updateSuccessToast } = useScreen()
@@ -37,7 +37,7 @@ export function SendEmail({
         }
       })
     }
-    if (purpose === "passwordReset" || purpose === "updatePassword") {
+    if (purpose === "passwordReset") {
       sendPasswordReset(emailForgottenPW, (response) => {
         if (!response.isSuccess) {
           updateErrorToast(response.errorMessage)
@@ -92,15 +92,14 @@ export function SendEmail({
                 log in{" "}
               </Button>
             )}
-            {purpose === "passwordReset" ||
-              (purpose === "updatePassword" && (
-                <TextField
-                  value={emailForgottenPW}
-                  onChange={(e) => setEmailForgottenPW(e.target.value)}
-                  size="small"
-                  placeholder="john@email.com"
-                />
-              ))}
+            {purpose === "passwordReset" && (
+              <TextField
+                value={emailForgottenPW}
+                onChange={(e) => setEmailForgottenPW(e.target.value)}
+                size="small"
+                placeholder="john@email.com"
+              />
+            )}
             <Button
               variant="contained"
               aria-label={purpose === "emailVerify" ? "resend email" : "reset password"}

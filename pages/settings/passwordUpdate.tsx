@@ -3,7 +3,7 @@ import { SendEmail } from "../../components/AuthComponents/RegisterComponents/Se
 export default function PasswordUpdate() {
   return (
     <div style={$wrapper}>
-      <SendEmail purpose="updatePassword" />
+      <SendEmail purpose="passwordReset" />
     </div>
   )
 }

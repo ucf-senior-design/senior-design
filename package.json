@@ -44,6 +44,7 @@
     "firebase-admin": "^11.3.0",
     "jalaali-react-date-picker": "^1.0.12",
     "mocha": "^10.1.0",
+    "mui-chips-input": "^2.0.1",
     "mui-daterange-picker": "^1.0.5",
     "next": "12.3.1",
     "next-session": "^4.0.5",

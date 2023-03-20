@@ -1,11 +1,21 @@
 import { Grid, Stack, Typography } from "@mui/material"
+import React from "react"
 import Avatar from "../../components/Avatar"
-import { useAuth } from "../../utility/hooks/authentication"
+import { User as UserType } from "../../utility/types/user"
 
-export default function UserHeader() {
-  const { user } = useAuth()
+export default function UserHeader({
+  user,
+}: {
+  user: (UserType & { didFinishRegister: boolean }) | undefined
+}) {
 
-  return (
+  const [displayName, setDisplayName] = React.useState("")
+
+  React.useEffect(() => {
+    setDisplayName(user?.name ?? "")
+  }, [])
+
+  return ( 
     <Grid
       container
       style={{
@@ -23,12 +33,11 @@ export default function UserHeader() {
           justifyContent: "start",
         }}
       >
-        <Avatar name={user?.name ?? ""} size={120} />
+        <Avatar name={displayName} size={120} />
         <Stack direction="column">
           <Typography noWrap sx={{ fontWeight: "300", fontSize: "25px" }}>
-            {"placeholder name"} ({user?.username ?? ""})
+            {displayName} ({user?.username ?? ""})
           </Typography>
-          <Typography sx={{ fontSize: "13px" }}>emergency contact: (999) - 999 - 999</Typography>
         </Stack>
       </Grid>
     </Grid>
