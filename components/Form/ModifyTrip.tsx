@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material"
 import React from "react"
 import theme from "../../styles/theme/Theme"
-import useCreateTrip from "../../utility/hooks/createTrip"
+import useCreateTrip from "../../utility/hooks/create/createTrip"
 import { useTrip } from "../../utility/hooks/trip"
 import { Duration } from "../../utility/types/trip"
 import DateRange from "./DateRange"
