@@ -22,7 +22,8 @@ export default function DateRange({
       showTime={
         showTime
           ? {
-              format: "HH:mm",
+              use12Hours: true,
+              format: "HH:mm a",
             }
           : undefined
       }

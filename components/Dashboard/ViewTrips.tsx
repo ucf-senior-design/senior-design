@@ -87,9 +87,20 @@ export default function ViewTrips() {
           alignContent: "center",
           justifyContent: { xs: "center", md: "end" },
           padding: "10px",
-          flexDirection: "column",
+          flexDirection: "row",
         }}
       >
+        <Button
+          sx={{ margin: "10px" }}
+          variant="contained"
+          onClick={() =>
+            router.push(`/trip/`, {
+              pathname: "dashboard/trip/create",
+            })
+          }
+        >
+          create trip
+        </Button>
         <Autocomplete
           options={tripSearchOptions}
           groupBy={(option) => option.start}
