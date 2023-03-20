@@ -47,10 +47,6 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     widgets: new Map<string, React.ReactNode>(),
   })
 
-  const [localLayout, setLocalLayout, removeLocalLayout] = useLocalStorage<Array<StoredLocation>>(
-    "localLayout",
-    [],
-  )
   const DEFAULT_SIZE_INDEX = 1
   const SIZES = [3, 5, 8, 12]
 

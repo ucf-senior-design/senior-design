@@ -5,6 +5,7 @@ import React from "react"
 import { useLocalStorage } from "react-use-storage"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
+import { User } from "../types/user"
 import { Response } from "../types/helper"
 import {
   CreatedEvent,
@@ -32,6 +33,7 @@ interface TripUseState extends Trip {
   joinableEvents: Array<Array<Event>>
   itinerary: Array<Array<Event>>
   destination: string
+  userData: Map<string, User> | undefined
   days: Array<Day>
   didReadLayout: boolean
 }
@@ -84,11 +86,6 @@ export function useTrip(): TripContext {
 export function TripProvider({ children }: { children: React.ReactNode }) {
   const [id, setId] = React.useState<string>()
   const [showOverlay, setShowOverlay] = React.useState(true)
-
-  const [localLayout, setLocalLayout, removeLocalLayout] = useLocalStorage<Array<StoredLocation>>(
-    "localLayout",
-    [],
-  )
   const router = useRouter()
 
   const { readLayout, createKey, addItem, resizable, getStorableLayout } = useResizable()
@@ -106,9 +103,11 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     itinerary: [],
     joinableEvents: [],
     photoURL: "",
+    userData: new Map<string, User>(),
     days: [],
     didReadLayout: false,
   })
+
   const { user } = useAuth()
 
   React.useEffect(() => {
@@ -140,7 +139,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     if (!trip.didReadLayout && trip.uid.length >= 0) {
       console.log("initializing layout....")
 
-      setLocalLayout(trip.layout)
       readLayout(trip.layout)
       setTrip({ ...trip, didReadLayout: true })
     }
@@ -209,6 +207,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       suggestions: suggestionWidgets,
       itinerary: eventData.userEvents,
       joinableEvents: eventData.joinableEvents,
+      userData: (await getUserData(Array.from(trip.attendees))) as Map<string, User>,
       days: getEventsByDay(
         trip.duration.start,
         trip.duration.end,
@@ -241,6 +240,26 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
     return polls
   }
+
+  async function getUserData(attendees: Array<string>) {
+    let userData = attendees.map(async (uid) => {
+      const options = createFetchRequestOptions(null, "GET")
+      const response = await fetch(`${API_URL}auth/user/getUserByID/${uid}`, options)
+      if (response.ok) {
+        return await response.json()
+      } else {
+        return await response.text()
+      }
+    })
+
+    let responses = await Promise.all(userData)
+    return new Map(
+      responses.map((value) => {
+        return [value.uid, value]
+      }),
+    )
+  }
+
   async function getSuggestionWidgetData() {
     const suggestionWidgets = new Map<string, SuggestionWidget>()
 
