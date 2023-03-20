@@ -1,5 +1,4 @@
 import { Paper } from "@mui/material"
-import { maxWidth } from "@mui/system"
 import { DateRange as ReactDateRange } from "react-date-range"
 
 export default function DateRange({
@@ -32,6 +31,7 @@ export default function DateRange({
             endDate: endDate,
           },
         ]}
+        
         onChange={(e) =>
           updateDates(e.selection.startDate ?? new Date(), e.selection.endDate ?? new Date())
         }

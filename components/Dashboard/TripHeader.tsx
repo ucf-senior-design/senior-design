@@ -1,18 +1,17 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+import EditIcon from "@mui/icons-material/Edit"
 import { Grid } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import Avatar from "../../components/Avatar"
 import { useTrip } from "../../utility/hooks/trip"
-import { Trip } from "../../utility/types/trip"
 
-export default function TripHeader ({ trip_details }: { trip_details: Trip }) {
+export default function TripHeader() {
   const { trip } = useTrip()
   const item1 = { username: "username", id: "123", name: "noriyuki" }
   const item2 = { username: "username2", id: "456", name: "minoru" }
   const example = [item1, item2]
 
   return (
-    <div>
       <Grid
         container
         style={{
@@ -45,13 +44,15 @@ export default function TripHeader ({ trip_details }: { trip_details: Trip }) {
           }}
         >
           <Typography sx={{ color: "white", fontWeight: "700", fontSize: "40px" }}>
-            {/* {trip_details.destination} <EditIcon sx={{ color: "white" }} /> */}
+            {trip.destination} <EditIcon sx={{ color: "white" }} />
           </Typography>
 
           <Typography sx={{ color: "white", fontWeight: "400", fontSize: "20px" }}>
-            {/* {{trip_details.duration.start}.toLocaleDateString("en-US", {
+            {/* {{trip.duration.start}.toLocaleDateString("en-US", {
                 year: 'numeric', month: 'long', day: 'numeric'
-            })} */}trip
+            })} */}
+
+            trip
           </Typography>
           <Grid
             container
@@ -67,6 +68,5 @@ export default function TripHeader ({ trip_details }: { trip_details: Trip }) {
           </Grid>
         </Grid>
       </Grid>
-    </div>
   )
 }
