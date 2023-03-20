@@ -18,9 +18,10 @@ export default function Widget({ widget }: { widget: TWidget }) {
       >
         <div
           style={{
-            height: "10px",
-
+            height: "75px",
+            alignItems: "center",
             display: "flex",
+            gap: "10px",
             justifyContent: "center",
           }}
         >
@@ -28,10 +29,34 @@ export default function Widget({ widget }: { widget: TWidget }) {
             {handleSettings && (
               <div style={{ display: "flex", width: "100%", flexDirection: "row" }}>
                 {resize.canIncreaseSize(widget.key) && (
-                  <Button onClick={() => resize.doIncreaseSize(widget.key)}> incr </Button>
+                  <Button
+                    sx={{
+                      marginRight: "5px",
+                      marginLeft: "5px",
+                      color: "black",
+                      borderColor: "#545270",
+                    }}
+                    color="secondary"
+                    variant="outlined"
+                    onClick={() => resize.doIncreaseSize(widget.key)}
+                  >
+                    +
+                  </Button>
                 )}
                 {resize.canDecreaseSize(widget.key) && (
-                  <Button onClick={() => resize.doDecreaseSize(widget.key)}> decr </Button>
+                  <Button
+                    sx={{
+                      marginRight: "5px",
+                      marginLeft: "5px",
+                      color: "black",
+                      borderColor: "#545270",
+                    }}
+                    color="secondary"
+                    variant="outlined"
+                    onClick={() => resize.doDecreaseSize(widget.key)}
+                  >
+                    -
+                  </Button>
                 )}
               </div>
             )}
