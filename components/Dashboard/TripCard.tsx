@@ -10,7 +10,6 @@ export default function TripCard({
   destination: string
   imageURI: string
 }) {
-  console.log(destination, imageURI)
   const router = useRouter()
 
   return (

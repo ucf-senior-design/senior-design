@@ -13,7 +13,6 @@ import {
   Event,
   Poll,
   PollOption,
-  StoredLocation,
   SuggestionOption,
   SuggestionWidget,
   Trip,
@@ -85,12 +84,6 @@ export function useTrip(): TripContext {
 
 export function TripProvider({ children }: { children: React.ReactNode }) {
   const [id, setId] = React.useState<string>()
-  const [showOverlay, setShowOverlay] = React.useState(true)
-
-  const [localLayout, setLocalLayout, removeLocalLayout] = useLocalStorage<Array<StoredLocation>>(
-    "localLayout",
-    [],
-  )
   const router = useRouter()
 
   const { updateNav } = useScreen()
@@ -152,7 +145,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     if (!trip.didReadLayout && trip.uid.length >= 0) {
       console.log("initializing layout....")
 
-      setLocalLayout(trip.layout)
       readLayout(trip.layout)
       setTrip({ ...trip, didReadLayout: true })
     }
