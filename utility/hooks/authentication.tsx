@@ -1,4 +1,9 @@
-import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
+import {
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  signInWithPopup,
+  User as FirebaseUser,
+} from "firebase/auth"
 import Router from "next/router"
 import React from "react"
 import { useLocalStorage } from "react-use-storage"
@@ -6,7 +11,6 @@ import { EMAIL_VERIFIED, MUST_ADD_DETAILS, MUST_VERIFY_EMAIL } from "../constant
 import { createFetchRequestOptions } from "../fetch"
 import { firebaseAuth } from "../firebase"
 import { User } from "../types/user"
-import { User as FirebaseUser } from "firebase/auth"
 import { useScreen } from "./screen"
 
 interface EmailPasswordLogin {
@@ -137,6 +141,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function doLogout() {
     removeLocalUser()
     setUser(undefined)
+    Router.push("/")
   }
 
   async function storePartialCredentialResult(u: any) {

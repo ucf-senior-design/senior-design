@@ -12,7 +12,8 @@ import {
   Typography,
 } from "@mui/material"
 import Link from "next/link"
-import React from "react"
+import { useAuth } from "../../utility/hooks/authentication"
+import { User as UserType } from "../../utility/types/user"
 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"
 import AddIcon from "@mui/icons-material/Add"
@@ -75,19 +76,21 @@ const authItem2 = {
 }
 const authItem3 = {
   id: 2,
-  link: "/",
+  link: "/teams",
   name: "teams",
   buttonLabel: "teams button",
   icon: GroupsIcon,
   iconLabel: "teams",
 }
 
-export const LoggedOutDrawer = () => {
+export const LoggedOutDrawer = ({
+  user,
+}: {
+  user: (UserType & { didFinishRegister: boolean }) | undefined
+}) => {
   const navItems = [navItem1, navItem2, navItem3, navItem4]
   const authNavItems = [authItem1, authItem2, authItem3]
-  //TODO: add logic for checking if a user is already logged in/active session
-  // Set this to true to see authenticated drawer
-  const [isAuth, setisAuth] = React.useState(false)
+  const { doLogout } = useAuth()
 
   return (
     <>
@@ -99,7 +102,7 @@ export const LoggedOutDrawer = () => {
       </Grid>
       <Divider />
       <List>
-        {isAuth ? (
+        {user ? (
           <>
             {authNavItems.map((item) => (
               <Link href={item.link} key={item.id} passHref>
@@ -115,8 +118,12 @@ export const LoggedOutDrawer = () => {
             ))}
             <div>
               <Divider sx={{ marginTop: 4 }} />
-              {/* TODO: Logout functionality */}
-              <Button variant="outlined" color="warning" sx={{ width: "100%" }}>
+              <Button
+                variant="outlined"
+                color="warning"
+                sx={{ width: "100%" }}
+                onClick={() => doLogout()}
+              >
                 Log Out
               </Button>
             </div>
