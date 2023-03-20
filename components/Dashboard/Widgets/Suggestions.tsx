@@ -7,38 +7,6 @@ import React from "react"
 import { BackdropModal } from "../../BackdropModal"
 import { useTrip } from "../../../utility/hooks/trip"
 
-export function SuggestionWidgets() {
-  const { trip } = useTrip()
-
-  const [suggestions, setSuggestions] = React.useState<React.ReactNode>(<></>)
-  React.useEffect(() => {
-    setSuggestions(getSuggestions)
-  }, [trip.suggestions])
-
-  function getSuggestions() {
-    const s: Array<React.ReactNode> = []
-    trip.suggestions?.forEach((suggestion) => {
-      s.push(<Suggestions key={suggestion.uid} suggestionWidget={suggestion} tripID={trip.uid} />)
-    })
-
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyItems: "center",
-          flexDirection: "column",
-          gap: 5,
-        }}
-      >
-        {s}
-      </div>
-    )
-  }
-
-  return <> {suggestions}</>
-}
-
 export function Suggestions({
   suggestionWidget,
   tripID,
@@ -47,14 +15,12 @@ export function Suggestions({
   suggestionWidget: SuggestionWidget
 }) {
   const {
-    doesUserOwn,
     storeNewSuggestion,
     toggleAddPopUp,
     didUserLike,
     like,
     unLike,
     suggestion,
-    deleteSuggestion,
     addSuggestion,
     toggleShowAllSuggestionsPopUp,
   } = useSuggestion(suggestionWidget)
@@ -62,7 +28,6 @@ export function Suggestions({
   function Suggestion({ suggestion }: { suggestion: SuggestionOption }) {
     return (
       <Grid key={suggestion.uid} container>
-        {/** TODO: Ensure Trip Hook has a way to store owner information and get the user's name from this. */}
         <Grid item xs={10} sx={{ display: "flex", flexDirection: "row", gap: 2, width: "100%" }}>
           <Typography> {suggestion.option}</Typography>
         </Grid>
@@ -76,14 +41,14 @@ export function Suggestions({
           }}
         >
           {didUserLike(suggestion.uid) ? (
-            <Button>
-              <Favorite
-                sx={{ color: "pink" }}
-                onClick={async (e) => {
-                  e.stopPropagation()
-                  await unLike(suggestion.uid)
-                }}
-              />
+            <Button
+              onClick={async (e) => {
+                console.log("unlike")
+                e.stopPropagation()
+                await unLike(suggestion.uid)
+              }}
+            >
+              <Favorite sx={{ color: "pink" }} />
             </Button>
           ) : (
             <Button
@@ -169,7 +134,12 @@ export function Suggestions({
           </div>
         </BackdropModal>
       </div>
-      <Paper sx={{ padding: "20px", width: "100%", height: "100%" }}>
+      <Paper
+        sx={{ padding: "20px", width: "100%", height: "100%" }}
+        onClick={(e) => {
+          e.stopPropagation()
+        }}
+      >
         <WidgetHeader
           owner={suggestion.owner}
           rightAccessory={

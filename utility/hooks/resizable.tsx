@@ -47,16 +47,11 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     widgets: new Map<string, React.ReactNode>(),
   })
 
-  const [localLayout, setLocalLayout, removeLocalLayout] = useLocalStorage<Array<StoredLocation>>(
-    "localLayout",
-    [],
-  )
   const DEFAULT_SIZE_INDEX = 1
   const SIZES = [3, 5, 8, 12]
 
   // Allows local layout to be stored whenever there are changes
   React.useEffect(() => {
-    // TODO: find a better fix for when someotimes the widgets are dropped in the same place it gets added to the order
     if (resizable.order.length !== resizable.size.size) {
       let seen = new Set<string>()
       let nOrder: Array<string> = []
