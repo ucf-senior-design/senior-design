@@ -1,3 +1,4 @@
+import { Person } from "@mui/icons-material"
 import AirportShuttleIcon from "@mui/icons-material/AirportShuttle"
 import MenuIcon from "@mui/icons-material/Menu"
 import {
@@ -33,29 +34,14 @@ export default function NavBar({ path }: { path: string }) {
   const { updateErrorToast } = useScreen()
   const [username, setUsername] = React.useState("")
 
-  const {
-    handleMenuClose,
-    handleListKeyDown,
-    handleDrawerToggle,
-    handleToggle,
-    anchorRef,
-    open,
-    mobileOpen,
-  } = useNavBar()
+  const { handleListKeyDown, handleDrawerToggle, setOpen, anchorRef, open, mobileOpen } =
+    useNavBar()
 
   const { nav } = useScreen()
 
   const handleLogout = (): void => {
     doLogout()
-    handleMenuClose
   }
-
-  React.useEffect(() => {
-    // Occurs if we haven't attempted to see if the user is logged in.
-    if (user === undefined || user.uid.length === 0 || !user.didFinishRegister) {
-      return undefined
-    }
-  }, [user])
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ m: 2 }}>
@@ -123,62 +109,63 @@ export default function NavBar({ path }: { path: string }) {
               direction="row"
               spacing={2}
               sx={{
-                display: { xs: "none", sm: "block" },
+                display: { xs: "none", sm: "flex" },
                 width: "100%",
                 justifyContent: "end",
                 textAlign: "right",
               }}
             >
-              {user !== undefined ? (
+              {user !== undefined && user?.didFinishRegister ? (
                 <>
                   {/* TODO: add correct pages once they have been created */}
                   <NavBarButton path="/dashboard" text="dashboard" variant="text" />
                   <NavBarButton path="/teams" text="teams" variant="text" />
-                  <Button
-                    ref={anchorRef}
-                    color="secondary"
-                    variant="outlined"
-                    aria-label={"user"}
-                    aria-controls={open ? "composition-menu" : undefined}
-                    aria-expanded={open ? "true" : undefined}
-                    area-haspopup="true"
-                    onClick={handleToggle}
-                  >
-                    {user.username ?? "undefined"}
-                  </Button>
-                  <Popper
-                    open={open}
-                    anchorEl={anchorRef.current}
-                    role={undefined}
-                    placement="bottom-start"
-                    transition
-                    disablePortal
-                  >
-                    {({ TransitionProps, placement }) => (
-                      <Grow
-                        {...TransitionProps}
-                        style={{
-                          transformOrigin:
-                            placement === "bottom-start" ? "left top" : "left bottom",
-                        }}
-                      >
-                        <Paper>
-                          <ClickAwayListener onClickAway={handleMenuClose}>
-                            <MenuList
-                              autoFocusItem={open}
-                              id="composition-menu"
-                              aria-labelledby="composition-button"
-                              onKeyDown={handleListKeyDown}
-                            >
-                              {/* TODO: Add logic for settings page*/}
-                              <MenuItem onClick={handleMenuClose}>my account</MenuItem>
-                              <MenuItem onClick={handleLogout}>logout</MenuItem>
-                            </MenuList>
-                          </ClickAwayListener>
-                        </Paper>
-                      </Grow>
-                    )}
-                  </Popper>
+                  <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+                    <Button
+                      ref={anchorRef}
+                      color="secondary"
+                      variant="outlined"
+                      aria-label={"user"}
+                      aria-controls={open ? "composition-menu" : undefined}
+                      aria-expanded={open ? "true" : undefined}
+                      area-haspopup="true"
+                    >
+                      <Person sx={{ color: "white" }} />
+                    </Button>
+                    <Popper
+                      open={open}
+                      anchorEl={anchorRef.current}
+                      role={undefined}
+                      placement="bottom-start"
+                      transition
+                      disablePortal
+                    >
+                      {({ TransitionProps, placement }) => (
+                        <Grow
+                          {...TransitionProps}
+                          style={{
+                            transformOrigin:
+                              placement === "bottom-start" ? "left top" : "left bottom",
+                          }}
+                        >
+                          <Paper>
+                            <ClickAwayListener onClickAway={() => setOpen(false)}>
+                              <MenuList
+                                autoFocusItem={open}
+                                id="composition-menu"
+                                aria-labelledby="composition-button"
+                                onKeyDown={handleListKeyDown}
+                              >
+                                {/* TODO: Add logic for settings page*/}
+                                {/* <MenuItem onClick={handleMenuClose}>my account</MenuItem> */}
+                                <MenuItem onClick={(e) => handleLogout()}>logout</MenuItem>
+                              </MenuList>
+                            </ClickAwayListener>
+                          </Paper>
+                        </Grow>
+                      )}
+                    </Popper>
+                  </div>
                 </>
               ) : (
                 <>
@@ -205,7 +192,7 @@ export default function NavBar({ path }: { path: string }) {
             }}
             open={mobileOpen}
             onClose={handleDrawerToggle}
-            ModalProps={{ keepMounted: true }}
+            ModalProps={{ keepMounted: false }}
           >
             {drawer}
           </Drawer>

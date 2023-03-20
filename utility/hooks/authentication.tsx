@@ -141,6 +141,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function doLogout() {
     removeLocalUser()
     setUser(undefined)
+    Router.push("/")
   }
 
   async function storePartialCredentialResult(u: any) {

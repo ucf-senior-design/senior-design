@@ -26,13 +26,6 @@ export default function useNavBar() {
     }
   }
 
-  const handleMenuClose = (event: Event | React.SyntheticEvent) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
-      return
-    }
-    setOpen(false)
-  }
-
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState)
   }
@@ -40,10 +33,11 @@ export default function useNavBar() {
   return {
     open,
     mobileOpen,
-    handleMenuClose,
+
     handleListKeyDown,
     handleToggle,
     handleDrawerToggle,
     anchorRef,
+    setOpen,
   }
 }
