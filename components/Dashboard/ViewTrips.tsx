@@ -49,7 +49,14 @@ export default function ViewTrips() {
     let tripCards: Array<React.ReactNode> = []
     if (trips !== undefined) {
       trips.forEach((trip) => {
-        tripCards.push(<TripCard key={trip.uid} uid={trip.uid} destination={trip.destination} />)
+        tripCards.push(
+          <TripCard
+            key={trip.uid}
+            uid={trip.uid}
+            destination={trip.destination}
+            imageURI={trip.photoURL}
+          />,
+        )
       })
     }
 
@@ -57,12 +64,12 @@ export default function ViewTrips() {
       <Paper
         sx={{
           backgroundColor: "transparent",
-          padding: "10px",
+
           display: "flex",
           alignContent: "center",
-          justifyContent: "start",
+          justifyContent: "center",
           flexWrap: "wrap",
-          width: "100%",
+          width: "100vw",
         }}
       >
         {tripCards}
@@ -79,6 +86,7 @@ export default function ViewTrips() {
           alignContent: "center",
           justifyContent: { xs: "center", md: "end" },
           padding: "10px",
+          flexDirection: "column",
         }}
       >
         <Autocomplete
