@@ -8,10 +8,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const tripID = req.query.tripID as string
 
   function getVoteDetails() {
-    if (params === undefined || params?.length !== 2) {
+    if (params === undefined || params?.length !== 3) {
       return { error: true, pollID: "", index: 0 }
     }
-    return { error: false, pollID: params[0], index: parseInt(params[1]) }
+    return { error: false, pollID: params[1], index: parseInt(params[2]) }
   }
 
   function getPollDetails() {
@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           .get()
           .then((value) => {
             const polls = unpackArrayResponse(value.docs)
-            res.status(200).send(polls)
+            res.status(200).send({ data: polls })
           })
           .catch((e) => {
             res.status(400).send("Error getting polls")
@@ -58,6 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           .get()
           .then((value) => {
             const polls = unpackArrayResponse(value.docs)
+
             res.status(200).send(polls)
           })
           .catch((e) => {

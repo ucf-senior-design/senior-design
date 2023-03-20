@@ -2,8 +2,8 @@ import { useDashboard } from "../../utility/hooks/dashboard"
 import React from "react"
 import TripCard from "./TripCard"
 import { Autocomplete, Button, Paper, TextField } from "@mui/material"
-import { Trip } from "../../utility/types/trip"
-import { Add } from "@mui/icons-material"
+import { useTrip } from "../../utility/hooks/trip"
+import { useRouter } from "next/router"
 
 type TripSearchOption = {
   destination: string
@@ -27,6 +27,7 @@ export default function ViewTrips() {
   ]
   const [tripSearchOptions, setTripSearchOptions] = React.useState<Array<TripSearchOption>>([])
   const { trips } = useDashboard()
+  const router = useRouter()
 
   React.useEffect(() => {
     let options: Array<TripSearchOption> = []
@@ -49,7 +50,14 @@ export default function ViewTrips() {
     let tripCards: Array<React.ReactNode> = []
     if (trips !== undefined) {
       trips.forEach((trip) => {
-        tripCards.push(<TripCard key={trip.uid} uid={trip.uid} destination={trip.destination} />)
+        tripCards.push(
+          <TripCard
+            key={trip.uid}
+            uid={trip.uid}
+            destination={trip.destination}
+            imageURI={trip.photoURL}
+          />,
+        )
       })
     }
 
@@ -57,12 +65,12 @@ export default function ViewTrips() {
       <Paper
         sx={{
           backgroundColor: "transparent",
-          padding: "10px",
+
           display: "flex",
           alignContent: "center",
-          justifyContent: "start",
+          justifyContent: "center",
           flexWrap: "wrap",
-          width: "100%",
+          width: "100vw",
         }}
       >
         {tripCards}
@@ -79,12 +87,30 @@ export default function ViewTrips() {
           alignContent: "center",
           justifyContent: { xs: "center", md: "end" },
           padding: "10px",
+          flexDirection: "row",
         }}
       >
+        <Button
+          sx={{ margin: "10px" }}
+          variant="contained"
+          onClick={() =>
+            router.push(`/trip/`, {
+              pathname: "dashboard/trip/create",
+            })
+          }
+        >
+          create trip
+        </Button>
         <Autocomplete
           options={tripSearchOptions}
           groupBy={(option) => option.start}
           getOptionLabel={(option) => option.destination}
+          onChange={(e, value) => {
+            router.push(`/trip/`, {
+              query: { id: value?.id },
+              pathname: "dashboard/trip/",
+            })
+          }}
           sx={{ width: { xs: "100%", md: 300 }, margin: "10px" }}
           renderInput={(params) => <TextField {...params} label="find trip" color="secondary" />}
         />
