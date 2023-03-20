@@ -242,7 +242,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function getUserData(attendees: Array<string>) {
-    console.log("attendees", attendees)
     let userData = attendees.map(async (uid) => {
       const options = createFetchRequestOptions(null, "GET")
       const response = await fetch(`${API_URL}auth/user/getUserByID/${uid}`, options)
