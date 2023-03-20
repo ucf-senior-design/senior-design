@@ -8,7 +8,7 @@ interface TripUseState extends Trip {
   joinableEvents: Array<Array<Event>>
   itinerary: Array<Array<Event>>
   destination: string
-  userData: Array<User> | undefined
+  userData: Map<string, User> | undefined
 }
 
 interface TripDetails {
@@ -69,7 +69,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     itinerary: [],
     joinableEvents: [],
     photoURL: "",
-    userData: []
+    userData: new Map<string, User>(),
   })
   const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -82,16 +82,20 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
       alert("Cannot load trip.")
       return
     }
-    
-    let attendees = Array.from( trip.attendees );
 
-    let userData: User[] = await Promise.all(attendees.map(async (uid) => {
-      const options = createFetchRequestOptions(null, "GET")
-      const response = await fetch(`${API_URL}auth/user/getUserByID/${uid}`, options)
-      if (response.ok) {
-        return await response.json();
-      }
-    }));
+    let attendees = Array.from(trip.attendees)
+
+    let userData: User[] = await Promise.all(
+      attendees.map(async (uid) => {
+        const options = createFetchRequestOptions(null, "GET")
+        const response = await fetch(`${API_URL}auth/user/getUserByID/${uid}`, options)
+        if (response.ok) {
+          return await response.json()
+        }
+      }),
+    )
+    
+    const userMap = new Map(userData.map((obj) => [obj.uid, obj]));
 
     console.log("initializing trip....")
     setTrip({
@@ -99,7 +103,7 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
       suggestions: suggestionWidgets,
       itinerary: eventData.userEvents,
       joinableEvents: eventData.joinableEvents,
-      userData: userData
+      userData: userMap,
     })
   }
 
