@@ -7,11 +7,13 @@ export default function DateRange({
   endDate,
   updateDates,
   showTime,
+  disabledDate,
 }: {
   startDate: Date
   endDate: Date
   updateDates(startDate: Date, endDate: Date): void
   showTime?: boolean
+  disabledDate?: (date: dayjs.Dayjs) => boolean
 }) {
   return (
     <DatePicker.RangePicker
@@ -27,6 +29,12 @@ export default function DateRange({
             }
           : undefined
       }
+      disabledDate={(date) => {
+        if (disabledDate === undefined) {
+          return false
+        }
+        return disabledDate(date)
+      }}
       onChange={(e) => {
         if (e !== null) console.log(e[0]?.toDate())
         if (e !== null) updateDates(e[0]?.toDate() ?? new Date(), e[1]?.toDate() ?? new Date())
