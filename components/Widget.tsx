@@ -18,7 +18,7 @@ export default function Widget({ widget }: { widget: TWidget }) {
       >
         <div
           style={{
-            height: "75px",
+            height: "50px",
             alignItems: "center",
             display: "flex",
             gap: "10px",

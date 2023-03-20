@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           didFinishRegister: localUser?.didFinishRegister ?? false,
           uid: currentUser.uid,
           email: currentUser.email ?? "",
-          name: currentUser.displayName ?? "",
+          name: localUser?.name ?? "",
           profilePic: currentUser.photoURL ?? "",
         })
       } else {

@@ -1,6 +1,8 @@
 import { Box, Button, Divider, TextField, Typography } from "@mui/material"
+import dayjs from "dayjs"
 import theme from "../../styles/theme/Theme"
 import useCreateEvent from "../../utility/hooks/create/createEvent"
+import { useTrip } from "../../utility/hooks/trip"
 import DateRange from "../Form/DateRange"
 import PlacesSearch from "../Form/PlacesSearch"
 import SelectAttendees from "../Form/SelectAttendees"
@@ -17,6 +19,7 @@ export default function CreateEvent({ closeModal }: { closeModal: () => void }) 
     updateLocation,
     addAttendeeOption,
   } = useCreateEvent()
+  const { trip } = useTrip()
 
   return (
     <Box
@@ -90,6 +93,11 @@ export default function CreateEvent({ closeModal }: { closeModal: () => void }) 
           duration
         </Typography>
         <DateRange
+          disabledDate={(date) => {
+            return (
+              dayjs(trip.duration.start).isAfter(date) || dayjs(trip.duration.end).isBefore(date)
+            )
+          }}
           showTime
           startDate={event.duration.start}
           endDate={event.duration.end}

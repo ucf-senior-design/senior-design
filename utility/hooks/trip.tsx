@@ -1,4 +1,6 @@
-import { Backdrop, CircularProgress } from "@mui/material"
+import { ArrowBack } from "@mui/icons-material"
+import { Backdrop, Button, CircularProgress } from "@mui/material"
+import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import queryString from "query-string"
 import React from "react"
@@ -13,7 +15,6 @@ import {
   Event,
   Poll,
   PollOption,
-  StoredLocation,
   SuggestionOption,
   SuggestionWidget,
   Trip,
@@ -21,6 +22,7 @@ import {
 } from "../types/trip"
 import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
+import { useScreen } from "./screen"
 
 export type Day = {
   date: Date
@@ -88,6 +90,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   const [showOverlay, setShowOverlay] = React.useState(true)
   const router = useRouter()
 
+  const { updateNav } = useScreen()
   const { readLayout, createKey, addItem, resizable, getStorableLayout } = useResizable()
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: "",
@@ -120,6 +123,15 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       const { id } = queryString.parse(window.location.search)
       setId(id as string)
     }
+    updateNav(
+      { background: "url('/header.svg') 100% 100%" },
+      "transparent",
+      <div style={{ height: "250px" }}>
+        <Button onClick={() => router.back()}>
+          <ArrowBack sx={{ color: "white" }} />
+        </Button>
+      </div>,
+    )
   }, [])
 
   React.useEffect(() => {
@@ -168,8 +180,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       })
       if (iIndex < itinerary.length) {
         if (
-          itinerary[iIndex][0].duration.start.toLocaleDateString() ===
-          new Date(day).toLocaleDateString()
+          itinerary[iIndex][0].duration.start.getDay() === new Date(day).getDay() &&
+          itinerary[iIndex][0].duration.start.getMonth() === new Date(day).getMonth()
         ) {
           days[days.length - 1].itinerary = itinerary[iIndex]
           iIndex += 1
@@ -178,8 +190,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
       if (jIndex < joinableEvents.length) {
         if (
-          joinableEvents[jIndex][0].duration.start.toLocaleDateString() ===
-          new Date(day).toLocaleDateString()
+          joinableEvents[jIndex][0].duration.start.getDay() === new Date(day).getDay() &&
+          joinableEvents[jIndex][0].duration.start.getMonth() === new Date(day).getMonth()
         ) {
           days[days.length - 1].joinable = joinableEvents[jIndex]
           jIndex += 1
@@ -573,11 +585,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         modifyTrip,
       }}
     >
-      {id && (
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={id === undefined}
-        >
+      {(id === undefined || resizable.order.length === 0) && (
+        <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
           <CircularProgress color="inherit" />
         </Backdrop>
       )}

@@ -11,8 +11,7 @@ export default function TripCard({
   imageURI: string
 }) {
   const router = useRouter()
-  const tempImage =
-    "https://images.unsplash.com/photo-1521706862577-47b053587f91?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8dHJvcGljfGVufDB8fDB8fA%3D%3D&w=1000&q=80"
+
   return (
     <Button
       onClick={() => {
@@ -34,7 +33,9 @@ export default function TripCard({
           background: `linear-gradient(
           rgba(0, 0, 0, 0.5), 
           rgba(0, 0, 0, 0.5)
-        ),url(${tempImage}`,
+        )`,
+          backgroundSize: "cover",
+          backgroundImage: `url("${imageURI}")`,
         }}
         style={{
           fontSize: "40px",

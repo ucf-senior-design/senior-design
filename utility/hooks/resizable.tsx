@@ -52,7 +52,6 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
 
   // Allows local layout to be stored whenever there are changes
   React.useEffect(() => {
-    // TODO: find a better fix for when someotimes the widgets are dropped in the same place it gets added to the order
     if (resizable.order.length !== resizable.size.size) {
       let seen = new Set<string>()
       let nOrder: Array<string> = []
