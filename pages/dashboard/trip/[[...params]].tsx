@@ -1,10 +1,5 @@
 import { useRouter } from "next/router"
 import React from "react"
-import { EventReschedule } from "../../../components/Dashboard/EventReschedule"
-import Schedule from "../../../components/Dashboard/Schedule"
-import { CalendarWidget } from "../../../components/Dashboard/Widgets/Calendar"
-import { PreferencesWidget } from "../../../components/Dashboard/Widgets/Preferences"
-import { SuggestionWidgets } from "../../../components/Dashboard/Widgets/Suggestions"
 import { useScreen } from "../../../utility/hooks/screen"
 import { TripProvider } from "../../../utility/hooks/trip"
 import type { MenuProps } from "antd"
@@ -16,6 +11,9 @@ import { Add } from "@mui/icons-material"
 import { Dropdown, Button as AButton } from "antd"
 import CreatePoll from "../../../components/Create/CreatePoll"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
+import { PreferencesWidget } from "../../../components/Dashboard/Widgets/Preferences"
+import { CalendarWidget } from "../../../components/Dashboard/Widgets/Calendar"
+import { EventReschedule } from "../../../components/Dashboard/EventReschedule"
 
 export default function Trip() {
   const router = useRouter()
@@ -28,7 +26,7 @@ export default function Trip() {
       <div style={{ height: "250px" }}>{/* <TripHeader /> */}</div>,
     )
   }, [router])
-  
+
   // Handle showing the create popups for different wigets
   const [showCreateEvent, setShowCreateEvent] = React.useState(false)
   const [showCreatePoll, setShowCreatePoll] = React.useState(false)
@@ -53,6 +51,9 @@ export default function Trip() {
   return (
     <ResizableProvider>
       <TripProvider>
+        <PreferencesWidget />
+        <CalendarWidget />
+        <EventReschedule />
         <Dropdown menu={{ items }} placement="topRight">
           <AButton style={$addButton}>
             <Add sx={{ color: "white" }} />
