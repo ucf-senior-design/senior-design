@@ -39,10 +39,9 @@ export default function PersonalInfo({
     )
     updateLoading(false)
   }
-  
+
   // tries and loads current info in before page loads
   React.useEffect(() => {
-
     setInfo({
       medicalInfo: user?.medicalInfo ?? [],
       allergies: user?.allergies ?? [],
@@ -68,10 +67,10 @@ export default function PersonalInfo({
           value={info.displayName}
           label="display name"
           placeholder="ex. jane doe"
-          onChange={(e: { target: { value: string } }) => 
-            setInfo((info) =>({
+          onChange={(e: { target: { value: string } }) =>
+            setInfo((info) => ({
               ...info,
-              displayName: e.target.value
+              displayName: e.target.value,
             }))
           }
           sx={{ marginBottom: 2, marginTop: 1 }}
@@ -81,9 +80,9 @@ export default function PersonalInfo({
         <MuiChipsInput
           value={info.allergies}
           onChange={(value) =>
-            setInfo((info) =>({
+            setInfo((info) => ({
               ...info,
-              allergies: value
+              allergies: value,
             }))
           }
         >
@@ -91,11 +90,12 @@ export default function PersonalInfo({
         </MuiChipsInput>
         <Typography sx={{ marginTop: 2 }}>medical information</Typography>
         <Divider sx={{ marginBottom: 1 }} />
-        <MuiChipsInput value={info.medicalInfo}
+        <MuiChipsInput
+          value={info.medicalInfo}
           onChange={(value) =>
-            setInfo((info) =>({
+            setInfo((info) => ({
               ...info,
-              medicalInfo: value
+              medicalInfo: value,
             }))
           }
         >

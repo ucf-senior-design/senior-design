@@ -8,14 +8,13 @@ export default function UserHeader({
 }: {
   user: (UserType & { didFinishRegister: boolean }) | undefined
 }) {
-
   const [displayName, setDisplayName] = React.useState("")
 
   React.useEffect(() => {
     setDisplayName(user?.name ?? "")
   }, [])
 
-  return ( 
+  return (
     <Grid
       container
       style={{
