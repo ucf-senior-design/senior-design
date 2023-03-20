@@ -11,7 +11,6 @@ import { Dropdown, Button as AButton } from "antd"
 import CreatePoll from "../../../components/Create/CreatePoll"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
 
-
 export default function Trip() {
   const router = useRouter()
 
