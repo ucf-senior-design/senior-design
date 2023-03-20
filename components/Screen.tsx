@@ -1,3 +1,4 @@
+import { useRouter } from "next/router"
 import * as React from "react"
 import { toast, ToastContainer, ToastOptions } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -15,8 +16,9 @@ export default function Screen({ children, path }: { path: string; children: Rea
     updateSuccessToast,
     nav,
     loading,
+    updateNav,
   } = useScreen()
-
+  const router = useRouter()
   const backgroundImage = path === "/about" ? "url('/Mountains.svg') 80% 80% " : undefined
   const msgToastOptions: ToastOptions = {
     position: "top-center",
@@ -29,6 +31,12 @@ export default function Screen({ children, path }: { path: string; children: Rea
     theme: "colored",
   }
 
+  // Resets View Trip Header UI on non view trip pages
+  React.useEffect(() => {
+    console.log(router.pathname)
+    if (!router.pathname.startsWith("/dashboard/trip/[[...params]]"))
+      updateNav(undefined, undefined, <></>)
+  }, [router])
   // Resets error toast after being shown.
   React.useEffect(() => {
     if (errorToast !== undefined) {

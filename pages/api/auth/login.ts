@@ -4,8 +4,9 @@ import { ERROR, MUST_ADD_DETAILS, MUST_VERIFY_EMAIL, SUCCESS } from "../../../ut
 import { firebaseAuth } from "../../../utility/firebase"
 import firebaseAdmin from "../../../utility/firebaseAdmin"
 import { User } from "../../../utility/types/user"
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  signInWithEmailAndPassword(firebaseAuth, req.body.email, req.body.password)
+  await signInWithEmailAndPassword(firebaseAuth, req.body.email, req.body.password)
     .then(async (result) => {
       // Looks to see if user has filled out their details yet by seeing if there is a doc in the "Users" collection with the user's uid.
       try {
