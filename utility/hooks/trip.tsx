@@ -107,7 +107,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     days: [],
     didReadLayout: false,
   })
-  console.log(trip)
+
   const { user } = useAuth()
 
   React.useEffect(() => {
