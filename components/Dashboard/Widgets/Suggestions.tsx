@@ -39,7 +39,7 @@ export function SuggestionWidgets() {
   return <> {suggestions}</>
 }
 
-function Suggestions({
+export function Suggestions({
   suggestionWidget,
   tripID,
 }: {
@@ -76,12 +76,24 @@ function Suggestions({
           }}
         >
           {didUserLike(suggestion.uid) ? (
-            <Favorite sx={{ color: "pink" }} onClick={async () => await unLike(suggestion.uid)} />
+            <Button>
+              <Favorite
+                sx={{ color: "pink" }}
+                onClick={async (e) => {
+                  e.stopPropagation()
+                  await unLike(suggestion.uid)
+                }}
+              />
+            </Button>
           ) : (
-            <FavoriteBorder
-              sx={{ color: "pink" }}
-              onClick={async () => await like(suggestion.uid)}
-            />
+            <Button
+              onClick={async (e) => {
+                e.stopPropagation()
+                await like(suggestion.uid)
+              }}
+            >
+              <FavoriteBorder sx={{ color: "pink" }} />
+            </Button>
           )}
         </Grid>
       </Grid>
@@ -100,53 +112,64 @@ function Suggestions({
 
   return (
     <>
-      <BackdropModal
-        isOpen={suggestion.showAllSuggestionsPopUp}
-        toggleShow={() => toggleShowAllSuggestionsPopUp()}
-      >
-        <div
-          style={{
-            backgroundColor: "white",
-            display: "flex",
-            flexDirection: "column",
-            padding: 20,
-            width: "300px",
-            gap: 10,
-          }}
+      <div style={{ position: "absolute", zIndex: 2 }}>
+        <BackdropModal
+          isOpen={suggestion.showAllSuggestionsPopUp}
+          toggleShow={() => toggleShowAllSuggestionsPopUp()}
         >
-          <Typography variant="h6" sx={{ textAlign: "center" }}>
-            All Suggestions
-          </Typography>
-          <CreateSuggestions showAll={true} />
-        </div>
-      </BackdropModal>
-      <BackdropModal isOpen={suggestion.showAddPopUp} toggleShow={() => toggleAddPopUp()}>
-        <div
-          style={{
-            backgroundColor: "white",
-            display: "flex",
-            flexDirection: "column",
-            padding: 20,
-            width: "300px",
-            gap: 10,
-          }}
-        >
-          <Typography variant="h6" sx={{ textAlign: "center" }}>
-            {`Add suggestions for ${suggestion.title}`}
-          </Typography>
-          <TextField
-            color="secondary"
-            label={"new suggestion"}
-            onChange={(e) => {
-              storeNewSuggestion(e.target.value)
+          <div
+            style={{
+              backgroundColor: "white",
+              display: "flex",
+              flexDirection: "column",
+              padding: 20,
+              width: "300px",
+              gap: 10,
             }}
-          />
-          <Button color="primary" variant="contained" onClick={() => addSuggestion()}>
-            add
-          </Button>
-        </div>
-      </BackdropModal>
-      <Paper sx={{ padding: "20px", width: "80vw", maxWidth: "300px" }}>
+          >
+            <Typography variant="h6" sx={{ textAlign: "center" }}>
+              All Suggestions
+            </Typography>
+            <CreateSuggestions showAll={true} />
+          </div>
+        </BackdropModal>
+      </div>
+      <div style={{ position: "absolute", zIndex: 2 }}>
+        <BackdropModal isOpen={suggestion.showAddPopUp} toggleShow={() => toggleAddPopUp()}>
+          <div
+            style={{
+              backgroundColor: "white",
+              display: "flex",
+              flexDirection: "column",
+              padding: 20,
+              width: "300px",
+              gap: 10,
+            }}
+          >
+            <Typography variant="h6" sx={{ textAlign: "center" }}>
+              {`Add suggestions for ${suggestion.title}`}
+            </Typography>
+            <TextField
+              color="secondary"
+              label={"new suggestion"}
+              onChange={(e) => {
+                storeNewSuggestion(e.target.value)
+              }}
+            />
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={(e) => {
+                e.stopPropagation()
+                addSuggestion()
+              }}
+            >
+              add
+            </Button>
+          </div>
+        </BackdropModal>
+      </div>
+      <Paper sx={{ padding: "20px", width: "100%", height: "100%" }}>
         <WidgetHeader
           owner={suggestion.owner}
           rightAccessory={

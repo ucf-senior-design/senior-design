@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .doc(tripID)
         .get()
         .then((value) => {
-          res.status(200).send(value.data())
+          res.status(200).send({ ...value.data(), uid: value.id })
         })
         .catch((e: any) => {
           res.status(400).send("Could not get trip.")
@@ -44,7 +44,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (
         params === undefined ||
         firebaseAuth.currentUser === null ||
-        (params[0] !== "join" && params[0] !== "leave" && params[0] !== "modify")
+        (params[0] !== "join" &&
+          params[0] !== "leave" &&
+          params[0] !== "modify" &&
+          params[0] !== "layout")
       ) {
         res.status(400).send("Invalid purpose")
         return
@@ -74,6 +77,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   duration: req.body.duration,
                 })
               }
+              break
+            }
+            case "layout": {
+              if (req.body.layout !== null && req.body.layout !== undefined) {
+                await updateDoc(docRef, {
+                  layout: req.body.layout,
+                })
+              } else {
+                res.status(400).send("Missing Layout")
+                return
+              }
+              break
             }
           }
           res.status(200).send("Success.")

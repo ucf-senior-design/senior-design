@@ -8,7 +8,7 @@ export default function TripCard({
 }: {
   uid: string
   destination: string
-  imageURI?: string
+  imageURI: string
 }) {
   const router = useRouter()
   const tempImage =
