@@ -68,6 +68,7 @@ interface TripContext {
   // handle events
   createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
   modifyTrip: (details: TripDetails, callback: (response: Response) => void) => Promise<void>
+  modifyEvent: (event: CreatedEvent, callback: (isSuccess: boolean) => void) => Promise<void>
 }
 
 const TripContext = React.createContext<TripContext>({} as TripContext)
@@ -326,6 +327,25 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     })
     return list
   }
+  function replaceEventInList(list: Array<Array<Event>>, event: Event) {
+    for (let i = 0; i < list.length; i++) {
+      for (let j = 0; j < list[i].length; j++) {
+        if (list[i][j].uid === event.uid) {
+          list[i][j] = event
+        }
+      }
+      return list
+    }
+
+    list[list.length - 1].push({
+      ...event,
+      duration: {
+        start: new Date(event.duration.start),
+        end: new Date(event.duration.end),
+      },
+    })
+    return list
+  }
 
   // TODO: Handle short break periods when determining joinable events
   async function getEventData() {
@@ -502,6 +522,20 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }
     callback(response.ok)
   }
+  async function modifyEvent(event: CreatedEvent, callback: (isSuccess: boolean) => void) {
+    const options = createFetchRequestOptions(JSON.stringify(event), "POST")
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/event`, options)
+
+    if (response.ok) {
+      let modifiedEvent: Event = await response.json()
+      setTrip({
+        ...trip,
+
+        itinerary: Array.from(replaceEventInList(trip.itinerary, modifiedEvent)),
+      })
+    }
+    callback(response.ok)
+  }
 
   async function storeLayout() {
     console.log("storing layout...")
@@ -552,6 +586,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         deleteWeather,
         createEvent,
         modifyTrip,
+        modifyEvent,
       }}
     >
       {id && (

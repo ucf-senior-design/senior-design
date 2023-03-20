@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material"
 import React from "react"
 import theme from "../../styles/theme/Theme"
-import useCreateTrip from "../../utility/hooks/create/createTrip"
+import useModifyTrip from "../../utility/hooks/modify/modifyTrip"
 import { useTrip } from "../../utility/hooks/trip"
 import { Duration } from "../../utility/types/trip"
 import DateRange from "./DateRange"
@@ -13,15 +13,7 @@ export default function ModifyTrip() {
   }
 
   const { trip } = useTrip()
-  const {
-    createTrip,
-    updateAttendees,
-    updateDuration,
-    updateDestination,
-    attendeeOptions,
-    maybeCreateTrip,
-    addAttendeeOption,
-  } = useCreateTrip()
+  const { modifyTrip, updateDuration, updateDestination } = useModifyTrip()
 
   return (
     <Box
@@ -41,7 +33,7 @@ export default function ModifyTrip() {
     >
       <Box style={{ overflowY: "auto", maxHeight: "850px", width: "100%", gap: 2 }}>
         <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
-          Modifying trip to {/*event.location*/ "location"}
+          Modifying trip to {trip.destination}
         </Typography>
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           destination
@@ -64,11 +56,11 @@ export default function ModifyTrip() {
           sx={{ width: "100%", marginTop: "10px" }}
           color={"primary"}
           variant="contained"
-          //   onClick={() =>
-          //     create((isSuccess: any) => {
-          //       if (isSuccess) closeModal()
-          //     })
-          //   }
+          onClick={() =>
+            modifyTrip((isSuccess: any) => {
+              if (isSuccess) closeModal()
+            })
+          }
         >
           Save Changes
         </Button>
