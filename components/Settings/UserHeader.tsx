@@ -11,26 +11,17 @@ export default function UserHeader() {
       container
       style={{
         padding: "20px",
+        alignContent: "center",
+        justifyContent: "center",
+        gap: "10px",
       }}
     >
-      <Grid
-        item
-        xs={4}
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          gap: 1,
-          alignItems: "center",
-          justifyContent: "start",
-        }}
-      >
-        <Avatar name={user?.name ?? ""} size={120} />
-        <Stack direction="column">
-          <Typography noWrap sx={{ fontWeight: "300", fontSize: "25px" }}>
-            {user?.name ?? ""} ({user?.username ?? ""})
-          </Typography>
-        </Stack>
-      </Grid>
+      <Avatar name={user?.name ?? ""} size={60} />
+      <Stack direction="column">
+        <Typography noWrap sx={{ fontWeight: "500", fontSize: "25px" }}>
+          {user?.name ?? ""} ({user?.username ?? ""})
+        </Typography>
+      </Stack>
     </Grid>
   )
 }

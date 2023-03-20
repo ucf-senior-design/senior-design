@@ -87,7 +87,7 @@ export default function PersonalInfo() {
         </MuiChipsInput>
         <Button
           disabled={loading}
-          variant="outlined"
+          variant="contained"
           aria-label="update changes"
           sx={{ marginBottom: 2, marginTop: 2 }}
           onClick={async () => await handleUpdate()}
