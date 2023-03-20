@@ -1,7 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
+import { API_URL } from "./utility/constants"
 
-export function middleware(request: NextRequest) {
-  // Clone the request headers and set a new header `x-hello-from-middleware1`
+export async function middleware(request: NextRequest) {
+  let getUserResponse = await fetch(`${API_URL}auth/user`, { method: "GET" })
+
+  if (!getUserResponse.ok) {
+    if (
+      request.nextUrl.pathname.startsWith("/dashboard") ||
+      request.nextUrl.pathname.startsWith("/settings")
+    ) {
+      return NextResponse.redirect(new URL("/auth/login", request.url))
+    }
+  }
+
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set(
     "Access-Control-Allow-Origin",
@@ -17,6 +28,7 @@ export function middleware(request: NextRequest) {
   // You can also set request headers in NextResponse.rewrite
   const response = NextResponse.next({
     // @ts-ignore
+
     request: {
       headers: requestHeaders,
     },

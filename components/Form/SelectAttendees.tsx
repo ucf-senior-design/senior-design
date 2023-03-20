@@ -1,5 +1,5 @@
 import { Autocomplete, SxProps, TextField, Theme } from "@mui/material"
-import { AttendeeOption } from "../../utility/hooks/createTrip"
+import { AttendeeOption } from "../../utility/hooks/create/createTrip"
 
 export default function SelectAttendees({
   selectedAttendees,
