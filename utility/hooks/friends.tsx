@@ -1,6 +1,5 @@
 import { auth } from "firebase-admin"
 import React from "react"
-import SecurePage from "../../components/SecurePage"
 import { API_URL } from "../constants"
 import { createFriendPairing } from "../helper"
 import { Friendship, User } from "../types/user"
@@ -36,7 +35,7 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     <FriendContext.Provider
       value={{ sendFriendRequest, acceptFriendRequest, removeFriendRequest, friendList }}
     >
-      <SecurePage>{children}</SecurePage>
+      {children}
     </FriendContext.Provider>
   )
 
