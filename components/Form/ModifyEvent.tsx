@@ -1,9 +1,10 @@
 import { Box, Button, Divider, TextField, Typography } from "@mui/material"
 import React from "react"
 import theme from "../../styles/theme/Theme"
+import { Event } from "../../utility/types/trip"
 import DateRange from "./DateRange"
 
-export default function ModifyEvent() {
+export default function ModifyEvent(event: Event) {
   function closeModal() {
     throw new Error("Function not implemented.")
   }
@@ -26,7 +27,7 @@ export default function ModifyEvent() {
     >
       <Box style={{ overflowY: "auto", maxHeight: "850px", width: "100%", gap: 2 }}>
         <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
-          Modifying {/*event.title*/ "event"}
+          Modifying {event.title}
         </Typography>
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           title
@@ -34,7 +35,7 @@ export default function ModifyEvent() {
         <TextField
           color={"secondary"}
           sx={{ width: "100%" }}
-          // value={event.title}
+          value={event.title}
           // onChange={(e) => updateTitle(e.target.value)}
         />
 
@@ -44,7 +45,7 @@ export default function ModifyEvent() {
         <TextField
           color={"secondary"}
           sx={{ width: "100%" }}
-          // value={event.description}
+          value={event.description}
           // onChange={(e) => updateDescription(e.target.value)}
         />
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
