@@ -1,5 +1,5 @@
 import { Grid, Stack } from "@mui/material"
-import { TeamForm } from "../../components/Dashboard/Widgets/TeamComponents/TeamForm"
+import { TeamForm } from "../../../components/Dashboard/Widgets/TeamComponents/TeamForm"
 
 export default function Teams() {
   return (
