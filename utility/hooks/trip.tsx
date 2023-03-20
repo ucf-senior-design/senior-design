@@ -1,8 +1,7 @@
-import { Button } from "@mui/material"
+import { Backdrop, CircularProgress } from "@mui/material"
 import { useRouter } from "next/router"
-import { Callbacks } from "rc-field-form/lib/interface"
+import queryString from "query-string"
 import React from "react"
-import { Beforeunload } from "react-beforeunload"
 import { useLocalStorage } from "react-use-storage"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
@@ -82,12 +81,16 @@ export function useTrip(): TripContext {
   return context
 }
 
-export function TripProvider({ children, id }: { children: React.ReactNode; id: string }) {
+export function TripProvider({ children }: { children: React.ReactNode }) {
+  const [id, setId] = React.useState<string>()
+  const [showOverlay, setShowOverlay] = React.useState(true)
+
   const [localLayout, setLocalLayout, removeLocalLayout] = useLocalStorage<Array<StoredLocation>>(
     "localLayout",
     [],
   )
   const router = useRouter()
+
   const { readLayout, createKey, addItem } = useResizable()
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: "",
@@ -107,6 +110,13 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     didReadLayout: false,
   })
   const { user } = useAuth()
+
+  React.useEffect(() => {
+    if (window !== undefined && window.location !== undefined) {
+      const { id } = queryString.parse(window.location.search)
+      setId(id as string)
+    }
+  }, [])
 
   React.useEffect(() => {
     if (trip.uid.length !== 0)
@@ -520,8 +530,6 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
   }
 
   React.useEffect(() => {
-    console.log("getting data for trip:", id)
-    initilizeTrip()
     router.events.on("routeChangeStart", async () => {
       console.log("updating layout..")
 
@@ -529,6 +537,11 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
       const response = await fetch(`${API_URL}/trip/${id}/layout`, options)
     })
   }, [])
+
+  React.useEffect(() => {
+    console.log("getting data for trip:", id)
+    if (id !== undefined) initilizeTrip()
+  }, [id])
 
   return (
     <TripContext.Provider
@@ -545,6 +558,14 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
         modifyTrip,
       }}
     >
+      {id && (
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={id === undefined}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       {children}
     </TripContext.Provider>
   )

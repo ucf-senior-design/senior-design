@@ -2,10 +2,8 @@ import { useRouter } from "next/router"
 import React from "react"
 import type { MenuProps } from "antd"
 import { TripProvider } from "../../../utility/hooks/trip"
-import { useScreen } from "../../../utility/hooks/screen"
 import { ResizableProvider } from "../../../utility/hooks/resizable"
 import Content from "../../../components/Dashboard/Content"
-import { Box, Button, Popover } from "@mui/material"
 import CreateEvent from "../../../components/Create/CreateEvent"
 import { BackdropModal } from "../../../components/BackdropModal"
 import { Add } from "@mui/icons-material"
@@ -13,9 +11,9 @@ import { Dropdown, Button as AButton } from "antd"
 import CreatePoll from "../../../components/Create/CreatePoll"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
 
+
 export default function Trip() {
   const router = useRouter()
-  const [tripID, setTripID] = React.useState<string | undefined>(undefined)
 
   // Handle showing the create popups for different wigets
   const [showCreateEvent, setShowCreateEvent] = React.useState(false)
@@ -37,16 +35,10 @@ export default function Trip() {
       label: <a onClick={() => setShowCreateSuggestion(true)}> Create Suggestion </a>,
     },
   ]
-  const { updateNav } = useScreen()
 
-  React.useEffect(() => {
-    const { id } = router.query
-    setTripID(id as string | undefined)
-  }, [router])
-
-  return tripID !== undefined ? (
+  return (
     <ResizableProvider>
-      <TripProvider id={tripID}>
+      <TripProvider>
         <Dropdown menu={{ items }} placement="topRight">
           <AButton style={$addButton}>
             <Add sx={{ color: "white" }} />
@@ -82,8 +74,6 @@ export default function Trip() {
         <Content />
       </TripProvider>
     </ResizableProvider>
-  ) : (
-    <div> loading</div>
   )
 }
 
