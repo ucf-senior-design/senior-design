@@ -11,6 +11,7 @@ interface PollUseState extends Poll {
 }
 
 export type usePollHook = {
+  hasUserVoted: () => boolean
   doesUserOwn: () => boolean
   didUserVote: (index: number) => boolean
   doVote: () => Promise<void>
@@ -56,6 +57,9 @@ export default function usePoll(p: Poll): usePollHook {
     })
   }, [])
 
+  function hasUserVoted() {
+    return poll.didSubmit
+  }
   /**
    * Checks to see if a user owns a poll
    */
@@ -79,22 +83,24 @@ export default function usePoll(p: Poll): usePollHook {
       return
     }
     let vote = poll.vote
-    await fetch(`${API_URL}trip/${tripID}/polls/vote/${poll.uid}/${vote}`).then((response) => {
-      if (response.ok) {
-        let tOptions = Array.from(p.options)
-        tOptions[vote].voters.push(userID)
+    await fetch(`${API_URL}trip/${tripID}/polls/vote/${poll.uid}/${vote}`, { method: "PUT" }).then(
+      (response) => {
+        if (response.ok) {
+          let tOptions = Array.from(p.options)
+          tOptions[vote].voters.push(userID)
 
-        setPoll({
-          ...poll,
-          didSubmit: true,
-          vote: vote,
-          options: tOptions,
-          totalVotes: (poll.totalVotes += 1),
-        })
-      } else {
-        updateErrorToast("Could not cast vote at the time.")
-      }
-    })
+          setPoll({
+            ...poll,
+            didSubmit: true,
+            vote: vote,
+            options: tOptions,
+            totalVotes: poll.totalVotes + 1,
+          })
+        } else {
+          updateErrorToast("Could not cast vote at the time.")
+        }
+      },
+    )
   }
 
   /**
@@ -128,5 +134,6 @@ export default function usePoll(p: Poll): usePollHook {
     selectOption,
     pollResults,
     showResults,
+    hasUserVoted,
   }
 }

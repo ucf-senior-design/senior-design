@@ -1,12 +1,39 @@
+import { Backdrop, CircularProgress } from "@mui/material"
+import { useRouter } from "next/router"
+import queryString from "query-string"
 import React from "react"
-import SecurePage from "../../components/SecurePage"
+import { useLocalStorage } from "react-use-storage"
+import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
-import { Duration, Event, SuggestionOption, SuggestionWidget, Trip } from "../types/trip"
+import { Response } from "../types/helper"
+import {
+  CreatedEvent,
+  Duration,
+  Event,
+  Poll,
+  PollOption,
+  StoredLocation,
+  SuggestionOption,
+  SuggestionWidget,
+  Trip,
+  WidgetType,
+} from "../types/trip"
+import { useAuth } from "./authentication"
+import { useResizable } from "./resizable"
+
+export type Day = {
+  date: Date
+  itinerary: Array<Event>
+  joinable: Array<Event>
+}
 interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>
+  polls: Map<string, Poll>
   joinableEvents: Array<Array<Event>>
   itinerary: Array<Array<Event>>
   destination: string
+  days: Array<Day>
+  didReadLayout: boolean
 }
 
 interface TripDetails {
@@ -19,27 +46,28 @@ interface TripContext {
   initilizeTrip: () => Promise<void>
 
   // handle suggestions
-  createSuggestion: () => Promise<void>
+  createSuggestion: (
+    title: string,
+    options: Array<string>,
+    callback: (response: Response) => void,
+  ) => Promise<void>
   deleteSuggestion: (uid: string) => Promise<void>
 
   // handle polls
-  createPoll: () => Promise<void>
+  createPoll: (
+    title: string,
+    options: Array<string>,
+    callback: (response: Response) => void,
+  ) => Promise<void>
   deletePoll: (uid: string) => Promise<void>
 
-  // handle weather widget
+  // handle weather widgetcreateP
   createWeather: () => Promise<void>
   deleteWeather: (uid: string) => Promise<void>
 
   // handle events
-  createEvent: (event: Event, callback: (response: Response) => void) => Promise<void>
+  createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
   modifyTrip: (details: TripDetails, callback: (response: Response) => void) => Promise<void>
-}
-
-// TODO: probably should import this
-interface Response {
-  result?: any
-  isSuccess: boolean
-  errorMessage?: string
 }
 
 const TripContext = React.createContext<TripContext>({} as TripContext)
@@ -52,9 +80,18 @@ export function useTrip(): TripContext {
   }
   return context
 }
-export function TripProvider({ children, id }: { children: React.ReactNode; id: string }) {
-  // TODO: remove this and read in the trip in the initilizeTrip() function
 
+export function TripProvider({ children }: { children: React.ReactNode }) {
+  const [id, setId] = React.useState<string>()
+  const [showOverlay, setShowOverlay] = React.useState(true)
+
+  const [localLayout, setLocalLayout, removeLocalLayout] = useLocalStorage<Array<StoredLocation>>(
+    "localLayout",
+    [],
+  )
+  const router = useRouter()
+
+  const { readLayout, createKey, addItem, resizable, getStorableLayout } = useResizable()
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: "",
     attendees: new Set(),
@@ -62,18 +99,103 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
       start: new Date(),
       end: new Date(),
     },
+    layout: [],
     destination: "",
+    polls: new Map<string, Poll>(),
     suggestions: new Map<string, SuggestionWidget>(),
     itinerary: [],
     joinableEvents: [],
     photoURL: "",
+    days: [],
+    didReadLayout: false,
   })
-  const API_URL = process.env.NEXT_PUBLIC_API_URL
+  const { user } = useAuth()
 
+  React.useEffect(() => {
+    if (resizable.order.length !== 0) {
+      storeLayout()
+    }
+  }, [resizable])
+  React.useEffect(() => {
+    if (window !== undefined && window.location !== undefined) {
+      const { id } = queryString.parse(window.location.search)
+      setId(id as string)
+    }
+  }, [])
+
+  React.useEffect(() => {
+    if (trip.uid.length !== 0)
+      setTrip({
+        ...trip,
+        days: getEventsByDay(
+          trip.duration.start,
+          trip.duration.end,
+          trip.itinerary,
+          trip.joinableEvents,
+        ),
+      })
+  }, [trip.joinableEvents, trip.itinerary])
+
+  React.useEffect(() => {
+    if (!trip.didReadLayout && trip.uid.length >= 0) {
+      console.log("initializing layout....")
+
+      setLocalLayout(trip.layout)
+      readLayout(trip.layout)
+      setTrip({ ...trip, didReadLayout: true })
+    }
+  }, [trip])
+
+  function addNewWidget(type: WidgetType, uid: string) {
+    const key = createKey(type, uid)
+    addItem(key)
+  }
+  function getEventsByDay(
+    start: Date,
+    end: Date,
+    itinerary: Array<Array<Event>>,
+    joinableEvents: Array<Array<Event>>,
+  ) {
+    let dayMilli = 1000 * 3600 * 24
+    let days: Array<Day> = []
+
+    let iIndex = 0
+    let jIndex = 0
+
+    for (let day = start.getTime(); day <= end.getTime(); day += dayMilli) {
+      days.push({
+        date: new Date(day),
+        itinerary: [],
+        joinable: [],
+      })
+      if (iIndex < itinerary.length) {
+        if (
+          itinerary[iIndex][0].duration.start.toLocaleDateString() ===
+          new Date(day).toLocaleDateString()
+        ) {
+          days[days.length - 1].itinerary = itinerary[iIndex]
+          iIndex += 1
+        }
+      }
+
+      if (jIndex < joinableEvents.length) {
+        if (
+          joinableEvents[jIndex][0].duration.start.toLocaleDateString() ===
+          new Date(day).toLocaleDateString()
+        ) {
+          days[days.length - 1].joinable = joinableEvents[jIndex]
+          jIndex += 1
+        }
+      }
+    }
+
+    return days
+  }
   async function initilizeTrip() {
     let trip = await getTrip()
     let suggestionWidgets = await getSuggestionWidgetData()
     let eventData = await getEventData()
+    let pollWidgets = await getPollWidgetData()
 
     if (suggestionWidgets === null || trip === null || eventData == null) {
       alert("Cannot load trip.")
@@ -83,12 +205,42 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     console.log("initializing trip....")
     setTrip({
       ...trip,
+      polls: pollWidgets,
       suggestions: suggestionWidgets,
       itinerary: eventData.userEvents,
       joinableEvents: eventData.joinableEvents,
+      days: getEventsByDay(
+        trip.duration.start,
+        trip.duration.end,
+        eventData.userEvents,
+        eventData.joinableEvents,
+      ),
+      didReadLayout: false,
     })
   }
 
+  async function getPollWidgetData() {
+    const polls = new Map<string, Poll>()
+
+    await fetch(`${API_URL}trip/${id}/polls/`, {
+      method: "GET",
+    }).then(async (response) => {
+      if (response.ok) {
+        const { data } = await response.json()
+
+        data.forEach((p: Poll) => {
+          polls.set(p.uid, {
+            uid: p.uid,
+            owner: p.owner,
+            title: p.title,
+            options: p.options,
+          })
+        })
+      }
+    })
+
+    return polls
+  }
   async function getSuggestionWidgetData() {
     const suggestionWidgets = new Map<string, SuggestionWidget>()
 
@@ -120,12 +272,19 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
   }
   async function getTrip() {
     const options = createFetchRequestOptions(null, "GET")
-    let t = null
+
     const response = await fetch(`${API_URL}trip/${id}`, options)
     if (response.ok) {
-      t = (await response.json()) as Trip
+      let t = (await response.json()) as Trip
+      return {
+        ...t,
+        duration: {
+          start: new Date(t?.duration.start),
+          end: new Date(t?.duration.end),
+        },
+      }
     }
-    return t
+    return null
   }
 
   function addEventToList(list: Array<Array<Event>>, event: Event) {
@@ -217,14 +376,97 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
     return null
   }
 
-  // TODO: Allow a user to create a suggestion widget for the trip.
-  async function createSuggestion() {}
+  async function createSuggestion(
+    title: string,
+    suggestions: Array<string>,
+    callback: (response: Response) => void,
+  ) {
+    if (user === undefined) {
+      callback({ isSuccess: false, errorMessage: "login and try again later." })
+      return
+    }
+
+    let suggestion = {
+      details: { owner: user.uid, title: title },
+      suggestions: suggestions,
+    }
+
+    const fetchoptions = createFetchRequestOptions(JSON.stringify(suggestion), "POST")
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/suggestion`, fetchoptions)
+
+    if (response.ok) {
+      let s = await response.json()
+
+      let suggestionWidgets = new Map(trip.suggestions)
+      const suggestions = new Map<string, SuggestionOption>()
+
+      s.suggestions.forEach((sug: SuggestionOption) => {
+        suggestions.set(sug.uid, {
+          ...sug,
+          likes: new Set(sug.likes),
+        } as SuggestionOption)
+      })
+
+      suggestionWidgets.set(s.widget.uid, {
+        ...s.widget,
+        suggestions: suggestions,
+      })
+
+      setTrip({
+        ...trip,
+        suggestions: suggestionWidgets,
+      })
+      addNewWidget("suggestion", s.widget.uid)
+      callback({ isSuccess: true })
+    } else {
+      callback({ isSuccess: response.ok, errorMessage: await response.text() })
+    }
+  }
 
   // TODO: Allow a user to delete a suggestion widget for the trip.
   async function deleteSuggestion(uid: string) {}
 
-  // TODO: Allow a user to create a poll widget for the trip.
-  async function createPoll() {}
+  async function createPoll(
+    title: string,
+    options: Array<string>,
+    callback: (response: Response) => void,
+  ) {
+    let pollOptions: Array<PollOption> = []
+
+    options.map((option) => {
+      pollOptions.push({
+        value: option,
+        voters: [],
+      })
+    })
+
+    if (user === undefined) {
+      callback({ isSuccess: false, errorMessage: "login and try again later." })
+      return
+    }
+    let poll = {
+      owner: user.uid,
+      title: title,
+      options: pollOptions,
+    }
+
+    const fetchoptions = createFetchRequestOptions(JSON.stringify(poll), "POST")
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/polls`, fetchoptions)
+
+    if (response.ok) {
+      let createdPoll: Poll = await response.json()
+      let nPolls = new Map(trip.polls)
+      nPolls.set(createdPoll.uid, createdPoll)
+      setTrip({
+        ...trip,
+        polls: nPolls,
+      })
+      addNewWidget("poll", createdPoll.uid)
+      callback({ isSuccess: true })
+    } else {
+      callback({ isSuccess: response.ok, errorMessage: await response.text() })
+    }
+  }
 
   // TODO: Allow a user to delete a poll widget for the trip.
   async function deletePoll(uid: string) {}
@@ -247,18 +489,32 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
   // TODO: Allow a user to delete an availabillity widget for the trip
   async function deleteAvailabillityWidget() {}
 
-  async function createEvent(event: Event, callback: (response: Response) => void) {
-    const options = createFetchRequestOptions(JSON.stringify(trip), "POST")
+  async function createEvent(event: CreatedEvent, callback: (isSuccess: boolean) => void) {
+    const options = createFetchRequestOptions(JSON.stringify(event), "POST")
     const response = await fetch(`${API_URL}/trip/${trip.uid}/event`, options)
 
     if (response.ok) {
-      callback({ isSuccess: response.ok, result: response.json() })
+      let createdEvent: Event = await response.json()
       setTrip({
         ...trip,
-        joinableEvents: Array.from(addEventToList(trip.joinableEvents, event)),
+        itinerary: Array.from(addEventToList(trip.itinerary, createdEvent)),
       })
-    } else {
-      callback({ isSuccess: response.ok, errorMessage: await response.text() })
+    }
+    callback(response.ok)
+  }
+
+  async function storeLayout() {
+    console.log("storing layout...")
+    const options = createFetchRequestOptions(
+      JSON.stringify({ layout: getStorableLayout(resizable.order) }),
+      "PUT",
+    )
+
+    const response = await fetch(`${API_URL}/trip/${id}/layout`, options)
+
+    // TODO: Allow user to choose to not leave page when this happens
+    if (!response.ok) {
+      alert("Unable to save layout changes")
     }
   }
 
@@ -280,8 +536,8 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
 
   React.useEffect(() => {
     console.log("getting data for trip:", id)
-    initilizeTrip()
-  }, [])
+    if (id !== undefined) initilizeTrip()
+  }, [id])
 
   return (
     <TripContext.Provider
@@ -298,7 +554,15 @@ export function TripProvider({ children, id }: { children: React.ReactNode; id: 
         modifyTrip,
       }}
     >
-      <SecurePage>{children}</SecurePage>
+      {id && (
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={id === undefined}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
+      {children}
     </TripContext.Provider>
   )
 }
