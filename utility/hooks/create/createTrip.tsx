@@ -21,6 +21,7 @@ export interface AttendeeOption {
   uid: string
 }
 export default function useCreateTrip() {
+  const { friendList } = useFriend()
   const [createTrip, setCreateTrip] = useState<TCreateTrip>({
     destination: "",
     placeID: "",
@@ -98,7 +99,7 @@ export default function useCreateTrip() {
       })
     }
 
-    setCreateTrip({ ...createTrip, attendeeOptions: options })
+    return options
   }
 
   async function getPhotoURL() {

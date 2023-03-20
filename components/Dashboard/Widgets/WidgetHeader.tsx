@@ -1,5 +1,6 @@
 import { Grid, Typography } from "@mui/material"
 import { useAuth } from "../../../utility/hooks/authentication"
+import { useTrip } from "../../../utility/hooks/trip"
 import Avatar from "../../Avatar"
 
 export default function WidgetHeader({
@@ -9,12 +10,9 @@ export default function WidgetHeader({
   owner: string
   rightAccessory?: React.ReactNode
 }) {
-  const { user } = useAuth()
+  const { trip } = useTrip()
   function getOwnerString() {
-    if (user?.uid === owner) {
-      return user.name
-    }
-    return "tempName"
+    return trip.userData?.get(owner)?.name ?? ""
   }
 
   return (
