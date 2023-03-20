@@ -1,6 +1,6 @@
 import { Circle, CircleOutlined } from "@mui/icons-material"
 import { Box, Button } from "@mui/material"
-import usePoll from "../../../../utility/hooks/polls"
+import usePoll, { usePollHook } from "../../../../utility/hooks/polls"
 import { Poll as PollType, PollOption as PollOptionType } from "../../../../utility/types/trip"
 
 function PollOption({
@@ -13,7 +13,7 @@ function PollOption({
   handleSelect: () => void
 }) {
   return (
-    <div
+    <Button
       style={{
         display: "flex",
         alignItems: "center",
@@ -22,36 +22,38 @@ function PollOption({
         padding: "10px",
         border: `1.5px solid ${selected ? "#3F3D56" : "#BBB"}`,
         borderRadius: "5px",
+        justifyContent: "start",
       }}
       onClick={(e) => {
-        handleSelect()
+        e.stopPropagation()
+        if (e.isPropagationStopped()) {
+          handleSelect()
+        }
       }}
     >
       {selected ? <Circle /> : <CircleOutlined />} {option}
-    </div>
+    </Button>
   )
 }
 
 export default function PollVote({
   options,
-  pollWidget,
+  poll,
 }: {
   options: Array<PollOptionType>
-  pollWidget: PollType
+  poll: usePollHook
 }) {
-  const { doVote, didUserVote, selectOption } = usePoll(pollWidget)
-
   return (
     <>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%", height: "100%" }}>
         <>
           {options.map((option, index) => {
             return (
               <PollOption
                 key={index}
                 option={option.value}
-                selected={didUserVote(index)}
-                handleSelect={() => selectOption(index)}
+                selected={poll.didUserVote(index)}
+                handleSelect={() => poll.selectOption(index)}
               />
             )
           })}
@@ -61,7 +63,7 @@ export default function PollVote({
       <Button
         variant="contained"
         sx={{ width: "100%", marginTop: "10px" }}
-        onClick={() => doVote()}
+        onClick={() => poll.doVote()}
       >
         Submit
       </Button>
