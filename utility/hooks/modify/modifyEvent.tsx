@@ -9,22 +9,24 @@ import { useTrip } from "../trip"
 export default function useModifyEvent(originalEvent: Event) {
   const { updateErrorToast } = useScreen()
   const { user } = useAuth()
-  const { modifyEvent } = useTrip()
+  const { modifyEvent, trip } = useTrip()
+  
 
   interface TModifyEvent extends Omit<CreatedEvent, "attendees"> {
     attendees: Array<AttendeeOption>
     attendeeOptions: Array<AttendeeOption>
   }
-  const ORIGINAL_EVENT: TModifyEvent = {
+
+  const [event, setEvent] = React.useState<TModifyEvent>({
     title: originalEvent.title,
     attendees: [],
     duration: originalEvent.duration,
     location: originalEvent.location,
     description: originalEvent.description,
     attendeeOptions: [],
-  }
-  const [event, setEvent] = React.useState<TModifyEvent>(ORIGINAL_EVENT)
+  })
 
+ 
   function updateLocation(location: string) {
     setEvent({
       ...event,
