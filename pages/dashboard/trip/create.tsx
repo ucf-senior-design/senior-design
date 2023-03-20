@@ -6,6 +6,7 @@ import SelectAttendees from "../../../components/Form/SelectAttendees"
 import UserSearch from "../../../components/Form/UserSearch"
 import theme from "../../../styles/theme/Theme"
 import DateRange from "../../../components/Form/DateRange"
+import { FriendProvider } from "../../../utility/hooks/friends"
 
 export default function CreateTrip() {
   const {
@@ -19,54 +20,56 @@ export default function CreateTrip() {
   } = useCreateTrip()
 
   return (
-    <div style={$containerStyle}>
-      <Paper sx={$paperStyle}>
-        <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
-          create trip
-        </Typography>
-        <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-          destination
-        </Typography>
-        <PlacesSearch
-          place={createTrip.destination}
-          types={["(cities)"]}
-          setPlace={(placeID, place) => updateDestination(placeID, place)}
-        />
+    <FriendProvider>
+      <div style={$containerStyle}>
+        <Paper sx={$paperStyle}>
+          <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
+            create trip
+          </Typography>
+          <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
+            destination
+          </Typography>
+          <PlacesSearch
+            place={createTrip.destination}
+            types={["(cities)"]}
+            setPlace={(placeID, place) => updateDestination(placeID, place)}
+          />
 
-        <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-          attendees
-        </Typography>
-        <SelectAttendees
-          selectedAttendees={createTrip.attendees}
-          options={createTrip.attendeeOptions}
-          updateAttendees={(a) => updateAttendees(a)}
-        />
-        <Divider>or</Divider>
-        <Typography
-          variant="body1"
-          style={{ ...$headerStyle, textAlign: "center", color: undefined }}
-        >
-          add attendee by username
-        </Typography>
+          <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
+            attendees
+          </Typography>
+          <SelectAttendees
+            selectedAttendees={createTrip.attendees}
+            options={createTrip.attendeeOptions}
+            updateAttendees={(a) => updateAttendees(a)}
+          />
+          <Divider>or</Divider>
+          <Typography
+            variant="body1"
+            style={{ ...$headerStyle, textAlign: "center", color: undefined }}
+          >
+            add attendee by username
+          </Typography>
 
-        <UserSearch
-          sx={{ width: "100%", marginBottom: "10px" }}
-          handleFoundUser={(user) => addAttendeeOption("person", user.uid, user.name)}
-        />
+          <UserSearch
+            sx={{ width: "100%", marginBottom: "10px" }}
+            handleFoundUser={(user) => addAttendeeOption("person", user.uid, user.name)}
+          />
 
-        <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-          duration
-        </Typography>
-        <DateRange
-          startDate={createTrip.duration.start}
-          endDate={createTrip.duration.end}
-          updateDates={(startDate, endDate) => updateDuration(startDate, endDate)}
-        />
-        <Button color="primary" variant="contained" onClick={async () => await maybeCreateTrip()}>
-          create
-        </Button>
-      </Paper>
-    </div>
+          <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
+            duration
+          </Typography>
+          <DateRange
+            startDate={createTrip.duration.start}
+            endDate={createTrip.duration.end}
+            updateDates={(startDate, endDate) => updateDuration(startDate, endDate)}
+          />
+          <Button color="primary" variant="contained" onClick={async () => await maybeCreateTrip()}>
+            create
+          </Button>
+        </Paper>
+      </div>
+    </FriendProvider>
   )
 }
 

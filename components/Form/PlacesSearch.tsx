@@ -30,6 +30,9 @@ export default function PlacesSearch({
       }}
       inputValue={inputValue}
       onChange={(_, value) => {
+        if (value === null) {
+          return
+        }
         setPlace(value.place_id, value.description)
         setInputValue(value.description)
       }}

@@ -1,53 +1,54 @@
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Stack,
-  Button,
-  Popper,
-  Grow,
-  Paper,
-  ClickAwayListener,
-  MenuList,
-  MenuItem,
-  Box,
-  Drawer,
-  LinearProgress,
-} from "@mui/material"
-import theme from "../../styles/theme/Theme"
-import { NavBarButton } from "./NavButton"
-import React from "react"
+import { Person } from "@mui/icons-material"
 import AirportShuttleIcon from "@mui/icons-material/AirportShuttle"
 import MenuIcon from "@mui/icons-material/Menu"
-import LoggedOutDrawer from "./LoggedOutDrawer"
+import {
+  AppBar,
+  Box,
+  Button,
+  ClickAwayListener,
+  Drawer,
+  Grow,
+  IconButton,
+  LinearProgress,
+  MenuItem,
+  MenuList,
+  Paper,
+  Popper,
+  Stack,
+  Toolbar,
+  Typography,
+} from "@mui/material"
+import React from "react"
+import theme from "../../styles/theme/Theme"
 import { useAuth } from "../../utility/hooks/authentication"
-import { useScreen } from "../../utility/hooks/screen"
 import useNavBar from "../../utility/hooks/navbar"
+import { useScreen } from "../../utility/hooks/screen"
+import LoggedOutDrawer from "./LoggedOutDrawer"
+import { NavBarButton } from "./NavButton"
 
 export default function NavBar({ path }: { path: string }) {
   const landingTextColor = path === "/" ? "white" : ""
   const landingBackgroundColor = path === "/" ? "#5F9DF7" : "#3F3D56"
   const { user, doLogout } = useAuth()
   const { loading } = useScreen()
-  const {
-    handleMenuClose,
-    handleListKeyDown,
-    handleDrawerToggle,
-    toggleMenu,
-    anchorRef,
-    open,
-    mobileOpen,
-  } = useNavBar()
+  const { updateErrorToast } = useScreen()
+  const [username, setUsername] = React.useState("")
+
+  const { handleListKeyDown, handleDrawerToggle, setOpen, anchorRef, open, mobileOpen } =
+    useNavBar()
 
   const { nav } = useScreen()
+
+  const handleLogout = (): void => {
+    doLogout()
+  }
+
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ m: 2 }}>
-      <LoggedOutDrawer />
+      <LoggedOutDrawer user={user} />
     </Box>
   )
 
-  const isAuth = false
   return (
     <>
       <nav aria-label="navigational bar">
@@ -72,7 +73,7 @@ export default function NavBar({ path }: { path: string }) {
               sx={{ display: { sm: "none" } }}
               color="inherit"
             >
-              <MenuIcon sx={{ fontSize: "38px", color: landingTextColor }} />
+              <MenuIcon sx={{ fontSize: "38px", color: "white" }} />
             </IconButton>
             <div
               style={{
@@ -108,62 +109,63 @@ export default function NavBar({ path }: { path: string }) {
               direction="row"
               spacing={2}
               sx={{
-                display: { xs: "none", sm: "block" },
+                display: { xs: "none", sm: "flex" },
                 width: "100%",
                 justifyContent: "end",
                 textAlign: "right",
               }}
             >
-              {isAuth ? (
+              {user !== undefined && user?.didFinishRegister ? (
                 <>
                   {/* TODO: add correct pages once they have been created */}
-                  <NavBarButton path="/dashboard/Overview" text="dashboard" variant="text" />
-                  <NavBarButton path="/" text="teams" variant="text" />
-                  <Button
-                    ref={anchorRef}
-                    color="secondary"
-                    variant="outlined"
-                    aria-label="user setings"
-                    aria-controls={open ? "composition-menu" : undefined}
-                    aria-expanded={open ? "true" : undefined}
-                    area-haspopup="true"
-                    onClick={() => doLogout()}
-                  >
-                    logout
-                  </Button>
-                  <Popper
-                    open={open}
-                    anchorEl={anchorRef.current}
-                    role={undefined}
-                    placement="bottom-start"
-                    transition
-                    disablePortal
-                  >
-                    {({ TransitionProps, placement }) => (
-                      <Grow
-                        {...TransitionProps}
-                        style={{
-                          transformOrigin:
-                            placement === "bottom-start" ? "left top" : "left bottom",
-                        }}
-                      >
-                        <Paper>
-                          <ClickAwayListener onClickAway={handleMenuClose}>
-                            <MenuList
-                              autoFocusItem={open}
-                              id="composition-menu"
-                              aria-labelledby="composition-button"
-                              onKeyDown={handleListKeyDown}
-                            >
-                              {/* TODO: Add logic */}
-                              <MenuItem onClick={handleMenuClose}>my account</MenuItem>
-                              <MenuItem onClick={handleMenuClose}>logout</MenuItem>
-                            </MenuList>
-                          </ClickAwayListener>
-                        </Paper>
-                      </Grow>
-                    )}
-                  </Popper>
+                  <NavBarButton path="/dashboard" text="dashboard" variant="text" />
+                  <NavBarButton path="/teams" text="teams" variant="text" />
+                  <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+                    <Button
+                      ref={anchorRef}
+                      color="secondary"
+                      variant="outlined"
+                      aria-label={"user"}
+                      aria-controls={open ? "composition-menu" : undefined}
+                      aria-expanded={open ? "true" : undefined}
+                      area-haspopup="true"
+                    >
+                      <Person sx={{ color: "white" }} />
+                    </Button>
+                    <Popper
+                      open={open}
+                      anchorEl={anchorRef.current}
+                      role={undefined}
+                      placement="bottom-start"
+                      transition
+                      disablePortal
+                    >
+                      {({ TransitionProps, placement }) => (
+                        <Grow
+                          {...TransitionProps}
+                          style={{
+                            transformOrigin:
+                              placement === "bottom-start" ? "left top" : "left bottom",
+                          }}
+                        >
+                          <Paper>
+                            <ClickAwayListener onClickAway={() => setOpen(false)}>
+                              <MenuList
+                                autoFocusItem={open}
+                                id="composition-menu"
+                                aria-labelledby="composition-button"
+                                onKeyDown={handleListKeyDown}
+                              >
+                                {/* TODO: Add logic for settings page*/}
+                                {/* <MenuItem onClick={handleMenuClose}>my account</MenuItem> */}
+                                <MenuItem onClick={(e) => handleLogout()}>logout</MenuItem>
+                              </MenuList>
+                            </ClickAwayListener>
+                          </Paper>
+                        </Grow>
+                      )}
+                    </Popper>
+                  </div>
                 </>
               ) : (
                 <>
@@ -190,7 +192,7 @@ export default function NavBar({ path }: { path: string }) {
             }}
             open={mobileOpen}
             onClose={handleDrawerToggle}
-            ModalProps={{ keepMounted: true }}
+            ModalProps={{ keepMounted: false }}
           >
             {drawer}
           </Drawer>
