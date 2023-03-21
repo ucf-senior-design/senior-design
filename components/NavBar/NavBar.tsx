@@ -16,7 +16,7 @@ import {
   Popper,
   Stack,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material"
 import Router from "next/router"
 import theme from "../../styles/theme/Theme"
@@ -41,7 +41,7 @@ export default function NavBar({ path }: { path: string }) {
   }
 
   const handleSettings = (): void => {
-    Router.push('/settings/account')
+    Router.push("/settings/account")
   }
 
   const drawer = (
@@ -116,7 +116,7 @@ export default function NavBar({ path }: { path: string }) {
                 textAlign: "right",
               }}
             >
-              {user !== undefined && user?.didFinishRegister ? (
+              {user?.didFinishRegister ? (
                 <>
                   <NavBarButton path="/dashboard" text="dashboard" variant="text" />
                   <NavBarButton path="/dashboard/teams" text="teams" variant="text" />

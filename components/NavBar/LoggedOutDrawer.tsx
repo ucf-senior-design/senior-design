@@ -9,7 +9,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography
+  Typography,
 } from "@mui/material"
 import Link from "next/link"
 import { useAuth } from "../../utility/hooks/authentication"
@@ -101,7 +101,7 @@ export const LoggedOutDrawer = ({
       </Grid>
       <Divider />
       <List>
-        {user !== undefined && user?.didFinishRegister ? (
+        {user?.didFinishRegister ? (
           <>
             {authNavItems.map((item) => (
               <Link href={item.link} key={item.id} passHref>

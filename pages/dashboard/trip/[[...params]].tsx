@@ -40,7 +40,7 @@ export default function Trip() {
     {
       key: "4",
       label: <a onClick={() => setShowAddWeather(true)}> Show Weather </a>,
-    }
+    },
   ]
 
   return (
@@ -80,15 +80,8 @@ export default function Trip() {
             </BackdropModal>
           </div>
 
-          <div style={$popUpDiv}>
-            <BackdropModal
-              isOpen={showAddWeather}
-              toggleShow={() => setShowAddWeather(!showAddWeather)}
-            >
-              <WeatherWidget />
-            </BackdropModal>
-          </div>
-          
+          <div style={$popUpDiv}>{showAddWeather && <WeatherWidget />}</div>
+
           <Content />
         </TripProvider>
       </FriendProvider>
