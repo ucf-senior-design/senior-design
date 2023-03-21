@@ -542,11 +542,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     )
 
     const response = await fetch(`${API_URL}/trip/${id}/layout`, options)
-
-    // TODO: Allow user to choose to not leave page when this happens
-    if (!response.ok) {
-      alert("Unable to save layout changes")
-    }
+    console.log(await response.text())
   }
 
   async function modifyTrip(details: TripDetails, callback: (response: Response) => void) {
