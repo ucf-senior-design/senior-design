@@ -6,7 +6,6 @@ import { createFetchRequestOptions } from "../../fetch"
 import { getAttendeeOptionsArray, createAttendeesArray } from "../../helper"
 import { StoredLocation, Trip } from "../../types/trip"
 import { useAuth } from "../authentication"
-import { useFriend } from "../friends"
 import { useScreen } from "../screen"
 
 interface TCreateTrip extends Omit<Trip, "uid" | "attendees"> {
@@ -21,7 +20,6 @@ export interface AttendeeOption {
   uid: string
 }
 export default function useCreateTrip() {
-  const { friendList } = useFriend()
   const [createTrip, setCreateTrip] = useState<TCreateTrip>({
     destination: "",
     placeID: "",
@@ -84,22 +82,6 @@ export default function useCreateTrip() {
         end: new Date(endDate),
       },
     })
-  }
-
-  function createAttendeeOptions() {
-    let options: Array<AttendeeOption> = []
-
-    if (friendList !== undefined) {
-      friendList.forEach((friendship) => {
-        options.push({
-          name: friendship.friend.name ?? "no name",
-          uid: user?.uid === friendship.pairing[0] ? friendship.pairing[1] : friendship.pairing[0],
-          type: "person",
-        })
-      })
-    }
-
-    return options
   }
 
   async function getPhotoURL() {
