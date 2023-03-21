@@ -12,61 +12,60 @@ export default function TripHeader() {
   const example = [item1, item2]
 
   return (
+    <Grid
+      container
+      style={{
+        padding: "20px",
+      }}
+    >
       <Grid
-        container
-        style={{
-          padding: "20px",
+        item
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "left",
+          justifyContent: "start",
+          gap: 1,
+          paddingTop: "50px",
         }}
       >
-        <Grid
-          item
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "left",
-            justifyContent: "start",
-            gap: 1,
-            paddingTop: "50px",
-          }}
-        >
-          <ArrowBackIcon sx={{ color: "white", fontSize: 40 }} />
-        </Grid>
+        <ArrowBackIcon sx={{ color: "white", fontSize: 40 }} />
+      </Grid>
 
-        <Grid
-          item
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 1,
-            alignItems: "left",
-            justifyContent: "start",
-            paddingLeft: "50px",
-          }}
-        >
-          <Typography sx={{ color: "white", fontWeight: "700", fontSize: "40px" }}>
-            {trip.destination} <EditIcon sx={{ color: "white" }} />
-          </Typography>
+      <Grid
+        item
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          alignItems: "left",
+          justifyContent: "start",
+          paddingLeft: "50px",
+        }}
+      >
+        <Typography sx={{ color: "white", fontWeight: "700", fontSize: "40px" }}>
+          {trip.destination} <EditIcon sx={{ color: "white" }} />
+        </Typography>
 
-          <Typography sx={{ color: "white", fontWeight: "400", fontSize: "20px" }}>
-            {/* {{trip.duration.start}.toLocaleDateString("en-US", {
+        <Typography sx={{ color: "white", fontWeight: "400", fontSize: "20px" }}>
+          {/* {{trip.duration.start}.toLocaleDateString("en-US", {
                 year: 'numeric', month: 'long', day: 'numeric'
             })} */}
-
-            trip
-          </Typography>
-          <Grid
-            container
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              gap: 2,
-            }}
-          >
-            {example.map((item) => (
-              <Avatar key={item.id} name={item.username} />
-            ))}
-          </Grid>
+          trip
+        </Typography>
+        <Grid
+          container
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 2,
+          }}
+        >
+          {example.map((item) => (
+            <Avatar key={item.id} name={item.username} />
+          ))}
         </Grid>
       </Grid>
+    </Grid>
   )
 }

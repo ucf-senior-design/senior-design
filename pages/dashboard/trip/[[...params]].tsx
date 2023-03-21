@@ -19,9 +19,7 @@ export default function Trip() {
     updateNav(
       { background: "url('/header.svg') 100% 100%" },
       "transparent",
-      <div style={{ height: "250px" }}> 
-        {/* <TripHeader /> */}
-      </div>,
+      <div style={{ height: "250px" }}>{/* <TripHeader /> */}</div>,
     )
   }, [router])
 

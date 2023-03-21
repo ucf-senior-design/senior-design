@@ -1,5 +1,5 @@
-import { Button, Paper, Typography } from "@mui/material";
-import { DatePicker } from 'antd';
+import { Button, Paper, Typography } from "@mui/material"
+import { DatePicker } from "antd"
 
 export function EventReschedule() {
   const { RangePicker } = DatePicker

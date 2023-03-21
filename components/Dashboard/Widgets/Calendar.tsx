@@ -1,12 +1,8 @@
-import { Button, Paper, Typography } from "@mui/material";
-import { useTrip } from "../../../utility/hooks/trip";
-import DateRange from "../../Form/DateRange";
+import { Button, Paper, Typography } from "@mui/material"
+import { Calendar, DatePicker } from "antd"
 
 export function CalendarWidget() {
-  const { trip } = useTrip()
-  const handleUpdate = () => {
-    console.log('Update');
-  };
+  const { RangePicker } = DatePicker
 
   return (
     <>
@@ -14,15 +10,12 @@ export function CalendarWidget() {
         <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center" }}>
           Trip Date Selection
         </Typography>
-        Select your availability:
-        <br />
-        <br />
-        <DateRange 
-        startDate = {new Date("03/19/2023")}
-        endDate = {new Date("03/20/2023")}
-        updateDates = {handleUpdate}/>
-
-        <br />
+        <br/>
+        Current group availability:
+        <Calendar fullscreen={false}/>
+        <p>Input an availability window:</p>
+        
+        <p><RangePicker /></p>
         <Button variant="outlined">submit</Button>
       </Paper>
     </>

@@ -31,7 +31,6 @@ export default function DateRange({
             endDate: endDate,
           },
         ]}
-        
         onChange={(e) =>
           updateDates(e.selection.startDate ?? new Date(), e.selection.endDate ?? new Date())
         }
