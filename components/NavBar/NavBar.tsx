@@ -16,9 +16,9 @@ import {
   Popper,
   Stack,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material"
-import React from "react"
+import Router from "next/router"
 import theme from "../../styles/theme/Theme"
 import { useAuth } from "../../utility/hooks/authentication"
 import useNavBar from "../../utility/hooks/navbar"
@@ -27,12 +27,9 @@ import LoggedOutDrawer from "./LoggedOutDrawer"
 import { NavBarButton } from "./NavButton"
 
 export default function NavBar({ path }: { path: string }) {
-  const landingTextColor = path === "/" ? "white" : ""
   const landingBackgroundColor = path === "/" ? "#5F9DF7" : "#3F3D56"
   const { user, doLogout } = useAuth()
   const { loading } = useScreen()
-  const { updateErrorToast } = useScreen()
-  const [username, setUsername] = React.useState("")
 
   const { handleListKeyDown, handleDrawerToggle, setOpen, anchorRef, open, mobileOpen } =
     useNavBar()
@@ -41,6 +38,10 @@ export default function NavBar({ path }: { path: string }) {
 
   const handleLogout = (): void => {
     doLogout()
+  }
+
+  const handleSettings = (): void => {
+    Router.push('/settings/account')
   }
 
   const drawer = (
@@ -117,9 +118,8 @@ export default function NavBar({ path }: { path: string }) {
             >
               {user !== undefined && user?.didFinishRegister ? (
                 <>
-                  {/* TODO: add correct pages once they have been created */}
                   <NavBarButton path="/dashboard" text="dashboard" variant="text" />
-                  <NavBarButton path="/teams" text="teams" variant="text" />
+                  <NavBarButton path="/dashboard/teams" text="teams" variant="text" />
                   <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
                     <Button
                       ref={anchorRef}
@@ -156,8 +156,7 @@ export default function NavBar({ path }: { path: string }) {
                                 aria-labelledby="composition-button"
                                 onKeyDown={handleListKeyDown}
                               >
-                                {/* TODO: Add logic for settings page*/}
-                                {/* <MenuItem onClick={handleMenuClose}>my account</MenuItem> */}
+                                <MenuItem onClick={handleSettings}>my account</MenuItem>
                                 <MenuItem onClick={(e) => handleLogout()}>logout</MenuItem>
                               </MenuList>
                             </ClickAwayListener>

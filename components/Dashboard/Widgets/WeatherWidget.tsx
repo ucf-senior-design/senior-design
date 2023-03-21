@@ -8,14 +8,16 @@ import {
   Paper,
   Stack,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material"
 import Image from "next/image"
 import React from "react"
+import { useTrip } from "../../../utility/hooks/trip"
 import { CurrentData, ForecastData } from "../../../utility/types/weather"
 
 const WeatherWidget: React.FC = () => {
-  const [city, setCity] = React.useState("Bohol, Philippines") //TODO: Grab location from trip as default
+  const { trip } = useTrip()
+  const [city, setCity] = React.useState(trip.destination)
   const [metric, setMetric] = React.useState("imperial")
   const [loading, sLoading] = React.useState(false)
 
@@ -58,7 +60,6 @@ const WeatherWidget: React.FC = () => {
           sLoading(true)
           const forecastData = await fetchForecast(city, metric)
           const currentData = await fetchCurrentWeather(city, metric)
-
           if (
             forecastData === undefined ||
             currentData === undefined ||
