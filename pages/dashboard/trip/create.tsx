@@ -1,12 +1,12 @@
-import { Box, Button, Divider, InputLabel, Paper, Typography } from "@mui/material"
-import DateRange from "../../../components/Form/DateRange"
+import { Box, Button, Chip, Divider, Paper, Typography } from "@mui/material"
 import React from "react"
-import useCreateTrip from "../../../utility/hooks/createTrip"
+import useCreateTrip from "../../../utility/hooks/create/createTrip"
 import PlacesSearch from "../../../components/Form/PlacesSearch"
 import SelectAttendees from "../../../components/Form/SelectAttendees"
 import UserSearch from "../../../components/Form/UserSearch"
 import theme from "../../../styles/theme/Theme"
-import SecurePage from "../../../components/SecurePage"
+import DateRange from "../../../components/Form/DateRange"
+import { FriendProvider } from "../../../utility/hooks/friends"
 
 export default function CreateTrip() {
   const {
@@ -20,7 +20,7 @@ export default function CreateTrip() {
   } = useCreateTrip()
 
   return (
-    <SecurePage>
+    <FriendProvider>
       <div style={$containerStyle}>
         <Paper sx={$paperStyle}>
           <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
@@ -40,8 +40,8 @@ export default function CreateTrip() {
           </Typography>
           <SelectAttendees
             selectedAttendees={createTrip.attendees}
-            options={attendeeOptions}
-            updateAttendees={(options) => updateAttendees(options)}
+            options={createTrip.attendeeOptions}
+            updateAttendees={(a) => updateAttendees(a)}
           />
           <Divider>or</Divider>
           <Typography
@@ -50,6 +50,7 @@ export default function CreateTrip() {
           >
             add attendee by username
           </Typography>
+
           <UserSearch
             sx={{ width: "100%", marginBottom: "10px" }}
             handleFoundUser={(user) => addAttendeeOption("person", user.uid, user.name)}
@@ -61,17 +62,14 @@ export default function CreateTrip() {
           <DateRange
             startDate={createTrip.duration.start}
             endDate={createTrip.duration.end}
-            updateDates={(startDate, endDate) => {
-              updateDuration(startDate, endDate)
-            }}
+            updateDates={(startDate, endDate) => updateDuration(startDate, endDate)}
           />
-
           <Button color="primary" variant="contained" onClick={async () => await maybeCreateTrip()}>
             create
           </Button>
         </Paper>
       </div>
-    </SecurePage>
+    </FriendProvider>
   )
 }
 

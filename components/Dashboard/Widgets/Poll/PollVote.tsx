@@ -1,10 +1,19 @@
 import { Circle, CircleOutlined } from "@mui/icons-material"
 import { Box, Button } from "@mui/material"
-import { PollOption as PollOptionType } from "../../../../utility/types/trip"
+import usePoll, { usePollHook } from "../../../../utility/hooks/polls"
+import { Poll as PollType, PollOption as PollOptionType } from "../../../../utility/types/trip"
 
-function PollOption({ option, selected }: { option: string; selected: boolean }) {
+function PollOption({
+  option,
+  selected,
+  handleSelect,
+}: {
+  option: string
+  selected: boolean
+  handleSelect: () => void
+}) {
   return (
-    <div
+    <Button
       style={{
         display: "flex",
         alignItems: "center",
@@ -13,24 +22,40 @@ function PollOption({ option, selected }: { option: string; selected: boolean })
         padding: "10px",
         border: `1.5px solid ${selected ? "#3F3D56" : "#BBB"}`,
         borderRadius: "5px",
+        justifyContent: "start",
       }}
       onClick={(e) => {
-        // TODO: Handle the user selecting on a poll option.
+        e.stopPropagation()
+        if (e.isPropagationStopped()) {
+          handleSelect()
+        }
       }}
     >
       {selected ? <Circle /> : <CircleOutlined />} {option}
-    </div>
+    </Button>
   )
 }
 
-export default function PollVote({ options }: { options: Array<PollOptionType> }) {
+export default function PollVote({
+  options,
+  poll,
+}: {
+  options: Array<PollOptionType>
+  poll: usePollHook
+}) {
   return (
     <>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%", height: "100%" }}>
         <>
-          {/** TODO: Handle whether the option is selected or not. */}
           {options.map((option, index) => {
-            return <PollOption key={index} option={option.value} selected={false} />
+            return (
+              <PollOption
+                key={index}
+                option={option.value}
+                selected={poll.didUserVote(index)}
+                handleSelect={() => poll.selectOption(index)}
+              />
+            )
           })}
         </>
       </Box>
@@ -38,10 +63,7 @@ export default function PollVote({ options }: { options: Array<PollOptionType> }
       <Button
         variant="contained"
         sx={{ width: "100%", marginTop: "10px" }}
-        onClick={() =>
-          // TODO: Create fetch request to vote on the poll.
-          console.log("submit vote")
-        }
+        onClick={() => poll.doVote()}
       >
         Submit
       </Button>

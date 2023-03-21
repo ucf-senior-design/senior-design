@@ -1,11 +1,13 @@
 import { useRouter } from "next/router"
 import React from "react"
 import { useState } from "react"
-import { createFetchRequestOptions } from "../fetch"
-import { Trip } from "../types/trip"
-import { useAuth } from "./authentication"
-import { useFriend } from "./friends"
-import { useScreen } from "./screen"
+import { API_URL } from "../../constants"
+import { createFetchRequestOptions } from "../../fetch"
+import { getAttendeeOptionsArray, createAttendeesArray } from "../../helper"
+import { StoredLocation, Trip } from "../../types/trip"
+import { useAuth } from "../authentication"
+import { useFriend } from "../friends"
+import { useScreen } from "../screen"
 
 interface TCreateTrip extends Omit<Trip, "uid" | "attendees"> {
   attendees: Array<AttendeeOption>
@@ -19,6 +21,7 @@ export interface AttendeeOption {
   uid: string
 }
 export default function useCreateTrip() {
+  const { friendList } = useFriend()
   const [createTrip, setCreateTrip] = useState<TCreateTrip>({
     destination: "",
     placeID: "",
@@ -29,16 +32,12 @@ export default function useCreateTrip() {
       end: new Date(),
     },
     attendeeOptions: [],
+    layout: [],
   })
 
-  const { friendList } = useFriend()
   const { user } = useAuth()
   const router = useRouter()
   const { updateErrorToast } = useScreen()
-
-  React.useEffect(() => {
-    createAttendeeOptions()
-  }, [friendList])
 
   function updateDestination(placeID: string, city: string) {
     setCreateTrip({
@@ -67,27 +66,6 @@ export default function useCreateTrip() {
     })
   }
 
-  function getAttendeeOptionsArray(list: Set<AttendeeOption>) {
-    let tAttendees: Array<AttendeeOption> = []
-    list.forEach((a) => {
-      tAttendees.push(a)
-    })
-    return tAttendees
-  }
-
-  function createAttendeesArray() {
-    let tAttendees: Array<string> = []
-    createTrip.attendees.forEach((a) => {
-      if (a.type === "team") {
-        // TODO Get all the people in the team
-        tAttendees.push(a.uid)
-      } else {
-        tAttendees.push(a.uid)
-      }
-    })
-    return tAttendees
-  }
-
   function updateAttendees(attendees: Array<AttendeeOption>) {
     setCreateTrip({
       ...createTrip,
@@ -96,11 +74,14 @@ export default function useCreateTrip() {
   }
 
   function updateDuration(startDate: Date, endDate: Date) {
+    startDate.setHours(0, 0, 0, 0)
+    endDate.setHours(0, 0, 0, 0)
+
     setCreateTrip({
       ...createTrip,
       duration: {
-        start: startDate,
-        end: endDate,
+        start: new Date(startDate),
+        end: new Date(endDate),
       },
     })
   }
@@ -118,7 +99,7 @@ export default function useCreateTrip() {
       })
     }
 
-    setCreateTrip({ ...createTrip, attendeeOptions: options })
+    return options
   }
 
   async function getPhotoURL() {
@@ -139,8 +120,6 @@ export default function useCreateTrip() {
   }
 
   async function maybeCreateTrip() {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL
-
     if (createTrip.destination.length === 0 || createTrip.placeID.length === 0) {
       updateErrorToast("please select a desintation.")
       return
@@ -149,16 +128,26 @@ export default function useCreateTrip() {
     let photoURL = await getPhotoURL()
 
     if (photoURL === undefined) {
-      updateErrorToast("cannot create trip at this time.")
+      updateErrorToast("cannot get location details at this time.")
       return
     }
 
     if (user === undefined) {
-      updateErrorToast("Please try again later.")
+      updateErrorToast("Please login and try again later.")
       return
     }
-    let attendees = createAttendeesArray()
+
+    let attendees = createAttendeesArray(createTrip.attendees)
     attendees.push(user.uid)
+
+    const timeDiff = createTrip.duration.end.getTime() - createTrip.duration.start.getTime() //get the difference in milliseconds
+    const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) //convert milliseconds to days
+    let layout: Array<StoredLocation> = []
+
+    // adds all days to the layout
+    for (let i = 0; i < Math.max(1, dayDiff); i++) {
+      layout.push({ key: `day:${i}`, size: 3 })
+    }
 
     const options = createFetchRequestOptions(
       JSON.stringify({
@@ -169,6 +158,7 @@ export default function useCreateTrip() {
         photoURL: photoURL,
         destination: createTrip.destination,
         attendees: attendees,
+        layout: layout,
       }),
       "POST",
     )
@@ -180,7 +170,7 @@ export default function useCreateTrip() {
 
       router.push(`/trip/`, {
         query: { id: newTrip.uid },
-        pathname: "dashboard/trip/",
+        pathname: "/dashboard/trip/",
       })
     } else {
       updateErrorToast("cannot create trip at this time.")
@@ -188,6 +178,7 @@ export default function useCreateTrip() {
   }
 
   let attendeeOptions = createTrip.attendeeOptions
+
   return {
     createTrip,
     updateAttendees,
