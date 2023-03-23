@@ -86,6 +86,16 @@ export default function useModifyEvent(originalEvent: Event) {
       return
     }
 
+    if (event.title === undefined) {
+      updateErrorToast("Please enter a title.")
+    }
+    if (event.duration === undefined) {
+      updateErrorToast("Please select a duration.")
+    }
+    if (event.location === undefined) {
+      updateErrorToast("Please enter a location.")
+    }
+
     let attendees = createAttendeesArray(event.attendees)
     attendees.push(user.uid)
 

@@ -7,7 +7,7 @@ import { useAuth } from "../authentication"
 import { useScreen } from "../screen"
 import { useTrip } from "../trip"
 
-interface TModifyTrip extends Omit<Trip, "uid" | "attendees" | "layout"> {
+interface TModifyTripDetails extends Omit<Trip, "uid" | "attendees" | "layout"> {
   placeID: string
 }
 
@@ -17,8 +17,8 @@ export interface AttendeeOption {
   uid: string
 }
 export default function useModifyTrip() {
-  const { trip } = useTrip()
-  const [modifyTrip, setModifyTrip] = useState<TModifyTrip>({
+  const { trip, modifyTrip } = useTrip()
+  const [modifyTripDetails, setModifyTripDetails] = useState<TModifyTripDetails>({
     destination: trip.destination,
     placeID: "",
     photoURL: trip.photoURL,
@@ -30,16 +30,16 @@ export default function useModifyTrip() {
   const { updateErrorToast } = useScreen()
 
   function updateDestination(placeID: string, city: string) {
-    setModifyTrip({
-      ...modifyTrip,
+    setModifyTripDetails({
+      ...modifyTripDetails,
       placeID: placeID,
       destination: city,
     })
   }
 
   function updateDuration(startDate: Date, endDate: Date) {
-    setModifyTrip({
-      ...modifyTrip,
+    setModifyTripDetails({
+      ...modifyTripDetails,
       duration: {
         start: new Date(startDate),
         end: new Date(endDate),
@@ -48,16 +48,16 @@ export default function useModifyTrip() {
   }
 
   async function getPhotoURL() {
-    if (modifyTrip.placeID.length === 0) {
+    if (modifyTripDetails.placeID.length === 0) {
       return undefined
     }
 
-    if (modifyTrip.destination === trip.destination) {
+    if (modifyTripDetails.destination === trip.destination) {
       return trip.photoURL
     }
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL
-    let response = await fetch(`${API_URL}places/${modifyTrip.placeID}`, {
+    let response = await fetch(`${API_URL}places/${modifyTripDetails.placeID}`, {
       method: "GET",
     })
     if (response.ok) {
@@ -68,8 +68,8 @@ export default function useModifyTrip() {
     return undefined
   }
 
-  async function maybeModifyTrip() {
-    if (modifyTrip.destination.length === 0 || modifyTrip.placeID.length === 0) {
+  async function maybeModifyTripDetails() {
+    if (modifyTripDetails.destination.length === 0 || modifyTripDetails.placeID.length === 0) {
       updateErrorToast("please select a desintation.")
       return
     }
@@ -86,44 +86,70 @@ export default function useModifyTrip() {
       return
     }
 
-    const timeDiff = modifyTrip.duration.end.getTime() - modifyTrip.duration.start.getTime() //get the difference in milliseconds
+    const timeDiff =
+      modifyTripDetails.duration.end.getTime() - modifyTripDetails.duration.start.getTime() //get the difference in milliseconds
     const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) //convert milliseconds to days
+    const oldLayout = trip.layout
     let layout: Array<StoredLocation> = []
+
+    let startDiff = Math.floor(
+      (trip.duration.start.getTime() - modifyTripDetails.duration.start.getTime()) /
+        (1000 * 60 * 60 * 24),
+    ) // If Positive, moved earlier
 
     // adds all days to the layout
     for (let i = 0; i < Math.max(1, dayDiff); i++) {
       layout.push({ key: `day:${i}`, size: 3 })
     }
 
+    // Copying layout from overlapping days
+    if (startDiff > 0) {
+      for (let i = startDiff; i < Math.max(1, dayDiff); i++) {
+        layout[i] = trip.layout[i - startDiff]
+      }
+    } else if (startDiff < 0) {
+      for (let i = 0; i < Math.max(1, dayDiff); i++) {
+        layout[i] = trip.layout[i - startDiff]
+      }
+    } else {
+      for (let i = 0; i < Math.max(1, dayDiff); i++) {
+        layout[i] = trip.layout[i]
+      }
+    }
+  }
+  async function modify(callback: (isSuccess: Response) => void) {
     const options = createFetchRequestOptions(
       JSON.stringify({
         duration: {
-          start: modifyTrip.duration.start,
-          end: modifyTrip.duration.end,
+          start: modifyTripDetails.duration.start,
+          end: modifyTripDetails.duration.end,
         },
-        photoURL: modifyTrip.photoURL,
-        destination: modifyTrip.destination,
+        destination: modifyTripDetails.destination,
       }),
       "POST",
     )
 
     const response = await fetch(`${API_URL}/trip`, options)
 
-    if (response.ok) {
-      let newTrip = await response.json()
-
-      router.push(`/trip/`, {
-        query: { id: newTrip.uid },
-        pathname: "/dashboard/trip/",
-      })
-    } else {
-      updateErrorToast("cannot modify trip at this time.")
+    if (user === undefined) {
+      updateErrorToast("Please try again later.")
+      return
     }
-  }
 
+    await modifyTrip(
+      {
+        duration: modifyTripDetails.duration,
+        destination: modifyTripDetails.destination,
+      },
+      (isSuccess) => {
+        callback(response)
+      },
+    )
+  }
   return {
+    modify,
     modifyTrip,
-    maybeModifyTrip,
+    maybeModifyTripDetails,
     updateDuration,
     updateDestination,
   }
