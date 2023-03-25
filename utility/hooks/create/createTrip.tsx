@@ -6,6 +6,7 @@ import { createFetchRequestOptions } from "../../fetch"
 import { getAttendeeOptionsArray, createAttendeesArray } from "../../helper"
 import { StoredLocation, Trip } from "../../types/trip"
 import { useAuth } from "../authentication"
+import { useFriend } from "../friends"
 import { useScreen } from "../screen"
 
 interface TCreateTrip extends Omit<Trip, "uid" | "attendees"> {
@@ -36,7 +37,28 @@ export default function useCreateTrip() {
   const { user } = useAuth()
   const router = useRouter()
   const { updateErrorToast } = useScreen()
+  const { friendList, addFriendOptions } = useFriend()
 
+  React.useEffect(() => {
+    let friends = addFriendOptions()
+    let updatedOptions = Array.from(createTrip.attendeeOptions)
+
+    createTrip.attendeeOptions.forEach((option) => {
+      if (friends.has(option.uid)) {
+        friends.delete(option.uid)
+      }
+    })
+
+    friends.forEach((friend) => {
+      updatedOptions.push(friend)
+    })
+
+    setCreateTrip({
+      ...createTrip,
+      attendeeOptions: updatedOptions,
+    })
+  }, [friendList])
+  
   function updateDestination(placeID: string, city: string) {
     setCreateTrip({
       ...createTrip,
