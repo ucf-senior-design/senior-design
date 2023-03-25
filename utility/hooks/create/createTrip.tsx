@@ -58,7 +58,7 @@ export default function useCreateTrip() {
       attendeeOptions: updatedOptions,
     })
   }, [friendList])
-  
+
   function updateDestination(placeID: string, city: string) {
     setCreateTrip({
       ...createTrip,
