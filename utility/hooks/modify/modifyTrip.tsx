@@ -70,7 +70,7 @@ export default function useModifyTrip() {
 
   async function maybeModifyTripDetails() {
     if (modifyTripDetails.destination.length === 0 || modifyTripDetails.placeID.length === 0) {
-      updateErrorToast("please select a desintation.")
+      updateErrorToast("please select a destination.")
       return
     }
 
@@ -89,7 +89,6 @@ export default function useModifyTrip() {
     const timeDiff =
       modifyTripDetails.duration.end.getTime() - modifyTripDetails.duration.start.getTime() //get the difference in milliseconds
     const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) //convert milliseconds to days
-    const oldLayout = trip.layout
     let layout: Array<StoredLocation> = []
 
     let startDiff = Math.floor(
@@ -101,6 +100,7 @@ export default function useModifyTrip() {
     for (let i = 0; i < Math.max(1, dayDiff); i++) {
       layout.push({ key: `day:${i}`, size: 3 })
     }
+    console.log(dayDiff)
 
     // Copying layout from overlapping days
     if (startDiff > 0) {
@@ -117,6 +117,7 @@ export default function useModifyTrip() {
       }
     }
   }
+
   async function modify(callback: (isSuccess: Response) => void) {
     const options = createFetchRequestOptions(
       JSON.stringify({
@@ -128,8 +129,8 @@ export default function useModifyTrip() {
       }),
       "POST",
     )
-
     const response = await fetch(`${API_URL}/trip`, options)
+    console.log(response)
 
     if (user === undefined) {
       updateErrorToast("Please try again later.")
@@ -141,10 +142,11 @@ export default function useModifyTrip() {
         duration: modifyTripDetails.duration,
         destination: modifyTripDetails.destination,
       },
-      (isSuccess) => {
+      () => {
         callback(response)
       },
     )
+    maybeModifyTripDetails()
   }
   return {
     modify,

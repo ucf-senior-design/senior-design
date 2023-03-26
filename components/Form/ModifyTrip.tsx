@@ -7,13 +7,9 @@ import { Duration } from "../../utility/types/trip"
 import DateRange from "./DateRange"
 import PlacesSearch from "./PlacesSearch"
 
-export default function ModifyTrip() {
-  function closeModal() {
-    throw new Error("Function not implemented.")
-  }
-
+export default function ModifyTrip({ closeModal }: { closeModal: () => void }) {
   const { trip } = useTrip()
-  const { modifyTrip, updateDuration, updateDestination } = useModifyTrip()
+  const { modifyTrip, updateDuration, updateDestination, modify } = useModifyTrip()
 
   return (
     <Box
@@ -57,8 +53,8 @@ export default function ModifyTrip() {
           color={"primary"}
           variant="contained"
           onClick={() =>
-            modifyTrip({ duration: trip.duration, destination: trip.destination }, (isSuccess) => {
-              if (isSuccess) closeModal()
+            modify((isSuccess) => {
+              if (isSuccess.ok) closeModal()
             })
           }
         >
