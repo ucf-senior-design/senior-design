@@ -1,4 +1,5 @@
-import { Autocomplete, Paper, TextField } from "@mui/material"
+import { Autocomplete, Button, Paper, TextField } from "@mui/material"
+import { useRouter } from "next/router"
 import React from "react"
 import { useDashboard } from "../../utility/hooks/dashboard"
 import TripCard from "./TripCard"
@@ -25,6 +26,7 @@ export default function ViewTrips() {
   ]
   const [tripSearchOptions, setTripSearchOptions] = React.useState<Array<TripSearchOption>>([])
   const { trips } = useDashboard()
+  const router = useRouter()
 
   React.useEffect(() => {
     let options: Array<TripSearchOption> = []
@@ -62,12 +64,12 @@ export default function ViewTrips() {
       <Paper
         sx={{
           backgroundColor: "transparent",
-          padding: "10px",
+
           display: "flex",
           alignContent: "center",
-          justifyContent: "start",
+          justifyContent: "center",
           flexWrap: "wrap",
-          width: "100%",
+          width: "100vw",
         }}
       >
         {tripCards}
@@ -84,12 +86,30 @@ export default function ViewTrips() {
           alignContent: "center",
           justifyContent: { xs: "center", md: "end" },
           padding: "10px",
+          flexDirection: "row",
         }}
       >
+        <Button
+          sx={{ margin: "10px" }}
+          variant="contained"
+          onClick={() =>
+            router.push(`/trip/`, {
+              pathname: "dashboard/trip/create",
+            })
+          }
+        >
+          create trip
+        </Button>
         <Autocomplete
           options={tripSearchOptions}
           groupBy={(option) => option.start}
           getOptionLabel={(option) => option.destination}
+          onChange={(e, value) => {
+            router.push(`/trip/`, {
+              query: { id: value?.id },
+              pathname: "dashboard/trip/",
+            })
+          }}
           sx={{ width: { xs: "100%", md: 300 }, margin: "10px" }}
           renderInput={(params) => <TextField {...params} label="find trip" color="secondary" />}
         />
