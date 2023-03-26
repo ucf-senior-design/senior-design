@@ -1,13 +1,10 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, Button, CircularProgress } from "@mui/material"
-import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import queryString from "query-string"
 import React from "react"
-import { useLocalStorage } from "react-use-storage"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
-import { User } from "../types/user"
 import { Response } from "../types/helper"
 import {
   CreatedEvent,
@@ -20,6 +17,7 @@ import {
   Trip,
   WidgetType,
 } from "../types/trip"
+import { User } from "../types/user"
 import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
 import { useScreen } from "./screen"
@@ -43,6 +41,7 @@ interface TripUseState extends Trip {
 interface TripDetails {
   duration: Duration
   destination: string
+  photoURL: string
 }
 
 interface TripContext {

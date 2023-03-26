@@ -9,6 +9,7 @@ import { useTrip } from "../trip"
 
 interface TModifyTripDetails extends Omit<Trip, "uid" | "attendees" | "layout"> {
   placeID: string
+  photoURL: string
 }
 
 export interface AttendeeOption {
@@ -47,7 +48,7 @@ export default function useModifyTrip() {
     })
   }
 
-  async function getPhotoURL() {
+  async function updatePhotoURL() {
     if (modifyTripDetails.placeID.length === 0) {
       return undefined
     }
@@ -74,13 +75,6 @@ export default function useModifyTrip() {
       return
     }
 
-    let photoURL = await getPhotoURL()
-
-    if (photoURL === undefined) {
-      updateErrorToast("cannot get location details at this time.")
-      return
-    }
-
     if (user === undefined) {
       updateErrorToast("Please login and try again later.")
       return
@@ -100,25 +94,20 @@ export default function useModifyTrip() {
     for (let i = 0; i < Math.max(1, dayDiff); i++) {
       layout.push({ key: `day:${i}`, size: 3 })
     }
-    console.log(dayDiff)
 
-    // Copying layout from overlapping days
-    if (startDiff > 0) {
-      for (let i = startDiff; i < Math.max(1, dayDiff); i++) {
-        layout[i] = trip.layout[i - startDiff]
-      }
-    } else if (startDiff < 0) {
-      for (let i = 0; i < Math.max(1, dayDiff); i++) {
-        layout[i] = trip.layout[i - startDiff]
-      }
-    } else {
-      for (let i = 0; i < Math.max(1, dayDiff); i++) {
-        layout[i] = trip.layout[i]
-      }
-    }
+    //TODO: Copying layout from overlapping days
+    trip.layout = layout
   }
 
   async function modify(callback: (isSuccess: Response) => void) {
+    let newURL = updatePhotoURL()
+
+    setModifyTripDetails({
+      ...modifyTripDetails,
+      photoURL: newURL.toString(),
+    })
+
+    console.log(modifyTripDetails.photoURL)
     const options = createFetchRequestOptions(
       JSON.stringify({
         duration: {
@@ -126,11 +115,11 @@ export default function useModifyTrip() {
           end: modifyTripDetails.duration.end,
         },
         destination: modifyTripDetails.destination,
+        photoURL: modifyTripDetails.photoURL,
       }),
       "PUT",
     )
     const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options)
-
     if (user === undefined) {
       updateErrorToast("Please try again later.")
       return
@@ -140,6 +129,7 @@ export default function useModifyTrip() {
       {
         duration: modifyTripDetails.duration,
         destination: modifyTripDetails.destination,
+        photoURL: modifyTripDetails.photoURL,
       },
       () => {
         callback(response)
