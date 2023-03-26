@@ -127,10 +127,9 @@ export default function useModifyTrip() {
         },
         destination: modifyTripDetails.destination,
       }),
-      "POST",
+      "PUT",
     )
-    const response = await fetch(`${API_URL}/trip`, options)
-    console.log(response)
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options)
 
     if (user === undefined) {
       updateErrorToast("Please try again later.")
