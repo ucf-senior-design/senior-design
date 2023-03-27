@@ -1,9 +1,11 @@
 import { LocationOn } from "@mui/icons-material"
 import { Box, Grid, Paper, Typography } from "@mui/material"
 import { getTime } from "../../utility/helper"
+import { useTrip } from "../../utility/hooks/trip"
 import { Event as EventType } from "../../utility/types/trip"
 import Avatar from "../Avatar"
 export default function Event({ event }: { event: EventType }) {
+  const { trip } = useTrip()
   return (
     <Paper sx={{ padding: "20px", width: "100%" }}>
       <Grid container>
@@ -45,7 +47,7 @@ export default function Event({ event }: { event: EventType }) {
             }}
           >
             {event.attendees.map((attendee, index) => {
-              return <>{index < 3 && <Avatar name={attendee} />}</>
+              return <>{index < 3 && <Avatar name={trip.userData?.get(attendee)?.name ?? ""} />}</>
             })}
           </Box>
         </Grid>

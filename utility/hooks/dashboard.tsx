@@ -3,7 +3,6 @@ import { createFetchRequestOptions } from "../fetch"
 import { Trip } from "../types/trip"
 import { useAuth } from "./authentication"
 import { Response } from "../types/helper"
-import SecurePage from "../../components/SecurePage"
 
 interface DashboardContext {
   trips: Map<string, Trip> | undefined
@@ -46,7 +45,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         leaveTrip,
       }}
     >
-      <SecurePage>{children}</SecurePage>
+      {children}
     </DashboardContext.Provider>
   )
 

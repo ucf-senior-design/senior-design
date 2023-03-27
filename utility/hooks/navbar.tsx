@@ -5,7 +5,7 @@ export default function useNavBar() {
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const anchorRef = React.useRef<HTMLButtonElement>(null)
 
-  function toggleMenu() {
+  const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen)
   }
 
@@ -26,13 +26,6 @@ export default function useNavBar() {
     }
   }
 
-  const handleMenuClose = (event: Event | React.SyntheticEvent) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
-      return
-    }
-    setOpen(false)
-  }
-
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState)
   }
@@ -40,10 +33,11 @@ export default function useNavBar() {
   return {
     open,
     mobileOpen,
-    handleMenuClose,
+
     handleListKeyDown,
-    toggleMenu,
+    handleToggle,
     handleDrawerToggle,
     anchorRef,
+    setOpen,
   }
 }

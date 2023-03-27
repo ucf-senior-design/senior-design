@@ -4,8 +4,18 @@ export interface Trip {
   duration: Duration
   destination: string
   photoURL: string
+  layout: Array<StoredLocation>
+}
+export type StoredLocation = {
+  key: string
+  size: number
 }
 
+export type WidgetType = "suggestion" | "day" | "poll"
+
+export interface Widget {
+  key: string
+}
 export type UserAvailabillity = {
   uid: string
   dates: Array<Duration>
@@ -47,13 +57,15 @@ export type Weather = {
   zipCode: string
 }
 
-export type Event = {
-  uid: string
+export interface CreatedEvent {
   title: string
   attendees: Array<string>
   duration: Duration
   location: string
   description: string
+}
+export interface Event extends CreatedEvent {
+  uid: string
 }
 
 export type PollOption = {

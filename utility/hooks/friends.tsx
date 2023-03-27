@@ -1,10 +1,10 @@
 import { auth } from "firebase-admin"
 import React from "react"
-import SecurePage from "../../components/SecurePage"
 import { API_URL } from "../constants"
 import { createFriendPairing } from "../helper"
 import { Friendship, User } from "../types/user"
 import { useAuth } from "./authentication"
+import { AttendeeOption } from "./create/createTrip"
 import { useScreen } from "./screen"
 
 interface FriendContext {
@@ -12,6 +12,7 @@ interface FriendContext {
   sendFriendRequest: (user: User) => Promise<void>
   acceptFriendRequest: (uid: string) => Promise<void>
   removeFriendRequest: (uid: string) => Promise<void>
+  addFriendOptions: () => Map<string, AttendeeOption>
 }
 const FriendContext = React.createContext<FriendContext>({} as FriendContext)
 
@@ -25,7 +26,7 @@ export function useFriend(): FriendContext {
 }
 
 export function FriendProvider({ children }: { children: React.ReactNode }) {
-  const { doSearch, user } = useAuth()
+  const { user } = useAuth()
   const { updateErrorToast } = useScreen()
   const [friendList, setFriendList] = React.useState<Map<string, Friendship>>()
 
@@ -34,9 +35,15 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
   }, [])
   return (
     <FriendContext.Provider
-      value={{ sendFriendRequest, acceptFriendRequest, removeFriendRequest, friendList }}
+      value={{
+        sendFriendRequest,
+        acceptFriendRequest,
+        removeFriendRequest,
+        friendList,
+        addFriendOptions,
+      }}
     >
-      <SecurePage>{children}</SecurePage>
+      {children}
     </FriendContext.Provider>
   )
 
@@ -84,12 +91,39 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     })
   }
 
+  function getFriendUID(pairing: Array<string>) {
+    if (pairing[0] === user?.uid || user?.uid === undefined) {
+      return pairing[1]
+    }
+    return pairing[0]
+  }
+
+  function addFriendOptions() {
+    let friendOptions: Map<string, AttendeeOption> = new Map()
+
+    if (friendList === undefined) {
+      return friendOptions
+    }
+
+    friendList?.forEach((friendship, _) => {
+      if (friendship.status.state === "accepted") {
+        let uid = getFriendUID(friendship.pairing)
+        friendOptions.set(uid, {
+          type: "person",
+          uid: uid,
+          name: friendship.friend.name ?? "",
+        })
+      }
+    })
+
+    return friendOptions
+  }
+
   async function getFriends() {
     let tfriendList = new Map<string, Friendship>()
     await fetch(`${API_URL}friends`, { method: "GET" }).then(async (result) => {
       if (result.ok) {
         const { friends } = await result.json()
-        console.log("getFriends()", friends)
         friends.forEach((friend: Friendship) => {
           tfriendList.set(friend.uid, friend)
         })

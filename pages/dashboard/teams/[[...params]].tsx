@@ -1,11 +1,22 @@
 import { Grid, Stack } from "@mui/material"
-import { TeamForm } from "../../components/Dashboard/Widgets/TeamComponents/TeamForm"
+import { useRouter } from "next/router"
+import React from "react"
+import { TeamForm } from "../../../components/Dashboard/Widgets/TeamComponents/TeamForm"
 
 export default function Teams() {
+  const router = useRouter()
+  const [teamID, setTeamID] = React.useState<string | undefined>(undefined)
+
+  React.useEffect(() => {
+    const { id } = router.query
+
+    setTeamID(id as string | undefined)
+  }, [router])
+
   return (
     <div style={$wrapper}>
       <Grid container direction="column" justifyContent="center" alignItems="center">
-        <TeamForm purpose="create" />
+        <TeamForm purpose="view" />
         <Stack
           sx={{ display: { xs: "none", md: "block" } }}
           style={{
