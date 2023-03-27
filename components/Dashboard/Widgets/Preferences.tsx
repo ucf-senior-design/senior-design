@@ -1,76 +1,107 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-  Typography,
-} from "@mui/material"
-import React from "react"
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney"
+import ParkIcon from "@mui/icons-material/Park"
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera"
+import SportsTennisIcon from "@mui/icons-material/SportsTennis"
+import { Box, Button, Chip, Paper, Typography } from "@mui/material"
 import { useTrip } from "../../../utility/hooks/trip"
 
-export function PreferencesWidget() {
+export const PreferencesWidget = ({ categories }: { categories: "cost" | "activity" }) => {
   const { trip } = useTrip()
-  const dummy = {
-    title: "activity preferences",
-    options: [1, 2, 3],
-  }
-
-  const [checked, setChecked] = React.useState([0])
-
-  const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value)
-    const newChecked = [...checked]
-
-    if (currentIndex === -1) {
-      newChecked.push(value)
-    } else {
-      newChecked.splice(currentIndex, 1)
-    }
-
-    setChecked(newChecked)
-  }
 
   return (
     <>
       <Paper sx={{ padding: "20px", width: "80vw", maxWidth: "300px" }}>
-        <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center" }}>
-          {dummy.title}
-        </Typography>
-        Select all acceptable preferences from the below list:
+        <p>Select all acceptable preferences from the below list:</p>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-            {dummy.options.map((item) => {
-              const labelId = `checkbox-list-label-${item}`
+          {categories === "cost" && (
+            <>
+              <Chip
+                variant="outlined"
+                icon={<AttachMoneyIcon />}
+                label={
+                  <Typography padding={1} fontSize={14}>
+                    very high
+                  </Typography>
+                }
+                size="medium"
+                sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+              />
+              <Chip
+                variant="outlined"
+                icon={<AttachMoneyIcon />}
+                label={
+                  <Typography padding={1} fontSize={14}>
+                    high
+                  </Typography>
+                }
+                size="medium"
+                sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+              />
+              <Chip
+                variant="outlined"
+                icon={<AttachMoneyIcon />}
+                label={
+                  <Typography padding={1} fontSize={14}>
+                    medium
+                  </Typography>
+                }
+                size="medium"
+                sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+              />
+              <Chip
+                variant="outlined"
+                icon={<AttachMoneyIcon />}
+                label={
+                  <Typography padding={1} fontSize={14}>
+                    low
+                  </Typography>
+                }
+                size="medium"
+                sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+              />
+            </>
+          )}
 
-              return (
-                <ListItem
-                  key={item}
-                  secondaryAction={<IconButton edge="end" aria-label="comments"></IconButton>}
-                  disablePadding
-                >
-                  <ListItemButton role={undefined} onClick={handleToggle(item)} dense>
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={checked.indexOf(item) !== -1}
-                        tabIndex={-1}
-                        color="secondary"
-                      />
-                    </ListItemIcon>
-                    <ListItemText id={labelId} primary={`Option ${item + 1}`} />
-                  </ListItemButton>
-                </ListItem>
-              )
-            })}
-          </List>
+          {categories === "activity" && (
+            <>
+              <Chip
+                variant="outlined"
+                icon={<SportsTennisIcon />}
+                label={
+                  <Typography padding={1} fontSize={14}>
+                    nature
+                  </Typography>
+                }
+                size="medium"
+                sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+              />
+              <Chip
+                variant="outlined"
+                icon={<ParkIcon />}
+                label={
+                  <Typography padding={1} fontSize={14}>
+                    sports
+                  </Typography>
+                }
+                size="medium"
+                sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+              />
+              <Chip
+                variant="outlined"
+                icon={<PhotoCameraIcon />}
+                label={
+                  <Typography padding={1} fontSize={14}>
+                    sightseeing
+                  </Typography>
+                }
+                size="medium"
+                sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+              />
+            </>
+          )}
+
+          <Button variant="outlined">add preference</Button>
         </Box>
-        <Button variant="outlined">vote</Button>
       </Paper>
     </>
   )
