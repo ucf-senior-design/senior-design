@@ -1,29 +1,15 @@
 import React from "react"
-import { createAttendeesArray, getAttendeeOptionsArray } from "../../helper"
-import { CreatedEvent, Event } from "../../types/trip"
+import { Event, Trip } from "../../types/trip"
 import { useAuth } from "../authentication"
-import { AttendeeOption } from "../create/createTrip"
 import { useScreen } from "../screen"
 import { useTrip } from "../trip"
 
-export default function useModifyEvent(originalEvent: Event) {
+export default function useModifyEvent(trip: Trip, originalEvent: Event) {
   const { updateErrorToast } = useScreen()
   const { user } = useAuth()
   const { modifyEvent } = useTrip()
 
-  interface TModifyEvent extends Omit<CreatedEvent, "attendees"> {
-    attendees: Array<AttendeeOption>
-    attendeeOptions: Array<AttendeeOption>
-  }
-  const ORIGINAL_EVENT: TModifyEvent = {
-    title: originalEvent.title,
-    attendees: [],
-    duration: originalEvent.duration,
-    location: originalEvent.location,
-    description: originalEvent.description,
-    attendeeOptions: [],
-  }
-  const [event, setEvent] = React.useState<TModifyEvent>(ORIGINAL_EVENT)
+  const [event, setEvent] = React.useState<Event>(originalEvent)
 
   function updateLocation(location: string) {
     setEvent({
@@ -55,31 +41,6 @@ export default function useModifyEvent(originalEvent: Event) {
     })
   }
 
-  function updateAttendees(attendees: Array<AttendeeOption>) {
-    setEvent({
-      ...event,
-      attendees: getAttendeeOptionsArray(new Set(attendees)),
-    })
-  }
-
-  function addAttendeeOption(type: "person" | "team", uid: string, name: string) {
-    let newOptions = new Set(event.attendeeOptions)
-    let newAttendees = new Set(event.attendees)
-    let attendee: AttendeeOption = {
-      type: type,
-      uid: uid,
-      name: name,
-    }
-
-    newOptions.add(attendee)
-    newAttendees.add(attendee)
-
-    setEvent({
-      ...event,
-      attendees: getAttendeeOptionsArray(newAttendees),
-      attendeeOptions: getAttendeeOptionsArray(newOptions),
-    })
-  }
   async function modify(callback: (isSuccess: boolean) => void) {
     if (user === undefined) {
       updateErrorToast("Please try again later.")
@@ -96,8 +57,23 @@ export default function useModifyEvent(originalEvent: Event) {
       updateErrorToast("Please enter a location.")
     }
 
-    let attendees = createAttendeesArray(event.attendees)
-    attendees.push(user.uid)
+    // const options = createFetchRequestOptions(
+    //   JSON.stringify({
+    //     title: event.title,
+    //     description: event.description,
+    //     duration: event.duration,
+    //     location: event.location,
+    //     attendees: originalEvent.attendees,
+    //   }),
+    //   "PUT",
+    // )
+    if (user === undefined) {
+      updateErrorToast("Please try again later.")
+      return
+    }
+    //const response = await fetch(`${API_URL}/trip/${trip.uid}/info/${originalEvent.uid}`, options)
+    // console.log(options.body)
+    // console.log(response)
 
     await modifyEvent(
       {
@@ -105,8 +81,9 @@ export default function useModifyEvent(originalEvent: Event) {
         description: event.description,
         duration: event.duration,
         location: event.location,
-        attendees: attendees,
+        attendees: originalEvent.attendees,
       },
+      event.uid,
       (isSuccess) => {
         callback(isSuccess)
       },
@@ -118,9 +95,7 @@ export default function useModifyEvent(originalEvent: Event) {
     modify,
     updateTitle,
     updateDuration,
-    updateAttendees,
     updateDescription,
     updateLocation,
-    addAttendeeOption,
   }
 }
