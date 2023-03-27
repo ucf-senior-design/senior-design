@@ -92,6 +92,7 @@ const WeatherWidget: React.FC = () => {
               display: "inline-block",
               borderRadius: 5,
               backgroundColor: "#E1E2DE",
+              width: "100%",
             }}
           >
             <Grid container direction="row" justifyContent="flex-end">

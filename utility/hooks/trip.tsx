@@ -15,7 +15,6 @@ import {
   SuggestionOption,
   SuggestionWidget,
   Trip,
-  Weather,
   WidgetType,
 } from "../types/trip"
 import { User } from "../types/user"
@@ -31,7 +30,6 @@ export type Day = {
 interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>
   polls: Map<string, Poll>
-  weather: Weather | undefined
   joinableEvents: Array<Array<Event>>
   itinerary: Array<Array<Event>>
   destination: string
@@ -103,7 +101,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     destination: "",
     polls: new Map<string, Poll>(),
     suggestions: new Map<string, SuggestionWidget>(),
-    weather: undefined,
     itinerary: [],
     joinableEvents: [],
     photoURL: "",
@@ -207,7 +204,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     let suggestionWidgets = await getSuggestionWidgetData()
     let eventData = await getEventData()
     let pollWidgets = await getPollWidgetData()
-    let weatherData = await getWeather()
 
     if (suggestionWidgets === null || trip === null || eventData == null) {
       alert("Cannot load trip.")
@@ -221,7 +217,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       suggestions: suggestionWidgets,
       itinerary: eventData.userEvents,
       joinableEvents: eventData.joinableEvents,
-      weather: weatherData,
       userData: (await getUserData(Array.from(trip.attendees))) as Map<string, User>,
       days: getEventsByDay(
         trip.duration.start,
@@ -505,28 +500,12 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   // TODO: Allow a user to delete a poll widget for the trip.
   async function deletePoll(uid: string) {}
 
-  function getWeather() {
-    let weather = {
-      owner: user?.uid ?? "",
-      city: trip.destination,
-    }
-
-    return weather
-  }
-
   // TODO: Allow a user to create a weather widget for the trip.
   function createWeather(callback: (response: Response) => void) {
     if (user === undefined) {
       callback({ isSuccess: false, errorMessage: "login and try again later." })
       return
     }
-
-    let weatherWidget = trip.weather
-
-    setTrip({
-      ...trip,
-      weather: weatherWidget,
-    })
     addNewWidget("weather", user.uid)
     callback({ isSuccess: true })
   }

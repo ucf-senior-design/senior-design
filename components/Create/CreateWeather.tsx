@@ -15,8 +15,8 @@ export default function CreateWeather({ closeModal }: { closeModal: () => void }
           flexDirection: "column",
         }}
       >
-        <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
-          do you want to show the weather for this trip?
+        <Typography variant="h5" style={{ ...$headerStyle, textAlign: "center" }}>
+          would you like to add a weather widget for this trip?
         </Typography>
         <Button
           sx={{ width: "100%", marginTop: "5px" }}
