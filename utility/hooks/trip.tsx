@@ -1,13 +1,10 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, Button, CircularProgress } from "@mui/material"
-import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import queryString from "query-string"
 import React from "react"
-import { useLocalStorage } from "react-use-storage"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
-import { User } from "../types/user"
 import { Response } from "../types/helper"
 import {
   CreatedEvent,
@@ -18,8 +15,9 @@ import {
   SuggestionOption,
   SuggestionWidget,
   Trip,
-  WidgetType,
+  WidgetType
 } from "../types/trip"
+import { User } from "../types/user"
 import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
 import { useScreen } from "./screen"
@@ -155,6 +153,25 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       setTrip({ ...trip, didReadLayout: true })
     }
   }, [trip])
+
+  const [count, setCount] = React.useState(0);
+  const WEBSOCKET_TIMER_SECONDS = 10;
+  React.useEffect(() => {
+    const fetchSuggestionData = async () => {
+      const suggestionWidgets = await getSuggestionWidgetData();
+      setTrip({
+        ...trip,
+        suggestions: suggestionWidgets,
+      })
+    }
+    fetchSuggestionData();
+
+    console.log(count)
+    setTimeout(() => {
+      const counter = count + 1;
+      setCount(counter)
+    }, WEBSOCKET_TIMER_SECONDS * 1000)
+  }, [count])
 
   function addNewWidget(type: WidgetType, uid: string) {
     const key = createKey(type, uid)
