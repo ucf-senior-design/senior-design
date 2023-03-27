@@ -10,12 +10,13 @@ export function CalendarWidget() {
         <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center" }}>
           Trip Date Selection
         </Typography>
-        <br/>
+        <br />
         Current group availability:
-        <Calendar fullscreen={false}/>
+        <Calendar fullscreen={false} />
         <p>Input an availability window:</p>
-        
-        <p><RangePicker /></p>
+        <p>
+          <RangePicker />
+        </p>
         <Button variant="outlined">submit</Button>
       </Paper>
     </>
