@@ -1,4 +1,3 @@
-import { Person } from "@mui/icons-material"
 import AirportShuttleIcon from "@mui/icons-material/AirportShuttle"
 import MenuIcon from "@mui/icons-material/Menu"
 import {
@@ -130,7 +129,7 @@ export default function NavBar({ path }: { path: string }) {
                       aria-expanded={open ? "true" : undefined}
                       area-haspopup="true"
                     >
-                      <Person sx={{ color: "white" }} />
+                      <Typography>{user.username}</Typography>
                     </Button>
                     <Popper
                       open={open}
