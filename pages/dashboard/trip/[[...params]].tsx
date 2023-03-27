@@ -7,8 +7,8 @@ import { BackdropModal } from "../../../components/BackdropModal"
 import CreateEvent from "../../../components/Create/CreateEvent"
 import CreatePoll from "../../../components/Create/CreatePoll"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
+import CreateWeather from "../../../components/Create/CreateWeather"
 import Content from "../../../components/Dashboard/Content"
-import WeatherWidget from "../../../components/Dashboard/Widgets/WeatherWidget"
 import { ResizableProvider } from "../../../utility/hooks/resizable"
 import { useScreen } from "../../../utility/hooks/screen"
 import { TripProvider } from "../../../utility/hooks/trip"
@@ -20,7 +20,7 @@ export default function Trip() {
   const [showCreateEvent, setShowCreateEvent] = React.useState(false)
   const [showCreatePoll, setShowCreatePoll] = React.useState(false)
   const [showCreateSuggestion, setShowCreateSuggestion] = React.useState(false)
-  const [showAddWeather, setShowAddWeather] = React.useState(false)
+  const [showCreateWeather, setShowCreateWeather] = React.useState(false)
 
   // For each create popup add an item to the menu
   const items: MenuProps["items"] = [
@@ -38,7 +38,7 @@ export default function Trip() {
     },
     {
       key: "4",
-      label: <a onClick={() => setShowAddWeather(true)}> Show Weather </a>,
+      label: <a onClick={() => setShowCreateWeather(true)}> Show Weather </a>,
     },
   ]
 
@@ -78,7 +78,14 @@ export default function Trip() {
           </BackdropModal>
         </div>
 
-        <div style={$popUpDiv}>{showAddWeather && <WeatherWidget />}</div>
+        <div style={$popUpDiv}>
+          <BackdropModal
+            isOpen={showCreateWeather}
+            toggleShow={() => setShowCreateWeather(!showCreateWeather)}
+          >
+            <CreateWeather closeModal={() => setShowCreateWeather(false)} />
+          </BackdropModal>
+        </div>
 
         <Content />
       </TripProvider>

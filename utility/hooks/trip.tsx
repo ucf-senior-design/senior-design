@@ -1,13 +1,10 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, Button, CircularProgress } from "@mui/material"
-import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import queryString from "query-string"
 import React from "react"
-import { useLocalStorage } from "react-use-storage"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
-import { User } from "../types/user"
 import { Response } from "../types/helper"
 import {
   CreatedEvent,
@@ -18,8 +15,10 @@ import {
   SuggestionOption,
   SuggestionWidget,
   Trip,
+  Weather,
   WidgetType,
 } from "../types/trip"
+import { User } from "../types/user"
 import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
 import { useScreen } from "./screen"
@@ -32,6 +31,7 @@ export type Day = {
 interface TripUseState extends Trip {
   suggestions: Map<string, SuggestionWidget>
   polls: Map<string, Poll>
+  weather: Weather | undefined
   joinableEvents: Array<Array<Event>>
   itinerary: Array<Array<Event>>
   destination: string
@@ -66,7 +66,7 @@ interface TripContext {
   deletePoll: (uid: string) => Promise<void>
 
   // handle weather widgetcreateP
-  createWeather: () => Promise<void>
+  createWeather: (callback: (response: Response) => void) => void
   deleteWeather: (uid: string) => Promise<void>
 
   // handle events
@@ -103,6 +103,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     destination: "",
     polls: new Map<string, Poll>(),
     suggestions: new Map<string, SuggestionWidget>(),
+    weather: undefined,
     itinerary: [],
     joinableEvents: [],
     photoURL: "",
@@ -206,6 +207,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     let suggestionWidgets = await getSuggestionWidgetData()
     let eventData = await getEventData()
     let pollWidgets = await getPollWidgetData()
+    let weatherData = await getWeather()
 
     if (suggestionWidgets === null || trip === null || eventData == null) {
       alert("Cannot load trip.")
@@ -219,6 +221,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       suggestions: suggestionWidgets,
       itinerary: eventData.userEvents,
       joinableEvents: eventData.joinableEvents,
+      weather: weatherData,
       userData: (await getUserData(Array.from(trip.attendees))) as Map<string, User>,
       days: getEventsByDay(
         trip.duration.start,
@@ -502,8 +505,31 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   // TODO: Allow a user to delete a poll widget for the trip.
   async function deletePoll(uid: string) {}
 
+  function getWeather() {
+    let weather = {
+      owner: user?.uid ?? "",
+      city: trip.destination,
+    }
+
+    return weather
+  }
+
   // TODO: Allow a user to create a weather widget for the trip.
-  async function createWeather() {}
+  function createWeather(callback: (response: Response) => void) {
+    if (user === undefined) {
+      callback({ isSuccess: false, errorMessage: "login and try again later." })
+      return
+    }
+
+    let weatherWidget = trip.weather
+
+    setTrip({
+      ...trip,
+      weather: weatherWidget,
+    })
+    addNewWidget("weather", user.uid)
+    callback({ isSuccess: true })
+  }
 
   // TODO: Allow a user to delete a weather widget for the trip.
   async function deleteWeather(uid: string) {}

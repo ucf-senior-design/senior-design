@@ -1,15 +1,4 @@
-import CancelIcon from "@mui/icons-material/Cancel"
-import EditIcon from "@mui/icons-material/Edit"
-import {
-  CircularProgress,
-  Divider,
-  Grid,
-  IconButton,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material"
+import { CircularProgress, Divider, Grid, Paper, Stack, TextField, Typography } from "@mui/material"
 import Image from "next/image"
 import React from "react"
 import { useTrip } from "../../../utility/hooks/trip"
@@ -106,7 +95,8 @@ const WeatherWidget: React.FC = () => {
             }}
           >
             <Grid container direction="row" justifyContent="flex-end">
-              {state.inEditMode ? (
+              {/* TODO: Temporarily removing editing */}
+              {/* {state.inEditMode ? (
                 <IconButton
                   onClick={() =>
                     setState((val) => ({
@@ -130,7 +120,7 @@ const WeatherWidget: React.FC = () => {
                 >
                   <EditIcon style={$iconStyle} />
                 </IconButton>
-              )}
+              )} */}
             </Grid>
             <Divider orientation="horizontal" />
             <Grid container direction="row" justifyContent="space-evenly">
