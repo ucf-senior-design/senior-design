@@ -10,6 +10,7 @@ import {
   CreatedEvent,
   Duration,
   Event,
+  ModifiedEvent,
   Poll,
   PollOption,
   SuggestionOption,
@@ -72,7 +73,7 @@ interface TripContext {
   createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
   modifyTrip: (details: TripDetails, callback: (response: Response) => void) => Promise<void>
   modifyEvent: (
-    event: CreatedEvent,
+    event: ModifiedEvent,
     uid: string,
     callback: (isSuccess: boolean) => void,
   ) => Promise<void>
@@ -557,13 +558,12 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     callback(response.ok)
   }
   async function modifyEvent(
-    event: CreatedEvent,
+    event: ModifiedEvent,
     uid: string,
     callback: (isSuccess: boolean) => void,
   ) {
     const options = createFetchRequestOptions(JSON.stringify(event), "PUT")
-    const response = await fetch(`${API_URL}/trip/${trip.uid}/update/${uid}`, options)
-    console.log(options)
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/event/info/${uid}`, options)
     if (response.ok) {
       let modifiedEvent: Event = await response.json()
       setTrip({

@@ -81,7 +81,6 @@ export default function useModifyEvent(trip: Trip, originalEvent: Event) {
         description: event.description,
         duration: event.duration,
         location: event.location,
-        attendees: originalEvent.attendees,
       },
       event.uid,
       (isSuccess) => {
