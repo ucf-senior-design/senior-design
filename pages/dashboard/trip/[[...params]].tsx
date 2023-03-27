@@ -9,6 +9,7 @@ import CreatePoll from "../../../components/Create/CreatePoll"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
 import CreateWeather from "../../../components/Create/CreateWeather"
 import Content from "../../../components/Dashboard/Content"
+import { FriendProvider } from "../../../utility/hooks/friends"
 import { ResizableProvider } from "../../../utility/hooks/resizable"
 import { useScreen } from "../../../utility/hooks/screen"
 import { TripProvider } from "../../../utility/hooks/trip"
@@ -45,49 +46,53 @@ export default function Trip() {
   return (
     <ResizableProvider>
       <TripProvider>
-        <Dropdown menu={{ items }} placement="topRight">
-          <AButton style={$addButton}>
-            <Add sx={{ color: "white" }} />
-          </AButton>
-        </Dropdown>
+        <FriendProvider>
+          <Dropdown menu={{ items }} placement="topRight">
+            <AButton style={$addButton}>
+              <Add sx={{ color: "white" }} />
+            </AButton>
+          </Dropdown>
 
-        <div style={$popUpDiv}>
-          <BackdropModal
-            isOpen={showCreateEvent}
-            toggleShow={() => setShowCreateEvent(!showCreateEvent)}
-          >
-            <CreateEvent closeModal={() => setShowCreateEvent(false)} />
-          </BackdropModal>
-        </div>
+          <div style={$popUpDiv}>
+            <BackdropModal
+              isOpen={showCreateEvent}
+              toggleShow={() => setShowCreateEvent(!showCreateEvent)}
+            >
+              <FriendProvider>
+                <CreateEvent closeModal={() => setShowCreateEvent(false)} />
+              </FriendProvider>
+            </BackdropModal>
+          </div>
 
-        <div style={$popUpDiv}>
-          <BackdropModal
-            isOpen={showCreatePoll}
-            toggleShow={() => setShowCreatePoll(!showCreatePoll)}
-          >
-            <CreatePoll closeModal={() => setShowCreatePoll(false)} />
-          </BackdropModal>
-        </div>
+          <div style={$popUpDiv}>
+            <BackdropModal
+              isOpen={showCreatePoll}
+              toggleShow={() => setShowCreatePoll(!showCreatePoll)}
+            >
+              <CreatePoll closeModal={() => setShowCreatePoll(false)} />
+            </BackdropModal>
+          </div>
 
-        <div style={$popUpDiv}>
-          <BackdropModal
-            isOpen={showCreateSuggestion}
-            toggleShow={() => setShowCreateSuggestion(!showCreateSuggestion)}
-          >
-            <CreateSuggestion closeModal={() => setShowCreateSuggestion(false)} />
-          </BackdropModal>
-        </div>
+          <div style={$popUpDiv}>
+            <BackdropModal
+              isOpen={showCreateSuggestion}
+              toggleShow={() => setShowCreateSuggestion(!showCreateSuggestion)}
+            >
+              <CreateSuggestion closeModal={() => setShowCreateSuggestion(false)} />
+            </BackdropModal>
+          </div>
 
-        <div style={$popUpDiv}>
-          <BackdropModal
-            isOpen={showCreateWeather}
-            toggleShow={() => setShowCreateWeather(!showCreateWeather)}
-          >
-            <CreateWeather closeModal={() => setShowCreateWeather(false)} />
-          </BackdropModal>
-        </div>
+          <div style={$popUpDiv}>
+            <BackdropModal
+              isOpen={showCreateWeather}
+              toggleShow={() => setShowCreateWeather(!showCreateWeather)}
+            >
+              <CreateWeather closeModal={() => setShowCreateWeather(false)} />
+            </BackdropModal>
+          </div>
 
-        <Content />
+          <Content />
+        </FriendProvider>
       </TripProvider>
     </ResizableProvider>
   )
