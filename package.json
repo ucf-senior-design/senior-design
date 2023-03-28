@@ -55,11 +55,13 @@
     "firebase-admin": "^11.3.0",
     "jalaali-react-date-picker": "^1.0.12",
     "jest-environment-jsdom": "^29.5.0",
+    "jest-fetch-mock": "^3.0.3",
+    "jest-node-exports-resolver": "^1.1.6",
     "material-ui-chip-input": "^1.1.0",
     "mocha": "^10.1.0",
     "mui-chips-input": "^2.0.1",
     "mui-daterange-picker": "^1.0.5",
-    "next": "12.3.1",
+    "next": "^13.2.4",
     "next-api-middleware": "^2.0.1",
     "next-session": "^4.0.5",
     "nextjs-cors": "^2.1.2",
@@ -80,7 +82,8 @@
     "react-tag-input": "^6.8.1",
     "react-toastify": "8.0.0",
     "react-use": "^17.4.0",
-    "react-use-storage": "^0.5.1"
+    "react-use-storage": "^0.5.1",
+    "ts-jest-resolver": "^2.0.1"
   },
   "testMatch": [
     "**/__tests__/*.+(ts|tsx|js)"

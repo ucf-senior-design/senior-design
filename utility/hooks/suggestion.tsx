@@ -30,6 +30,7 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
   const { trip } = useTrip()
 
   const userID = user?.uid ?? ""
+
   const tripID = trip.uid
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -39,6 +40,8 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
     showAllSuggestionsPopUp: false,
     ...s,
   })
+
+  console.info(suggestion.suggestions.get("sample_suggestion")?.likes)
 
   /**
    * Checks to see if a user owners a suggestion
@@ -55,6 +58,12 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
    * @returns true if the user has liked the suggestion and false otherwise.
    */
   function didUserLike(option: string) {
+    console.info(
+      "didUserLike",
+      suggestion.suggestions,
+      option,
+      suggestion.suggestions.get(option)?.likes.has(userID),
+    )
     const isLiked = suggestion.suggestions.get(option)?.likes.has(userID)
     return isLiked !== undefined ? isLiked : false
   }
@@ -79,6 +88,7 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
       JSON.stringify({ suggestion: suggestion.newSuggestion }),
       "PUT",
     )
+
     await fetch(`${API_URL}trip/${tripID}/suggestion/add/${suggestion.uid}`, options).then(
       async (response) => {
         if (response.ok) {
@@ -118,7 +128,9 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
       options,
     )
       .then((response) => {
+        console.info(response, response.ok === true)
         if (response.ok) {
+          console.info("success")
           // If successful, store that the user likes the suggestion locally.
           const newSuggestions = new Map(suggestion.suggestions)
           const suggestionOption = newSuggestions.get(selectedOption)
