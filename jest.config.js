@@ -35,7 +35,7 @@ module.exports = {
     "<rootDir>/.next/",
     "<rootDir>/utility/types/",
   ],
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   transform: {
     // Use babel-jest to transpile tests with the next/babel preset
     // https://jestjs.io/docs/configuration#transform-objectstring-pathtotransformer--pathtotransformer-object
@@ -43,7 +43,7 @@ module.exports = {
       "babel-jest",
       {
         babelrc: false,
-        presets: ["@babel/preset-typescript"],
+        presets: ["@babel/preset-typescript", "@babel/preset-react", "@babel/preset-env"],
         plugins: ["@babel/plugin-proposal-optional-chaining"],
       },
     ],
