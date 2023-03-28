@@ -72,11 +72,7 @@ interface TripContext {
   // handle events
   createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
   modifyTrip: (details: TripDetails, callback: (response: Response) => void) => Promise<void>
-  modifyEvent: (
-    event: ModifiedEvent,
-    uid: string,
-    callback: (isSuccess: boolean) => void,
-  ) => Promise<void>
+  modifyEvent: (event: ModifiedEvent, callback: (isSuccess: boolean) => void) => Promise<void>
 }
 
 const TripContext = React.createContext<TripContext>({} as TripContext)
@@ -557,13 +553,9 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }
     callback(response.ok)
   }
-  async function modifyEvent(
-    event: ModifiedEvent,
-    uid: string,
-    callback: (isSuccess: boolean) => void,
-  ) {
+  async function modifyEvent(event: ModifiedEvent, callback: (isSuccess: boolean) => void) {
     const options = createFetchRequestOptions(JSON.stringify(event), "PUT")
-    const response = await fetch(`${API_URL}/trip/${trip.uid}/event/info/${uid}`, options)
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/event/info/${event.uid}`, options)
     if (response.ok) {
       let modifiedEvent: Event = await response.json()
       setTrip({
@@ -598,8 +590,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         duration: details.duration,
         photoURL: details.photoURL,
       })
-    } else {
-      callback({ isSuccess: response.ok, errorMessage: await response.text() })
     }
   }
 

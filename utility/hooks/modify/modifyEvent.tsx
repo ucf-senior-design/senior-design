@@ -57,32 +57,18 @@ export default function useModifyEvent(trip: Trip, originalEvent: Event) {
       updateErrorToast("Please enter a location.")
     }
 
-    // const options = createFetchRequestOptions(
-    //   JSON.stringify({
-    //     title: event.title,
-    //     description: event.description,
-    //     duration: event.duration,
-    //     location: event.location,
-    //     attendees: originalEvent.attendees,
-    //   }),
-    //   "PUT",
-    // )
     if (user === undefined) {
       updateErrorToast("Please try again later.")
       return
     }
-    //const response = await fetch(`${API_URL}/trip/${trip.uid}/info/${originalEvent.uid}`, options)
-    // console.log(options.body)
-    // console.log(response)
-
     await modifyEvent(
       {
         title: event.title,
         description: event.description,
         duration: event.duration,
         location: event.location,
+        uid: event.uid,
       },
-      event.uid,
       (isSuccess) => {
         callback(isSuccess)
       },

@@ -70,16 +70,6 @@ export default function useModifyTrip() {
   }
 
   async function maybeModifyTripDetails() {
-    if (modifyTripDetails.destination.length === 0 || modifyTripDetails.placeID.length === 0) {
-      updateErrorToast("please select a destination.")
-      return
-    }
-
-    if (user === undefined) {
-      updateErrorToast("Please login and try again later.")
-      return
-    }
-
     const timeDiff =
       modifyTripDetails.duration.end.getTime() - modifyTripDetails.duration.start.getTime() //get the difference in milliseconds
     const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) //convert milliseconds to days
@@ -100,14 +90,26 @@ export default function useModifyTrip() {
   }
 
   async function modify(callback: (isSuccess: Response) => void) {
-    let newURL = updatePhotoURL()
+    if (modifyTripDetails.destination.length === 0 || modifyTripDetails.placeID.length === 0) {
+      updateErrorToast("please select a destination.")
+      return
+    }
 
-    setModifyTripDetails({
-      ...modifyTripDetails,
-      photoURL: newURL.toString(),
+    if (user === undefined) {
+      updateErrorToast("Please login and try again later.")
+      return
+    }
+    updatePhotoURL().then((newURL) => {
+      if (newURL !== undefined) {
+        console.log(newURL)
+        setModifyTripDetails({
+          ...modifyTripDetails,
+          photoURL: newURL || "",
+        })
+      }
     })
 
-    console.log(modifyTripDetails.photoURL)
+    console.log("photo: " + modifyTripDetails.photoURL)
     const options = createFetchRequestOptions(
       JSON.stringify({
         duration: {
@@ -119,10 +121,6 @@ export default function useModifyTrip() {
       }),
       "PUT",
     )
-    if (user === undefined) {
-      updateErrorToast("Please try again later.")
-      return
-    }
     const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options)
 
     await modifyTrip(

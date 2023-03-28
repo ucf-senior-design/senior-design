@@ -36,12 +36,11 @@ export default function ModifyTrip({ closeModal }: { closeModal: () => void }) {
         </Typography>
         <PlacesSearch
           place={trip.destination}
-          types={[]}
-          setPlace={(_, place) => updateDestination(_, place)}
+          types={["(cities)"]}
+          setPlace={(placeID, place) => updateDestination(placeID, place)}
         />
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           duration
-          {/* // Need to add widget for adding day // addNewWidget */}
         </Typography>
         <DateRange
           startDate={trip.duration.start}

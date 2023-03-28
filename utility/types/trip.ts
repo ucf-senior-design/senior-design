@@ -69,6 +69,7 @@ export interface ModifiedEvent {
   duration: Duration
   location: string
   description: string
+  uid: string
 }
 export interface Event extends CreatedEvent {
   uid: string
