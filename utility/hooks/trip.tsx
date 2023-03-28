@@ -164,10 +164,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         suggestions: suggestionWidgets,
       })
     }
-    fetchSuggestionData();
-
-    console.log(count)
     setTimeout(() => {
+      fetchSuggestionData();
       const counter = count + 1;
       setCount(counter)
     }, WEBSOCKET_TIMER_SECONDS * 1000)
