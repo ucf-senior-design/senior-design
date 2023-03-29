@@ -2,6 +2,7 @@ import React from "react"
 import { createFetchRequestOptions } from "../fetch"
 import { SuggestionOption, SuggestionWidget } from "../types/trip"
 import { useAuth } from "./authentication"
+import { useScreen } from "./screen"
 import { useTrip } from "./trip"
 
 // Type of the Suggestion useState used in this custom hook
@@ -28,7 +29,7 @@ export type useSuggestionHook = {
 export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
   const { user } = useAuth()
   const { trip } = useTrip()
-
+  const { updateErrorToast } = useScreen()
   const userID = user?.uid ?? ""
 
   const tripID = trip.uid
@@ -40,8 +41,6 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
     showAllSuggestionsPopUp: false,
     ...s,
   })
-
-  console.info(suggestion.suggestions.get("sample_suggestion")?.likes)
 
   /**
    * Checks to see if a user owners a suggestion
@@ -110,7 +109,7 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
             showAddPopUp: false,
           })
         } else {
-          alert("Try again later")
+          updateErrorToast("Try again later")
         }
       },
     )
@@ -122,15 +121,14 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
    */
   async function like(selectedOption: string) {
     // Create the fetch request.
+    console.info(suggestion.suggestions.get(selectedOption))
     const options = createFetchRequestOptions(JSON.stringify({}), "PUT")
     await fetch(
       `${API_URL}trip/${tripID}/suggestion/like/${suggestion.uid}/${selectedOption}`,
       options,
     )
       .then((response) => {
-        console.info(response, response.ok === true)
         if (response.ok) {
-          console.info("success")
           // If successful, store that the user likes the suggestion locally.
           const newSuggestions = new Map(suggestion.suggestions)
           const suggestionOption = newSuggestions.get(selectedOption)
@@ -146,7 +144,8 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
             }
           })
         } else {
-          alert("Try Again Later")
+          console.info(suggestion.suggestions.get(selectedOption))
+          updateErrorToast("Try again later")
         }
       })
       .catch(() => {})
@@ -177,7 +176,7 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
           }
         })
       } else {
-        alert("Try Again Later")
+        updateErrorToast("Try Again Later")
       }
     })
   }

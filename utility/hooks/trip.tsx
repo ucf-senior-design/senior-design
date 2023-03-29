@@ -1,7 +1,6 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, Button, CircularProgress } from "@mui/material"
-// import { useRouter } from "next/router"
-// import queryString from "query-string"
+import { useRouter } from "next/router"
 import React from "react"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
@@ -86,9 +85,9 @@ export function useTrip(): TripContext {
 export function TripProvider({ children }: { children: React.ReactNode }) {
   const [id, setId] = React.useState<string>()
   const [showOverlay, setShowOverlay] = React.useState(true)
-  // const router = useRouter()
+  const router = useRouter()
 
-  const { updateNav } = useScreen()
+  const { updateNav, updateErrorToast } = useScreen()
   const { readLayout, createKey, addItem, resizable, getStorableLayout } = useResizable()
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: "",
@@ -118,8 +117,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   }, [resizable])
   React.useEffect(() => {
     if (window !== undefined && window.location !== undefined) {
-      // const { id } = queryString.parse(window.location.search)
-      const id = ""
+      let location = window.location.search
+      const id = location
       setId(id as string)
     }
     updateNav(
@@ -207,7 +206,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     let pollWidgets = await getPollWidgetData()
 
     if (suggestionWidgets === null || trip === null || eventData == null) {
-      alert("Cannot load trip.")
+      updateErrorToast("Cannot load trip.")
       return
     }
 

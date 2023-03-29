@@ -70,7 +70,6 @@ module.exports = {
   moduleNameMapper: {
     /* This is key to preventing the webpack error. */
     "^firebase(.*)$": "<rootDir>/__mocks__/firebaseMock.js",
-    "query-string": "<rootDir>/__mocks__/queryString.js",
   },
   automock: false,
   resetMocks: false,

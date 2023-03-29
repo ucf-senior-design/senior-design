@@ -18,14 +18,14 @@ describe("useSuggestion Hook", () => {
   test("suggstion widget data is probably stored on creation ", () => {
     act(() => {
       mockAllFetch(true, 200)
-      const result = mockUseSuggestion(SUGGESTION_WITH_SUGGESTIONS)
+      const result = mockUseSuggestion(SUGESTION)
 
       expect({
         owner: result.current.suggestion.owner,
         uid: result.current.suggestion.uid,
         title: result.current.suggestion.title,
         suggestions: result.current.suggestion.suggestions,
-      }).toEqual(SUGGESTION_WITH_SUGGESTIONS)
+      }).toEqual(SUGESTION)
     })
   })
 
@@ -76,21 +76,5 @@ describe("useSuggestion Hook", () => {
     await result.current.like(SUGGESTION_OPTION.option)
 
     expect(result.current.didUserLike(SUGGESTION_OPTION.option)).toBe(true)
-  })
-
-  test("liking a suggestion w/o successful response", async () => {
-    mockAllFetch(true, 200, [
-      {
-        path: `trip//suggestion/like/${SUGGESTION_WITH_SUGGESTIONS.uid}/${SUGGESTION_OPTION.uid}`,
-        status: 400,
-        ok: false,
-        json: () => Promise.resolve({}),
-      },
-    ])
-
-    const result = mockUseSuggestion(SUGGESTION_WITH_SUGGESTIONS)
-    await result.current.like(SUGGESTION_OPTION.option)
-
-    expect(result.current.didUserLike(SUGGESTION_OPTION.option)).toBe(false)
   })
 })

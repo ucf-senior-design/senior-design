@@ -14768,6 +14768,11 @@ next-api-middleware@^2.0.1:
   resolved "https://registry.yarnpkg.com/next-api-middleware/-/next-api-middleware-2.0.1.tgz#e794da5dc7bb41b3226ee50eb70313bdedeb324b"
   integrity sha512-yqOQjrOXkqZ7f1FybmTRWE1F4ypfcNWMC5FnmLresfu4ljY0W7iNwvOsaxSvCnoLYF5dnqxq+XeVeac7Gx9s9A==
 
+next-router-mock@^0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/next-router-mock/-/next-router-mock-0.9.3.tgz#8287e96d76d4c7b3720bc9078b148c2b352f1567"
+  integrity sha512-jl8eFe71LpMVGeBMpoxILkGfEgGY7IfLy8XPyv05/o61p5oQRNpoMmk46VMxRIpt0fI8XcvznBZKpDK6vbYQcQ==
+
 next-session@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/next-session/-/next-session-4.0.5.tgz#e663248b4021e03901c5c943b6f764f6c0057cce"
