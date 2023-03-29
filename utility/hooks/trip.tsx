@@ -124,7 +124,10 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       setId(id as string)
     }
     updateNav(
-      { background: "url('/header.svg') 100% 100%" },
+      {
+        background: "url('/header.svg') 100% 100%",
+        backgroundRepeat: "no-repeat",
+      },
       "transparent",
       <div style={{ height: "250px" }}>
         <Button onClick={() => router.back()}>
