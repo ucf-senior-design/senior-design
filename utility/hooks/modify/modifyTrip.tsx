@@ -1,13 +1,11 @@
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { API_URL } from "../../constants"
-import { createFetchRequestOptions } from "../../fetch"
 import { StoredLocation, Trip } from "../../types/trip"
 import { useAuth } from "../authentication"
 import { useScreen } from "../screen"
 import { useTrip } from "../trip"
 
-interface TModifyTripDetails extends Omit<Trip, "uid" | "attendees" | "layout"> {
+interface TModifyTripDetails extends Omit<Trip, "uid" | "attendees"> {
   placeID: string
   photoURL: string
 }
@@ -18,12 +16,13 @@ export interface AttendeeOption {
   uid: string
 }
 export default function useModifyTrip() {
-  const { trip, modifyTrip } = useTrip()
+  const { trip, modifyTrip, removeExtraDays } = useTrip()
   const [modifyTripDetails, setModifyTripDetails] = useState<TModifyTripDetails>({
     destination: trip.destination,
     placeID: "",
     photoURL: trip.photoURL,
     duration: trip.duration,
+    layout: trip.layout,
   })
 
   const { user } = useAuth()
@@ -66,7 +65,7 @@ export default function useModifyTrip() {
     return undefined
   }
 
-  async function maybeModifyTripDetails() {
+  function maybeModifyTripDetails() {
     const timeDiff =
       modifyTripDetails.duration.end.getTime() - modifyTripDetails.duration.start.getTime() //get the difference in milliseconds
     const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) //convert milliseconds to days
@@ -76,18 +75,24 @@ export default function useModifyTrip() {
       (trip.duration.start.getTime() - modifyTripDetails.duration.start.getTime()) /
         (1000 * 60 * 60 * 24),
     ) // If Positive, moved earlier
-
+    let oldLayout = trip.layout
     // adds all days to the layout
     for (let i = 0; i < Math.max(1, dayDiff); i++) {
       layout.push({ key: `day:${i}`, size: 3 })
     }
+    console.log(oldLayout)
+    console.log(layout)
 
     console.log(Math.max(1, dayDiff))
+    setModifyTripDetails({
+      ...modifyTripDetails,
+      layout: layout,
+    })
+
     //TODO: Copying layout from overlapping days
-    trip.layout = layout
   }
 
-  async function modify(callback: (isSuccess: Response) => void) {
+  async function modify(callback: () => void) {
     if (modifyTripDetails.destination.length === 0 || modifyTripDetails.placeID.length === 0) {
       updateErrorToast("please select a destination.")
       return
@@ -99,14 +104,11 @@ export default function useModifyTrip() {
     }
     await updatePhotoURL()
 
-    console.log("photo: " + modifyTripDetails.photoURL)
-    const options = createFetchRequestOptions(JSON.stringify(modifyTripDetails), "PUT")
-    const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options)
-
+    console.log("layout: " + modifyTripDetails.layout)
+    // maybeModifyTripDetails()
     await modifyTrip(modifyTripDetails, () => {
-      callback(response)
+      callback()
     })
-    maybeModifyTripDetails()
   }
   return {
     modify,

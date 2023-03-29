@@ -13,6 +13,7 @@ import {
   ModifiedEvent,
   Poll,
   PollOption,
+  StoredLocation,
   SuggestionOption,
   SuggestionWidget,
   Trip,
@@ -43,11 +44,13 @@ interface TripDetails {
   duration: Duration
   destination: string
   photoURL: string
+  layout: Array<StoredLocation>
 }
 
 interface TripContext {
   trip: TripUseState
   initilizeTrip: () => Promise<void>
+  removeExtraDays: () => void
 
   // handle suggestions
   createSuggestion: (
@@ -71,7 +74,7 @@ interface TripContext {
 
   // handle events
   createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
-  modifyTrip: (details: TripDetails, callback: (response: Response) => void) => Promise<void>
+  modifyTrip: (details: TripDetails, callback: () => void) => Promise<void>
   modifyEvent: (event: ModifiedEvent, callback: (isSuccess: boolean) => void) => Promise<void>
 }
 
@@ -157,6 +160,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }
   }, [trip])
 
+  //
+  function removeExtraDays() {}
   function addNewWidget(type: WidgetType, uid: string) {
     const key = createKey(type, uid)
     addItem(key)
@@ -585,18 +590,44 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     console.log(await response.text())
   }
 
-  async function modifyTrip(details: TripDetails, callback: (response: Response) => void) {
+  // React.useEffect(() => {
+  //   const timeDiff = trip.duration.end.getTime() - trip.duration.start.getTime() //get the difference in milliseconds
+  //   const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) //convert milliseconds to days
+  //   let layout: Array<StoredLocation> = []
+
+  //   let startDiff = Math.floor(
+  //     (trip.duration.start.getTime() - trip.duration.start.getTime()) / (1000 * 60 * 60 * 24),
+  //   ) // If Positive, moved earlier
+  //   let oldLayout = trip.layout
+  //   // adds all days to the layout
+  //   for (let i = 0; i < Math.max(1, dayDiff); i++) {
+  //     layout.push({ key: `day:${i + 1}`, size: 3 })
+  //   }
+  //   console.log(oldLayout)
+  //   console.log(layout)
+  //   setTrip({
+  //     ...trip,
+  //     layout: layout,
+  //   })
+  // }, [trip.duration])
+
+  async function modifyTrip(details: TripDetails, callback: () => void) {
     const options = createFetchRequestOptions(JSON.stringify(details), "PUT")
     const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options)
+    const responseLayout = await fetch(`${API_URL}/trip/${trip.uid}/layout`, options)
 
-    if (response.ok) {
-      callback({ isSuccess: response.ok, result: response.json() })
+    if (response.ok && responseLayout.ok) {
       setTrip({
         ...trip,
         destination: details.destination,
         duration: details.duration,
         photoURL: details.photoURL,
+        // layout: details.layout,
       })
+      // modifyTripLocal()
+      console.log(responseLayout)
+      console.log("before call back: " + trip.layout)
+      callback()
     }
   }
 
@@ -619,6 +650,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         createEvent,
         modifyTrip,
         modifyEvent,
+        removeExtraDays,
       }}
     >
       {(id === undefined || resizable.order.length === 0) && (

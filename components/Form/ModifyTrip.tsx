@@ -52,8 +52,8 @@ export default function ModifyTrip({ closeModal }: { closeModal: () => void }) {
           color={"primary"}
           variant="contained"
           onClick={() =>
-            modify((isSuccess) => {
-              if (isSuccess.ok) closeModal()
+            modify(() => {
+              closeModal()
             })
           }
         >
