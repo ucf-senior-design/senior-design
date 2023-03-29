@@ -21,7 +21,6 @@ export interface AttendeeOption {
   uid: string
 }
 export default function useCreateTrip() {
-  const { friendList } = useFriend()
   const [createTrip, setCreateTrip] = useState<TCreateTrip>({
     destination: "",
     placeID: "",
@@ -38,6 +37,27 @@ export default function useCreateTrip() {
   const { user } = useAuth()
   const router = useRouter()
   const { updateErrorToast } = useScreen()
+  const { friendList, addFriendOptions } = useFriend()
+
+  React.useEffect(() => {
+    let friends = addFriendOptions()
+    let updatedOptions = Array.from(createTrip.attendeeOptions)
+
+    createTrip.attendeeOptions.forEach((option) => {
+      if (friends.has(option.uid)) {
+        friends.delete(option.uid)
+      }
+    })
+
+    friends.forEach((friend) => {
+      updatedOptions.push(friend)
+    })
+
+    setCreateTrip({
+      ...createTrip,
+      attendeeOptions: updatedOptions,
+    })
+  }, [friendList])
 
   function updateDestination(placeID: string, city: string) {
     setCreateTrip({
@@ -84,22 +104,6 @@ export default function useCreateTrip() {
         end: new Date(endDate),
       },
     })
-  }
-
-  function createAttendeeOptions() {
-    let options: Array<AttendeeOption> = []
-
-    if (friendList !== undefined) {
-      friendList.forEach((friendship) => {
-        options.push({
-          name: friendship.friend.name ?? "no name",
-          uid: user?.uid === friendship.pairing[0] ? friendship.pairing[1] : friendship.pairing[0],
-          type: "person",
-        })
-      })
-    }
-
-    return options
   }
 
   async function getPhotoURL() {

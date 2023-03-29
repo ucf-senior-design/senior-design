@@ -1,18 +1,16 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, Button, CircularProgress } from "@mui/material"
-import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import queryString from "query-string"
 import React from "react"
-import { useLocalStorage } from "react-use-storage"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
-import { User } from "../types/user"
 import { Response } from "../types/helper"
 import {
   CreatedEvent,
   Duration,
   Event,
+  ModifiedEvent,
   Poll,
   PollOption,
   SuggestionOption,
@@ -20,6 +18,7 @@ import {
   Trip,
   WidgetType,
 } from "../types/trip"
+import { User } from "../types/user"
 import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
 import { useScreen } from "./screen"
@@ -43,6 +42,7 @@ interface TripUseState extends Trip {
 interface TripDetails {
   duration: Duration
   destination: string
+  photoURL: string
 }
 
 interface TripContext {
@@ -72,7 +72,7 @@ interface TripContext {
   // handle events
   createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
   modifyTrip: (details: TripDetails, callback: (response: Response) => void) => Promise<void>
-  modifyEvent: (event: CreatedEvent, callback: (isSuccess: boolean) => void) => Promise<void>
+  modifyEvent: (event: ModifiedEvent, callback: (isSuccess: boolean) => void) => Promise<void>
 }
 
 const TripContext = React.createContext<TripContext>({} as TripContext)
@@ -553,10 +553,9 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }
     callback(response.ok)
   }
-  async function modifyEvent(event: CreatedEvent, callback: (isSuccess: boolean) => void) {
-    const options = createFetchRequestOptions(JSON.stringify(event), "POST")
-    const response = await fetch(`${API_URL}/trip/${trip.uid}/event`, options)
-
+  async function modifyEvent(event: ModifiedEvent, callback: (isSuccess: boolean) => void) {
+    const options = createFetchRequestOptions(JSON.stringify(event), "PUT")
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/event/info/${event.uid}`, options)
     if (response.ok) {
       let modifiedEvent: Event = await response.json()
       setTrip({
@@ -576,11 +575,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     )
 
     const response = await fetch(`${API_URL}/trip/${id}/layout`, options)
-
-    // TODO: Allow user to choose to not leave page when this happens
-    if (!response.ok) {
-      alert("Unable to save layout changes")
-    }
+    console.log(await response.text())
   }
 
   async function modifyTrip(details: TripDetails, callback: (response: Response) => void) {
@@ -593,9 +588,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         ...trip,
         destination: details.destination,
         duration: details.duration,
+        photoURL: details.photoURL,
       })
-    } else {
-      callback({ isSuccess: response.ok, errorMessage: await response.text() })
     }
   }
 

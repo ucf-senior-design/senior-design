@@ -7,8 +7,9 @@ import { useAuth } from "../authentication"
 import { useScreen } from "../screen"
 import { useTrip } from "../trip"
 
-interface TModifyTrip extends Omit<Trip, "uid" | "attendees" | "layout"> {
+interface TModifyTripDetails extends Omit<Trip, "uid" | "attendees" | "layout"> {
   placeID: string
+  photoURL: string
 }
 
 export interface AttendeeOption {
@@ -17,8 +18,8 @@ export interface AttendeeOption {
   uid: string
 }
 export default function useModifyTrip() {
-  const { trip } = useTrip()
-  const [modifyTrip, setModifyTrip] = useState<TModifyTrip>({
+  const { trip, modifyTrip } = useTrip()
+  const [modifyTripDetails, setModifyTripDetails] = useState<TModifyTripDetails>({
     destination: trip.destination,
     placeID: "",
     photoURL: trip.photoURL,
@@ -30,16 +31,16 @@ export default function useModifyTrip() {
   const { updateErrorToast } = useScreen()
 
   function updateDestination(placeID: string, city: string) {
-    setModifyTrip({
-      ...modifyTrip,
+    setModifyTripDetails({
+      ...modifyTripDetails,
       placeID: placeID,
       destination: city,
     })
   }
 
   function updateDuration(startDate: Date, endDate: Date) {
-    setModifyTrip({
-      ...modifyTrip,
+    setModifyTripDetails({
+      ...modifyTripDetails,
       duration: {
         start: new Date(startDate),
         end: new Date(endDate),
@@ -47,37 +48,48 @@ export default function useModifyTrip() {
     })
   }
 
-  async function getPhotoURL() {
-    if (modifyTrip.placeID.length === 0) {
+  async function updatePhotoURL() {
+    if (modifyTripDetails.placeID.length === 0) {
       return undefined
     }
 
-    if (modifyTrip.destination === trip.destination) {
-      return trip.photoURL
-    }
-
     const API_URL = process.env.NEXT_PUBLIC_API_URL
-    let response = await fetch(`${API_URL}places/${modifyTrip.placeID}`, {
+    let response = await fetch(`${API_URL}places/${modifyTripDetails.placeID}`, {
       method: "GET",
     })
     if (response.ok) {
-      return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1400&photoreference=${await response.text()}&key=${
+      modifyTripDetails.photoURL = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1400&photoreference=${await response.text()}&key=${
         process.env.NEXT_PUBLIC_PLACES_KEY
       }`
+      return modifyTripDetails.photoURL
     }
     return undefined
   }
 
-  async function maybeModifyTrip() {
-    if (modifyTrip.destination.length === 0 || modifyTrip.placeID.length === 0) {
-      updateErrorToast("please select a desintation.")
-      return
+  async function maybeModifyTripDetails() {
+    const timeDiff =
+      modifyTripDetails.duration.end.getTime() - modifyTripDetails.duration.start.getTime() //get the difference in milliseconds
+    const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) //convert milliseconds to days
+    let layout: Array<StoredLocation> = []
+
+    let startDiff = Math.floor(
+      (trip.duration.start.getTime() - modifyTripDetails.duration.start.getTime()) /
+        (1000 * 60 * 60 * 24),
+    ) // If Positive, moved earlier
+
+    // adds all days to the layout
+    for (let i = 0; i < Math.max(1, dayDiff); i++) {
+      layout.push({ key: `day:${i}`, size: 3 })
     }
 
-    let photoURL = await getPhotoURL()
+    console.log(Math.max(1, dayDiff))
+    //TODO: Copying layout from overlapping days
+    trip.layout = layout
+  }
 
-    if (photoURL === undefined) {
-      updateErrorToast("cannot get location details at this time.")
+  async function modify(callback: (isSuccess: Response) => void) {
+    if (modifyTripDetails.destination.length === 0 || modifyTripDetails.placeID.length === 0) {
+      updateErrorToast("please select a destination.")
       return
     }
 
@@ -85,45 +97,21 @@ export default function useModifyTrip() {
       updateErrorToast("Please login and try again later.")
       return
     }
+    await updatePhotoURL()
 
-    const timeDiff = modifyTrip.duration.end.getTime() - modifyTrip.duration.start.getTime() //get the difference in milliseconds
-    const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) //convert milliseconds to days
-    let layout: Array<StoredLocation> = []
+    console.log("photo: " + modifyTripDetails.photoURL)
+    const options = createFetchRequestOptions(JSON.stringify(modifyTripDetails), "PUT")
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options)
 
-    // adds all days to the layout
-    for (let i = 0; i < Math.max(1, dayDiff); i++) {
-      layout.push({ key: `day:${i}`, size: 3 })
-    }
-
-    const options = createFetchRequestOptions(
-      JSON.stringify({
-        duration: {
-          start: modifyTrip.duration.start,
-          end: modifyTrip.duration.end,
-        },
-        photoURL: modifyTrip.photoURL,
-        destination: modifyTrip.destination,
-      }),
-      "POST",
-    )
-
-    const response = await fetch(`${API_URL}/trip`, options)
-
-    if (response.ok) {
-      let newTrip = await response.json()
-
-      router.push(`/trip/`, {
-        query: { id: newTrip.uid },
-        pathname: "/dashboard/trip/",
-      })
-    } else {
-      updateErrorToast("cannot modify trip at this time.")
-    }
+    await modifyTrip(modifyTripDetails, () => {
+      callback(response)
+    })
+    maybeModifyTripDetails()
   }
-
   return {
+    modify,
     modifyTrip,
-    maybeModifyTrip,
+    maybeModifyTripDetails,
     updateDuration,
     updateDestination,
   }

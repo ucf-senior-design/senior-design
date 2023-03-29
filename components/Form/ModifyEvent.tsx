@@ -1,14 +1,27 @@
-import { Box, Button, Divider, TextField, Typography } from "@mui/material"
+import { Box, Button, TextField, Typography } from "@mui/material"
 import React from "react"
 import theme from "../../styles/theme/Theme"
-import { Event } from "../../utility/types/trip"
+import useModifyEvent from "../../utility/hooks/modify/modifyEvent"
+import { useTrip } from "../../utility/hooks/trip"
+import { Event as EventType } from "../../utility/types/trip"
 import DateRange from "./DateRange"
+import PlacesSearch from "./PlacesSearch"
 
-export default function ModifyEvent(event: Event) {
-  function closeModal() {
-    throw new Error("Function not implemented.")
-  }
+export default function ModifyEvent({
+  closeModal,
+  event,
+}: {
+  closeModal: () => void
+  event: EventType
+}) {
+  const { trip } = useTrip()
+  const { updateDuration, updateLocation, updateDescription, updateTitle, modify } = useModifyEvent(
+    trip,
+    event,
+  )
 
+  const [title, setTitle] = React.useState(event.title)
+  const [description, setDescription] = React.useState(event.description)
   return (
     <Box
       sx={{
@@ -35,8 +48,11 @@ export default function ModifyEvent(event: Event) {
         <TextField
           color={"secondary"}
           sx={{ width: "100%" }}
-          value={event.title}
-          // onChange={(e) => updateTitle(e.target.value)}
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value)
+            updateTitle(e.target.value)
+          }}
         />
 
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
@@ -45,58 +61,39 @@ export default function ModifyEvent(event: Event) {
         <TextField
           color={"secondary"}
           sx={{ width: "100%" }}
-          value={event.description}
-          // onChange={(e) => updateDescription(e.target.value)}
+          value={description}
+          onChange={(e) => {
+            setDescription(e.target.value)
+            updateDescription(e.target.value)
+          }}
         />
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           destination
         </Typography>
-        {/* <PlacesSearch
+        <PlacesSearch
           place={event.location}
           types={[]}
           setPlace={(_, place) => updateLocation(place)}
-        /> */}
-        <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-          attendees
-        </Typography>
-        {/* <SelectAttendees
-          selectedAttendees={event.attendees}
-          options={event.attendeeOptions}
-          updateAttendees={(a) => updateAttendees(a)}
-        /> */}
-        <Divider>or</Divider>
-        <Typography
-          variant="body1"
-          style={{ ...$headerStyle, textAlign: "center", color: undefined }}
-        >
-          add attendee by username
-        </Typography>
-
-        {/* <UserSearch
-          sx={{ width: "100%", marginBottom: "10px" }}
-          handleFoundUser={(user) => addAttendeeOption("person", user.uid, user.name)}
-        /> */}
+        />
 
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           duration
         </Typography>
         <DateRange
-          startDate={new Date()}
-          endDate={new Date()}
-          // startDate={event.duration.start}
-          // endDate={event.duration.end}
-          // updateDates={(startDate, endDate) => updateDuration(startDate, endDate)}
-          updateDates={() => {}}
+          startDate={event.duration.start}
+          endDate={event.duration.end}
+          updateDates={(startDate, endDate) => updateDuration(startDate, endDate)}
+          showTime
         />
         <Button
           sx={{ width: "100%", marginTop: "10px" }}
           color={"primary"}
           variant="contained"
-          // onClick={() =>
-          //   create((isSuccess: any) => {
-          //     if (isSuccess) closeModal()
-          //   })
-          // }
+          onClick={() =>
+            modify((isSuccess: any) => {
+              if (isSuccess) closeModal()
+            })
+          }
         >
           Save Changes
         </Button>
@@ -109,16 +106,4 @@ const $headerStyle: React.CSSProperties = {
   fontWeight: 500,
   color: theme.palette.secondary.main,
   padding: 5,
-}
-function useCreateEvent(): {
-  event: any
-  create: any
-  updateTitle: any
-  updateDuration: any
-  updateAttendees: any
-  updateDescription: any
-  updateLocation: any
-  addAttendeeOption: any
-} {
-  throw new Error("Function not implemented.")
 }

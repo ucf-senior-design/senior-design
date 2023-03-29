@@ -7,13 +7,9 @@ import { Duration } from "../../utility/types/trip"
 import DateRange from "./DateRange"
 import PlacesSearch from "./PlacesSearch"
 
-export default function ModifyTrip() {
-  function closeModal() {
-    throw new Error("Function not implemented.")
-  }
-
+export default function ModifyTrip({ closeModal }: { closeModal: () => void }) {
   const { trip } = useTrip()
-  const { modifyTrip, updateDuration, updateDestination } = useModifyTrip()
+  const { modifyTrip, updateDuration, updateDestination, modify } = useModifyTrip()
 
   return (
     <Box
@@ -40,12 +36,11 @@ export default function ModifyTrip() {
         </Typography>
         <PlacesSearch
           place={trip.destination}
-          types={[]}
-          setPlace={(_, place) => updateDestination(_, place)}
+          types={["(cities)"]}
+          setPlace={(placeID, place) => updateDestination(placeID, place)}
         />
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           duration
-          {/* // Need to add widget for adding day // addNewWidget */}
         </Typography>
         <DateRange
           startDate={trip.duration.start}
@@ -57,8 +52,8 @@ export default function ModifyTrip() {
           color={"primary"}
           variant="contained"
           onClick={() =>
-            modifyTrip((isSuccess: any) => {
-              if (isSuccess) closeModal()
+            modify((isSuccess) => {
+              if (isSuccess.ok) closeModal()
             })
           }
         >
