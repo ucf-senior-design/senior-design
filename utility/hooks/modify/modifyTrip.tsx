@@ -53,18 +53,15 @@ export default function useModifyTrip() {
       return undefined
     }
 
-    if (modifyTripDetails.destination === trip.destination) {
-      return trip.photoURL
-    }
-
     const API_URL = process.env.NEXT_PUBLIC_API_URL
     let response = await fetch(`${API_URL}places/${modifyTripDetails.placeID}`, {
       method: "GET",
     })
     if (response.ok) {
-      return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1400&photoreference=${await response.text()}&key=${
+      modifyTripDetails.photoURL = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1400&photoreference=${await response.text()}&key=${
         process.env.NEXT_PUBLIC_PLACES_KEY
       }`
+      return modifyTripDetails.photoURL
     }
     return undefined
   }
@@ -85,6 +82,7 @@ export default function useModifyTrip() {
       layout.push({ key: `day:${i}`, size: 3 })
     }
 
+    console.log(Math.max(1, dayDiff))
     //TODO: Copying layout from overlapping days
     trip.layout = layout
   }
@@ -99,40 +97,15 @@ export default function useModifyTrip() {
       updateErrorToast("Please login and try again later.")
       return
     }
-    updatePhotoURL().then((newURL) => {
-      if (newURL !== undefined) {
-        console.log(newURL)
-        setModifyTripDetails({
-          ...modifyTripDetails,
-          photoURL: newURL || "",
-        })
-      }
-    })
+    await updatePhotoURL()
 
     console.log("photo: " + modifyTripDetails.photoURL)
-    const options = createFetchRequestOptions(
-      JSON.stringify({
-        duration: {
-          start: modifyTripDetails.duration.start,
-          end: modifyTripDetails.duration.end,
-        },
-        destination: modifyTripDetails.destination,
-        photoURL: modifyTripDetails.photoURL,
-      }),
-      "PUT",
-    )
+    const options = createFetchRequestOptions(JSON.stringify(modifyTripDetails), "PUT")
     const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options)
 
-    await modifyTrip(
-      {
-        duration: modifyTripDetails.duration,
-        destination: modifyTripDetails.destination,
-        photoURL: modifyTripDetails.photoURL,
-      },
-      () => {
-        callback(response)
-      },
-    )
+    await modifyTrip(modifyTripDetails, () => {
+      callback(response)
+    })
     maybeModifyTripDetails()
   }
   return {
