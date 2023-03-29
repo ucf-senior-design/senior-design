@@ -21,7 +21,7 @@ export default function Content() {
         }}
       >
         {resizable.order.map((value, index) => (
-          <CreateItem index={index} value={value} />
+          <CreateItem key={index} index={index} value={value} />
         ))}
       </div>
     )

@@ -6,13 +6,12 @@ import { ResizableProvider } from "../../../utility/hooks/resizable"
 import Content from "../../../components/Dashboard/Content"
 import CreateEvent from "../../../components/Create/CreateEvent"
 import { BackdropModal } from "../../../components/BackdropModal"
-import { Add, ArrowBack } from "@mui/icons-material"
+import { Add } from "@mui/icons-material"
 import { Dropdown, Button as AButton } from "antd"
 import CreatePoll from "../../../components/Create/CreatePoll"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
 import { useScreen } from "../../../utility/hooks/screen"
-import { Button } from "@mui/material"
-import { FriendProvider } from "../../../utility/hooks/friends"
+import { TripHeader } from "../../../components/Dashboard/TripHeader"
 
 export default function Trip() {
   const { updateNav } = useScreen()
@@ -41,6 +40,7 @@ export default function Trip() {
   return (
     <ResizableProvider>
       <TripProvider>
+        <TripHeader />
         <Dropdown menu={{ items }} placement="topRight">
           <AButton style={$addButton}>
             <Add sx={{ color: "white" }} />
@@ -87,7 +87,8 @@ const $popUpDiv: React.CSSProperties = {
 const $addButton: React.CSSProperties = {
   height: "60px",
   width: "60px",
-  backgroundColor: "#3F3D56",
+  border: "none",
+  backgroundColor: "rgba(63, 61, 86, 1.0)",
   position: "fixed",
   bottom: "20px",
   left: "20px",

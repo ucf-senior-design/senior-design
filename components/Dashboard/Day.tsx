@@ -8,14 +8,11 @@ export default function Day({
   day,
   events,
   joinableEvents,
-  weatherIcon,
-  temperature,
 }: {
   day: Date
   events: Array<EventType>
   joinableEvents: Array<EventType>
-  weatherIcon: React.ReactNode
-  temperature: number
+
 }) {
   return (
     <Box sx={{ padding: "10px" }}>
@@ -32,8 +29,7 @@ export default function Day({
         <Typography sx={{ fontWeight: 900, fontSize: "40px" }}>
           {day.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
         </Typography>
-        {weatherIcon}
-        <Typography sx={{ fontWeight: 700, fontSize: "24px" }}>{temperature}</Typography>
+     
       </Box>
 
       {/* List of events this user has joined in chronological order */}

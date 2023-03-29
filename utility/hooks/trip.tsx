@@ -1,5 +1,5 @@
 import { ArrowBack } from "@mui/icons-material"
-import { Backdrop, Button, CircularProgress } from "@mui/material"
+import { Backdrop, CircularProgress} from "@mui/material"
 import { useRouter } from "next/router"
 import queryString from "query-string"
 import React from "react"
@@ -123,23 +123,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       const { id } = queryString.parse(window.location.search)
       setId(id as string)
     }
-
-    updateNav(
-      {
-        background:
-          "linear-gradient(95.55deg, rgba(211, 124, 82, 0.9) -2.09%, rgba(102, 145, 214, 0.9) 33.78%, rgba(75, 98, 147, 0.9) 57.94%, rgba(63, 61, 86, 0.9) 82.17%)",
-      },
-      "transparent",
-      <div
-        style={{
-          height: "250px",
-        }}
-      >
-        <Button onClick={() => router.back()}>
-          <ArrowBack sx={{ color: "white" }} />
-        </Button>
-      </div>,
-    )
   }, [])
 
   React.useEffect(() => {
