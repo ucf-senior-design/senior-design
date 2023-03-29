@@ -1,10 +1,8 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, Button, CircularProgress } from "@mui/material"
-import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import queryString from "query-string"
 import React from "react"
-import { useLocalStorage } from "react-use-storage"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
 import { User } from "../types/user"
@@ -87,6 +85,7 @@ export function useTrip(): TripContext {
 
 export function TripProvider({ children }: { children: React.ReactNode }) {
   const [id, setId] = React.useState<string>()
+  const [height, setHeight] = React.useState(0)
   const [showOverlay, setShowOverlay] = React.useState(true)
   const router = useRouter()
 
@@ -118,18 +117,24 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       storeLayout()
     }
   }, [resizable])
+
   React.useEffect(() => {
     if (window !== undefined && window.location !== undefined) {
       const { id } = queryString.parse(window.location.search)
       setId(id as string)
     }
+
     updateNav(
       {
-        background: "url('/header.svg') 100% 100%",
-        backgroundRepeat: "no-repeat",
+        background:
+          "linear-gradient(95.55deg, rgba(211, 124, 82, 0.9) -2.09%, rgba(102, 145, 214, 0.9) 33.78%, rgba(75, 98, 147, 0.9) 57.94%, rgba(63, 61, 86, 0.9) 82.17%)",
       },
       "transparent",
-      <div style={{ height: "250px" }}>
+      <div
+        style={{
+          height: "250px",
+        }}
+      >
         <Button onClick={() => router.back()}>
           <ArrowBack sx={{ color: "white" }} />
         </Button>
