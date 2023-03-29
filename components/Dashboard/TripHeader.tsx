@@ -9,7 +9,6 @@ import { useScreen } from "../../utility/hooks/screen"
 import { useRouter } from "next/router"
 import { ArrowBack } from "@mui/icons-material"
 
-
 export function TripHeader() {
   const router = useRouter()
   const { trip } = useTrip()
@@ -29,13 +28,31 @@ export function TripHeader() {
         <Button onClick={() => router.back()}>
           <ArrowBack sx={{ color: "white" }} />
         </Button>
-        <div style={{ padding: 20 }}>
+        <div
+          style={{
+            padding: 20,
+            flexDirection: "column",
+            display: "flex",
+
+            alignContent: "center",
+            justifyContent: "center",
+            bottom: 0,
+          }}
+        >
           <Typography sx={{ fontSize: "40px", fontWeight: "bold", color: "white" }}>
             {trip.destination}
           </Typography>
-          {Array.from(trip.attendees).map((attendee) => {
-            return <Avatar key={attendee} name={trip.userData?.get(attendee)?.name ?? "name"} />
-          })}
+          <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+            {Array.from(trip.attendees).map((attendee) => {
+              return (
+                <Avatar
+                  key={attendee}
+                  name={trip.userData?.get(attendee)?.name ?? "name"}
+                  size={50}
+                />
+              )
+            })}
+          </div>
         </div>
       </div>,
     )

@@ -1,5 +1,5 @@
 import { ArrowBack } from "@mui/icons-material"
-import { Backdrop, CircularProgress} from "@mui/material"
+import { Backdrop, CircularProgress } from "@mui/material"
 import { useRouter } from "next/router"
 import queryString from "query-string"
 import React from "react"

@@ -12,7 +12,6 @@ export default function Day({
   day: Date
   events: Array<EventType>
   joinableEvents: Array<EventType>
-
 }) {
   return (
     <Box sx={{ padding: "10px" }}>
@@ -29,7 +28,6 @@ export default function Day({
         <Typography sx={{ fontWeight: 900, fontSize: "40px" }}>
           {day.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
         </Typography>
-     
       </Box>
 
       {/* List of events this user has joined in chronological order */}
