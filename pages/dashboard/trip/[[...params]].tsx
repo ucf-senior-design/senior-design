@@ -1,18 +1,18 @@
+import { Add } from "@mui/icons-material"
+import type { MenuProps } from "antd"
+import { Button as AButton, Dropdown } from "antd"
 import { useRouter } from "next/router"
 import React from "react"
-import type { MenuProps } from "antd"
-import { TripProvider } from "../../../utility/hooks/trip"
-import { ResizableProvider } from "../../../utility/hooks/resizable"
-import Content from "../../../components/Dashboard/Content"
-import CreateEvent from "../../../components/Create/CreateEvent"
 import { BackdropModal } from "../../../components/BackdropModal"
-import { Add, ArrowBack } from "@mui/icons-material"
-import { Dropdown, Button as AButton } from "antd"
+import CreateEvent from "../../../components/Create/CreateEvent"
 import CreatePoll from "../../../components/Create/CreatePoll"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
-import { useScreen } from "../../../utility/hooks/screen"
-import { Button } from "@mui/material"
+import CreateWeather from "../../../components/Create/CreateWeather"
+import Content from "../../../components/Dashboard/Content"
 import { FriendProvider } from "../../../utility/hooks/friends"
+import { ResizableProvider } from "../../../utility/hooks/resizable"
+import { useScreen } from "../../../utility/hooks/screen"
+import { TripProvider } from "../../../utility/hooks/trip"
 
 export default function Trip() {
   const { updateNav } = useScreen()
@@ -21,6 +21,7 @@ export default function Trip() {
   const [showCreateEvent, setShowCreateEvent] = React.useState(false)
   const [showCreatePoll, setShowCreatePoll] = React.useState(false)
   const [showCreateSuggestion, setShowCreateSuggestion] = React.useState(false)
+  const [showCreateWeather, setShowCreateWeather] = React.useState(false)
 
   // For each create popup add an item to the menu
   const items: MenuProps["items"] = [
@@ -35,6 +36,10 @@ export default function Trip() {
     {
       key: "3",
       label: <a onClick={() => setShowCreateSuggestion(true)}> Create Suggestion </a>,
+    },
+    {
+      key: "4",
+      label: <a onClick={() => setShowCreateWeather(true)}> Show Weather </a>,
     },
   ]
 
@@ -76,6 +81,16 @@ export default function Trip() {
               <CreateSuggestion closeModal={() => setShowCreateSuggestion(false)} />
             </BackdropModal>
           </div>
+
+          <div style={$popUpDiv}>
+            <BackdropModal
+              isOpen={showCreateWeather}
+              toggleShow={() => setShowCreateWeather(!showCreateWeather)}
+            >
+              <CreateWeather closeModal={() => setShowCreateWeather(false)} />
+            </BackdropModal>
+          </div>
+
           <Content />
         </FriendProvider>
       </TripProvider>

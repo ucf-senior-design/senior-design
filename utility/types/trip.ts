@@ -11,7 +11,7 @@ export type StoredLocation = {
   size: number
 }
 
-export type WidgetType = "suggestion" | "day" | "poll"
+export type WidgetType = "suggestion" | "day" | "poll" | "weather"
 
 export interface Widget {
   key: string
@@ -54,7 +54,8 @@ export type Duration = {
 
 // TODO: Determine what is necessary
 export type Weather = {
-  zipCode: string
+  owner: string
+  city: string
 }
 
 export interface CreatedEvent {

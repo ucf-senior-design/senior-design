@@ -1,6 +1,6 @@
 # how to create a widget
 
-*note: "< nameOfWidget > ", " < NameOfWidget >"  are placeholders not types!!*
+_note: "< nameOfWidget > ", " < NameOfWidget >" are placeholders not types!!_
 
 ## create the UI
 
@@ -9,13 +9,13 @@
 go to utillity/types/ts and create a type for the widget. This should look something like this
 
 ```tsx
-// utility/types/ts 
+// utility/types/ts
 
 type <NameOfWidget>Widget = {
 	owner: string // required field, for the widget header should be the owner's uid
 	// all the values here are things you need in your widget.
 	// I suggest that you are concious of how you may need to access these values later
-	// for example a lot of times it may be easier to use a map or a set instead of 
+	// for example a lot of times it may be easier to use a map or a set instead of
 	// an array to make updates easier in the hook
 }
 ```
@@ -24,7 +24,7 @@ type <NameOfWidget>Widget = {
 
 working on the UI first is easiest, because you can see if you need to make any changes to your type before creating the hook! You can create your widget in Dashboard/Widgets/<NameOfWidget>.tsx
 
-Also, be sure to use temporary data here of the type of your widget. You can return this component temporarily in trip/[[…params]].tsx.So you can see the UI while working on it. 
+Also, be sure to use temporary data here of the type of your widget. You can return this component temporarily in trip/[[…params]].tsx.So you can see the UI while working on it.
 
 ```tsx
 // components/Dashboard/Widgets/<widgetName>.tsx
@@ -50,7 +50,7 @@ export default function Trip(){
 }
 ```
 
-now that you are done with this make a **pull request** and work on getting it merged in! and make a **new branch to continue** working on the hook for it. 
+now that you are done with this make a **pull request** and work on getting it merged in! and make a **new branch to continue** working on the hook for it.
 
 Also, I suggest looking at how the suggestions or polls are being done here if you get stuck.
 
@@ -69,16 +69,16 @@ export default function use<WidgetName>({<nameOfWidget>: <NameOfWidget>Widget })
 		// whether it is seen or not here
 	}
 
-	// For each value in the widget ( besides the owner ) 
+	// For each value in the widget ( besides the owner )
 	// I suggest you create a function for updating that value
 	// for example if you had a value called title.
-	
+
 	function updateTitle(string:title) {
 		set<NameOfWidget>(
 	}
 
 	// Once you have all of your functions return the values and all of your functions
-	
+
 	return {
 		<nameOfWidget>,
 		updateTitle,
@@ -91,18 +91,18 @@ export default function use<WidgetName>({<nameOfWidget>: <NameOfWidget>Widget })
 
 [senior-design/trip.tsx at main · ucf-senior-design/senior-design](https://github.com/ucf-senior-design/senior-design/blob/main/utility/hooks/trip.tsx)
 
-- [ ]  add a type for storing the widget data in the tripUseState
-- [ ]  add a default value for storing the widget in the trip value
-- [ ]  create a function for a fetch method to read the data from the database
-- [ ]  read in the data in initlizeTrip()
-- [ ]  add map for the widgets in the TripUseState
+- [ ] add a type for storing the widget data in the tripUseState
+- [ ] add a default value for storing the widget in the trip value
+- [ ] create a function for a fetch method to read the data from the database
+- [ ] read in the data in initlizeTrip()
+- [ ] add map for the widgets in the TripUseState
 
 ```tsx
 // utility/hooks/trip.tsx
 
 // add a value for the value to stored in the existing TripUseState
 interface TripUseState extends Trip {
-	// ... extending usse state 
+	// ... extending usse state
 	<nameOfWidget> : Map<string, <NameOfWidget>>
 }
 
@@ -112,9 +112,9 @@ const [trip, setTrip] = React.useState<TripUseState>({
 	<nameOfWidget> : new Map<string, <NameOfWidget>>
 })
 
-// create a function to read the data from the database 
+// create a function to read the data from the database
 function get<nameOfWidget>Data(){
-	
+
 }
 
 // set the data in the existing initilizeTrip function
@@ -135,8 +135,8 @@ async function initializeTrip(){
 
 ### step 5: allow your widget to be rendered
 
-- [ ]  add nameOfWidget to widgetType in utillity/types/trip.ts
-    - [ ]  Allow the widget UI to be created in the widget hook in utillity/hooks/widget.ts
+- [ ] add nameOfWidget to widgetType in utillity/types/trip.ts
+  - [ ] Allow the widget UI to be created in the widget hook in utillity/hooks/widget.ts
 
 ```tsx
 // utillity/hooks/widget.tsx

@@ -1,13 +1,10 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, Button, CircularProgress } from "@mui/material"
-import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import queryString from "query-string"
 import React from "react"
-import { useLocalStorage } from "react-use-storage"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
-import { User } from "../types/user"
 import { Response } from "../types/helper"
 import {
   CreatedEvent,
@@ -20,6 +17,7 @@ import {
   Trip,
   WidgetType,
 } from "../types/trip"
+import { User } from "../types/user"
 import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
 import { useScreen } from "./screen"
@@ -66,7 +64,7 @@ interface TripContext {
   deletePoll: (uid: string) => Promise<void>
 
   // handle weather widgetcreateP
-  createWeather: () => Promise<void>
+  createWeather: (callback: (response: Response) => void) => void
   deleteWeather: (uid: string) => Promise<void>
 
   // handle events
@@ -503,7 +501,14 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   async function deletePoll(uid: string) {}
 
   // TODO: Allow a user to create a weather widget for the trip.
-  async function createWeather() {}
+  function createWeather(callback: (response: Response) => void) {
+    if (user === undefined) {
+      callback({ isSuccess: false, errorMessage: "login and try again later." })
+      return
+    }
+    addNewWidget("weather", user.uid)
+    callback({ isSuccess: true })
+  }
 
   // TODO: Allow a user to delete a weather widget for the trip.
   async function deleteWeather(uid: string) {}
