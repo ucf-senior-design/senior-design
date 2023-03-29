@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { StoredLocation, Trip } from "../../types/trip"
@@ -57,10 +58,9 @@ export default function useModifyTrip() {
       method: "GET",
     })
     if (response.ok) {
-      modifyTripDetails.photoURL = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1400&photoreference=${await response.text()}&key=${
+      return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1400&photoreference=${await response.text()}&key=${
         process.env.NEXT_PUBLIC_PLACES_KEY
       }`
-      return modifyTripDetails.photoURL
     }
     return undefined
   }
@@ -92,6 +92,54 @@ export default function useModifyTrip() {
     //TODO: Copying layout from overlapping days
   }
 
+  function updateLayout() {
+    let oldIndexToDay = new Map<number, string>()
+    let newDayToIndex = new Map<string, number>()
+
+    let oldTripStart = dayjs(trip.duration.start)
+    let oldTripEnd = dayjs(trip.duration.end)
+
+    let newTripStart = dayjs(modifyTripDetails.duration.start)
+    let newTripEnd = dayjs(modifyTripDetails.duration.end)
+
+    for (let i = 0; i < oldTripEnd.diff(oldTripStart, "day"); i++) {
+      oldIndexToDay.set(i, oldTripStart.add(i, "day").toDate().toDateString())
+    }
+
+    for (let i = 0; i < newTripEnd.diff(newTripStart, "day"); i++) {
+      newDayToIndex.set(newTripStart.add(i, "day").toDate().toDateString(), i)
+    }
+
+    let layout: Array<StoredLocation> = []
+
+    trip.layout.forEach((item) => {
+      if (item.key.startsWith("day:")) {
+        let splitKey = item.key.split(":")
+        let oldIndex = parseInt(splitKey[1])
+
+        let oldDay = oldIndexToDay.get(oldIndex) as string
+        let newDay = newDayToIndex.get(oldDay)
+
+        if (newDay !== undefined)
+          layout.push({
+            key: `day:${newDay}`,
+            size: item.size,
+          })
+        newDayToIndex.delete(oldDay)
+      } else {
+        layout.push(item)
+      }
+    })
+
+    newDayToIndex.forEach((day, _) => {
+      layout.push({
+        key: `day:${day}`,
+        size: 2,
+      })
+    })
+
+    return layout
+  }
   async function modify(callback: () => void) {
     if (modifyTripDetails.destination.length === 0 || modifyTripDetails.placeID.length === 0) {
       updateErrorToast("please select a destination.")
@@ -102,13 +150,24 @@ export default function useModifyTrip() {
       updateErrorToast("Please login and try again later.")
       return
     }
-    await updatePhotoURL()
 
-    console.log("layout: " + modifyTripDetails.layout)
-    // maybeModifyTripDetails()
-    await modifyTrip(modifyTripDetails, () => {
-      callback()
-    })
+    let photoURL = await updatePhotoURL()
+    if (photoURL === undefined) {
+      updateErrorToast("Please try again later.")
+      return
+    }
+
+    await modifyTrip(
+      {
+        duration: modifyTripDetails.duration,
+        destination: modifyTripDetails.destination,
+        photoURL: photoURL,
+        layout: updateLayout(),
+      },
+      () => {
+        callback()
+      },
+    )
   }
   return {
     modify,
@@ -116,5 +175,6 @@ export default function useModifyTrip() {
     maybeModifyTripDetails,
     updateDuration,
     updateDestination,
+    modifyTripDetails,
   }
 }

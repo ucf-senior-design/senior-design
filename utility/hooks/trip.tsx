@@ -1,5 +1,6 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, Button, CircularProgress } from "@mui/material"
+import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import queryString from "query-string"
 import React from "react"
@@ -149,7 +150,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
           trip.joinableEvents,
         ),
       })
-  }, [trip.joinableEvents, trip.itinerary])
+  }, [trip.joinableEvents, trip.itinerary, trip.duration])
 
   React.useEffect(() => {
     if (!trip.didReadLayout && trip.uid.length >= 0) {
@@ -178,31 +179,28 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     let iIndex = 0
     let jIndex = 0
 
-    for (let day = start.getTime(); day <= end.getTime(); day += dayMilli) {
+    let day = dayjs(start)
+    while (!dayjs(end).add(1, "day").isSame(day, "day")) {
       days.push({
-        date: new Date(day),
+        date: day.toDate(),
         itinerary: [],
         joinable: [],
       })
       if (iIndex < itinerary.length) {
-        if (
-          itinerary[iIndex][0].duration.start.getDay() === new Date(day).getDay() &&
-          itinerary[iIndex][0].duration.start.getMonth() === new Date(day).getMonth()
-        ) {
+        if (dayjs(itinerary[iIndex][0].duration.start).isSame(day, "day")) {
           days[days.length - 1].itinerary = itinerary[iIndex]
           iIndex += 1
         }
       }
 
       if (jIndex < joinableEvents.length) {
-        if (
-          joinableEvents[jIndex][0].duration.start.getDay() === new Date(day).getDay() &&
-          joinableEvents[jIndex][0].duration.start.getMonth() === new Date(day).getMonth()
-        ) {
+        if (dayjs(itinerary[jIndex][0].duration.start).isSame(day, "day")) {
           days[days.length - 1].joinable = joinableEvents[jIndex]
           jIndex += 1
         }
       }
+
+      day = day.add(1, "day")
     }
 
     return days
@@ -590,43 +588,22 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     console.log(await response.text())
   }
 
-  // React.useEffect(() => {
-  //   const timeDiff = trip.duration.end.getTime() - trip.duration.start.getTime() //get the difference in milliseconds
-  //   const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) //convert milliseconds to days
-  //   let layout: Array<StoredLocation> = []
-
-  //   let startDiff = Math.floor(
-  //     (trip.duration.start.getTime() - trip.duration.start.getTime()) / (1000 * 60 * 60 * 24),
-  //   ) // If Positive, moved earlier
-  //   let oldLayout = trip.layout
-  //   // adds all days to the layout
-  //   for (let i = 0; i < Math.max(1, dayDiff); i++) {
-  //     layout.push({ key: `day:${i + 1}`, size: 3 })
-  //   }
-  //   console.log(oldLayout)
-  //   console.log(layout)
-  //   setTrip({
-  //     ...trip,
-  //     layout: layout,
-  //   })
-  // }, [trip.duration])
-
+  console.log(trip)
   async function modifyTrip(details: TripDetails, callback: () => void) {
     const options = createFetchRequestOptions(JSON.stringify(details), "PUT")
     const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options)
     const responseLayout = await fetch(`${API_URL}/trip/${trip.uid}/layout`, options)
 
     if (response.ok && responseLayout.ok) {
+      readLayout(details.layout)
       setTrip({
         ...trip,
         destination: details.destination,
         duration: details.duration,
         photoURL: details.photoURL,
-        // layout: details.layout,
+        layout: details.layout,
       })
-      // modifyTripLocal()
-      console.log(responseLayout)
-      console.log("before call back: " + trip.layout)
+
       callback()
     }
   }

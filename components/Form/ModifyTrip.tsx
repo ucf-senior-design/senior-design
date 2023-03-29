@@ -9,7 +9,8 @@ import PlacesSearch from "./PlacesSearch"
 
 export default function ModifyTrip({ closeModal }: { closeModal: () => void }) {
   const { trip } = useTrip()
-  const { modifyTrip, updateDuration, updateDestination, modify } = useModifyTrip()
+  const { modifyTrip, updateDuration, updateDestination, modify, modifyTripDetails } =
+    useModifyTrip()
 
   return (
     <Box
@@ -35,7 +36,7 @@ export default function ModifyTrip({ closeModal }: { closeModal: () => void }) {
           destination
         </Typography>
         <PlacesSearch
-          place={trip.destination}
+          place={modifyTripDetails.destination}
           types={["(cities)"]}
           setPlace={(placeID, place) => updateDestination(placeID, place)}
         />
@@ -43,8 +44,8 @@ export default function ModifyTrip({ closeModal }: { closeModal: () => void }) {
           duration
         </Typography>
         <DateRange
-          startDate={trip.duration.start}
-          endDate={trip.duration.end}
+          startDate={modifyTripDetails.duration.start}
+          endDate={modifyTripDetails.duration.end}
           updateDates={(startDate, endDate) => updateDuration(startDate, endDate)}
         />
         <Button
