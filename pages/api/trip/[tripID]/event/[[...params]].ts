@@ -104,11 +104,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         firebaseAuth.currentUser === null ||
         params === undefined ||
         params.length !== 2 ||
-        (!params[0] && params[0] !== "join" && params[0] !== "leave" && params[0] !== "info")
+        (!params[0] &&
+          params[0] !== "join" &&
+          params[0] !== "leave" &&
+          params[0] !== "info" &&
+          params[0] !== "reschedule")
       ) {
         res.status(400).send("Invalid Params")
       } else {
-        const purpose = params[0] // join | leave | info
+        const purpose = params[0] // join | leave | info | reschedule
         const eventId = params[1]
 
         // Prevent updating attendees by using the /api/trip/{tripID}/update/{eventID} endpoint. Must use .../leave/{eventID} or .../join/{eventID} to do this.
@@ -135,6 +139,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 ),
               }
             }
+            // Given the new start and end date in the request body
+            case "reschedule": {
+              return { duration: { start: req.body.duration.start, end: req.body.duration.end } }
+            }
             // Sets the request to update information about the event.
             case "info": {
               return req.body
@@ -152,6 +160,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(200).send({})
           })
           .catch((e) => {
+            console.log(e)
             res.status(400).send("Could not modify event.")
           })
       }

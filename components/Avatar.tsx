@@ -1,4 +1,5 @@
 import { Avatar as MuiAvatar } from "@mui/material"
+import { useTrip } from "../utility/hooks/trip"
 export default function Avatar({
   name,
   image,
@@ -8,6 +9,7 @@ export default function Avatar({
   image?: string
   size?: number
 }) {
+  const { trip } = useTrip()
   function stringToColor(string: string) {
     let hash = 0
     let i

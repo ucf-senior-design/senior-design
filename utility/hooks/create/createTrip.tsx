@@ -34,14 +34,30 @@ export default function useCreateTrip() {
     layout: [],
   })
 
-  const { friendList } = useFriend()
   const { user } = useAuth()
   const router = useRouter()
   const { updateErrorToast } = useScreen()
+  const { friendList, addFriendOptions } = useFriend()
 
-  // React.useEffect(() => {
-  //   createAttendeeOptions()
-  // }, [friendList])
+  React.useEffect(() => {
+    let friends = addFriendOptions()
+    let updatedOptions = Array.from(createTrip.attendeeOptions)
+
+    createTrip.attendeeOptions.forEach((option) => {
+      if (friends.has(option.uid)) {
+        friends.delete(option.uid)
+      }
+    })
+
+    friends.forEach((friend) => {
+      updatedOptions.push(friend)
+    })
+
+    setCreateTrip({
+      ...createTrip,
+      attendeeOptions: updatedOptions,
+    })
+  }, [friendList])
 
   function updateDestination(placeID: string, city: string) {
     setCreateTrip({
@@ -78,6 +94,9 @@ export default function useCreateTrip() {
   }
 
   function updateDuration(startDate: Date, endDate: Date) {
+    startDate.setHours(0, 0, 0, 0)
+    endDate.setHours(0, 0, 0, 0)
+
     setCreateTrip({
       ...createTrip,
       duration: {
@@ -85,22 +104,6 @@ export default function useCreateTrip() {
         end: new Date(endDate),
       },
     })
-  }
-
-  function createAttendeeOptions() {
-    let options: Array<AttendeeOption> = []
-
-    if (friendList !== undefined) {
-      friendList.forEach((friendship) => {
-        options.push({
-          name: friendship.friend.name ?? "no name",
-          uid: user?.uid === friendship.pairing[0] ? friendship.pairing[1] : friendship.pairing[0],
-          type: "person",
-        })
-      })
-    }
-
-    setCreateTrip({ ...createTrip, attendeeOptions: options })
   }
 
   async function getPhotoURL() {
@@ -156,7 +159,7 @@ export default function useCreateTrip() {
           start: createTrip.duration.start,
           end: createTrip.duration.end,
         },
-        photoURL: "",
+        photoURL: photoURL,
         destination: createTrip.destination,
         attendees: attendees,
         layout: layout,
