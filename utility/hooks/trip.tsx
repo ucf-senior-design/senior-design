@@ -66,7 +66,7 @@ interface TripContext {
   deletePoll: (uid: string) => Promise<void>
 
   // handle weather widgetcreateP
-  createWeather: () => Promise<void>
+  createWeather: (callback: (response: Response) => void) => void
   deleteWeather: (uid: string) => Promise<void>
 
   // handle events
@@ -523,7 +523,14 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   async function deletePoll(uid: string) {}
 
   // TODO: Allow a user to create a weather widget for the trip.
-  async function createWeather() {}
+  function createWeather(callback: (response: Response) => void) {
+    if (user === undefined) {
+      callback({ isSuccess: false, errorMessage: "login and try again later." })
+      return
+    }
+    addNewWidget("weather", user.uid)
+    callback({ isSuccess: true })
+  }
 
   // TODO: Allow a user to delete a weather widget for the trip.
   async function deleteWeather(uid: string) {}

@@ -7,6 +7,7 @@ import { BackdropModal } from "../../../components/BackdropModal"
 import CreateEvent from "../../../components/Create/CreateEvent"
 import CreatePoll from "../../../components/Create/CreatePoll"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
+import CreateWeather from "../../../components/Create/CreateWeather"
 import Content from "../../../components/Dashboard/Content"
 import ModifyTrip from "../../../components/Form/ModifyTrip"
 import { FriendProvider } from "../../../utility/hooks/friends"
@@ -22,6 +23,7 @@ export default function Trip() {
   const [showCreatePoll, setShowCreatePoll] = React.useState(false)
   const [showCreateSuggestion, setShowCreateSuggestion] = React.useState(false)
   const [showModifyTrip, setShowModifyTrip] = React.useState(false)
+  const [showCreateWeather, setShowCreateWeather] = React.useState(false)
 
   // For each create popup add an item to the menu
   const items: MenuProps["items"] = [
@@ -40,6 +42,10 @@ export default function Trip() {
     {
       key: "4",
       label: <a onClick={() => setShowModifyTrip(true)}> Modify Trip </a>,
+    },
+    {
+      key: "5",
+      label: <a onClick={() => setShowCreateWeather(true)}> Show Weather </a>,
     },
   ]
 
@@ -95,6 +101,16 @@ export default function Trip() {
               <CreateSuggestion closeModal={() => setShowCreateSuggestion(false)} />
             </BackdropModal>
           </div>
+
+          <div style={$popUpDiv}>
+            <BackdropModal
+              isOpen={showCreateWeather}
+              toggleShow={() => setShowCreateWeather(!showCreateWeather)}
+            >
+              <CreateWeather closeModal={() => setShowCreateWeather(false)} />
+            </BackdropModal>
+          </div>
+
           <Content />
         </FriendProvider>
       </TripProvider>
