@@ -4,10 +4,10 @@ import { useAuth } from "../authentication"
 import { useScreen } from "../screen"
 import { useTrip } from "../trip"
 
-export default function useModifyEvent(trip: Trip, originalEvent: Event) {
+export default function useModifyEvent(originalEvent: Event) {
   const { updateErrorToast } = useScreen()
   const { user } = useAuth()
-  const { modifyEvent } = useTrip()
+  const { modifyEvent, trip } = useTrip()
 
   const [event, setEvent] = React.useState<Event>(originalEvent)
 
