@@ -17,7 +17,7 @@ export interface AttendeeOption {
   uid: string
 }
 export default function useModifyTrip() {
-  const { trip, modifyTrip, removeExtraDays } = useTrip()
+  const { trip, modifyTrip } = useTrip()
   const [modifyTripDetails, setModifyTripDetails] = useState<TModifyTripDetails>({
     destination: trip.destination,
     placeID: "",

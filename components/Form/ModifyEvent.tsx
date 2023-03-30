@@ -2,7 +2,6 @@ import { Box, Button, TextField, Typography } from "@mui/material"
 import React from "react"
 import theme from "../../styles/theme/Theme"
 import useModifyEvent from "../../utility/hooks/modify/modifyEvent"
-import { useTrip } from "../../utility/hooks/trip"
 import { Event as EventType } from "../../utility/types/trip"
 import DateRange from "./DateRange"
 import PlacesSearch from "./PlacesSearch"
@@ -14,14 +13,13 @@ export default function ModifyEvent({
   closeModal: () => void
   event: EventType
 }) {
-  const { trip } = useTrip()
-  const { updateDuration, updateLocation, updateDescription, updateTitle, modify } = useModifyEvent(
-    trip,
-    event,
-  )
+  const { updateDuration, updateLocation, updateDescription, updateTitle, modify, modifiedEvent } =
+    useModifyEvent(event)
 
   const [title, setTitle] = React.useState(event.title)
   const [description, setDescription] = React.useState(event.description)
+  const [startTime, setStartTime] = React.useState(event.duration.start)
+  const [endTime, setEndTime] = React.useState(event.duration.end)
   return (
     <Box
       sx={{
@@ -80,8 +78,8 @@ export default function ModifyEvent({
           duration
         </Typography>
         <DateRange
-          startDate={event.duration.start}
-          endDate={event.duration.end}
+          startDate={modifiedEvent.duration.start}
+          endDate={modifiedEvent.duration.end}
           updateDates={(startDate, endDate) => updateDuration(startDate, endDate)}
           showTime
         />

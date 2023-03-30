@@ -51,7 +51,6 @@ interface TripDetails {
 interface TripContext {
   trip: TripUseState
   initilizeTrip: () => Promise<void>
-  removeExtraDays: () => void
 
   // handle suggestions
   createSuggestion: (
@@ -161,8 +160,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }
   }, [trip])
 
-  //
-  function removeExtraDays() {}
   function addNewWidget(type: WidgetType, uid: string) {
     const key = createKey(type, uid)
     addItem(key)
@@ -573,6 +570,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
         itinerary: Array.from(replaceEventInList(trip.itinerary, modifiedEvent)),
       })
+      initilizeTrip()
     }
     callback(response.ok)
   }
@@ -588,7 +586,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     console.log(await response.text())
   }
 
-  console.log(trip)
   async function modifyTrip(details: TripDetails, callback: () => void) {
     const options = createFetchRequestOptions(JSON.stringify(details), "PUT")
     const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options)
@@ -627,7 +624,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         createEvent,
         modifyTrip,
         modifyEvent,
-        removeExtraDays,
       }}
     >
       {(id === undefined || resizable.order.length === 0) && (

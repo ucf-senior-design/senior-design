@@ -1,5 +1,5 @@
 import React from "react"
-import { Event, Trip } from "../../types/trip"
+import { Event, Event as EventType } from "../../types/trip"
 import { useAuth } from "../authentication"
 import { useScreen } from "../screen"
 import { useTrip } from "../trip"
@@ -7,26 +7,26 @@ import { useTrip } from "../trip"
 export default function useModifyEvent(originalEvent: Event) {
   const { updateErrorToast } = useScreen()
   const { user } = useAuth()
-  const { modifyEvent, trip } = useTrip()
+  const { modifyEvent } = useTrip()
 
-  const [event, setEvent] = React.useState<Event>(originalEvent)
+  const [modifiedEvent, setModifiedEvent] = React.useState<EventType>(originalEvent)
 
   function updateLocation(location: string) {
-    setEvent({
-      ...event,
+    setModifiedEvent({
+      ...modifiedEvent,
       location: location,
     })
   }
 
   function updateTitle(title: string) {
-    setEvent({
-      ...event,
+    setModifiedEvent({
+      ...modifiedEvent,
       title: title,
     })
   }
   function updateDuration(startDate: Date, endDate: Date) {
-    setEvent({
-      ...event,
+    setModifiedEvent({
+      ...modifiedEvent,
       duration: {
         start: new Date(startDate),
         end: new Date(endDate),
@@ -35,8 +35,8 @@ export default function useModifyEvent(originalEvent: Event) {
   }
 
   function updateDescription(description: string) {
-    setEvent({
-      ...event,
+    setModifiedEvent({
+      ...modifiedEvent,
       description: description,
     })
   }
@@ -47,13 +47,13 @@ export default function useModifyEvent(originalEvent: Event) {
       return
     }
 
-    if (event.title === undefined) {
+    if (modifiedEvent.title === undefined) {
       updateErrorToast("Please enter a title.")
     }
-    if (event.duration === undefined) {
+    if (modifiedEvent.duration === undefined) {
       updateErrorToast("Please select a duration.")
     }
-    if (event.location === undefined) {
+    if (modifiedEvent.location === undefined) {
       updateErrorToast("Please enter a location.")
     }
 
@@ -63,11 +63,11 @@ export default function useModifyEvent(originalEvent: Event) {
     }
     await modifyEvent(
       {
-        title: event.title,
-        description: event.description,
-        duration: event.duration,
-        location: event.location,
-        uid: event.uid,
+        title: modifiedEvent.title,
+        description: modifiedEvent.description,
+        duration: modifiedEvent.duration,
+        location: modifiedEvent.location,
+        uid: modifiedEvent.uid,
       },
       (isSuccess) => {
         callback(isSuccess)
@@ -76,7 +76,7 @@ export default function useModifyEvent(originalEvent: Event) {
   }
 
   return {
-    event,
+    modifiedEvent,
     modify,
     updateTitle,
     updateDuration,
