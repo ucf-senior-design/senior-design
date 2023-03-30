@@ -26,13 +26,10 @@ import { useScreen } from "../../utility/hooks/screen"
 import LoggedOutDrawer from "./LoggedOutDrawer"
 import { NavBarButton } from "./NavButton"
 
-export default function NavBar({ path }: { path: string }) {
-  const landingTextColor = path === "/" ? "white" : ""
+export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boolean }) {
   const landingBackgroundColor = path === "/" ? "#5F9DF7" : "#3F3D56"
   const { user, doLogout } = useAuth()
   const { loading } = useScreen()
-  const { updateErrorToast } = useScreen()
-  const [username, setUsername] = React.useState("")
 
   const { handleListKeyDown, handleDrawerToggle, setOpen, anchorRef, open, mobileOpen } =
     useNavBar()
@@ -115,56 +112,60 @@ export default function NavBar({ path }: { path: string }) {
                 textAlign: "right",
               }}
             >
-              {user !== undefined && user?.didFinishRegister ? (
+              {loggedIn ? (
                 <>
                   {/* TODO: add correct pages once they have been created */}
                   <NavBarButton path="/dashboard" text="dashboard" variant="text" />
                   <NavBarButton path="/teams" text="teams" variant="text" />
                   <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-                    <Button
-                      ref={anchorRef}
-                      color="secondary"
-                      variant="outlined"
-                      aria-label={"user"}
-                      aria-controls={open ? "composition-menu" : undefined}
-                      aria-expanded={open ? "true" : undefined}
-                      area-haspopup="true"
-                    >
-                      <Person sx={{ color: "white" }} />
-                    </Button>
-                    <Popper
-                      open={open}
-                      anchorEl={anchorRef.current}
-                      role={undefined}
-                      placement="bottom-start"
-                      transition
-                      disablePortal
-                    >
-                      {({ TransitionProps, placement }) => (
-                        <Grow
-                          {...TransitionProps}
-                          style={{
-                            transformOrigin:
-                              placement === "bottom-start" ? "left top" : "left bottom",
-                          }}
+                    {anchorRef !== null && anchorRef !== undefined && (
+                      <>
+                        <Button
+                          ref={anchorRef}
+                          color="secondary"
+                          variant="outlined"
+                          aria-label={"user"}
+                          aria-controls={open ? "composition-menu" : undefined}
+                          aria-expanded={open ? "true" : undefined}
+                          area-haspopup="true"
                         >
-                          <Paper>
-                            <ClickAwayListener onClickAway={() => setOpen(false)}>
-                              <MenuList
-                                autoFocusItem={open}
-                                id="composition-menu"
-                                aria-labelledby="composition-button"
-                                onKeyDown={handleListKeyDown}
-                              >
-                                {/* TODO: Add logic for settings page*/}
-                                {/* <MenuItem onClick={handleMenuClose}>my account</MenuItem> */}
-                                <MenuItem onClick={(e) => handleLogout()}>logout</MenuItem>
-                              </MenuList>
-                            </ClickAwayListener>
-                          </Paper>
-                        </Grow>
-                      )}
-                    </Popper>
+                          <Person sx={{ color: "white" }} />
+                        </Button>
+                        <Popper
+                          open={open}
+                          anchorEl={anchorRef.current}
+                          role={undefined}
+                          placement="bottom-start"
+                          transition
+                          disablePortal
+                        >
+                          {({ TransitionProps, placement }) => (
+                            <Grow
+                              {...TransitionProps}
+                              style={{
+                                transformOrigin:
+                                  placement === "bottom-start" ? "left top" : "left bottom",
+                              }}
+                            >
+                              <Paper>
+                                <ClickAwayListener onClickAway={() => setOpen(false)}>
+                                  <MenuList
+                                    autoFocusItem={open}
+                                    id="composition-menu"
+                                    aria-labelledby="composition-button"
+                                    onKeyDown={handleListKeyDown}
+                                  >
+                                    {/* TODO: Add logic for settings page*/}
+                                    {/* <MenuItem onClick={handleMenuClose}>my account</MenuItem> */}
+                                    <MenuItem onClick={(e) => handleLogout()}>logout</MenuItem>
+                                  </MenuList>
+                                </ClickAwayListener>
+                              </Paper>
+                            </Grow>
+                          )}
+                        </Popper>
+                      </>
+                    )}
                   </div>
                 </>
               ) : (
