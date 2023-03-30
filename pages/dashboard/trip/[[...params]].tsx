@@ -1,7 +1,6 @@
 import { Add } from "@mui/icons-material"
 import type { MenuProps } from "antd"
 import { Button as AButton, Dropdown } from "antd"
-import { useRouter } from "next/router"
 import React from "react"
 import { BackdropModal } from "../../../components/BackdropModal"
 import CreateEvent from "../../../components/Create/CreateEvent"
@@ -9,6 +8,7 @@ import CreatePoll from "../../../components/Create/CreatePoll"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
 import CreateWeather from "../../../components/Create/CreateWeather"
 import Content from "../../../components/Dashboard/Content"
+import { TripHeader } from "../../../components/Dashboard/TripHeader"
 import ModifyTrip from "../../../components/Form/ModifyTrip"
 import { FriendProvider } from "../../../utility/hooks/friends"
 import { ResizableProvider } from "../../../utility/hooks/resizable"
@@ -16,8 +16,6 @@ import { useScreen } from "../../../utility/hooks/screen"
 import { TripProvider } from "../../../utility/hooks/trip"
 
 export default function Trip() {
-  const { updateNav } = useScreen()
-  const router = useRouter()
   // Handle showing the create popups for different wigets
   const [showCreateEvent, setShowCreateEvent] = React.useState(false)
   const [showCreatePoll, setShowCreatePoll] = React.useState(false)
@@ -53,6 +51,7 @@ export default function Trip() {
     <ResizableProvider>
       <TripProvider>
         <FriendProvider>
+          <TripHeader />
           <Dropdown menu={{ items }} placement="topRight">
             <AButton style={$addButton}>
               <Add sx={{ color: "white" }} />
@@ -126,7 +125,8 @@ const $popUpDiv: React.CSSProperties = {
 const $addButton: React.CSSProperties = {
   height: "60px",
   width: "60px",
-  backgroundColor: "#3F3D56",
+  border: "none",
+  backgroundColor: "rgba(63, 61, 86, 1.0)",
   position: "fixed",
   bottom: "20px",
   left: "20px",

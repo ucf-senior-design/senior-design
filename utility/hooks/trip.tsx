@@ -1,6 +1,5 @@
 import { ArrowBack } from "@mui/icons-material"
-import { Backdrop, Button, CircularProgress } from "@mui/material"
-import dayjs from "dayjs"
+import { Backdrop, CircularProgress } from "@mui/material"
 import { useRouter } from "next/router"
 import queryString from "query-string"
 import React from "react"
@@ -24,6 +23,7 @@ import { User } from "../types/user"
 import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
 import { useScreen } from "./screen"
+import dayjs from "dayjs"
 
 export type Day = {
   date: Date
@@ -91,6 +91,7 @@ export function useTrip(): TripContext {
 
 export function TripProvider({ children }: { children: React.ReactNode }) {
   const [id, setId] = React.useState<string>()
+  const [height, setHeight] = React.useState(0)
   const [showOverlay, setShowOverlay] = React.useState(true)
   const router = useRouter()
 
@@ -122,20 +123,12 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       storeLayout()
     }
   }, [resizable])
+
   React.useEffect(() => {
     if (window !== undefined && window.location !== undefined) {
       const { id } = queryString.parse(window.location.search)
       setId(id as string)
     }
-    updateNav(
-      { background: "url('/header.svg') 100% 100%" },
-      "transparent",
-      <div style={{ height: "250px" }}>
-        <Button onClick={() => router.back()}>
-          <ArrowBack sx={{ color: "white" }} />
-        </Button>
-      </div>,
-    )
   }, [])
 
   React.useEffect(() => {
@@ -170,7 +163,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     itinerary: Array<Array<Event>>,
     joinableEvents: Array<Array<Event>>,
   ) {
-    let dayMilli = 1000 * 3600 * 24
     let days: Array<Day> = []
 
     let iIndex = 0
@@ -191,7 +183,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (jIndex < joinableEvents.length) {
-        if (dayjs(itinerary[jIndex][0].duration.start).isSame(day, "day")) {
+        if (dayjs(joinableEvents[jIndex][0].duration.start).isSame(day, "day")) {
           days[days.length - 1].joinable = joinableEvents[jIndex]
           jIndex += 1
         }
