@@ -9,6 +9,7 @@ import CreatePoll from "../../../components/Create/CreatePoll"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
 import CreateWeather from "../../../components/Create/CreateWeather"
 import Content from "../../../components/Dashboard/Content"
+import ModifyTrip from "../../../components/Form/ModifyTrip"
 import { FriendProvider } from "../../../utility/hooks/friends"
 import { ResizableProvider } from "../../../utility/hooks/resizable"
 import { useScreen } from "../../../utility/hooks/screen"
@@ -21,6 +22,7 @@ export default function Trip() {
   const [showCreateEvent, setShowCreateEvent] = React.useState(false)
   const [showCreatePoll, setShowCreatePoll] = React.useState(false)
   const [showCreateSuggestion, setShowCreateSuggestion] = React.useState(false)
+  const [showModifyTrip, setShowModifyTrip] = React.useState(false)
   const [showCreateWeather, setShowCreateWeather] = React.useState(false)
 
   // For each create popup add an item to the menu
@@ -39,6 +41,10 @@ export default function Trip() {
     },
     {
       key: "4",
+      label: <a onClick={() => setShowModifyTrip(true)}> Modify Trip </a>,
+    },
+    {
+      key: "5",
       label: <a onClick={() => setShowCreateWeather(true)}> Show Weather </a>,
     },
   ]
@@ -52,6 +58,20 @@ export default function Trip() {
               <Add sx={{ color: "white" }} />
             </AButton>
           </Dropdown>
+          <Dropdown menu={{ items }} placement="topRight">
+            <AButton style={$addButton}>
+              <Add sx={{ color: "white" }} />
+            </AButton>
+          </Dropdown>
+
+          <div style={$popUpDiv}>
+            <BackdropModal
+              isOpen={showModifyTrip}
+              toggleShow={() => setShowModifyTrip(!showModifyTrip)}
+            >
+              <ModifyTrip closeModal={() => setShowModifyTrip(false)} />
+            </BackdropModal>
+          </div>
 
           <div style={$popUpDiv}>
             <BackdropModal
