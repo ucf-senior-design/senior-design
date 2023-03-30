@@ -1,8 +1,10 @@
 import { Button, Paper, Typography } from "@mui/material"
 import { Calendar, DatePicker } from "antd"
 import type { Dayjs } from "dayjs"
+import { useTrip } from "../../../utility/hooks/trip"
 
 export function CalendarWidget() {
+  const { trip } = useTrip()
   const { RangePicker } = DatePicker
 
   interface calInfo {
@@ -100,18 +102,17 @@ export function CalendarWidget() {
 
   return (
     <>
-      <Paper sx={{ padding: "20px", width: "100vw", maxWidth: "500px" }}>
-        <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center" }}>
+      <Paper sx={{ padding: "20px", width: "100vw", maxWidth: "500px", lineHeight: "2.5em" }}>
+        <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center", padding: "1" }}>
           Trip Date Selection
         </Typography>
-        <br />
         Current group availability:
         <Calendar dateCellRender={dateCellRender} monthCellRender={monthCellRender} />
-        <p>Input an availability window:</p>
+        Input an availability window:
+        <RangePicker />
         <p>
-          <RangePicker />
+          <Button variant="outlined">submit</Button>
         </p>
-        <Button variant="outlined">submit</Button>
       </Paper>
     </>
   )

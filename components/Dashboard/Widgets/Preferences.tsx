@@ -5,9 +5,17 @@ import SportsTennisIcon from "@mui/icons-material/SportsTennis"
 import { Box, Button, Chip, Paper, Typography } from "@mui/material"
 
 export const PreferencesWidget = () => {
+  const votes_cost = [2, 5, 1, 2]
+  const votes_act = [4, 5, 1]
+
+  const sum_cost = votes_cost.reduce((a, b) => a + b)
+  const sum_act = votes_act.reduce((a, b) => a + b)
   return (
     <>
       <Paper sx={{ padding: "20px", width: "80vw", maxWidth: "300px" }}>
+        <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center", padding: "1" }}>
+          preferences Selection
+        </Typography>
         <p>Select all acceptable cost preferences from the below list:</p>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <Chip
@@ -15,7 +23,7 @@ export const PreferencesWidget = () => {
             icon={<AttachMoneyIcon />}
             label={
               <Typography padding={1} fontSize={14}>
-                very high
+                very high - {(votes_cost[0] / sum_cost) * 100}%
               </Typography>
             }
             size="medium"
@@ -26,7 +34,7 @@ export const PreferencesWidget = () => {
             icon={<AttachMoneyIcon />}
             label={
               <Typography padding={1} fontSize={14}>
-                high
+                high - {(votes_cost[1] / sum_cost) * 100}%
               </Typography>
             }
             size="medium"
@@ -37,7 +45,7 @@ export const PreferencesWidget = () => {
             icon={<AttachMoneyIcon />}
             label={
               <Typography padding={1} fontSize={14}>
-                medium
+                medium - {(votes_cost[2] / sum_cost) * 100}%
               </Typography>
             }
             size="medium"
@@ -48,7 +56,7 @@ export const PreferencesWidget = () => {
             icon={<AttachMoneyIcon />}
             label={
               <Typography padding={1} fontSize={14}>
-                low
+                low - {(votes_cost[3] / sum_cost) * 100}%
               </Typography>
             }
             size="medium"
@@ -63,7 +71,7 @@ export const PreferencesWidget = () => {
             icon={<SportsTennisIcon />}
             label={
               <Typography padding={1} fontSize={14}>
-                nature
+                nature - {(votes_act[0] / sum_act) * 100}%
               </Typography>
             }
             size="medium"
@@ -74,7 +82,7 @@ export const PreferencesWidget = () => {
             icon={<ParkIcon />}
             label={
               <Typography padding={1} fontSize={14}>
-                sports
+                sports - {(votes_act[1] / sum_act) * 100}%
               </Typography>
             }
             size="medium"
@@ -85,7 +93,7 @@ export const PreferencesWidget = () => {
             icon={<PhotoCameraIcon />}
             label={
               <Typography padding={1} fontSize={14}>
-                sightseeing
+                sightseeing - {(votes_act[2] / sum_act) * 100}%
               </Typography>
             }
             size="medium"

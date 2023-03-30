@@ -2,14 +2,10 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import EditIcon from "@mui/icons-material/Edit"
 import { Grid } from "@mui/material"
 import Typography from "@mui/material/Typography"
-import Avatar from "../../components/Avatar"
 import { useTrip } from "../../utility/hooks/trip"
 
 export default function TripHeader() {
   const { trip } = useTrip()
-  const item1 = { username: "username", id: "123", name: "noriyuki" }
-  const item2 = { username: "username2", id: "456", name: "minoru" }
-  const example = [item1, item2]
 
   return (
     <Grid
@@ -48,7 +44,8 @@ export default function TripHeader() {
         </Typography>
 
         <Typography sx={{ color: "white", fontWeight: "400", fontSize: "20px" }}>
-          {/* {{trip.duration.start}.toLocaleDateString("en-US", {
+          {/* not sure how to convert this to string since it doesnt accept it in normal state */}
+           {/* {{trip.duration.start}.toLocaleDateString("en-US", {
                 year: 'numeric', month: 'long', day: 'numeric'
             })} */}
           trip
@@ -61,9 +58,11 @@ export default function TripHeader() {
             gap: 2,
           }}
         >
-          {trip.attendees.map((attendee) => (<Avatar key={attendee} name={trip.userData.get(attendee).name})/>
-            <Avatar key={item.id} name={item.username} />
-          ))}
+          {/* used your code but not sure whats wrong here (?) committed w comment since it prevented push*/}
+
+          {/* {{trip.attendees.map((attendee) => 
+          (<Avatar key={attendee} name={trip.userData.get(attendee).name}))}} */}
+          
         </Grid>
       </Grid>
     </Grid>
