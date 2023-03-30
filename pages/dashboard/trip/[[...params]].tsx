@@ -15,7 +15,6 @@ import { ResizableProvider } from "../../../utility/hooks/resizable"
 import { useScreen } from "../../../utility/hooks/screen"
 import { TripProvider } from "../../../utility/hooks/trip"
 
-
 export default function Trip() {
   // Handle showing the create popups for different wigets
   const [showCreateEvent, setShowCreateEvent] = React.useState(false)
