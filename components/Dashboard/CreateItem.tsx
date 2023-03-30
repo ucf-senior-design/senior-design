@@ -22,8 +22,6 @@ export function CreateItem({ index, value }: { index: number; value: string }) {
       })
   }, [])
 
-  console.log(size)
-
   const SortableItem = SortableElement(({ value }: { value: string }) => (
     <Box
       sx={{
