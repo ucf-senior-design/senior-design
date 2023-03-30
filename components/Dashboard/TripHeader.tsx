@@ -45,7 +45,7 @@ export default function TripHeader() {
 
         <Typography sx={{ color: "white", fontWeight: "400", fontSize: "20px" }}>
           {/* not sure how to convert this to string since it doesnt accept it in normal state */}
-           {/* {{trip.duration.start}.toLocaleDateString("en-US", {
+          {/* {{trip.duration.start}.toLocaleDateString("en-US", {
                 year: 'numeric', month: 'long', day: 'numeric'
             })} */}
           trip
@@ -62,7 +62,6 @@ export default function TripHeader() {
 
           {/* {{trip.attendees.map((attendee) => 
           (<Avatar key={attendee} name={trip.userData.get(attendee).name}))}} */}
-          
         </Grid>
       </Grid>
     </Grid>
