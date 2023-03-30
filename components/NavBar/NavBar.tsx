@@ -1,4 +1,3 @@
-import { Person } from "@mui/icons-material"
 import AirportShuttleIcon from "@mui/icons-material/AirportShuttle"
 import MenuIcon from "@mui/icons-material/Menu"
 import {
@@ -18,11 +17,12 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material"
-import React from "react"
+import Router from "next/router"
 import theme from "../../styles/theme/Theme"
 import { useAuth } from "../../utility/hooks/authentication"
 import useNavBar from "../../utility/hooks/navbar"
 import { useScreen } from "../../utility/hooks/screen"
+import Avatar from "../Avatar"
 import LoggedOutDrawer from "./LoggedOutDrawer"
 import { NavBarButton } from "./NavButton"
 
@@ -38,6 +38,10 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
 
   const handleLogout = (): void => {
     doLogout()
+  }
+
+  const handleSettings = (): void => {
+    Router.push("/settings/account")
   }
 
   const drawer = (
@@ -114,22 +118,21 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
             >
               {loggedIn ? (
                 <>
-                  {/* TODO: add correct pages once they have been created */}
                   <NavBarButton path="/dashboard" text="dashboard" variant="text" />
-                  <NavBarButton path="/teams" text="teams" variant="text" />
+                  <NavBarButton path="/dashboard/teams" text="teams" variant="text" />
                   <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
                     {anchorRef !== null && anchorRef !== undefined && (
                       <>
                         <Button
                           ref={anchorRef}
                           color="secondary"
-                          variant="outlined"
+                          variant="text"
                           aria-label={"user"}
                           aria-controls={open ? "composition-menu" : undefined}
                           aria-expanded={open ? "true" : undefined}
                           area-haspopup="true"
                         >
-                          <Person sx={{ color: "white" }} />
+                          <Avatar name={user?.name ?? ""} />
                         </Button>
                         <Popper
                           open={open}

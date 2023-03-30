@@ -1,9 +1,8 @@
-import { useDashboard } from "../../utility/hooks/dashboard"
-import React from "react"
-import TripCard from "./TripCard"
 import { Autocomplete, Button, Paper, TextField } from "@mui/material"
-import { useTrip } from "../../utility/hooks/trip"
 import { useRouter } from "next/router"
+import React from "react"
+import { useDashboard } from "../../utility/hooks/dashboard"
+import TripCard from "./TripCard"
 
 type TripSearchOption = {
   destination: string
