@@ -4,11 +4,9 @@ import { CalendarWidget } from "../components/Dashboard/Widgets/Calendar"
 import { PreferencesWidget } from "../components/Dashboard/Widgets/Preferences"
 
 export default function test() {
-
-
   return (
     <div style={$wrapper}>
-      <Grid container direction="column" justifyContent="center" alignItems="center">
+      <Grid container direction="row" justifyContent="center" alignItems="center">
         <PreferencesWidget />
         <CalendarWidget />
         <Stack
