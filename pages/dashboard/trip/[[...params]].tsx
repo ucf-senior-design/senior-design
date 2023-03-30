@@ -1,7 +1,6 @@
 import { Add } from "@mui/icons-material"
 import type { MenuProps } from "antd"
 import { Button as AButton, Dropdown } from "antd"
-import { useRouter } from "next/router"
 import React from "react"
 import { BackdropModal } from "../../../components/BackdropModal"
 import CreateEvent from "../../../components/Create/CreateEvent"
@@ -16,9 +15,8 @@ import { ResizableProvider } from "../../../utility/hooks/resizable"
 import { useScreen } from "../../../utility/hooks/screen"
 import { TripProvider } from "../../../utility/hooks/trip"
 
+
 export default function Trip() {
-  const { updateNav } = useScreen()
-  const router = useRouter()
   // Handle showing the create popups for different wigets
   const [showCreateEvent, setShowCreateEvent] = React.useState(false)
   const [showCreatePoll, setShowCreatePoll] = React.useState(false)

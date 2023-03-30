@@ -23,6 +23,7 @@ import { User } from "../types/user"
 import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
 import { useScreen } from "./screen"
+import dayjs from "dayjs"
 
 export type Day = {
   date: Date
@@ -162,7 +163,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     itinerary: Array<Array<Event>>,
     joinableEvents: Array<Array<Event>>,
   ) {
-    let dayMilli = 1000 * 3600 * 24
     let days: Array<Day> = []
 
     let iIndex = 0
@@ -183,7 +183,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (jIndex < joinableEvents.length) {
-        if (dayjs(itinerary[jIndex][0].duration.start).isSame(day, "day")) {
+        if (dayjs(joinableEvents[jIndex][0].duration.start).isSame(day, "day")) {
           days[days.length - 1].joinable = joinableEvents[jIndex]
           jIndex += 1
         }
