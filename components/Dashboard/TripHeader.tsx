@@ -61,7 +61,7 @@ export default function TripHeader() {
             gap: 2,
           }}
         >
-          {example.map((item) => (
+          {trip.attendees.map((attendee) => (<Avatar key={attendee} name={trip.userData.get(attendee).name})/>
             <Avatar key={item.id} name={item.username} />
           ))}
         </Grid>
