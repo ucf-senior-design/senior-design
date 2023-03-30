@@ -1,17 +1,16 @@
-import { Button, Paper, Typography } from "@mui/material";
-import { Calendar, DatePicker } from "antd";
-import type { Dayjs } from 'dayjs';
+import { Button, Paper, Typography } from "@mui/material"
+import { Calendar, DatePicker } from "antd"
+import type { Dayjs } from "dayjs"
 
 export function CalendarWidget() {
-
   const { RangePicker } = DatePicker
 
   interface calInfo {
-    username: string;
-    date: Date;
-};
+    username: string
+    date: Date
+  }
 
-  function stringToColor(string: string) : string {
+  function stringToColor(string: string): string {
     let hash = 0
     let i
 
@@ -29,62 +28,75 @@ export function CalendarWidget() {
     return color
   }
 
-  const getMonthData = (value: Dayjs) => {
-  };
+  const getMonthData = (value: Dayjs) => {}
 
   const getListData = (value: Dayjs) => {
-    const listData: calInfo[] = [];
-    const availability_1 = [[2,1], [2,3], [3,1], [3,2], [3,4], [3,5], [3,10]]
-    const availability_2 = [[2,10], [2,13], [3,11], [3,2], [3,3], [3,5], [3,11]]
+    const listData: calInfo[] = []
+    const availability_1 = [
+      [2, 1],
+      [2, 3],
+      [3, 1],
+      [3, 2],
+      [3, 4],
+      [3, 5],
+      [3, 10],
+    ]
+    const availability_2 = [
+      [2, 10],
+      [2, 13],
+      [3, 11],
+      [3, 2],
+      [3, 3],
+      [3, 5],
+      [3, 11],
+    ]
 
     for (let i = 0; i < availability_1.length; i++) {
-      if (value.date() === availability_1[i][1] && value.month() === availability_1[i][0]){
-
-        let dateData = {} as calInfo;
-        const date = new Date();
+      if (value.date() === availability_1[i][1] && value.month() === availability_1[i][0]) {
+        let dateData = {} as calInfo
+        const date = new Date()
         date.setMonth(availability_1[i][0])
         date.setDate(availability_1[i][1])
-        
-        dateData.date = date;
-        dateData.username = 'username';
-        listData.push(dateData);
-      }}
-    for (let i = 0; i < availability_2.length; i++) {
-      if (value.date() === availability_2[i][1] && value.month() === availability_2[i][0]){
 
-        let dateData = {} as calInfo;
-        const date = new Date();
-        date.setMonth(availability_2[i][0])
-        date.setDate(availability_2[i][1])
-        
-        dateData.date = date;
-        dateData.username = 'test';
-        listData.push(dateData);
+        dateData.date = date
+        dateData.username = "username"
+        listData.push(dateData)
       }
     }
-    return listData || [];
-  };
-  
+    for (let i = 0; i < availability_2.length; i++) {
+      if (value.date() === availability_2[i][1] && value.month() === availability_2[i][0]) {
+        let dateData = {} as calInfo
+        const date = new Date()
+        date.setMonth(availability_2[i][0])
+        date.setDate(availability_2[i][1])
+
+        dateData.date = date
+        dateData.username = "test"
+        listData.push(dateData)
+      }
+    }
+    return listData || []
+  }
 
   const monthCellRender = (value: Dayjs) => {
-    const num = getMonthData(value);
-    return null;
-  };
+    const num = getMonthData(value)
+    return null
+  }
 
   const dateCellRender = (value: Dayjs) => {
-    const listData = getListData(value);
+    const listData = getListData(value)
 
-    
     return (
- <>
+      <>
         {listData.map((item) => (
-          <div key={item.username} style={{width:"100%", height:"5px", backgroundColor:stringToColor(item.username)}}>
-            
-          </div>
+          <div
+            key={item.username}
+            style={{ width: "100%", height: "5px", backgroundColor: stringToColor(item.username) }}
+          ></div>
         ))}
-     </>
-    );
-  };
+      </>
+    )
+  }
 
   return (
     <>

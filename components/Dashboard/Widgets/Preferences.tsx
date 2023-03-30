@@ -5,7 +5,6 @@ import SportsTennisIcon from "@mui/icons-material/SportsTennis"
 import { Box, Button, Chip, Paper, Typography } from "@mui/material"
 
 export const PreferencesWidget = () => {
-
   return (
     <>
       <Paper sx={{ padding: "20px", width: "80vw", maxWidth: "300px" }}>
@@ -56,43 +55,42 @@ export const PreferencesWidget = () => {
             sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
           />
         </Box>
-      
+
         <p>Select all acceptable outdoors activities preferences from the below list:</p>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <Chip
-                variant="outlined"
-                icon={<SportsTennisIcon />}
-                label={
-                  <Typography padding={1} fontSize={14}>
-                    nature
-                  </Typography>
-                }
-                size="medium"
-                sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
-              />
-              <Chip
-                variant="outlined"
-                icon={<ParkIcon />}
-                label={
-                  <Typography padding={1} fontSize={14}>
-                    sports
-                  </Typography>
-                }
-                size="medium"
-                sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
-              />
-              <Chip
-                variant="outlined"
-                icon={<PhotoCameraIcon />}
-                label={
-                  <Typography padding={1} fontSize={14}>
-                    sightseeing
-                  </Typography>
-                }
-                size="medium"
-                sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
-              />
-            
+          <Chip
+            variant="outlined"
+            icon={<SportsTennisIcon />}
+            label={
+              <Typography padding={1} fontSize={14}>
+                nature
+              </Typography>
+            }
+            size="medium"
+            sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+          />
+          <Chip
+            variant="outlined"
+            icon={<ParkIcon />}
+            label={
+              <Typography padding={1} fontSize={14}>
+                sports
+              </Typography>
+            }
+            size="medium"
+            sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+          />
+          <Chip
+            variant="outlined"
+            icon={<PhotoCameraIcon />}
+            label={
+              <Typography padding={1} fontSize={14}>
+                sightseeing
+              </Typography>
+            }
+            size="medium"
+            sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+          />
 
           <Button variant="outlined">add preference</Button>
         </Box>
