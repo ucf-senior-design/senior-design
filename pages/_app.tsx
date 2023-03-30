@@ -30,7 +30,7 @@ const defaultTheme = createTheme(theme)
 
 const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
-  
+
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={defaultTheme}>
