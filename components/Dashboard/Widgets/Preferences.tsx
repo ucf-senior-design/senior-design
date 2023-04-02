@@ -1,76 +1,107 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-  Typography,
-} from "@mui/material"
-import React from "react"
-import { useTrip } from "../../../utility/hooks/trip"
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney"
+import ParkIcon from "@mui/icons-material/Park"
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera"
+import SportsTennisIcon from "@mui/icons-material/SportsTennis"
+import { Box, Button, Chip, Paper, Typography } from "@mui/material"
 
-export function PreferencesWidget() {
-  const { trip } = useTrip()
-  const dummy = {
-    title: "activity preferences",
-    options: [1, 2, 3],
-  }
+export const PreferencesWidget = () => {
+  const votes_cost = [2, 5, 1, 2]
+  const votes_act = [4, 5, 1]
 
-  const [checked, setChecked] = React.useState([0])
-
-  const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value)
-    const newChecked = [...checked]
-
-    if (currentIndex === -1) {
-      newChecked.push(value)
-    } else {
-      newChecked.splice(currentIndex, 1)
-    }
-
-    setChecked(newChecked)
-  }
-
+  const sum_cost = votes_cost.reduce((a, b) => a + b)
+  const sum_act = votes_act.reduce((a, b) => a + b)
   return (
     <>
       <Paper sx={{ padding: "20px", width: "80vw", maxWidth: "300px" }}>
-        <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center" }}>
-          {dummy.title}
+        <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center", padding: "1" }}>
+          preferences Selection
         </Typography>
-        Select all acceptable preferences from the below list:
+        <p>Select all acceptable cost preferences from the below list:</p>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-            {dummy.options.map((item) => {
-              const labelId = `checkbox-list-label-${item}`
-
-              return (
-                <ListItem
-                  key={item}
-                  secondaryAction={<IconButton edge="end" aria-label="comments"></IconButton>}
-                  disablePadding
-                >
-                  <ListItemButton role={undefined} onClick={handleToggle(item)} dense>
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={checked.indexOf(item) !== -1}
-                        tabIndex={-1}
-                        color="secondary"
-                      />
-                    </ListItemIcon>
-                    <ListItemText id={labelId} primary={`Option ${item + 1}`} />
-                  </ListItemButton>
-                </ListItem>
-              )
-            })}
-          </List>
+          <Chip
+            variant="outlined"
+            icon={<AttachMoneyIcon />}
+            label={
+              <Typography padding={1} fontSize={14}>
+                very high - {(votes_cost[0] / sum_cost) * 100}%
+              </Typography>
+            }
+            size="medium"
+            sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+          />
+          <Chip
+            variant="outlined"
+            icon={<AttachMoneyIcon />}
+            label={
+              <Typography padding={1} fontSize={14}>
+                high - {(votes_cost[1] / sum_cost) * 100}%
+              </Typography>
+            }
+            size="medium"
+            sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+          />
+          <Chip
+            variant="outlined"
+            icon={<AttachMoneyIcon />}
+            label={
+              <Typography padding={1} fontSize={14}>
+                medium - {(votes_cost[2] / sum_cost) * 100}%
+              </Typography>
+            }
+            size="medium"
+            sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+          />
+          <Chip
+            variant="outlined"
+            icon={<AttachMoneyIcon />}
+            label={
+              <Typography padding={1} fontSize={14}>
+                low - {(votes_cost[3] / sum_cost) * 100}%
+              </Typography>
+            }
+            size="medium"
+            sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+          />
         </Box>
-        <Button variant="outlined">vote</Button>
+
+        <p>Select all acceptable outdoors activities preferences from the below list:</p>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Chip
+            variant="outlined"
+            icon={<SportsTennisIcon />}
+            label={
+              <Typography padding={1} fontSize={14}>
+                nature - {(votes_act[0] / sum_act) * 100}%
+              </Typography>
+            }
+            size="medium"
+            sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+          />
+          <Chip
+            variant="outlined"
+            icon={<ParkIcon />}
+            label={
+              <Typography padding={1} fontSize={14}>
+                sports - {(votes_act[1] / sum_act) * 100}%
+              </Typography>
+            }
+            size="medium"
+            sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+          />
+          <Chip
+            variant="outlined"
+            icon={<PhotoCameraIcon />}
+            label={
+              <Typography padding={1} fontSize={14}>
+                sightseeing - {(votes_act[2] / sum_act) * 100}%
+              </Typography>
+            }
+            size="medium"
+            sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+          />
+
+          <Button variant="outlined">add preference</Button>
+        </Box>
       </Paper>
     </>
   )

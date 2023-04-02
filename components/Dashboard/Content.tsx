@@ -18,7 +18,7 @@ export default function Content() {
     return (
       <Grid
         container
-        gap={1}
+        gap={0.8}
         sx={{ paddingLeft: { xs: 10, lg: 20 }, paddingRight: { xs: 10, md: 20, lg: 30 } }}
         alignItems={"center"}
         justifyContent={"center"}

@@ -21,6 +21,7 @@ export interface AttendeeOption {
   uid: string
 }
 export default function useCreateTrip() {
+  const { friendList } = useFriend()
   const [createTrip, setCreateTrip] = useState<TCreateTrip>({
     destination: "",
     placeID: "",
@@ -34,14 +35,9 @@ export default function useCreateTrip() {
     layout: [],
   })
 
-  const { friendList } = useFriend()
   const { user } = useAuth()
   const router = useRouter()
   const { updateErrorToast } = useScreen()
-
-  // React.useEffect(() => {
-  //   createAttendeeOptions()
-  // }, [friendList])
 
   function updateDestination(placeID: string, city: string) {
     setCreateTrip({
@@ -78,6 +74,9 @@ export default function useCreateTrip() {
   }
 
   function updateDuration(startDate: Date, endDate: Date) {
+    startDate.setHours(0, 0, 0, 0)
+    endDate.setHours(0, 0, 0, 0)
+
     setCreateTrip({
       ...createTrip,
       duration: {
@@ -100,7 +99,7 @@ export default function useCreateTrip() {
       })
     }
 
-    setCreateTrip({ ...createTrip, attendeeOptions: options })
+    return options
   }
 
   async function getPhotoURL() {
@@ -156,7 +155,7 @@ export default function useCreateTrip() {
           start: createTrip.duration.start,
           end: createTrip.duration.end,
         },
-        photoURL: "",
+        photoURL: photoURL,
         destination: createTrip.destination,
         attendees: attendees,
         layout: layout,

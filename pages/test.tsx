@@ -1,11 +1,14 @@
 import { Grid, Stack } from "@mui/material"
-import { TeamForm } from "../../../components/Dashboard/Widgets/TeamComponents/TeamForm"
+import React from "react"
+import { CalendarWidget } from "../components/Dashboard/Widgets/Calendar"
+import { PreferencesWidget } from "../components/Dashboard/Widgets/Preferences"
 
-export default function Teams() {
+export default function test() {
   return (
     <div style={$wrapper}>
-      <Grid container direction="column" justifyContent="center" alignItems="center">
-        <TeamForm purpose="create" />
+      <Grid container direction="row" justifyContent="center" alignItems="center">
+        <PreferencesWidget />
+        <CalendarWidget />
         <Stack
           sx={{ display: { xs: "none", md: "block" } }}
           style={{

@@ -27,12 +27,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return
         }
 
-        if (
-          (await firebaseAdmin.auth().getUser(result.user.uid)).emailVerified === false &&
-          process.env.NODE_ENV !== "test"
-        ) {
+        if ((await firebaseAdmin.auth().getUser(result.user.uid)).emailVerified === false) {
           res.status(MUST_VERIFY_EMAIL).send(maybeUser.data() as any as User)
         }
+
         res.status(SUCCESS).send(maybeUser.data() as any as User)
       } catch (error) {
         let authError = error as auth.AuthError
@@ -52,6 +50,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           break
         default:
           res.status(ERROR).send("Try again later.")
+          return
       }
+      res.status(400).send(error.code)
     })
 }
