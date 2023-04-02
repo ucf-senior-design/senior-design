@@ -57,12 +57,6 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
    * @returns true if the user has liked the suggestion and false otherwise.
    */
   function didUserLike(option: string) {
-    console.info(
-      "didUserLike",
-      suggestion.suggestions,
-      option,
-      suggestion.suggestions.get(option)?.likes.has(userID),
-    )
     const isLiked = suggestion.suggestions.get(option)?.likes.has(userID)
     return isLiked !== undefined ? isLiked : false
   }
@@ -120,8 +114,6 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
    * @param selectedOption the uid of the suggestion the user is trying to like.
    */
   async function like(selectedOption: string) {
-    // Create the fetch request.
-    console.info(suggestion.suggestions.get(selectedOption))
     const options = createFetchRequestOptions(JSON.stringify({}), "PUT")
     await fetch(
       `${API_URL}trip/${tripID}/suggestion/like/${suggestion.uid}/${selectedOption}`,
@@ -144,7 +136,6 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
             }
           })
         } else {
-          console.info(suggestion.suggestions.get(selectedOption))
           updateErrorToast("Try again later")
         }
       })
