@@ -4,7 +4,16 @@ import { useAuth } from "../authentication"
 import { useScreen } from "../screen"
 import { useTrip } from "../trip"
 
-export default function useModifyEvent(originalEvent: Event) {
+export type useModifyEventHook = {
+  modifiedEvent: EventType
+  modify: (callback: (isSuccess: boolean) => void) => Promise<void>
+  updateTitle: (title: string) => void
+  updateDuration: (startDate: Date, endDate: Date) => void
+  updateDescription: (description: string) => void
+  updateLocation: (location: string) => void
+}
+
+export default function useModifyEvent(originalEvent: Event): useModifyEventHook {
   const { updateErrorToast } = useScreen()
   const { user } = useAuth()
   const { modifyEvent } = useTrip()
