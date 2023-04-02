@@ -19,6 +19,7 @@ interface Resizable {
   createKey: (type: WidgetType, uid: string) => string
   getWidget: (key: string) => React.ReactNode
   onSortEnd: ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => void
+  onSortStart: () => void
   addItem: (key: string) => void
   getStorableLayout: (order: Array<string>) => void
 }
@@ -245,6 +246,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
         handleItemUpdate,
         readLayout,
         resizable,
+        onSortStart,
         onSortEnd,
         getWidget,
         addItem,
