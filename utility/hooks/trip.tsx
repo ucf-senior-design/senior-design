@@ -1,5 +1,5 @@
-import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, CircularProgress } from "@mui/material"
+import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import React from "react"
 import { API_URL } from "../constants"
@@ -22,7 +22,6 @@ import { User } from "../types/user"
 import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
 import { useScreen } from "./screen"
-import dayjs from "dayjs"
 
 export type Day = {
   date: Date
@@ -40,7 +39,7 @@ interface TripUseState extends Trip {
   didReadLayout: boolean
 }
 
-interface TripDetails {
+export interface TripDetails {
   duration: Duration
   destination: string
   photoURL: string
