@@ -75,6 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 await updateDoc(docRef, {
                   destination: req.body.destination,
                   duration: req.body.duration,
+                  photoURL: req.body.photoURL,
                 })
               }
               break
