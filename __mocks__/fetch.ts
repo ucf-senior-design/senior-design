@@ -1,4 +1,5 @@
 import { SuggestionOption } from "../utility/types/trip"
+import { ACCEPTED_FRIENDSHIP_1, ACCEPTED_FRIENDSHIP_2 } from "./hooks/friends"
 
 export function mockAllFetch(
   isOk: boolean,
@@ -29,6 +30,17 @@ export function mockAllFetch(
       }
     }
 
+    if (req.endsWith("friends")) {
+      return Promise.resolve({
+        status: status,
+        ok: isOk,
+        json: () => {
+          return Promise.resolve({
+            friends: [ACCEPTED_FRIENDSHIP_1, ACCEPTED_FRIENDSHIP_2],
+          })
+        },
+      })
+    }
     if (req.endsWith("suggestion/add/uid")) {
       return Promise.resolve({
         status: status,
@@ -42,6 +54,17 @@ export function mockAllFetch(
       })
     }
 
+    if (req.endsWith("auth/user")) {
+      Promise.resolve({
+        status: status,
+        ok: isOk,
+        json: () =>
+          Promise.resolve({
+            uid: "uid",
+            name: "test user",
+          }),
+      })
+    }
     if (req.endsWith("trip/") && options.method === "GET") {
       return Promise.resolve({
         status: status,
@@ -55,6 +78,7 @@ export function mockAllFetch(
           }),
       })
     }
+
     return Promise.resolve({
       status: status,
       ok: isOk,

@@ -16,37 +16,28 @@ export default function useCreateEvent() {
     attendees: Array<AttendeeOption>
     attendeeOptions: Array<AttendeeOption>
   }
+
   const EMPTY_EVENT: TCreateEvent = {
     title: "",
     attendees: [],
     duration: { start: new Date(), end: new Date() },
     location: "",
     description: "",
-    attendeeOptions: [],
+    attendeeOptions: initializeAttendeeOptions(),
   }
-
   const [event, setEvent] = React.useState<TCreateEvent>(EMPTY_EVENT)
-  const { friendList, addFriendOptions } = useFriend()
+  const { addFriendOptions } = useFriend()
 
-  React.useEffect(() => {
+  function initializeAttendeeOptions() {
     let friends = addFriendOptions()
-    let updatedOptions = Array.from(event.attendeeOptions)
-
-    event.attendeeOptions.forEach((option) => {
-      if (friends.has(option.uid)) {
-        friends.delete(option.uid)
-      }
-    })
+    let updatedOptions: Array<AttendeeOption> = []
 
     friends.forEach((friend) => {
       updatedOptions.push(friend)
     })
 
-    setEvent({
-      ...event,
-      attendeeOptions: updatedOptions,
-    })
-  }, [friendList])
+    return updatedOptions
+  }
 
   function updateLocation(location: string) {
     setEvent({
