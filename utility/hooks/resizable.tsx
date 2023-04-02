@@ -46,7 +46,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
   const [moving, setMoving] = React.useState(false);
 
   const DEFAULT_SIZE_INDEX = 1
-  const SIZES = [3, 5, 8, 12]
+  const SIZES = [1, 2, 3, 4]
 
   // Allows local layout to be stored whenever there are changes
   React.useEffect(() => {
