@@ -1,10 +1,7 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, Button, CircularProgress } from "@mui/material"
-import dayjs from "dayjs"
 import { useRouter } from "next/router"
-import queryString from "query-string"
 import React from "react"
-import { useLocalStorage } from "react-use-storage"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
 import { User } from "../types/user"
@@ -90,7 +87,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   const [showOverlay, setShowOverlay] = React.useState(true)
   const router = useRouter()
 
-  const { updateNav } = useScreen()
+  const { updateNav, updateErrorToast } = useScreen()
   const { readLayout, createKey, addItem, resizable, getStorableLayout } = useResizable()
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: "",
@@ -120,7 +117,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   }, [resizable])
   React.useEffect(() => {
     if (window !== undefined && window.location !== undefined) {
-      const { id } = queryString.parse(window.location.search)
+      let location = window.location.search
+      const id = location
       setId(id as string)
     }
     updateNav(
@@ -208,7 +206,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     let pollWidgets = await getPollWidgetData()
 
     if (suggestionWidgets === null || trip === null || eventData == null) {
-      alert("Cannot load trip.")
+      updateErrorToast("Cannot load trip.")
       return
     }
 
@@ -238,15 +236,15 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }).then(async (response) => {
       if (response.ok) {
         const { data } = await response.json()
-
-        data.forEach((p: Poll) => {
-          polls.set(p.uid, {
-            uid: p.uid,
-            owner: p.owner,
-            title: p.title,
-            options: p.options,
+        if (data !== undefined && data !== null)
+          data.forEach((p: Poll) => {
+            polls.set(p.uid, {
+              uid: p.uid,
+              owner: p.owner,
+              title: p.title,
+              options: p.options,
+            })
           })
-        })
       }
     })
 
@@ -281,22 +279,23 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       if (response.ok) {
         const { data } = await response.json()
 
-        data.forEach((s: any) => {
-          const suggestions = new Map<string, SuggestionOption>()
-          s.suggestions.forEach((sug: SuggestionOption) => {
-            suggestions.set(sug.uid, {
-              ...sug,
-              likes: new Set(sug.likes),
-            } as SuggestionOption)
-          })
+        if (data !== undefined && data !== null)
+          data.forEach((s: any) => {
+            const suggestions = new Map<string, SuggestionOption>()
+            s.suggestions.forEach((sug: SuggestionOption) => {
+              suggestions.set(sug.uid, {
+                ...sug,
+                likes: new Set(sug.likes),
+              } as SuggestionOption)
+            })
 
-          suggestionWidgets.set(s.uid, {
-            uid: s.uid,
-            owner: s.owner,
-            title: s.title,
-            suggestions: suggestions,
+            suggestionWidgets.set(s.uid, {
+              uid: s.uid,
+              owner: s.owner,
+              title: s.title,
+              suggestions: suggestions,
+            })
           })
-        })
       }
     })
     return suggestionWidgets
@@ -371,7 +370,14 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       let data = await response.json()
 
       const { joinable, itinerary }: { joinable: Array<Event>; itinerary: Array<Event> } = data
-
+      if (
+        joinable === undefined ||
+        joinable === null ||
+        itinerary === undefined ||
+        itinerary === null
+      ) {
+        return null
+      }
       // Determine actualy joinable events
       let joinableIndex = 0
 
