@@ -1,69 +1,60 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack"
-import EditIcon from "@mui/icons-material/Edit"
-import { Grid } from "@mui/material"
+import { ArrowBack } from "@mui/icons-material"
+import { Button } from "@mui/material"
 import Typography from "@mui/material/Typography"
+import { useRouter } from "next/router"
+import React from "react"
+import Avatar from "../../components/Avatar"
+import { useScreen } from "../../utility/hooks/screen"
 import { useTrip } from "../../utility/hooks/trip"
 
-export default function TripHeader() {
+export function TripHeader() {
+  const router = useRouter()
   const { trip } = useTrip()
-
-  return (
-    <Grid
-      container
-      style={{
-        padding: "20px",
-      }}
-    >
-      <Grid
-        item
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "left",
-          justifyContent: "start",
-          gap: 1,
-          paddingTop: "50px",
+  const { updateNav } = useScreen()
+  React.useEffect(() => {
+    updateNav(
+      {
+        background:
+          "linear-gradient(99.17deg, rgba(162, 54, 3, 0.9) -3.2%, rgba(101, 46, 129, 0.9) 26.95%, rgba(75, 98, 147, 0.9) 60.14%, rgba(63, 61, 86, 0.9) 97.04%)",
+      },
+      "transparent",
+      <div
+        style={{
+          height: "250px",
         }}
       >
-        <ArrowBackIcon sx={{ color: "white", fontSize: 40 }} />
-      </Grid>
-
-      <Grid
-        item
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 1,
-          alignItems: "left",
-          justifyContent: "start",
-          paddingLeft: "50px",
-        }}
-      >
-        <Typography sx={{ color: "white", fontWeight: "700", fontSize: "40px" }}>
-          {trip.destination} <EditIcon sx={{ color: "white" }} />
-        </Typography>
-
-        <Typography sx={{ color: "white", fontWeight: "400", fontSize: "20px" }}>
-          {/* not sure how to convert this to string since it doesnt accept it in normal state */}
-          {/* {{trip.duration.start}.toLocaleDateString("en-US", {
-                year: 'numeric', month: 'long', day: 'numeric'
-            })} */}
-          trip
-        </Typography>
-        <Grid
-          container
-          sx={{
+        <Button onClick={() => router.back()}>
+          <ArrowBack sx={{ color: "white" }} />
+        </Button>
+        <div
+          style={{
+            padding: 20,
+            flexDirection: "column",
             display: "flex",
-            flexDirection: "row",
-            gap: 2,
+
+            alignContent: "center",
+            justifyContent: "center",
+            bottom: 0,
           }}
         >
-          {/* used your code but not sure whats wrong here (?) committed w comment since it prevented push*/}
+          <Typography sx={{ fontSize: "40px", fontWeight: "bold", color: "white" }}>
+            {trip.destination}
+          </Typography>
+          <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+            {Array.from(trip.attendees).map((attendee) => {
+              return (
+                <Avatar
+                  key={attendee}
+                  name={trip.userData?.get(attendee)?.name ?? "name"}
+                  size={50}
+                />
+              )
+            })}
+          </div>
+        </div>
+      </div>,
+    )
+  }, [trip])
 
-          {/* {{trip.attendees.map((attendee) => 
-          (<Avatar key={attendee} name={trip.userData.get(attendee).name}))}} */}
-        </Grid>
-      </Grid>
-    </Grid>
-  )
+  return <></>
 }

@@ -21,8 +21,6 @@ export default function Schedule() {
               day={trip.itinerary[iIndex][0].duration.start}
               events={trip.itinerary[iIndex]}
               joinableEvents={[]}
-              weatherIcon={<></>}
-              temperature={70}
             />,
           )
           iIndex++
@@ -35,8 +33,6 @@ export default function Schedule() {
               day={trip.joinableEvents[jIndex][0].duration.start}
               events={[]}
               joinableEvents={trip.joinableEvents[jIndex]}
-              weatherIcon={<></>}
-              temperature={70}
             />,
           )
           jIndex++
@@ -46,8 +42,6 @@ export default function Schedule() {
               day={trip.itinerary[iIndex][0].duration.start}
               events={trip.itinerary[iIndex]}
               joinableEvents={trip.joinableEvents[jIndex]}
-              weatherIcon={<></>}
-              temperature={70}
             />,
           )
           jIndex++
@@ -59,8 +53,6 @@ export default function Schedule() {
             day={trip.itinerary[iIndex][0].duration.start}
             events={trip.itinerary[iIndex]}
             joinableEvents={[]}
-            weatherIcon={<></>}
-            temperature={70}
           />,
         )
         iIndex++
@@ -70,8 +62,6 @@ export default function Schedule() {
             day={trip.joinableEvents[jIndex][0].duration.start}
             events={[]}
             joinableEvents={trip.joinableEvents[jIndex]}
-            weatherIcon={<></>}
-            temperature={70}
           />,
         )
         jIndex++

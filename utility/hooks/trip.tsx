@@ -1,28 +1,28 @@
 import { ArrowBack } from "@mui/icons-material"
-import { Backdrop, Button, CircularProgress } from "@mui/material"
-import dayjs from "dayjs"
+import { Backdrop, CircularProgress } from "@mui/material"
 import { useRouter } from "next/router"
-import queryString from "query-string"
 import React from "react"
-import { useLocalStorage } from "react-use-storage"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
-import { User } from "../types/user"
 import { Response } from "../types/helper"
 import {
   CreatedEvent,
   Duration,
   Event,
+  ModifiedEvent,
   Poll,
   PollOption,
+  StoredLocation,
   SuggestionOption,
   SuggestionWidget,
   Trip,
   WidgetType,
 } from "../types/trip"
+import { User } from "../types/user"
 import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
 import { useScreen } from "./screen"
+import dayjs from "dayjs"
 
 export type Day = {
   date: Date
@@ -43,6 +43,8 @@ interface TripUseState extends Trip {
 interface TripDetails {
   duration: Duration
   destination: string
+  photoURL: string
+  layout: Array<StoredLocation>
 }
 
 interface TripContext {
@@ -66,12 +68,13 @@ interface TripContext {
   deletePoll: (uid: string) => Promise<void>
 
   // handle weather widgetcreateP
-  createWeather: () => Promise<void>
+  createWeather: (callback: (response: Response) => void) => void
   deleteWeather: (uid: string) => Promise<void>
 
   // handle events
   createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
-  modifyTrip: (details: TripDetails, callback: (response: Response) => void) => Promise<void>
+  modifyTrip: (details: TripDetails, callback: () => void) => Promise<void>
+  modifyEvent: (event: ModifiedEvent, callback: (isSuccess: boolean) => void) => Promise<void>
 }
 
 const TripContext = React.createContext<TripContext>({} as TripContext)
@@ -87,10 +90,11 @@ export function useTrip(): TripContext {
 
 export function TripProvider({ children }: { children: React.ReactNode }) {
   const [id, setId] = React.useState<string>()
+  const [height, setHeight] = React.useState(0)
   const [showOverlay, setShowOverlay] = React.useState(true)
   const router = useRouter()
 
-  const { updateNav } = useScreen()
+  const { updateNav, updateErrorToast } = useScreen()
   const { readLayout, createKey, addItem, resizable, getStorableLayout } = useResizable()
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: "",
@@ -118,20 +122,13 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       storeLayout()
     }
   }, [resizable])
+
   React.useEffect(() => {
     if (window !== undefined && window.location !== undefined) {
-      const { id } = queryString.parse(window.location.search)
+      let location = window.location.search
+      const id = location
       setId(id as string)
     }
-    updateNav(
-      { background: "url('/header.svg') 100% 100%" },
-      "transparent",
-      <div style={{ height: "250px" }}>
-        <Button onClick={() => router.back()}>
-          <ArrowBack sx={{ color: "white" }} />
-        </Button>
-      </div>,
-    )
   }, [])
 
   React.useEffect(() => {
@@ -145,7 +142,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
           trip.joinableEvents,
         ),
       })
-  }, [trip.joinableEvents, trip.itinerary])
+  }, [trip.joinableEvents, trip.itinerary, trip.duration])
 
   React.useEffect(() => {
     if (!trip.didReadLayout && trip.uid.length >= 0) {
@@ -166,37 +163,33 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     itinerary: Array<Array<Event>>,
     joinableEvents: Array<Array<Event>>,
   ) {
-    let dayMilli = 1000 * 3600 * 24
     let days: Array<Day> = []
 
     let iIndex = 0
     let jIndex = 0
 
-    for (let day = start.getTime(); day <= end.getTime(); day += dayMilli) {
+    let day = dayjs(start)
+    while (!dayjs(end).add(1, "day").isSame(day, "day")) {
       days.push({
-        date: new Date(day),
+        date: day.toDate(),
         itinerary: [],
         joinable: [],
       })
       if (iIndex < itinerary.length) {
-        if (
-          itinerary[iIndex][0].duration.start.getDay() === new Date(day).getDay() &&
-          itinerary[iIndex][0].duration.start.getMonth() === new Date(day).getMonth()
-        ) {
+        if (dayjs(itinerary[iIndex][0].duration.start).isSame(day, "day")) {
           days[days.length - 1].itinerary = itinerary[iIndex]
           iIndex += 1
         }
       }
 
       if (jIndex < joinableEvents.length) {
-        if (
-          joinableEvents[jIndex][0].duration.start.getDay() === new Date(day).getDay() &&
-          joinableEvents[jIndex][0].duration.start.getMonth() === new Date(day).getMonth()
-        ) {
+        if (dayjs(joinableEvents[jIndex][0].duration.start).isSame(day, "day")) {
           days[days.length - 1].joinable = joinableEvents[jIndex]
           jIndex += 1
         }
       }
+
+      day = day.add(1, "day")
     }
 
     return days
@@ -208,7 +201,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     let pollWidgets = await getPollWidgetData()
 
     if (suggestionWidgets === null || trip === null || eventData == null) {
-      alert("Cannot load trip.")
+      updateErrorToast("Cannot load trip.")
       return
     }
 
@@ -238,15 +231,15 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }).then(async (response) => {
       if (response.ok) {
         const { data } = await response.json()
-
-        data.forEach((p: Poll) => {
-          polls.set(p.uid, {
-            uid: p.uid,
-            owner: p.owner,
-            title: p.title,
-            options: p.options,
+        if (data !== undefined && data !== null)
+          data.forEach((p: Poll) => {
+            polls.set(p.uid, {
+              uid: p.uid,
+              owner: p.owner,
+              title: p.title,
+              options: p.options,
+            })
           })
-        })
       }
     })
 
@@ -281,22 +274,23 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       if (response.ok) {
         const { data } = await response.json()
 
-        data.forEach((s: any) => {
-          const suggestions = new Map<string, SuggestionOption>()
-          s.suggestions.forEach((sug: SuggestionOption) => {
-            suggestions.set(sug.uid, {
-              ...sug,
-              likes: new Set(sug.likes),
-            } as SuggestionOption)
-          })
+        if (data !== undefined && data !== null)
+          data.forEach((s: any) => {
+            const suggestions = new Map<string, SuggestionOption>()
+            s.suggestions.forEach((sug: SuggestionOption) => {
+              suggestions.set(sug.uid, {
+                ...sug,
+                likes: new Set(sug.likes),
+              } as SuggestionOption)
+            })
 
-          suggestionWidgets.set(s.uid, {
-            uid: s.uid,
-            owner: s.owner,
-            title: s.title,
-            suggestions: suggestions,
+            suggestionWidgets.set(s.uid, {
+              uid: s.uid,
+              owner: s.owner,
+              title: s.title,
+              suggestions: suggestions,
+            })
           })
-        })
       }
     })
     return suggestionWidgets
@@ -357,6 +351,25 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     })
     return list
   }
+  function replaceEventInList(list: Array<Array<Event>>, event: Event) {
+    for (let i = 0; i < list.length; i++) {
+      for (let j = 0; j < list[i].length; j++) {
+        if (list[i][j].uid === event.uid) {
+          list[i][j] = event
+        }
+      }
+      return list
+    }
+
+    list[list.length - 1].push({
+      ...event,
+      duration: {
+        start: new Date(event.duration.start),
+        end: new Date(event.duration.end),
+      },
+    })
+    return list
+  }
 
   // TODO: Handle short break periods when determining joinable events
   async function getEventData() {
@@ -371,7 +384,14 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       let data = await response.json()
 
       const { joinable, itinerary }: { joinable: Array<Event>; itinerary: Array<Event> } = data
-
+      if (
+        joinable === undefined ||
+        joinable === null ||
+        itinerary === undefined ||
+        itinerary === null
+      ) {
+        return null
+      }
       // Determine actualy joinable events
       let joinableIndex = 0
 
@@ -503,7 +523,14 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   async function deletePoll(uid: string) {}
 
   // TODO: Allow a user to create a weather widget for the trip.
-  async function createWeather() {}
+  function createWeather(callback: (response: Response) => void) {
+    if (user === undefined) {
+      callback({ isSuccess: false, errorMessage: "login and try again later." })
+      return
+    }
+    addNewWidget("weather", user.uid)
+    callback({ isSuccess: true })
+  }
 
   // TODO: Allow a user to delete a weather widget for the trip.
   async function deleteWeather(uid: string) {}
@@ -533,6 +560,20 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }
     callback(response.ok)
   }
+  async function modifyEvent(event: ModifiedEvent, callback: (isSuccess: boolean) => void) {
+    const options = createFetchRequestOptions(JSON.stringify(event), "PUT")
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/event/info/${event.uid}`, options)
+    if (response.ok) {
+      let modifiedEvent: Event = await response.json()
+      setTrip({
+        ...trip,
+
+        itinerary: Array.from(replaceEventInList(trip.itinerary, modifiedEvent)),
+      })
+      initilizeTrip()
+    }
+    callback(response.ok)
+  }
 
   async function storeLayout() {
     console.log("storing layout...")
@@ -542,26 +583,25 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     )
 
     const response = await fetch(`${API_URL}/trip/${id}/layout`, options)
-
-    // TODO: Allow user to choose to not leave page when this happens
-    if (!response.ok) {
-      alert("Unable to save layout changes")
-    }
+    console.log(await response.text())
   }
 
-  async function modifyTrip(details: TripDetails, callback: (response: Response) => void) {
+  async function modifyTrip(details: TripDetails, callback: () => void) {
     const options = createFetchRequestOptions(JSON.stringify(details), "PUT")
     const response = await fetch(`${API_URL}/trip/${trip.uid}/modify`, options)
+    const responseLayout = await fetch(`${API_URL}/trip/${trip.uid}/layout`, options)
 
-    if (response.ok) {
-      callback({ isSuccess: response.ok, result: response.json() })
+    if (response.ok && responseLayout.ok) {
+      readLayout(details.layout)
       setTrip({
         ...trip,
         destination: details.destination,
         duration: details.duration,
+        photoURL: details.photoURL,
+        layout: details.layout,
       })
-    } else {
-      callback({ isSuccess: response.ok, errorMessage: await response.text() })
+
+      callback()
     }
   }
 
@@ -583,6 +623,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         deleteWeather,
         createEvent,
         modifyTrip,
+        modifyEvent,
       }}
     >
       {(id === undefined || resizable.order.length === 0) && (
