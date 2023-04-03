@@ -26,5 +26,5 @@ export default function Content() {
     )
   })
 
-  return <SortableList axis="xy" onSortStart={onSortStart} onSortEnd={onSortEnd}  />
+  return <SortableList axis="xy" onSortStart={onSortStart} onSortEnd={onSortEnd} />
 }
