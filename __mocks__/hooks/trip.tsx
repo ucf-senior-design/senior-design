@@ -3,10 +3,10 @@ import { TripDetails, useTrip } from "../../utility/hooks/trip"
 import { wrapperForWidgets } from "../wrapper"
 
 export const MODIFY_TRIP: TripDetails = {
-    duration: {start: new Date(), end: new Date()},
-    destination: 'Paris, France',
-    photoURL: '',
-    layout: [],
+  duration: { start: new Date(), end: new Date() },
+  destination: "Paris, France",
+  photoURL: "",
+  layout: [],
 }
 
 export function mockUseTrip() {

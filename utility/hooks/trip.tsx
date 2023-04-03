@@ -1,7 +1,5 @@
-import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, CircularProgress } from "@mui/material"
 import dayjs from "dayjs"
-import { useRouter } from "next/router"
 import React from "react"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
@@ -124,8 +122,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     if (window !== undefined && window.location !== undefined) {
       let location = window.location.search
-      const id = location
-      setId(id as string)
+      setId(location.replace("?id=", ""))
     }
   }, [])
 
