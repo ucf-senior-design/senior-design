@@ -1,7 +1,7 @@
 import { ArrowBack } from "@mui/icons-material"
-import { Backdrop, Button, CircularProgress } from "@mui/material"
+import { Backdrop, CircularProgress } from "@mui/material"
+import dayjs from "dayjs"
 import { useRouter } from "next/router"
-import queryString from "query-string"
 import React from "react"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
@@ -23,7 +23,6 @@ import { User } from "../types/user"
 import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
 import { useScreen } from "./screen"
-import dayjs from "dayjs"
 
 export type Day = {
   date: Date
@@ -41,7 +40,7 @@ interface TripUseState extends Trip {
   didReadLayout: boolean
 }
 
-interface TripDetails {
+export interface TripDetails {
   duration: Duration
   destination: string
   photoURL: string
@@ -124,7 +123,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (window !== undefined && window.location !== undefined) {
-      const { id } = queryString.parse(window.location.search)
+      let location = window.location.search
+      const id = location
       setId(id as string)
     }
   }, [])
@@ -240,15 +240,15 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }).then(async (response) => {
       if (response.ok) {
         const { data } = await response.json()
-
-        data.forEach((p: Poll) => {
-          polls.set(p.uid, {
-            uid: p.uid,
-            owner: p.owner,
-            title: p.title,
-            options: p.options,
+        if (data !== undefined && data !== null)
+          data.forEach((p: Poll) => {
+            polls.set(p.uid, {
+              uid: p.uid,
+              owner: p.owner,
+              title: p.title,
+              options: p.options,
+            })
           })
-        })
       }
     })
 
@@ -283,22 +283,23 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       if (response.ok) {
         const { data } = await response.json()
 
-        data.forEach((s: any) => {
-          const suggestions = new Map<string, SuggestionOption>()
-          s.suggestions.forEach((sug: SuggestionOption) => {
-            suggestions.set(sug.uid, {
-              ...sug,
-              likes: new Set(sug.likes),
-            } as SuggestionOption)
-          })
+        if (data !== undefined && data !== null)
+          data.forEach((s: any) => {
+            const suggestions = new Map<string, SuggestionOption>()
+            s.suggestions.forEach((sug: SuggestionOption) => {
+              suggestions.set(sug.uid, {
+                ...sug,
+                likes: new Set(sug.likes),
+              } as SuggestionOption)
+            })
 
-          suggestionWidgets.set(s.uid, {
-            uid: s.uid,
-            owner: s.owner,
-            title: s.title,
-            suggestions: suggestions,
+            suggestionWidgets.set(s.uid, {
+              uid: s.uid,
+              owner: s.owner,
+              title: s.title,
+              suggestions: suggestions,
+            })
           })
-        })
       }
     })
     return suggestionWidgets
@@ -394,7 +395,14 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       let data = await response.json()
 
       const { joinable, itinerary }: { joinable: Array<Event>; itinerary: Array<Event> } = data
-
+      if (
+        joinable === undefined ||
+        joinable === null ||
+        itinerary === undefined ||
+        itinerary === null
+      ) {
+        return null
+      }
       // Determine actualy joinable events
       let joinableIndex = 0
 
