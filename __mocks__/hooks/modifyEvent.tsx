@@ -18,9 +18,13 @@ export const MODIFIED_EVENT: ModifiedEvent = {
   description: "MODIFIED Sample Description",
   uid: "Sample uid",
 }
-
-export function callbackFunction() {
-  return true
+export const MODIFIED_EVENT_WITH_ATTENDEES = {
+  title: "MODIFIED Sample Title",
+  duration: { start: new Date(), end: new Date() },
+  location: "MODIFIED Sample Location",
+  description: "MODIFIED Sample Description",
+  uid: "Sample uid",
+  attendees: [],
 }
 
 export function mockModifyEvent(originalEvent: Event) {
