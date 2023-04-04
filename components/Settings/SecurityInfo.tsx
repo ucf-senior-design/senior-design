@@ -15,7 +15,7 @@ export default function SecurityInfo() {
       >
         <Typography sx={{ fontSize: "15px" }}>security information</Typography>
         <Divider />
-        <Link href="/settings/passwordUpdate" passHref>
+        <Link href="/settings/passwordUpdate" passHref legacyBehavior>
           <Button
             variant="outlined"
             aria-label="update password button"
@@ -26,5 +26,5 @@ export default function SecurityInfo() {
         </Link>
       </Stack>
     </Paper>
-  )
+  );
 }

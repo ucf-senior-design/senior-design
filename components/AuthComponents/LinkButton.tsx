@@ -5,11 +5,11 @@ import theme from "../../styles/theme/Theme"
 export const LinkButton = ({ text, link }: { text: any; link: any }) => {
   return (
     <ThemeProvider theme={theme}>
-      <Link href={link} passHref>
-        <a style={{ textDecoration: "underline" }}>{text}</a>
+      <Link href={link} passHref style={{ textDecoration: "underline" }}>
+        {text}
       </Link>
     </ThemeProvider>
-  )
+  );
 }
 
 export default LinkButton

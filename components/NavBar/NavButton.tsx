@@ -11,7 +11,7 @@ export function NavBarButton({
   variant: "text" | "outlined" | "contained"
 }) {
   return (
-    <Link href={path} passHref>
+    <Link href={path} passHref legacyBehavior>
       <Button
         color={path === "/" ? "landing" : "secondary"}
         variant={variant}
@@ -20,5 +20,5 @@ export function NavBarButton({
         {text}
       </Button>
     </Link>
-  )
+  );
 }

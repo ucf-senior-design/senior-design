@@ -42,7 +42,7 @@ const Home: NextPage = () => {
             a collaborative approach to group planning.
           </Typography>
 
-          <Link href="/auth/register" passHref>
+          <Link href="/auth/register" passHref legacyBehavior>
             <Button
               variant="outlined"
               endIcon={<ArrowForwardIcon />}
@@ -79,7 +79,7 @@ const Home: NextPage = () => {
         </Stack>
       </main>
     </div>
-  )
+  );
 }
 
 export default Home

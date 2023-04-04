@@ -91,61 +91,59 @@ export const LoggedOutDrawer = ({
   const authNavItems = [authItem1, authItem2, authItem3]
   const { doLogout } = useAuth()
 
-  return (
-    <>
-      <Grid container direction="row" sx={{ mb: 2, color: "white" }}>
-        <IconButton sx={{ p: 0, pr: 1 }}>
-          <AirportShuttleIcon sx={{ color: "white" }} />
-        </IconButton>
-        <Typography variant="h6">we-tinerary</Typography>
-      </Grid>
-      <Divider />
-      <List>
-        {user?.didFinishRegister ? (
-          <>
-            {authNavItems.map((item) => (
-              <Link href={item.link} key={item.id} passHref>
-                <ListItem component="a" disablePadding sx={{ color: "white" }}>
-                  <ListItemButton aria-label={item.buttonLabel}>
-                    <ListItemIcon aria-label={item.iconLabel}>
-                      <item.icon sx={{ color: "white" }} />
-                    </ListItemIcon>
-                    <ListItemText primary={item.name} />
-                  </ListItemButton>
-                </ListItem>
-              </Link>
-            ))}
-            <div>
-              <Divider sx={{ marginTop: 4 }} />
-              <Button
-                variant="outlined"
-                color="warning"
-                sx={{ width: "100%" }}
-                onClick={() => doLogout()}
-              >
-                Log Out
-              </Button>
-            </div>
-          </>
-        ) : (
-          <>
-            {navItems.map((item) => (
-              <Link href={item.link} key={item.id} passHref>
-                <ListItem component="a" disablePadding sx={{ color: "white" }}>
-                  <ListItemButton aria-label={item.buttonLabel}>
-                    <ListItemIcon aria-label={item.iconLabel}>
-                      <item.icon sx={{ color: "white" }} />
-                    </ListItemIcon>
-                    <ListItemText primary={item.name} />
-                  </ListItemButton>
-                </ListItem>
-              </Link>
-            ))}
-          </>
-        )}
-      </List>
-    </>
-  )
+  return <>
+    <Grid container direction="row" sx={{ mb: 2, color: "white" }}>
+      <IconButton sx={{ p: 0, pr: 1 }}>
+        <AirportShuttleIcon sx={{ color: "white" }} />
+      </IconButton>
+      <Typography variant="h6">we-tinerary</Typography>
+    </Grid>
+    <Divider />
+    <List>
+      {user?.didFinishRegister ? (
+        <>
+          {authNavItems.map((item) => (
+            <Link href={item.link} key={item.id} passHref legacyBehavior>
+              <ListItem component="a" disablePadding sx={{ color: "white" }}>
+                <ListItemButton aria-label={item.buttonLabel}>
+                  <ListItemIcon aria-label={item.iconLabel}>
+                    <item.icon sx={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText primary={item.name} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          ))}
+          <div>
+            <Divider sx={{ marginTop: 4 }} />
+            <Button
+              variant="outlined"
+              color="warning"
+              sx={{ width: "100%" }}
+              onClick={() => doLogout()}
+            >
+              Log Out
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          {navItems.map((item) => (
+            <Link href={item.link} key={item.id} passHref legacyBehavior>
+              <ListItem component="a" disablePadding sx={{ color: "white" }}>
+                <ListItemButton aria-label={item.buttonLabel}>
+                  <ListItemIcon aria-label={item.iconLabel}>
+                    <item.icon sx={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText primary={item.name} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          ))}
+        </>
+      )}
+    </List>
+  </>;
 }
 
 export default LoggedOutDrawer
