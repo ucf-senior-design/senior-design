@@ -52,4 +52,3 @@ jobs:
           yarn lint
           yarn prettier
           yarn build
-
