@@ -62,7 +62,6 @@ export default function About() {
           flexDirection: "column",
           textAlign: "center",
           alignItems: "center",
-          justifyContent: "center",
         }}
       >
         <div>

@@ -30,7 +30,7 @@ export default function PersonalInfo() {
     })
     updateLoading(false)
   }
-
+ 
   return (
     <Paper>
       <Stack
@@ -52,7 +52,7 @@ export default function PersonalInfo() {
           onChange={(e: { target: { value: string } }) =>
             setInfo((info) => ({
               ...info,
-              displayName: e.target.value,
+              name: e.target.value,
             }))
           }
           sx={{ marginBottom: 2, marginTop: 1 }}
