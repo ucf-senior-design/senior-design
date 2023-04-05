@@ -1,6 +1,9 @@
+import BallotIcon from "@mui/icons-material/Ballot"
+import LightbulbIcon from "@mui/icons-material/Lightbulb"
 import MenuBookIcon from "@mui/icons-material/MenuBook"
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1"
 import PublicIcon from "@mui/icons-material/Public"
+import WbSunnyIcon from "@mui/icons-material/WbSunny"
 import { Card, Grid, Typography, useTheme } from "@mui/material"
 
 const item1 = {
@@ -17,16 +20,36 @@ const item2 = {
   subtitle: "let our widgets and APIs grab all the information you need to plan your dream trip",
 }
 const item3 = {
-  id: 2,
+  id: 3,
   icon: MenuBookIcon,
   header: "create the itinerary",
   subtitle:
     "after consulting the extensive trip document, create an itinerary that everyone can see and enjoy",
 }
+const item4 = {
+  id: 4,
+  icon: BallotIcon,
+  header: "create polls",
+  subtitle:
+    "finding it hard to decide? utilize our poll widget and let the majority determine the best option!",
+}
+const item5 = {
+  id: 5,
+  icon: LightbulbIcon,
+  header: "suggest an idea",
+  subtitle: "get inspiration from your attendees by using our suggestion widget to gather ideas",
+}
+const item6 = {
+  id: 6,
+  icon: WbSunnyIcon,
+  header: "check the weather",
+  subtitle:
+    "preview the week's forecast with our weather widget to plan your trip with confidence.",
+}
 
 export default function About() {
   const theme = useTheme()
-  const boxItems = [item1, item2, item3]
+  const boxItems = [item1, item2, item3, item4, item5, item6]
 
   return (
     <>
@@ -41,7 +64,6 @@ export default function About() {
           flexDirection: "column",
           textAlign: "center",
           alignItems: "center",
-          justifyContent: "center",
         }}
       >
         <div>
