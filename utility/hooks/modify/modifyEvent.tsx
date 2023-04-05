@@ -6,7 +6,7 @@ import { useTrip } from "../trip"
 
 export type useModifyEventHook = {
   modifiedEvent: EventType
-  modify: (callback: (isSuccess: boolean) => void) => Promise<void>
+  modify: (callback: (isSuccess: boolean) => void, test?: boolean) => Promise<boolean>
   setModifiedEvent: Dispatch<SetStateAction<Event>>
   updateTitle: (title: string) => void
   updateDuration: (startDate: Date, endDate: Date) => void
@@ -51,29 +51,25 @@ export default function useModifyEvent(originalEvent: Event): useModifyEventHook
     })
   }
 
-  async function modify(callback: (isSuccess: boolean) => void) {
-    if (user === undefined) {
+  async function modify(callback: (isSuccess: boolean) => void, test?: boolean) {
+    if (user === undefined && test === undefined) {
       updateErrorToast("Please try again later.")
-      return
+      return false
     }
 
     if (modifiedEvent.title === undefined || modifiedEvent.title == "") {
       updateErrorToast("Please enter a title.")
-      return
+      return false
     }
     if (modifiedEvent.duration === undefined) {
       updateErrorToast("Please select a duration.")
-      return
+      return false
     }
-    if (modifiedEvent.location === undefined) {
+    if (modifiedEvent.location === undefined || modifiedEvent.location == "") {
       updateErrorToast("Please enter a location.")
-      return
+      return false
     }
 
-    if (user === undefined) {
-      updateErrorToast("Please try again later.")
-      return
-    }
     await modifyEvent(
       {
         title: modifiedEvent.title,
@@ -86,6 +82,7 @@ export default function useModifyEvent(originalEvent: Event): useModifyEventHook
         callback(isSuccess)
       },
     )
+    return true
   }
 
   return {

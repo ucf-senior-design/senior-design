@@ -13,7 +13,10 @@ export const ORIGINAL_EVENT: Event = {
 }
 export const MODIFIED_EVENT: ModifiedEvent = {
   title: "MODIFIED Sample Title",
-  duration: { start: new Date(), end: new Date() },
+  duration: {
+    start: new Date("2023-04-03T23:04:45.155Z"),
+    end: new Date("2023-04-03T23:14:45.155Z"),
+  },
   location: "MODIFIED Sample Location",
   description: "MODIFIED Sample Description",
   uid: "Sample uid",
