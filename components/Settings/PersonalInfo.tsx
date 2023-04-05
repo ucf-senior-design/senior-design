@@ -30,7 +30,7 @@ export default function PersonalInfo() {
     })
     updateLoading(false)
   }
- 
+
   return (
     <Paper>
       <Stack
