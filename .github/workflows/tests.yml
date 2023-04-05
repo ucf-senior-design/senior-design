@@ -3,11 +3,38 @@ name: Tests CI
 on: [pull_request]
 
 jobs:
-    coverage:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v1
-            - uses: artiomtr/jest-coverage-report-action@v2
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  #   threshold: 80 # optional parameter
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo "Ok so it seems like this is running."
+
+      # Creates .env file
+      - name: Create env file
+        run: |
+          pwd
+          touch .env.local
+          touch .test.test
+          echo "${{secrets.ENV}}" >> .env.local
+          echo "${{vars.TEST}}" >> .test.test
+          echo "${{env.TEST}}" >> .test.tester
+          cat .test.test
+          cat .test.tester
+
+      # Runs a set of commands using the runners shell
+      - name: Install Dependencies
+        run: |
+          npm install -g yarn
+          yarn install --frozen-lockfile
+      
+      - uses: actions/checkout@v1
+      - uses: artiomtr/jest-coverage-report-action@v2
+        with:
+            test-script: yarn jest --ci --json --coverage --testLocationInResults --outputFile=report.json
