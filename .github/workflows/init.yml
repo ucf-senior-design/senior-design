@@ -59,8 +59,9 @@ jobs:
         with:
           node-version: 16
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-            # Creates .env file
+      - uses:
+          actions/checkout@v3
+          # Creates .env file
       - name: Create env file
         run: |
           pwd
@@ -71,6 +72,7 @@ jobs:
           echo "${{env.TEST}}" >> .test.tester
           cat .test.test
           cat .test.tester
-      
-      - uses: dorny/test-reporter@v1.6.0
+
+      - name: Test Reporter
+        uses: dorny/test-reporter@v1.6.0
 
