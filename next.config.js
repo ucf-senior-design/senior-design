@@ -5,6 +5,9 @@ const nextConfig = {
   images: {
     domains: ["openweathermap.org"],
   },
+  experimental: {
+    newNextLinkBehavior: false,
+  },
   async headers() {
     // enable cors in nextJS
     return [

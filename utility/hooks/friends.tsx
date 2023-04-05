@@ -105,6 +105,7 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
       return friendOptions
     }
 
+    console.info("FRIEND LIST", friendList)
     friendList?.forEach((friendship, _) => {
       if (friendship.status.state === "accepted") {
         let uid = getFriendUID(friendship.pairing)
@@ -123,6 +124,8 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     let tfriendList = new Map<string, Friendship>()
     await fetch(`${API_URL}friends`, { method: "GET" }).then(async (result) => {
       if (result.ok) {
+        console.info(result, result.json())
+        return
         const { friends } = await result.json()
         friends.forEach((friend: Friendship) => {
           tfriendList.set(friend.uid, friend)

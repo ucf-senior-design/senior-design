@@ -5,6 +5,7 @@ import { TripProvider } from "../utility/hooks/trip"
 import React from "react"
 import * as nextRouter from "next/router"
 import * as queryString from "query-string"
+import { FriendProvider } from "../utility/hooks/friends"
 
 export function wrapperForWidgets(): ({ children }: { children: React.ReactNode }) => JSX.Element {
   // @ts-ignore
@@ -16,7 +17,9 @@ export function wrapperForWidgets(): ({ children }: { children: React.ReactNode 
     <ScreenProvider>
       <AuthProvider>
         <ResizableProvider>
-          <TripProvider>{children} </TripProvider>{" "}
+          <TripProvider>
+            <FriendProvider> {children} </FriendProvider>{" "}
+          </TripProvider>{" "}
         </ResizableProvider>
       </AuthProvider>
     </ScreenProvider>
