@@ -1,5 +1,3 @@
-import { SuggestionOption } from "../utility/types/trip"
-
 export function mockAllFetch(
   isOk: boolean,
   status: number,
@@ -55,6 +53,22 @@ export function mockAllFetch(
           }),
       })
     }
+
+    if (
+      req.startsWith(`${process.env.NEXT_PUBLIC_API_URL}/trip//polls/vote/`) &&
+      options.method === "PUT"
+    ) {
+      return Promise.resolve({
+        status: status,
+        ok: isOk,
+        json: () =>
+          Promise.resolve({
+            value: "value",
+            voters: new Array<string>(""),
+          }),
+      })
+    }
+
     return Promise.resolve({
       status: status,
       ok: isOk,
