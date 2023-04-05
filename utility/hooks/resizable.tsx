@@ -1,9 +1,6 @@
 import React from "react"
 import Widget from "../../components/Widget"
 import { StoredLocation, WidgetType } from "../types/trip"
-import { useLocalStorage } from "react-use-storage"
-import { ConstructionOutlined } from "@mui/icons-material"
-import { send } from "process"
 
 type ResizableUseState = {
   size: Map<string, number> // stores the size of each item <key,size>
@@ -22,8 +19,10 @@ interface Resizable {
   createKey: (type: WidgetType, uid: string) => string
   getWidget: (key: string) => React.ReactNode
   onSortEnd: ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => void
+  onSortStart: () => void
   addItem: (key: string) => void
   getStorableLayout: (order: Array<string>) => void
+  moving: boolean
 }
 
 const ResizableContext = React.createContext<Resizable | null>(null)
@@ -46,6 +45,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     order: [],
     widgets: new Map<string, React.ReactNode>(),
   })
+  const [moving, setMoving] = React.useState(false)
 
   const DEFAULT_SIZE_INDEX = 1
   const SIZES = [1, 2, 3, 4]
@@ -230,6 +230,11 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
       ...resizable,
       order: moveArray(oldIndex, newIndex),
     })
+    setMoving(false)
+  }
+
+  function onSortStart() {
+    setMoving(true)
   }
 
   return (
@@ -242,12 +247,14 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
         handleItemUpdate,
         readLayout,
         resizable,
+        onSortStart,
         onSortEnd,
         getWidget,
         addItem,
         canDecreaseSize,
         canIncreaseSize,
         getStorableLayout,
+        moving,
       }}
     >
       {children}

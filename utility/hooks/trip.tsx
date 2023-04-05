@@ -1,6 +1,5 @@
-import { ArrowBack } from "@mui/icons-material"
 import { Backdrop, CircularProgress } from "@mui/material"
-import { useRouter } from "next/router"
+import dayjs from "dayjs"
 import React from "react"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
@@ -22,7 +21,6 @@ import { User } from "../types/user"
 import { useAuth } from "./authentication"
 import { useResizable } from "./resizable"
 import { useScreen } from "./screen"
-import dayjs from "dayjs"
 
 export type Day = {
   date: Date
@@ -40,7 +38,7 @@ interface TripUseState extends Trip {
   didReadLayout: boolean
 }
 
-interface TripDetails {
+export interface TripDetails {
   duration: Duration
   destination: string
   photoURL: string
@@ -90,12 +88,10 @@ export function useTrip(): TripContext {
 
 export function TripProvider({ children }: { children: React.ReactNode }) {
   const [id, setId] = React.useState<string>()
-  const [height, setHeight] = React.useState(0)
-  const [showOverlay, setShowOverlay] = React.useState(true)
-  const router = useRouter()
-
-  const { updateNav, updateErrorToast } = useScreen()
-  const { readLayout, createKey, addItem, resizable, getStorableLayout } = useResizable()
+  const WEBSOCKET_TIMER_SECONDS = 30
+  const [resetTime, setResetTime] = React.useState(false)
+  const { readLayout, createKey, addItem, resizable, getStorableLayout, moving } = useResizable()
+  const { updateErrorToast } = useScreen()
   const [trip, setTrip] = React.useState<TripUseState>({
     uid: "",
     attendees: new Set(),
@@ -126,8 +122,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     if (window !== undefined && window.location !== undefined) {
       let location = window.location.search
-      const id = location
-      setId(id as string)
+      setId(location.replace("?id=", ""))
     }
   }, [])
 
@@ -152,6 +147,13 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       setTrip({ ...trip, didReadLayout: true })
     }
   }, [trip])
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setResetTime(!resetTime)
+    }, WEBSOCKET_TIMER_SECONDS * 1000)
+    if (!moving) initilizeTrip()
+  }, [resetTime])
 
   function addNewWidget(type: WidgetType, uid: string) {
     const key = createKey(type, uid)
@@ -194,14 +196,18 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
     return days
   }
+
   async function initilizeTrip() {
+    if (id === undefined) {
+      return
+    }
     let trip = await getTrip()
     let suggestionWidgets = await getSuggestionWidgetData()
     let eventData = await getEventData()
     let pollWidgets = await getPollWidgetData()
 
     if (suggestionWidgets === null || trip === null || eventData == null) {
-      updateErrorToast("Cannot load trip.")
+      updateErrorToast("cannot load trip.")
       return
     }
 
@@ -301,13 +307,15 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     const response = await fetch(`${API_URL}trip/${id}`, options)
     if (response.ok) {
       let t = (await response.json()) as Trip
-      return {
-        ...t,
-        duration: {
-          start: new Date(t?.duration.start),
-          end: new Date(t?.duration.end),
-        },
-      }
+
+      if (t !== undefined && t !== null && t.duration !== undefined)
+        return {
+          ...t,
+          duration: {
+            start: new Date(t?.duration.start),
+            end: new Date(t?.duration.end),
+          },
+        }
     }
     return null
   }

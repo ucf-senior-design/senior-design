@@ -1,10 +1,9 @@
-import { useResizable } from "../../utility/hooks/resizable"
-import React from "react"
 import { SortableContainer } from "react-sortable-hoc"
+import { useResizable } from "../../utility/hooks/resizable"
 import { CreateItem } from "./CreateItem"
 
 export default function Content() {
-  const { resizable, onSortEnd } = useResizable()
+  const { resizable, onSortEnd, onSortStart } = useResizable()
 
   const SortableList = SortableContainer(() => {
     return (
@@ -27,5 +26,5 @@ export default function Content() {
     )
   })
 
-  return <SortableList axis="xy" onSortEnd={onSortEnd} />
+  return <SortableList axis="xy" onSortStart={onSortStart} onSortEnd={onSortEnd} />
 }
