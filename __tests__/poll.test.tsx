@@ -25,12 +25,19 @@ describe("polls hook", () => {
 
   // vote on an option w/ successful response
   test("successfully vote on a poll option", async () => {
-    mockAllFetch(true, 200)
+    mockAllFetch(true, 200, [
+      {
+        path: `trip//poll/vote`,
+        status: 200,
+        ok: true,
+        json: () => Promise.resolve({}),
+      },
+    ])
     const result = mockUsePoll(POLL)
 
-    // act(() => {
-    //   result.current.selectOption(0)
-    // })
+    act(() => {
+      result.current.selectOption(0)
+    })
 
     await result.current.doVote()
 

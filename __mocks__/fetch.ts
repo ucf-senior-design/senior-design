@@ -54,14 +54,17 @@ export function mockAllFetch(
       })
     }
 
-    if (req.endsWith("polls/vote/uid/0") && options.method === "PUT") {
+    if (
+      req.startsWith(`${process.env.NEXT_PUBLIC_API_URL}/trip//polls/vote/`) &&
+      options.method === "PUT"
+    ) {
       return Promise.resolve({
         status: status,
         ok: isOk,
         json: () =>
           Promise.resolve({
             value: "value",
-            voters: new Array<string>(),
+            voters: new Array<string>(""),
           }),
       })
     }

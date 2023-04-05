@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react-hooks/dom"
 import usePoll from "../../utility/hooks/polls"
-import { Poll as PollType, PollOption } from "../../utility/types/trip"
+import { PollOption, Poll as PollType } from "../../utility/types/trip"
 import { wrapperForWidgets } from "../wrapper"
 
 export const POLL_OPTION: PollOption = {
@@ -11,7 +11,7 @@ export const POLL: PollType = {
   owner: "owner",
   uid: "uid",
   title: "title",
-  options: new Array<PollOption>(),
+  options: new Array<PollOption>(POLL_OPTION),
 }
 export function mockUsePoll(p: PollType) {
   const wrapper = wrapperForWidgets()
