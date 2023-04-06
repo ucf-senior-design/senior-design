@@ -1,17 +1,21 @@
 import { ArrowBack } from "@mui/icons-material"
-import { Button } from "@mui/material"
-import Typography from "@mui/material/Typography"
+import { Button, Stack, Typography } from "@mui/material"
 import { useRouter } from "next/router"
 import React from "react"
-import Avatar from "../../components/Avatar"
-import { useScreen } from "../../utility/hooks/screen"
-import { useTrip } from "../../utility/hooks/trip"
+import AvatarMuiChip from "../../../../components/AvatarMuiChip"
+import { useScreen } from "../../../../utility/hooks/screen"
+import { useTrip } from "../../../../utility/hooks/trip"
+import { User } from "../../../../utility/types/user"
 
-export function TripHeader() {
+export default function Attendees() {
   const router = useRouter()
   const { trip } = useTrip()
   const { updateNav } = useScreen()
+  const [attendees, setAttendees] = React.useState<Map<string, User> | undefined>()
+
   React.useEffect(() => {
+    setAttendees(trip?.userData ?? new Map())
+
     updateNav(
       {
         background:
@@ -20,7 +24,7 @@ export function TripHeader() {
       "transparent",
       <div
         style={{
-          height: "250px",
+          height: "150px",
         }}
       >
         <Button onClick={() => router.back()}>
@@ -38,32 +42,18 @@ export function TripHeader() {
           }}
         >
           <Typography sx={{ fontSize: "40px", fontWeight: "bold", color: "white" }}>
-            {trip.destination}
+            trip attendees
           </Typography>
-          <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-            {Array.from(trip.attendees).map((attendee) => {
-              return (
-                <Avatar
-                  key={attendee}
-                  name={trip.userData?.get(attendee)?.name ?? "name"}
-                  size={50}
-                />
-              )
-            })}
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => {
-                router.push(`/dashboard/trip/attendees?id=${trip.uid}`)
-              }}
-            >
-              view all attendees
-            </Button>
-          </div>
         </div>
       </div>,
     )
   }, [trip])
 
-  return <></>
+  return (
+    <>
+      <Stack width={150} direction={"column"}>
+        <AvatarMuiChip attendees={attendees} />
+      </Stack>
+    </>
+  )
 }

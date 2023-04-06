@@ -118,7 +118,7 @@ export default function NavBar({ path }: { path: string }) {
               {user?.didFinishRegister ? (
                 <>
                   <NavBarButton path="/dashboard" text="dashboard" variant="text" />
-                  <NavBarButton path="/settings/friends" text="settings" variant="text" />
+                  <NavBarButton path="/settings/friends" text="friends" variant="text" />
                   <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
                     <Button
                       ref={anchorRef}
