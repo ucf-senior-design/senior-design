@@ -69,6 +69,7 @@ export default function useModifyEvent(originalEvent: Event) {
         location: modifiedEvent.location,
         uid: modifiedEvent.uid,
       },
+      originalEvent.attendees,
       (isSuccess) => {
         callback(isSuccess)
       },

@@ -72,7 +72,11 @@ interface TripContext {
   // handle events
   createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
   modifyTrip: (details: TripDetails, callback: () => void) => Promise<void>
-  modifyEvent: (event: ModifiedEvent, callback: (isSuccess: boolean) => void) => Promise<void>
+  modifyEvent: (
+    event: ModifiedEvent,
+    attendees: Array<string>,
+    callback: (isSuccess: boolean) => void,
+  ) => Promise<void>
 }
 
 const TripContext = React.createContext<TripContext>({} as TripContext)
@@ -148,12 +152,12 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }
   }, [trip])
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      setResetTime(!resetTime)
-    }, WEBSOCKET_TIMER_SECONDS * 1000)
-    if (!moving) initilizeTrip()
-  }, [resetTime])
+  // React.useEffect(() => {
+  //   setTimeout(() => {
+  //     setResetTime(!resetTime)
+  //   }, WEBSOCKET_TIMER_SECONDS * 1000)
+  //   if (!moving) initilizeTrip()
+  // }, [resetTime])
 
   function addNewWidget(type: WidgetType, uid: string) {
     const key = createKey(type, uid)
@@ -568,19 +572,51 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }
     callback(response.ok)
   }
-  async function modifyEvent(event: ModifiedEvent, callback: (isSuccess: boolean) => void) {
-    const options = createFetchRequestOptions(JSON.stringify(event), "PUT")
-    const response = await fetch(`${API_URL}/trip/${trip.uid}/event/info/${event.uid}`, options)
-    if (response.ok) {
-      let modifiedEvent: Event = await response.json()
-      setTrip({
-        ...trip,
 
-        itinerary: Array.from(replaceEventInList(trip.itinerary, modifiedEvent)),
-      })
-      initilizeTrip()
+  async function rescheduleEvent(
+    uid: string,
+    data: { duration: Duration; attendees: Array<string> },
+    callback: (isSuccess: boolean, errorMessage?: string) => void,
+  ) {
+    const options = createFetchRequestOptions(JSON.stringify(data), "PUT")
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/event/reschedule/${uid}`, options)
+
+    if (response.ok) {
+      callback(true)
+      return
     }
-    callback(response.ok)
+
+    callback(false, await response.text())
+  }
+  async function modifyEvent(
+    event: ModifiedEvent,
+    attendees: Array<string>,
+    callback: (isSuccess: boolean) => void,
+  ) {
+    await rescheduleEvent(
+      event.uid,
+      { duration: event.duration, attendees: attendees },
+      async (isSuccess, errorMessage) => {
+        if (isSuccess) {
+          const options = createFetchRequestOptions(JSON.stringify(event), "PUT")
+          const response = await fetch(
+            `${API_URL}/trip/${trip.uid}/event/info/${event.uid}`,
+            options,
+          )
+
+          if (response.ok) {
+            let modifiedEvent: Event = await response.json()
+            setTrip({
+              ...trip,
+              itinerary: Array.from(replaceEventInList(trip.itinerary, modifiedEvent)),
+            })
+          }
+          callback(response.ok)
+        } else {
+          updateErrorToast(errorMessage)
+        }
+      },
+    )
   }
 
   async function storeLayout() {

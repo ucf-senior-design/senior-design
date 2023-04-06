@@ -89,40 +89,12 @@ const WeatherWidget: React.FC = () => {
           <Paper
             square={false}
             style={{
-              display: "inline-block",
               borderRadius: 5,
-              backgroundColor: "#E1E2DE",
+              backgroundColor: "white",
               width: "100%",
             }}
           >
-            <Grid container direction="row" justifyContent="flex-end">
-              {/* TODO: Temporarily removing editing */}
-              {/* {state.inEditMode ? (
-                <IconButton
-                  onClick={() =>
-                    setState((val) => ({
-                      ...val,
-                      inEditMode: false,
-                    }))
-                  }
-                  style={$iconButtonStyle}
-                >
-                  <CancelIcon style={$iconStyle} />
-                </IconButton>
-              ) : (
-                <IconButton
-                  onClick={() =>
-                    setState((val) => ({
-                      ...val,
-                      inEditMode: true,
-                    }))
-                  }
-                  style={$iconButtonStyle}
-                >
-                  <EditIcon style={$iconStyle} />
-                </IconButton>
-              )} */}
-            </Grid>
+            <Grid container direction="row" justifyContent="flex-end"></Grid>
             <Divider orientation="horizontal" />
             <Grid container direction="row" justifyContent="space-evenly">
               <Stack
@@ -145,20 +117,8 @@ const WeatherWidget: React.FC = () => {
                   </Typography>
                 </Stack>
                 <Stack justifyContent={"center"} alignItems={"center"} margin={1} padding={1}>
-                  {/* TODO: Grab the location from trip info as a default parameter instead */}
-                  {state.inEditMode ? (
-                    <TextField
-                      error={state.isError}
-                      disabled={loading}
-                      helperText={state.isError ? "city not found" : ""}
-                      id="city_name"
-                      label={loading ? "loading..." : "enter a city"}
-                      variant="standard"
-                      onBlur={(e) => setCity(e.target.value)}
-                    />
-                  ) : (
-                    <Typography variant="h4">{weatherWidget.current.name}</Typography>
-                  )}
+                  <Typography variant="h4">{weatherWidget.current.name}</Typography>
+
                   <Typography variant="h6">{weatherWidget.current.main.temp}°F</Typography>
 
                   <Typography variant="caption" noWrap={true} style={{ marginTop: 15 }}>
