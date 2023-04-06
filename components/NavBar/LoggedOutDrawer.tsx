@@ -75,11 +75,11 @@ const authItem2 = {
 }
 const authItem3 = {
   id: 2,
-  link: "/dashboard/teams",
-  name: "teams",
-  buttonLabel: "teams button",
+  link: "/settings/friends",
+  name: "friends",
+  buttonLabel: "friends list button",
   icon: GroupsIcon,
-  iconLabel: "teams",
+  iconLabel: "friends",
 }
 
 export const LoggedOutDrawer = ({
