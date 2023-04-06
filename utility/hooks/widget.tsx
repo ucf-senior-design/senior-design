@@ -22,15 +22,7 @@ export default function useWidget(w: Widget) {
     }
     if (splitKey[0] === "day") {
       let day = trip.days[parseInt(splitKey[1])]
-      return (
-        <Day
-          day={new Date(day.date)}
-          events={day.itinerary}
-          joinableEvents={day.joinable}
-          weatherIcon={<WbSunny />}
-          temperature={30}
-        />
-      )
+      return <Day day={new Date(day.date)} events={day.itinerary} joinableEvents={day.joinable} />
     }
 
     if (splitKey[0] === "poll") {
