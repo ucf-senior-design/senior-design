@@ -15,10 +15,10 @@ export default function Attendees() {
   })
 
   return (
-      <Stack width={150} direction={"column"}>
-        <Typography sx={{ padding: 1 }}>trip attendees</Typography>
-        <Divider sx={{ marginBottom: 1 }} />
-        <AvatarMuiChip attendees={attendees} />
-      </Stack>
+    <Stack width={150} direction={"column"}>
+      <Typography sx={{ padding: 1 }}>trip attendees</Typography>
+      <Divider sx={{ marginBottom: 1 }} />
+      <AvatarMuiChip attendees={attendees} />
+    </Stack>
   )
 }
