@@ -2,7 +2,6 @@ import { Button, Divider, Paper, Stack, Typography } from "@mui/material"
 import Link from "next/link"
 
 export default function SecurityInfo() {
-
   return (
     <Paper>
       <Stack
