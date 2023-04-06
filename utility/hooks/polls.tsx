@@ -15,6 +15,7 @@ export type usePollHook = {
   doesUserOwn: () => boolean
   didUserVote: (index: number) => boolean
   doVote: () => Promise<void>
+  poll: Poll
   showResults: () => boolean
   selectOption: (index: number) => void
   pollResults: (index: number) => number
@@ -132,6 +133,7 @@ export default function usePoll(p: Poll): usePollHook {
     didUserVote,
     doVote,
     selectOption,
+    poll,
     pollResults,
     showResults,
     hasUserVoted,

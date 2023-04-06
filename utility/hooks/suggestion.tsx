@@ -2,6 +2,7 @@ import React from "react"
 import { createFetchRequestOptions } from "../fetch"
 import { SuggestionOption, SuggestionWidget } from "../types/trip"
 import { useAuth } from "./authentication"
+import { useScreen } from "./screen"
 import { useTrip } from "./trip"
 
 // Type of the Suggestion useState used in this custom hook
@@ -28,8 +29,9 @@ export type useSuggestionHook = {
 export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
   const { user } = useAuth()
   const { trip } = useTrip()
-
+  const { updateErrorToast } = useScreen()
   const userID = user?.uid ?? ""
+
   const tripID = trip.uid
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -79,6 +81,7 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
       JSON.stringify({ suggestion: suggestion.newSuggestion }),
       "PUT",
     )
+
     await fetch(`${API_URL}trip/${tripID}/suggestion/add/${suggestion.uid}`, options).then(
       async (response) => {
         if (response.ok) {
@@ -100,7 +103,7 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
             showAddPopUp: false,
           })
         } else {
-          alert("Try again later")
+          updateErrorToast("Try again later")
         }
       },
     )
@@ -111,7 +114,6 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
    * @param selectedOption the uid of the suggestion the user is trying to like.
    */
   async function like(selectedOption: string) {
-    // Create the fetch request.
     const options = createFetchRequestOptions(JSON.stringify({}), "PUT")
     await fetch(
       `${API_URL}trip/${tripID}/suggestion/like/${suggestion.uid}/${selectedOption}`,
@@ -134,7 +136,7 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
             }
           })
         } else {
-          alert("Try Again Later")
+          updateErrorToast("Try again later")
         }
       })
       .catch(() => {})
@@ -165,7 +167,7 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
           }
         })
       } else {
-        alert("Try Again Later")
+        updateErrorToast("Try Again Later")
       }
     })
   }

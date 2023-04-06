@@ -35,9 +35,12 @@ export function SelectChipList({
       <Button
         key={index}
         onClick={() => hook.updateSelected(option)}
-        color="primary"
-        variant={hook.isSelected(option) ? "contained" : "outlined"}
-        sx={$chip}
+        variant={"contained"}
+        sx={{
+          ...$chip,
+          backgroundColor: hook.isSelected(option) ? "#A09CC9" : "#EFEFEF",
+          color: hook.isSelected(option) ? "white" : "black",
+        }}
       >
         <div>
           <Typography style={{ fontSize: 16, fontStyle: "bold" }}>{option}</Typography>
@@ -52,7 +55,11 @@ export function SelectChipList({
         <FormLabel> {label}</FormLabel>
         <div style={$chipContainer}>
           {chips}
-          <Button onClick={() => hook.togglePopUp()} sx={$addChip} variant="outlined">
+          <Button
+            onClick={() => hook.togglePopUp()}
+            sx={{ ...$addChip, backgroundColor: "#3F3D56" }}
+            variant="contained"
+          >
             <Add />
           </Button>
         </div>
