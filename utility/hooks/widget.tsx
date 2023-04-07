@@ -4,7 +4,7 @@ import Day from "../../components/Dashboard/Day"
 import Poll from "../../components/Dashboard/Widgets/Poll/Poll"
 import { Suggestions } from "../../components/Dashboard/Widgets/Suggestions"
 import WeatherWidget from "../../components/Dashboard/Widgets/WeatherWidget"
-import { SuggestionWidget, Widget } from "../types/trip"
+import { SuggestionWidget, Widget, WidgetType } from "../types/trip"
 import { useTrip } from "./trip"
 export default function useWidget(w: Widget) {
   const [popup, setPopup] = React.useState(false)
@@ -12,6 +12,7 @@ export default function useWidget(w: Widget) {
 
   function getWidgetUI(): React.ReactNode {
     let splitKey = w.key.split(":")
+    let widgetType: WidgetType = splitKey[0] as any
     if (splitKey[0] === "suggestion") {
       return (
         <Suggestions
@@ -20,17 +21,25 @@ export default function useWidget(w: Widget) {
         />
       )
     }
-    if (splitKey[0] === "day") {
+    if (widgetType === "day") {
       let day = trip.days[parseInt(splitKey[1])]
       return <Day day={new Date(day.date)} events={day.itinerary} joinableEvents={day.joinable} />
     }
 
-    if (splitKey[0] === "poll") {
+    if (widgetType === "poll") {
       return <Poll poll={trip.polls.get(splitKey[1]) as any} showResults={false} />
     }
 
-    if (splitKey[0] === "weather") {
+    if (widgetType === "weather") {
       return <WeatherWidget />
+    }
+
+    if (widgetType === "preference") {
+      return <div> preference widget </div>
+    }
+
+    if (widgetType === "availabillity") {
+      return <div> availabillity widget</div>
     }
 
     return <></>

@@ -1,10 +1,16 @@
+import { Cable } from "@mui/icons-material"
 import { Backdrop, CircularProgress } from "@mui/material"
+import Layout from "antd/es/layout/layout"
 import dayjs from "dayjs"
 import React from "react"
+import { domainToASCII } from "url"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
 import { Response } from "../types/helper"
 import {
+  ActivityPref,
+  ActivityPrefWidget,
+  AvailabillityWidget,
   CreatedEvent,
   Duration,
   Event,
@@ -35,6 +41,8 @@ interface TripUseState extends Trip {
   destination: string
   userData: Map<string, User> | undefined
   days: Array<Day>
+  activityPreferences: Map<string, ActivityPrefWidget>
+  availabillity: Map<string, AvailabillityWidget>
   didReadLayout: boolean
 }
 
@@ -55,7 +63,7 @@ interface TripContext {
     options: Array<string>,
     callback: (response: Response) => void,
   ) => Promise<void>
-  deleteSuggestion: (uid: string) => Promise<void>
+  deleteSuggestion: (uid: string, callback: (isSuccess: boolean) => void) => Promise<void>
 
   // handle polls
   createPoll: (
@@ -63,7 +71,7 @@ interface TripContext {
     options: Array<string>,
     callback: (response: Response) => void,
   ) => Promise<void>
-  deletePoll: (uid: string) => Promise<void>
+  deletePoll: (uid: string, callback: (isSuccess: boolean) => void) => Promise<void>
 
   // handle weather widgetcreateP
   createWeather: (callback: (response: Response) => void) => void
@@ -73,6 +81,16 @@ interface TripContext {
   createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
   modifyTrip: (details: TripDetails, callback: () => void) => Promise<void>
   modifyEvent: (event: ModifiedEvent, callback: (isSuccess: boolean) => void) => Promise<void>
+
+  // handle preferences widget
+  deleteActivityWidget: (uid: string, callback: (isSuccess: boolean) => void) => void
+  createActivityWidget: (preferences: ActivityPref, callback: (isSuccess: boolean) => void) => void
+
+  createAvailabillityWidget: (
+    data: { title: string; dates: Array<Duration> },
+    callback: (isSuccess: boolean) => void,
+  ) => void
+  deleteAvailabillityWidget: (uid: string, callback: (isSuccess: boolean) => void) => void
 }
 
 const TripContext = React.createContext<TripContext>({} as TripContext)
@@ -93,6 +111,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   const { readLayout, createKey, addItem, resizable, getStorableLayout, moving } = useResizable()
   const { updateErrorToast } = useScreen()
   const [trip, setTrip] = React.useState<TripUseState>({
+    // Trip Values
     uid: "",
     attendees: new Set(),
     duration: {
@@ -101,11 +120,17 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     },
     layout: [],
     destination: "",
-    polls: new Map<string, Poll>(),
-    suggestions: new Map<string, SuggestionWidget>(),
+    photoURL: "",
     itinerary: [],
     joinableEvents: [],
-    photoURL: "",
+
+    // Widget Data
+    availabillity: new Map(),
+    polls: new Map<string, Poll>(),
+    activityPreferences: new Map<string, ActivityPrefWidget>(),
+    suggestions: new Map<string, SuggestionWidget>(),
+
+    // Other
     userData: new Map<string, User>(),
     days: [],
     didReadLayout: false,
@@ -113,6 +138,10 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
   const { user } = useAuth()
 
+  React.useEffect(() => {
+    readLayout(trip.layout)
+    storeLayout()
+  }, [trip.layout])
   React.useEffect(() => {
     if (resizable.order.length !== 0) {
       storeLayout()
@@ -159,6 +188,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     const key = createKey(type, uid)
     addItem(key)
   }
+
   function getEventsByDay(
     start: Date,
     end: Date,
@@ -205,6 +235,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     let suggestionWidgets = await getSuggestionWidgetData()
     let eventData = await getEventData()
     let pollWidgets = await getPollWidgetData()
+    let availabillityWidgets = await getAvailabillityWidgetData()
+    let prefWidgets = await getPreferenceWidgetData()
 
     if (suggestionWidgets === null || trip === null || eventData == null) {
       updateErrorToast("cannot load trip.")
@@ -219,12 +251,14 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       itinerary: eventData.userEvents,
       joinableEvents: eventData.joinableEvents,
       userData: (await getUserData(Array.from(trip.attendees))) as Map<string, User>,
+      availabillity: availabillityWidgets,
       days: getEventsByDay(
         trip.duration.start,
         trip.duration.end,
         eventData.userEvents,
         eventData.joinableEvents,
       ),
+      activityPreferences: prefWidgets,
       didReadLayout: false,
     })
   }
@@ -269,6 +303,49 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         return [value.uid, value]
       }),
     )
+  }
+
+  async function getPreferenceWidgetData() {
+    const prefWidgets = new Map<string, ActivityPrefWidget>()
+
+    const response = await fetch(`${API_URL}trip/${id}/activityPref/`, {
+      method: "GET",
+    })
+
+    if (response.ok) {
+      const { data } = await response.json()
+
+      data.forEach((widget: any) => {
+        prefWidgets.set(widget.uid, {
+          ...widget,
+          sports: new Set(widget.sports),
+          nature: new Set(widget.nature),
+          sightseeing: new Set(widget.sightseeing),
+          lowPrice: new Set(widget.lowPrice),
+          medPrice: new Set(widget.medPrice),
+          highPrice: new Set(widget.highPrice),
+          veryHighPrice: new Set(widget.veryHighPrice),
+        })
+      })
+    }
+    return prefWidgets
+  }
+  async function getAvailabillityWidgetData() {
+    const availabillityWidgets = new Map<string, AvailabillityWidget>()
+
+    const response = await fetch(`${API_URL}trip/${id}/availabillity/`, {
+      method: "GET",
+    })
+
+    if (response.ok) {
+      const { data } = await response.json()
+
+      data.forEach((widget: any) => {
+        availabillityWidgets.set(widget.uid, widget)
+      })
+    }
+
+    return availabillityWidgets
   }
 
   async function getSuggestionWidgetData() {
@@ -379,7 +456,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     return list
   }
 
-  // TODO: Handle short break periods when determining joinable events
   async function getEventData() {
     let joinableEvents: Array<Array<Event>> = []
     let userEvents: Array<Array<Event>> = []
@@ -482,8 +558,35 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  // TODO: Allow a user to delete a suggestion widget for the trip.
-  async function deleteSuggestion(uid: string) {}
+  function removeFromLayout(uid: string) {
+    let newLayout: Array<StoredLocation> = []
+
+    trip.layout.forEach((item) => {
+      let splitKey = item.key.split(":")
+      if (splitKey.length !== 2 && splitKey[1] !== uid) newLayout.push(item)
+    })
+
+    return newLayout
+  }
+
+  async function deleteSuggestion(uid: string, callback: (isSuccess: boolean) => void) {
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/suggestion/${uid}`, {
+      method: "DELETE",
+    })
+
+    if (response.ok) {
+      let map = new Map(trip.suggestions)
+      let layout = removeFromLayout(uid)
+
+      map.delete(uid)
+      setTrip({
+        ...trip,
+        suggestions: map,
+        layout: layout,
+      })
+    }
+    callback(response.ok)
+  }
 
   async function createPoll(
     title: string,
@@ -527,10 +630,26 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  // TODO: Allow a user to delete a poll widget for the trip.
-  async function deletePoll(uid: string) {}
+  async function deletePoll(uid: string, callback: (isSuccess: boolean) => void) {
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/polls/${uid}`, {
+      method: "DELETE",
+    })
 
-  // TODO: Allow a user to create a weather widget for the trip.
+    if (response.ok) {
+      let map = new Map(trip.polls)
+      let layout = removeFromLayout(uid)
+
+      map.delete(uid)
+      setTrip({
+        ...trip,
+        polls: map,
+        layout: layout,
+      })
+    }
+
+    callback(response.ok)
+  }
+
   function createWeather(callback: (response: Response) => void) {
     if (user === undefined) {
       callback({ isSuccess: false, errorMessage: "login and try again later." })
@@ -540,20 +659,104 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     callback({ isSuccess: true })
   }
 
-  // TODO: Allow a user to delete a weather widget for the trip.
-  async function deleteWeather(uid: string) {}
+  async function deleteWeather(uid: string) {
+    let layout = removeFromLayout(uid)
+    setTrip({
+      ...trip,
+      layout: layout,
+    })
+  }
 
-  // TODO: Allow a user to delete an activity widget for the trip.
-  async function deleteActivityWidget(uid: string) {}
+  async function deleteActivityWidget(uid: string, callback: (isSuccess: boolean) => void) {
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/activityPref/${uid}`, {
+      method: "DELETE",
+    })
 
-  // TODO: Allow a user to delete an activity widget for the trip.
-  async function createActivityWidget() {}
+    if (response.ok) {
+      let map = new Map(trip.activityPreferences)
+      let layout = removeFromLayout(uid)
 
-  // TODO: Allow a user to create an availabillity widget for the trip.
-  async function createAvailabillityWidget() {}
+      map.delete(uid)
+      setTrip({
+        ...trip,
+        activityPreferences: map,
+        layout: layout,
+      })
+    }
 
-  // TODO: Allow a user to delete an availabillity widget for the trip
-  async function deleteAvailabillityWidget() {}
+    callback(response.ok)
+  }
+
+  async function createActivityWidget(
+    preferences: ActivityPref,
+    callback: (isSuccess: boolean) => void,
+  ) {
+    const options = createFetchRequestOptions(JSON.stringify(preferences), "POST")
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/activityPref`, options)
+
+    if (response.ok) {
+      let widget = await response.json()
+      let map = new Map(trip.activityPreferences)
+      map.set(widget.uid, {
+        ...widget,
+        sports: new Set(widget.sports),
+        nature: new Set(widget.nature),
+        sightseeing: new Set(widget.sightseeing),
+        lowPrice: new Set(widget.lowPrice),
+        medPrice: new Set(widget.medPrice),
+        highPrice: new Set(widget.highPrice),
+        veryHighPrice: new Set(widget.veryHighPrice),
+      })
+
+      setTrip({
+        ...trip,
+        activityPreferences: map,
+      })
+      addNewWidget("preference", widget.uid)
+    }
+
+    callback(response.ok)
+  }
+
+  async function createAvailabillityWidget(
+    data: { title: string; dates: Array<Duration> },
+    callback: (isSuccess: boolean) => void,
+  ) {
+    const options = createFetchRequestOptions(JSON.stringify(data), "POST")
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/availabillity`, options)
+
+    if (response.ok) {
+      const widget = await response.json()
+      let map = new Map(trip.availabillity)
+      map.set(widget.uid, widget)
+
+      setTrip({
+        ...trip,
+        availabillity: map,
+      })
+      addNewWidget("availabillity", widget.uid)
+    }
+
+    callback(response.ok)
+  }
+
+  async function deleteAvailabillityWidget(uid: string, callback: (isSuccess: boolean) => void) {
+    const response = await fetch(`${API_URL}/trip/${trip.uid}/availabillity`, { method: "DELETE" })
+
+    if (response.ok) {
+      let map = new Map(trip.availabillity)
+      let layout = removeFromLayout(uid)
+
+      map.delete(uid)
+      setTrip({
+        ...trip,
+        layout: layout,
+        availabillity: map,
+      })
+    }
+
+    callback(response.ok)
+  }
 
   async function createEvent(event: CreatedEvent, callback: (isSuccess: boolean) => void) {
     const options = createFetchRequestOptions(JSON.stringify(event), "POST")
@@ -632,6 +835,10 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         createEvent,
         modifyTrip,
         modifyEvent,
+        createActivityWidget,
+        deleteActivityWidget,
+        createAvailabillityWidget,
+        deleteAvailabillityWidget,
       }}
     >
       {(id === undefined || resizable.order.length === 0) && (
