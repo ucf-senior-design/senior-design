@@ -8,7 +8,7 @@ function AttendeeDisplay({ attendee }: { attendee: User }) {
     <div>
       {attendee.allergies ? (
         <div>
-          <Typography>preferences</Typography>
+          <Typography>allergies</Typography>
           <p>{attendee.allergies}</p>
         </div>
       ) : (
