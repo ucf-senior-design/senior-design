@@ -368,7 +368,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         }
       }
     }
-    console.error("Could not find Original Event")
     return list
   }
 

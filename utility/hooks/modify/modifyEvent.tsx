@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react"
+import React from "react"
 import { Event, Event as EventType } from "../../types/trip"
 import { useAuth } from "../authentication"
 import { useScreen } from "../screen"
@@ -7,7 +7,6 @@ import { useTrip } from "../trip"
 export type useModifyEventHook = {
   modifiedEvent: EventType
   modify: (callback: (isSuccess: boolean) => void, test?: boolean) => Promise<boolean>
-  setModifiedEvent: Dispatch<SetStateAction<Event>>
   updateTitle: (title: string) => void
   updateDuration: (startDate: Date, endDate: Date) => void
   updateDescription: (description: string) => void
@@ -51,8 +50,8 @@ export default function useModifyEvent(originalEvent: Event): useModifyEventHook
     })
   }
 
-  async function modify(callback: (isSuccess: boolean) => void, test?: boolean) {
-    if (user === undefined && test === undefined) {
+  async function modify(callback: (isSuccess: boolean) => void) {
+    if (user === undefined) {
       updateErrorToast("Please try again later.")
       return false
     }
@@ -76,7 +75,7 @@ export default function useModifyEvent(originalEvent: Event): useModifyEventHook
         description: modifiedEvent.description,
         duration: modifiedEvent.duration,
         location: modifiedEvent.location,
-        uid: originalEvent.uid,
+        uid: modifiedEvent.uid,
       },
       (isSuccess) => {
         callback(isSuccess)
@@ -87,7 +86,6 @@ export default function useModifyEvent(originalEvent: Event): useModifyEventHook
 
   return {
     modifiedEvent,
-    setModifiedEvent,
     modify,
     updateTitle,
     updateDuration,

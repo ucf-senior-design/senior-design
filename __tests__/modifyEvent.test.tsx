@@ -1,6 +1,5 @@
-import { act } from "react-dom/test-utils"
 import { mockAllFetch } from "../__mocks__/fetch"
-import { mockModifyEvent, MODIFIED_EVENT, ORIGINAL_EVENT } from "../__mocks__/hooks/modifyEvent"
+import { mockModifyEvent, ORIGINAL_EVENT } from "../__mocks__/hooks/modifyEvent"
 
 describe("Modify Event Hook", () => {
   beforeEach(() => {
@@ -10,7 +9,7 @@ describe("Modify Event Hook", () => {
     jest.spyOn(console, "log").mockImplementation(() => {})
   })
 
-  test("Successfully modified", async () => {
+  test("Event successfully modified completely", async () => {
     mockAllFetch(true, 200, [
       {
         path: `/trip//event/info/`,
@@ -20,61 +19,34 @@ describe("Modify Event Hook", () => {
       },
     ])
     const result = mockModifyEvent(ORIGINAL_EVENT)
-    await act(async () => {
-      await result.current.updateDuration(
-        MODIFIED_EVENT.duration.start,
-        MODIFIED_EVENT.duration.end,
-      )
-      await result.current.updateLocation(MODIFIED_EVENT.location)
-      await result.current.updateDescription(MODIFIED_EVENT.description)
-      await result.current.updateTitle(MODIFIED_EVENT.title)
-    })
 
-    expect(await result.current.modify(() => {}, true)).toEqual(true)
+    expect(await result.current.modify(() => {})).toEqual(true)
   })
-  test("Blank Title", async () => {
+  test("No Title Entered Fail", async () => {
     mockAllFetch(true, 200, [
       {
         path: `/trip//event/info/`,
-        status: 200,
-        ok: true,
+        status: 400,
+        ok: false,
         json: () => Promise.resolve({}),
       },
     ])
-    const result = mockModifyEvent(ORIGINAL_EVENT)
-    await act(async () => {
-      await result.current.updateDuration(
-        MODIFIED_EVENT.duration.start,
-        MODIFIED_EVENT.duration.end,
-      )
-      await result.current.updateLocation(MODIFIED_EVENT.location)
-      await result.current.updateDescription(MODIFIED_EVENT.description)
-      await result.current.updateTitle("")
-    })
+    const result = mockModifyEvent({ ...ORIGINAL_EVENT, title: "" })
 
-    expect(await result.current.modify(() => {}, true)).toEqual(false)
+    expect(await result.current.modify(() => {})).toEqual(false)
   })
 
-  test("Blank Location", async () => {
+  test("No Location Entered Fail", async () => {
     mockAllFetch(true, 200, [
       {
         path: `/trip//event/info/`,
-        status: 200,
-        ok: true,
+        status: 400,
+        ok: false,
         json: () => Promise.resolve({}),
       },
     ])
-    const result = mockModifyEvent(ORIGINAL_EVENT)
-    await act(async () => {
-      await result.current.updateDuration(
-        MODIFIED_EVENT.duration.start,
-        MODIFIED_EVENT.duration.end,
-      )
-      await result.current.updateLocation("")
-      await result.current.updateDescription(MODIFIED_EVENT.description)
-      await result.current.updateTitle(MODIFIED_EVENT.title)
-    })
+    const result = mockModifyEvent({ ...ORIGINAL_EVENT, location: "" })
 
-    expect(await result.current.modify(() => {}, true)).toEqual(false)
+    expect(await result.current.modify(() => {})).toEqual(false)
   })
 })
