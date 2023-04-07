@@ -60,11 +60,7 @@ export default function useSuggestion(p: PreferencesWidget): usePreferenceHook {
       .catch(() => {})
   }
 
-  async function calculateResults(selectedOption: string){
-
-  }
-
-  
+  async function calculateResults(selectedOption: string) {}
 
   return {
     // addSuggestion,
