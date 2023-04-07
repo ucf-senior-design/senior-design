@@ -1,4 +1,4 @@
-import { ArrowBack } from "@mui/icons-material"
+import { ArrowBack, MoreHoriz } from "@mui/icons-material"
 import { Button } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import { useRouter } from "next/router"
@@ -41,24 +41,28 @@ export function TripHeader() {
             {trip.destination}
           </Typography>
           <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-            {Array.from(trip.attendees).map((attendee) => {
-              return (
-                <Avatar
-                  key={attendee}
-                  name={trip.userData?.get(attendee)?.name ?? "name"}
-                  size={50}
-                />
-              )
+            {Array.from(trip.attendees).map((attendee, index) => {
+              if (index <= 4)
+                return (
+                  <Avatar
+                    key={attendee}
+                    name={trip.userData?.get(attendee)?.name ?? "name"}
+                    size={50}
+                  />
+                )
             })}
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => {
-                router.push(`/dashboard/trip/attendees?id=${trip.uid}`)
-              }}
-            >
-              view all attendees
-            </Button>
+            {trip.attendees !== undefined && trip.attendees.size !== 0 && (
+              <Button
+                sx={{ display: "flex", alignItems: "center", justifyContent: "start" }}
+                variant="text"
+                color="secondary"
+                onClick={() => {
+                  router.push(`/dashboard/trip/attendees?id=${trip.uid}`)
+                }}
+              >
+                <MoreHoriz />
+              </Button>
+            )}
           </div>
         </div>
       </div>,
