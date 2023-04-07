@@ -5,9 +5,7 @@ import { useScreen } from "./screen"
 import { useTrip } from "./trip"
 
 // All of the values and functions returned from this use state
-export type usePreferenceHook = {
-
-}
+export type usePreferenceHook = {}
 
 export default function useSuggestion(p: PreferencesWidget): usePreferenceHook {
   const { user } = useAuth()
@@ -18,9 +16,7 @@ export default function useSuggestion(p: PreferencesWidget): usePreferenceHook {
   const tripID = trip.uid
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL
-  const [preference, setPreference] = React.useState<PreferenceUseState>({
-  })
-
+  const [preference, setPreference] = React.useState<PreferenceUseState>({})
 
   /**
    * Checks if a user voted on a preference - see results if so.
@@ -32,19 +28,16 @@ export default function useSuggestion(p: PreferencesWidget): usePreferenceHook {
     return voted !== undefined ? voted : false
   }
 
-
-
   /**
    * Allows a user to vote on a preference
    * @param selectedOption the uid of the suggestion the user is trying to like.
    */
   async function sendVote(selectedOption: string) {
     const options = createFetchRequestOptions(JSON.stringify({}), "PUT")
-    // await fetch(
-    //   `${API_URL}trip/${tripID}/suggestion/like/${suggestion.uid}/${selectedOption}`,
-    //   options,
-    // )
-
+      // await fetch(
+      //   `${API_URL}trip/${tripID}/suggestion/like/${suggestion.uid}/${selectedOption}`,
+      //   options,
+      // )
 
       .then((response) => {
         if (response.ok) {
@@ -67,16 +60,18 @@ export default function useSuggestion(p: PreferencesWidget): usePreferenceHook {
       .catch(() => {})
   }
 
+  async function calculateResults(selectedOption: string){
+
+  }
+
   
 
-
-
   return {
-        // addSuggestion,
-        // didUserLike,
-        // like,
-        // unLike,
-        // storeNewSuggestion,
-        // doesUserOwn,
+    // addSuggestion,
+    // didUserLike,
+    // like,
+    // unLike,
+    // storeNewSuggestion,
+    // doesUserOwn,
   }
 }
