@@ -22,9 +22,9 @@ type <NameOfWidget>Widget = {
 
 ### step 2: start working on the UI
 
-working on the UI first is easiest, because you can see if you need to make any changes to your type before creating the hook! You can create your widget in Dashboard/Widgets/<NameOfWidget>.tsx
+working on the UI first is easiest, because you can see if you need to make any changes to your type before creating the hook! You can create your widget in components/Dashboard/Widgets/<NameOfWidget>.tsx
 
-Also, be sure to use temporary data here of the type of your widget. You can return this component temporarily in trip/[[…params]].tsx.So you can see the UI while working on it.
+Also, be sure to use temporary data here of the type of your widget. You can return this component temporarily in `pages/dashboard/trip/\[\[...params\]\].tsx` so you can see the UI while working on it.
 
 ```tsx
 // components/Dashboard/Widgets/<widgetName>.tsx
