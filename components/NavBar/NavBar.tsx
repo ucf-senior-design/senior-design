@@ -119,7 +119,7 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
               {loggedIn ? (
                 <>
                   <NavBarButton path="/dashboard" text="dashboard" variant="text" />
-                  <NavBarButton path="/dashboard/teams" text="teams" variant="text" />
+                  <NavBarButton path="/settings/friends" text="friends" variant="text" />
                   <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
                     {anchorRef !== null && anchorRef !== undefined && (
                       <>
