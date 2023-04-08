@@ -159,7 +159,7 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
                                     onKeyDown={handleListKeyDown}
                                   >
                                     {/* TODO: Add logic for settings page*/}
-                                    {/* <MenuItem onClick={handleMenuClose}>my account</MenuItem> */}
+                                    <MenuItem onClick={handleSettings}>my account</MenuItem>
                                     <MenuItem onClick={(e) => handleLogout()}>logout</MenuItem>
                                   </MenuList>
                                 </ClickAwayListener>
