@@ -84,13 +84,16 @@ interface TripContext {
 
   // handle preferences widget
   deleteActivityWidget: (uid: string, callback: (isSuccess: boolean) => void) => void
-  createActivityWidget: (preferences: ActivityPref, callback: (isSuccess: boolean) => void) => void
+  createActivityWidget: (
+    preferences: ActivityPref,
+    callback: (isSuccess: boolean) => void,
+  ) => Promise<void>
 
   createAvailabillityWidget: (
     data: { title: string; dates: Array<Duration> },
-    callback: (isSuccess: boolean) => void,
+    callback: (isSuccess: boolean) => Promise<void>,
   ) => void
-  deleteAvailabillityWidget: (uid: string, callback: (isSuccess: boolean) => void) => void
+  deleteAvailabillityWidget: (uid: string, callback: (isSuccess: boolean) => void) => Promise<void>
 }
 
 const TripContext = React.createContext<TripContext>({} as TripContext)
