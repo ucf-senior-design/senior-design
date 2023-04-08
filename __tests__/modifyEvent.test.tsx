@@ -1,3 +1,4 @@
+import { act } from "react-dom/test-utils"
 import { mockAllFetch } from "../__mocks__/fetch"
 import { mockModifyEvent, ORIGINAL_EVENT } from "../__mocks__/hooks/modifyEvent"
 
@@ -10,19 +11,15 @@ describe("Modify Event Hook", () => {
   })
 
   test("Event successfully modified completely", async () => {
-    mockAllFetch(true, 200, [
-      {
-        path: `/trip//event/info/`,
-        status: 200,
-        ok: true,
-        json: () => Promise.resolve({}),
-      },
-    ])
+    mockAllFetch(true, 200)
     const result = mockModifyEvent(ORIGINAL_EVENT)
-
-    expect(await result.current.modify(() => {})).toEqual(true)
+    const onSuccessCallback = jest.fn(() => {})
+    act(async () => {
+      result.current.modify(() => onSuccessCallback)
+    })
+    expect(onSuccessCallback).toBeCalledTimes(1)
   })
-  test("No Title Entered Fail", async () => {
+  test("No Title Entered Should Fail", async () => {
     mockAllFetch(true, 200, [
       {
         path: `/trip//event/info/`,
@@ -32,11 +29,14 @@ describe("Modify Event Hook", () => {
       },
     ])
     const result = mockModifyEvent({ ...ORIGINAL_EVENT, title: "" })
-
-    expect(await result.current.modify(() => {})).toEqual(false)
+    const onSuccessCallback = jest.fn(() => {})
+    act(() => {
+      result.current.modify(onSuccessCallback)
+    })
+    expect(onSuccessCallback).toBeCalledTimes(0)
   })
 
-  test("No Location Entered Fail", async () => {
+  test("No Location Entered Should Fail", async () => {
     mockAllFetch(true, 200, [
       {
         path: `/trip//event/info/`,
@@ -46,7 +46,10 @@ describe("Modify Event Hook", () => {
       },
     ])
     const result = mockModifyEvent({ ...ORIGINAL_EVENT, location: "" })
-
-    expect(await result.current.modify(() => {})).toEqual(false)
+    const onSuccessCallback = jest.fn(() => {})
+    act(() => {
+      result.current.modify(onSuccessCallback)
+    })
+    expect(onSuccessCallback).toBeCalledTimes(0)
   })
 })
