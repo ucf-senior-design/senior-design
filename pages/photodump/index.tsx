@@ -1,3 +1,4 @@
+import { Box } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import * as GooglePhotosAlbum from "google-photos-album-image-url-fetch"
 import { Gallery } from "react-grid-gallery"
@@ -32,6 +33,7 @@ async function fetchAndLogUrls() {
   const photoArray = await GooglePhotosAlbum.fetchImageUrls(
     "https://photos.app.goo.gl/Pf9JFXUARNfN3Qhr7",
   )
+
   let stringified = JSON.stringify(photoArray, null, 2)
   console.log(stringified)
 
@@ -45,12 +47,8 @@ const imageArray = fetchAndLogUrls().catch((er) => console.error(er))
 
 export default function canvas() {
   return (
-    <>
-      <Typography variant="h1">
-        <b>PhotoDump</b> trip_name
-      </Typography>
-
+    <Box sx={{ width: "100%", height: "100%" }}>
       <Gallery images={images} />
-    </>
+    </Box>
   )
 }
