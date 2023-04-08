@@ -5,6 +5,7 @@ import React from "react"
 import { BackdropModal } from "../../../components/BackdropModal"
 import CreateEvent from "../../../components/Create/CreateEvent"
 import CreatePoll from "../../../components/Create/CreatePoll"
+import CreatePreferences from "../../../components/Create/CreatePreferences"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
 import CreateWeather from "../../../components/Create/CreateWeather"
 import Content from "../../../components/Dashboard/Content"
@@ -22,6 +23,7 @@ export default function Trip() {
   const [showCreateSuggestion, setShowCreateSuggestion] = React.useState(false)
   const [showModifyTrip, setShowModifyTrip] = React.useState(false)
   const [showCreateWeather, setShowCreateWeather] = React.useState(false)
+  const [showCreatePreference, setShowCreatePreference] = React.useState(false)
 
   // For each create popup add an item to the menu
   const items: MenuProps["items"] = [
@@ -44,6 +46,10 @@ export default function Trip() {
     {
       key: "5",
       label: <a onClick={() => setShowCreateWeather(true)}> Show Weather </a>,
+    },
+    {
+      key: "6",
+      label: <a onClick={() => setShowCreatePreference(true)}> Create Prefrence Widget</a>,
     },
   ]
 
@@ -72,6 +78,14 @@ export default function Trip() {
             </BackdropModal>
           </div>
 
+          <div style={$popUpDiv}>
+            <BackdropModal
+              isOpen={showCreatePreference}
+              toggleShow={() => setShowCreatePreference(!showCreatePreference)}
+            >
+              <CreatePreferences closeModal={() => setShowModifyTrip(false)} />
+            </BackdropModal>
+          </div>
           <div style={$popUpDiv}>
             <BackdropModal
               isOpen={showCreateEvent}
