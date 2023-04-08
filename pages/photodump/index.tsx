@@ -40,12 +40,12 @@ async function fetchAndLogUrls() {
   return photoArray
 }
 
-// Should take a Google Photos response and convert it into the format accepted by readt grid library.
+// Should take a Google Photos response and convert it into the format accepted by react grid library.
 function convertImageInfo() {}
 
 const imageArray = fetchAndLogUrls().catch((er) => console.error(er))
 
-export default function canvas() {
+export default function Photodump() {
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
       <Gallery images={images} />
