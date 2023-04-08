@@ -1,13 +1,11 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack"
-import EditIcon from "@mui/icons-material/Edit"
-import { Button, Grid } from "@mui/material"
+import { ArrowBack, MoreHoriz } from "@mui/icons-material"
+import { Button } from "@mui/material"
 import Typography from "@mui/material/Typography"
-import Avatar from "../../components/Avatar"
-import { useTrip } from "../../utility/hooks/trip"
-import React from "react"
-import { useScreen } from "../../utility/hooks/screen"
 import { useRouter } from "next/router"
-import { ArrowBack } from "@mui/icons-material"
+import React from "react"
+import Avatar from "../../components/Avatar"
+import { useScreen } from "../../utility/hooks/screen"
+import { useTrip } from "../../utility/hooks/trip"
 
 export function TripHeader() {
   const router = useRouter()
@@ -43,15 +41,28 @@ export function TripHeader() {
             {trip.destination}
           </Typography>
           <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-            {Array.from(trip.attendees).map((attendee) => {
-              return (
-                <Avatar
-                  key={attendee}
-                  name={trip.userData?.get(attendee)?.name ?? "name"}
-                  size={50}
-                />
-              )
+            {Array.from(trip.attendees).map((attendee, index) => {
+              if (index <= 4)
+                return (
+                  <Avatar
+                    key={attendee}
+                    name={trip.userData?.get(attendee)?.name ?? "name"}
+                    size={50}
+                  />
+                )
             })}
+            {trip.attendees !== undefined && trip.attendees.size !== 0 && (
+              <Button
+                sx={{ display: "flex", alignItems: "center", justifyContent: "start" }}
+                variant="text"
+                color="secondary"
+                onClick={() => {
+                  router.push(`/dashboard/trip/attendees?id=${trip.uid}`)
+                }}
+              >
+                <MoreHoriz />
+              </Button>
+            )}
           </div>
         </div>
       </div>,
