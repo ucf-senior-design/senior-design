@@ -16,10 +16,10 @@ export default function CreatePhotoDump({ closeModal }: { closeModal: () => void
         }}
       >
         <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
-          create event
+          create photo widget
         </Typography>
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-          title
+          url to google photos albumn
         </Typography>
         <TextField
           color={"secondary"}
