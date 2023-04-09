@@ -30,7 +30,7 @@ export default function ModifyTrip({ closeModal }: { closeModal: () => void }) {
     >
       <Box style={{ overflowY: "auto", maxHeight: "850px", width: "100%", gap: 2 }}>
         <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
-          Modifying trip to {trip.destination}
+          modify trip
         </Typography>
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           destination

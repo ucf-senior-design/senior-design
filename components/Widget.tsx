@@ -77,7 +77,7 @@ export default function Widget({ widget }: { widget: TWidget }) {
                   <Delete sx={{ fontSize: "18px" }} />
                 </Button>
                 <Button
-                  disabled={resize.canIncreaseSize(widget.key)}
+                  disabled={!resize.canIncreaseSize(widget.key)}
                   sx={{
                     color: "black",
                     borderColor: "#545270",
@@ -90,7 +90,7 @@ export default function Widget({ widget }: { widget: TWidget }) {
                 </Button>
 
                 <Button
-                  disabled={resize.canDecreaseSize(widget.key)}
+                  disabled={!resize.canDecreaseSize(widget.key)}
                   sx={{
                     marginRight: "5px",
                     marginLeft: "5px",
@@ -107,7 +107,7 @@ export default function Widget({ widget }: { widget: TWidget }) {
             )}
           </div>
         </div>
-        <div>{hook.getWidgetUI()}</div>
+        <div style={{ width: "100%" }}>{hook.getWidgetUI()}</div>
       </div>
     </div>
   )

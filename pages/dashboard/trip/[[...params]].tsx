@@ -41,21 +41,17 @@ export default function Trip() {
       key: "3",
       label: <a onClick={() => setShowCreateSuggestion(true)}> Create Suggestion Widget </a>,
     },
-    // TODO: Move this
+
     {
       key: "4",
-      label: <a onClick={() => setShowModifyTrip(true)}> Modify Trip </a>,
-    },
-    {
-      key: "5",
       label: <a onClick={() => setShowCreateWeather(true)}> Show Weather </a>,
     },
     {
-      key: "6",
+      key: "5",
       label: <a onClick={() => setShowCreatePreference(true)}> Create Prefrence Widget</a>,
     },
     {
-      key: "7",
+      key: "6",
       label: <a onClick={() => setShowCreateAvailabillity(true)}> Create Availabillity Widget</a>,
     },
   ]
@@ -64,7 +60,7 @@ export default function Trip() {
     <ResizableProvider>
       <TripProvider>
         <FriendProvider>
-          <TripHeader />
+          <TripHeader showModify={() => setShowModifyTrip(true)} />
           <Dropdown menu={{ items }} placement="topRight">
             <AButton style={$addButton}>
               <Add sx={{ color: "white" }} />
