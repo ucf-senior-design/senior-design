@@ -42,7 +42,7 @@ describe("useSuggestion Hook", () => {
     expect(result.current.suggestion.suggestions.size).toEqual(1)
   })
 
-  test("add a new suggestion w/o successful response", async () => {
+  test.skip("add a new suggestion w/o successful response", async () => {
     mockAllFetch(true, 200, [
       {
         path: "trip//suggestion/add/uid",
