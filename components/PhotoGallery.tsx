@@ -104,7 +104,7 @@ export default function PhotoGallery({ url }: { url: string }) {
     console.log(res[0])
     setImages(res) // lgtm🕺🤓
     // console.log(images) // LLLLL
-  })
+  }).catch((err) => console.log(err))
 
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
