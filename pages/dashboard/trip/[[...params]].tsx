@@ -4,7 +4,7 @@ import { Button as AButton, Dropdown } from "antd"
 import React from "react"
 import { BackdropModal } from "../../../components/BackdropModal"
 import CreateEvent from "../../../components/Create/CreateEvent"
-import CreatePhotodump from "../../../components/Create/CreatePhotodump"
+// import CreatePhotodump from "../../../components/Create/CreatePhotodump"
 import CreatePoll from "../../../components/Create/CreatePoll"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
 import CreateWeather from "../../../components/Create/CreateWeather"
@@ -115,14 +115,14 @@ export default function Trip() {
             </BackdropModal>
           </div>
 
-          <div style={$popUpDiv}>
+          {/* <div style={$popUpDiv}>
             <BackdropModal
               isOpen={showCreatePhotodump}
               toggleShow={() => setShowCreatePhotodump(!showCreatePhotodump)}
             >
               <CreatePhotodump closeModal={() => setShowCreatePhotodump(false)} />
             </BackdropModal>
-          </div>
+          </div> */}
 
           <Content />
         </FriendProvider>
