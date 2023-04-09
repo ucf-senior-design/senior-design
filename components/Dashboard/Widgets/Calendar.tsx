@@ -17,7 +17,16 @@ export function CalendarWidget({ availability }: { availability: Availabillity }
 
   return (
     <>
-      <Paper sx={{ padding: "20px", width: "100%", minWidth: "300px" ,maxHeight:"500px", overflowY:"auto", height: "100%" }}>
+      <Paper
+        sx={{
+          padding: "20px",
+          width: "100%",
+          minWidth: "300px",
+          maxHeight: "500px",
+          overflowY: "auto",
+          height: "100%",
+        }}
+      >
         <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center", fontSize: "20px" }}>
           {availability.title}
         </Typography>
