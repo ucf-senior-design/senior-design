@@ -1,11 +1,23 @@
 import { Button, Paper, Typography } from "@mui/material"
 import { Calendar, DatePicker } from "antd"
 import { Dayjs } from "dayjs"
+import React, { useState } from "react"
 import useAvailabillity from "../../../utility/hooks/availabillity"
 import { Availabillity } from "../../../utility/types/trip"
 
 export function CalendarWidget({ availability }: { availability: Availabillity }) {
   const { dates } = useAvailabillity(availability)
+  const availabillityHook = useAvailabillity(availability)
+  const [selectedDates, setSelectedDates] = useState([])
+
+  const [setMonth, setDay] = React.useState<{
+    month?: number
+    day?: number
+  }>({
+    month: undefined,
+    day: undefined,
+  })
+
   interface calInfo {
     usernames: string[]
     date: Date
@@ -43,7 +55,7 @@ export function CalendarWidget({ availability }: { availability: Availabillity }
   }
 
   const dateCellRender = (value: Dayjs) => {
-    const listData1 = new Map<string, string[]>([
+    const listData1 = new Map<string, Array<string>>([
       ["3:1", ["username", "test", "hi"]],
       ["3:3", ["username2", "test2", "hi2"]],
       ["3:9", ["username3", "test3", "hi3"]],
@@ -76,9 +88,15 @@ export function CalendarWidget({ availability }: { availability: Availabillity }
         Current group availability:
         <Calendar dateCellRender={dateCellRender} monthCellRender={monthCellRender} />
         Input an availability window:
-        <RangePicker />
+        <RangePicker
+          onChange={(e) => {
+            console.log(e)
+          }}
+        />
         <p>
-          <Button variant="outlined">submit</Button>
+          <Button variant="outlined">
+            submit
+          </Button>
         </p>
       </Paper>
     </>
