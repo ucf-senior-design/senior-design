@@ -1,3 +1,4 @@
+import { keys } from "@mui/system"
 import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import { useState } from "react"
@@ -27,7 +28,7 @@ export default function useModifyTrip() {
   })
 
   const { user } = useAuth()
-  const router = useRouter()
+
   const { updateErrorToast } = useScreen()
 
   function updateDestination(placeID: string, city: string) {
@@ -42,8 +43,8 @@ export default function useModifyTrip() {
     setModifyTripDetails({
       ...modifyTripDetails,
       duration: {
-        start: new Date(startDate),
-        end: new Date(endDate),
+        start: new Date(startDate.setHours(0, 0, 0, 0)),
+        end: new Date(endDate.setHours(0, 0, 0, 0)),
       },
     })
   }
@@ -63,33 +64,6 @@ export default function useModifyTrip() {
       }`
     }
     return undefined
-  }
-
-  function maybeModifyTripDetails() {
-    const timeDiff =
-      modifyTripDetails.duration.end.getTime() - modifyTripDetails.duration.start.getTime() //get the difference in milliseconds
-    const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) //convert milliseconds to days
-    let layout: Array<StoredLocation> = []
-
-    let startDiff = Math.floor(
-      (trip.duration.start.getTime() - modifyTripDetails.duration.start.getTime()) /
-        (1000 * 60 * 60 * 24),
-    ) // If Positive, moved earlier
-    let oldLayout = trip.layout
-    // adds all days to the layout
-    for (let i = 0; i < Math.max(1, dayDiff); i++) {
-      layout.push({ key: `day:${i}`, size: 3 })
-    }
-    console.log(oldLayout)
-    console.log(layout)
-
-    console.log(Math.max(1, dayDiff))
-    setModifyTripDetails({
-      ...modifyTripDetails,
-      layout: layout,
-    })
-
-    //TODO: Copying layout from overlapping days
   }
 
   function updateLayout() {
@@ -131,14 +105,39 @@ export default function useModifyTrip() {
       }
     })
 
+    let mergedLayout: Array<StoredLocation> = []
+
+    layout.forEach((item) => {
+      if (item.key.startsWith("day")) {
+        let splitKey = item.key.split(":")
+        let bday = parseInt(splitKey[1])
+        let keysToPop: Array<string> = []
+        newDayToIndex.forEach((day, key) => {
+          if (day < bday) {
+            mergedLayout.push({
+              key: `day:${day}`,
+              size: 2,
+            })
+            keysToPop.push(key)
+          }
+        })
+
+        keysToPop.forEach((key) => {
+          newDayToIndex.delete(key)
+        })
+      }
+
+      mergedLayout.push(item)
+    })
+
     newDayToIndex.forEach((day, _) => {
-      layout.push({
+      mergedLayout.push({
         key: `day:${day}`,
         size: 2,
       })
     })
 
-    return layout
+    return mergedLayout
   }
   async function modify(callback: () => void) {
     if (modifyTripDetails.destination.length === 0 || modifyTripDetails.placeID.length === 0) {
@@ -172,7 +171,6 @@ export default function useModifyTrip() {
   return {
     modify,
     modifyTrip,
-    maybeModifyTripDetails,
     updateDuration,
     updateDestination,
     modifyTripDetails,

@@ -1,10 +1,11 @@
+import { useRef } from "react"
 import { SortableContainer } from "react-sortable-hoc"
 import { useResizable } from "../../utility/hooks/resizable"
 import { CreateItem } from "./CreateItem"
 
 export default function Content() {
   const { resizable, onSortEnd, onSortStart } = useResizable()
-
+  const ref = useRef()
   const SortableList = SortableContainer(() => {
     return (
       <div
@@ -17,6 +18,8 @@ export default function Content() {
           gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
           gridGap: "0px",
           gridAutoRows: "3px",
+          maxHeight: "100%",
+          overflowY: "auto",
         }}
       >
         {resizable.order.map((value, index) => (
@@ -26,5 +29,13 @@ export default function Content() {
     )
   })
 
-  return <SortableList axis="xy" onSortStart={onSortStart} onSortEnd={onSortEnd} useDragHandle />
+  return (
+    <SortableList
+      axis="xy"
+      onSortStart={onSortStart}
+      onSortEnd={onSortEnd}
+      useDragHandle
+      useWindowAsScrollContainer={true}
+    />
+  )
 }
