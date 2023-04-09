@@ -2,7 +2,7 @@ import { Box, Button, Typography } from "@mui/material"
 import React from "react"
 import { Event as EventType } from "../../utility/types/trip"
 import { BackdropModal } from "../BackdropModal"
-import ModifyEvent from "../Form/ModifyEvent"
+import ModifyEvent from "../Modify/ModifyEvent"
 import Event from "./Event"
 import JoinableEvent from "./JoinableEvent"
 

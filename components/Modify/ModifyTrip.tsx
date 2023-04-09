@@ -4,8 +4,8 @@ import theme from "../../styles/theme/Theme"
 import useModifyTrip from "../../utility/hooks/modify/modifyTrip"
 import { useTrip } from "../../utility/hooks/trip"
 import { Duration } from "../../utility/types/trip"
-import DateRange from "./DateRange"
-import PlacesSearch from "./PlacesSearch"
+import DateRange from "../Form/DateRange"
+import PlacesSearch from "../Form/PlacesSearch"
 
 export default function ModifyTrip({ closeModal }: { closeModal: () => void }) {
   const { trip } = useTrip()

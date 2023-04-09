@@ -91,8 +91,8 @@ interface TripContext {
 
   createAvailabillityWidget: (
     data: { title: string; dates: Array<Duration> },
-    callback: (isSuccess: boolean) => Promise<void>,
-  ) => void
+    callback: (isSuccess: boolean) => void,
+  ) => Promise<void>
   deleteAvailabillityWidget: (uid: string, callback: (isSuccess: boolean) => void) => Promise<void>
 }
 

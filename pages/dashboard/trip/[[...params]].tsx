@@ -3,6 +3,7 @@ import type { MenuProps } from "antd"
 import { Button as AButton, Dropdown } from "antd"
 import React from "react"
 import { BackdropModal } from "../../../components/BackdropModal"
+import CreateAvailabillity from "../../../components/Create/CreateAvaillabillity"
 import CreateEvent from "../../../components/Create/CreateEvent"
 import CreatePoll from "../../../components/Create/CreatePoll"
 import CreatePreferences from "../../../components/Create/CreatePreferences"
@@ -10,7 +11,7 @@ import CreateSuggestion from "../../../components/Create/CreateSuggestion"
 import CreateWeather from "../../../components/Create/CreateWeather"
 import Content from "../../../components/Dashboard/Content"
 import { TripHeader } from "../../../components/Dashboard/TripHeader"
-import ModifyTrip from "../../../components/Form/ModifyTrip"
+import ModifyTrip from "../../../components/Modify/ModifyTrip"
 import { FriendProvider } from "../../../utility/hooks/friends"
 import { ResizableProvider } from "../../../utility/hooks/resizable"
 import { useScreen } from "../../../utility/hooks/screen"
@@ -24,6 +25,7 @@ export default function Trip() {
   const [showModifyTrip, setShowModifyTrip] = React.useState(false)
   const [showCreateWeather, setShowCreateWeather] = React.useState(false)
   const [showCreatePreference, setShowCreatePreference] = React.useState(false)
+  const [showCreateAvaillabillity, setShowCreateAvailabillity] = React.useState(false)
 
   // For each create popup add an item to the menu
   const items: MenuProps["items"] = [
@@ -37,8 +39,9 @@ export default function Trip() {
     },
     {
       key: "3",
-      label: <a onClick={() => setShowCreateSuggestion(true)}> Create Suggestion </a>,
+      label: <a onClick={() => setShowCreateSuggestion(true)}> Create Suggestion Widget </a>,
     },
+    // TODO: Move this
     {
       key: "4",
       label: <a onClick={() => setShowModifyTrip(true)}> Modify Trip </a>,
@@ -50,6 +53,10 @@ export default function Trip() {
     {
       key: "6",
       label: <a onClick={() => setShowCreatePreference(true)}> Create Prefrence Widget</a>,
+    },
+    {
+      key: "7",
+      label: <a onClick={() => setShowCreateAvailabillity(true)}> Create Availabillity Widget</a>,
     },
   ]
 
@@ -83,9 +90,19 @@ export default function Trip() {
               isOpen={showCreatePreference}
               toggleShow={() => setShowCreatePreference(!showCreatePreference)}
             >
-              <CreatePreferences closeModal={() => setShowModifyTrip(false)} />
+              <CreatePreferences closeModal={() => setShowCreatePreference(false)} />
             </BackdropModal>
           </div>
+
+          <div style={$popUpDiv}>
+            <BackdropModal
+              isOpen={showCreateAvaillabillity}
+              toggleShow={() => setShowCreateAvailabillity(!showCreateAvaillabillity)}
+            >
+              <CreateAvailabillity closeModal={() => setShowCreateAvailabillity(false)} />
+            </BackdropModal>
+          </div>
+
           <div style={$popUpDiv}>
             <BackdropModal
               isOpen={showCreateEvent}
