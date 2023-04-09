@@ -10,6 +10,7 @@ export type usePreferenceHook = {}
 export default function useSuggestion(p: PreferencesWidget): usePreferenceHook {
   const { user } = useAuth()
   const { trip } = useTrip()
+  
   const { updateErrorToast } = useScreen()
   const userID = user?.uid ?? ""
 
@@ -24,7 +25,7 @@ export default function useSuggestion(p: PreferencesWidget): usePreferenceHook {
    * @returns true if the user has liked the suggestion and false otherwise.
    */
   function didUserVote(option: string) {
-    const voted = preference.preferences.get(option)?.votes.has(userID)
+    const voted = preference.preferences.get(option)?.has(userID)
     return voted !== undefined ? voted : false
   }
 
@@ -34,20 +35,19 @@ export default function useSuggestion(p: PreferencesWidget): usePreferenceHook {
    */
   async function sendVote(selectedOption: string) {
     const options = createFetchRequestOptions(JSON.stringify({}), "PUT")
-      // await fetch(
-      //   `${API_URL}trip/${tripID}/suggestion/like/${suggestion.uid}/${selectedOption}`,
-      //   options,
-      // )
+       await fetch(
+         `${API_URL}trip/${tripID}/preferences/${selectedOption}`,
+         options,
+       )
 
       .then((response) => {
         if (response.ok) {
           // If successful, store that the user likes the suggestion locally.
-          const suggestionVotes = preferences.get(selectedOption)
+          const suggestionVotes = p.get(selectedOption)
 
-          setPreference((preference) => {
-            if (preferenceOption) {
-              preferenceOption.votes.add(userID)
-              newPreferences.set(selectedOption, preferenceOption)
+          setPreference(() => {
+            if (selectedOption) {
+              selectedOption.add(userID)
             }
             return {
               ...preference,
