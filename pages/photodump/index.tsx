@@ -1,7 +1,7 @@
 import { Box } from "@mui/material"
-import Typography from "@mui/material/Typography"
 import * as GooglePhotosAlbum from "google-photos-album-image-url-fetch"
 import { Gallery } from "react-grid-gallery"
+import PhotoGallery from "../../components/PhotoGallery"
 
 const images = [
   {
@@ -29,26 +29,32 @@ const images = [
   },
 ]
 
-async function fetchAndLogUrls() {
-  const photoArray = await GooglePhotosAlbum.fetchImageUrls(
-    "https://photos.app.goo.gl/Pf9JFXUARNfN3Qhr7",
-  )
+// async function fetchAndLogUrls(url: string) {
+//   const photoArray = await GooglePhotosAlbum.fetchImageUrls(url)
 
-  let stringified = JSON.stringify(photoArray, null, 2)
-  console.log(stringified)
+//   let stringified = JSON.stringify(photoArray, null, 2)
+//   console.log(stringified)
 
-  return photoArray
-}
+//   return photoArray
+// }
 
 // Should take a Google Photos response and convert it into the format accepted by react grid library.
-function convertImageInfo() {}
+// function convertImageInfo() {}
 
-const imageArray = fetchAndLogUrls().catch((er) => console.error(er))
+// const imageArray = fetchAndLogUrls("https://photos.app.goo.gl/Pf9JFXUARNfN3Qhr7").catch((er) =>
+//   console.error(er),
+// )
 
 export default function Photodump() {
   return (
-    <Box sx={{ width: "100%", height: "100%" }}>
-      <Gallery images={images} />
-    </Box>
+    <>
+      {/* <Box sx={{ width: "100%", height: "100%" }}>
+        <Gallery images={images} />
+      </Box> */}
+
+      <PhotoGallery url="https://photos.app.goo.gl/Pf9JFXUARNfN3Qhr7"></PhotoGallery>
+    </>
   )
 }
+
+//love getting nothing rendered

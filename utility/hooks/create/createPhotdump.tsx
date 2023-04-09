@@ -3,7 +3,7 @@ import { useScreen } from "../screen"
 import { useTrip } from "../trip"
 
 export default function useCreatePhotodump() {
-//   const { createPhotodump } = useTrip()
+  //   const { createPhotodump } = useTrip()
   const { updateErrorToast } = useScreen()
   const [albumURL, updateAlbumURL] = React.useState<string>()
 
@@ -22,5 +22,5 @@ export default function useCreatePhotodump() {
     // })
   }
 
-  return { create, albumURL, updateAlbumURL}
+  return { create, albumURL, updateAlbumURL }
 }
