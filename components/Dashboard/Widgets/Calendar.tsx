@@ -1,8 +1,7 @@
 import { Button, Paper, Typography } from "@mui/material"
 import { Calendar, DatePicker } from "antd"
-import dayjs, { Dayjs } from "dayjs"
+import { Dayjs } from "dayjs"
 import useAvailabillity from "../../../utility/hooks/availabillity"
-import { useTrip } from "../../../utility/hooks/trip"
 import { Availabillity } from "../../../utility/types/trip"
 
 export function CalendarWidget({ availability }: { availability: Availabillity }) {
@@ -35,6 +34,7 @@ export function CalendarWidget({ availability }: { availability: Availabillity }
   function createDateHash(month: number, day: number) {
     return `${month}:${day}`
   }
+
   const getMonthData = (dayjs: Dayjs) => {}
 
   const monthCellRender = (value: Dayjs) => {
@@ -43,19 +43,23 @@ export function CalendarWidget({ availability }: { availability: Availabillity }
   }
 
   const dateCellRender = (value: Dayjs) => {
-    const listData = dates
+    const listData1 = new Map<string, string[]>([
+      ["3:1", ["username", "test", "hi"]],
+      ["3:3", ["username2", "test2", "hi2"]],
+      ["3:9", ["username3", "test3", "hi3"]],
+      ["4:20", ["username4", "test4", "hi4"]],
+    ])
 
+    if (listData1 === undefined) return <></>
+
+    const listData = listData1.get(createDateHash(value.month(), value.date())) ?? []
     return (
       <>
-        {/* this is wrong but don't know how to fix and commented out so it would push */}
-        {/* {listData.forEach((item.usernames) => {
-          item.usernames.forEach((username) => {
-            <div
-            key={username}
-            style={{ width: "100%", height: "5px", backgroundColor: stringToColor(item.username) }}
-          ></div>
-          })
-          })} */}
+        {listData.map((username) => {<div
+              key={username}
+              style={{ width: "100%", height: "5px", backgroundColor: stringToColor(username) }}
+            ></div>
+        })}
       </>
     )
   }
