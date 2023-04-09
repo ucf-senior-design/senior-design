@@ -5,6 +5,7 @@ import React from "react"
 import { BackdropModal } from "../../../components/BackdropModal"
 import CreateAvailabillity from "../../../components/Create/CreateAvaillabillity"
 import CreateEvent from "../../../components/Create/CreateEvent"
+import CreatePhotodump from "../../../components/Create/CreatePhotoDump"
 import CreatePoll from "../../../components/Create/CreatePoll"
 import CreatePreferences from "../../../components/Create/CreatePreferences"
 import CreateSuggestion from "../../../components/Create/CreateSuggestion"
@@ -14,7 +15,6 @@ import { TripHeader } from "../../../components/Dashboard/TripHeader"
 import ModifyTrip from "../../../components/Modify/ModifyTrip"
 import { FriendProvider } from "../../../utility/hooks/friends"
 import { ResizableProvider } from "../../../utility/hooks/resizable"
-import { useScreen } from "../../../utility/hooks/screen"
 import { TripProvider } from "../../../utility/hooks/trip"
 
 export default function Trip() {
@@ -26,6 +26,7 @@ export default function Trip() {
   const [showCreateWeather, setShowCreateWeather] = React.useState(false)
   const [showCreatePreference, setShowCreatePreference] = React.useState(false)
   const [showCreateAvaillabillity, setShowCreateAvailabillity] = React.useState(false)
+  const [showCreatePhotodump, setShowCreatePhotodump] = React.useState(false)
 
   // For each create popup add an item to the menu
   const items: MenuProps["items"] = [
@@ -53,6 +54,10 @@ export default function Trip() {
     {
       key: "6",
       label: <a onClick={() => setShowCreateAvailabillity(true)}> Create Availabillity Widget</a>,
+    },
+    {
+      key: "7",
+      label: <a onClick={() => setShowCreatePhotodump(true)}> Connect to Google Photos </a>,
     },
   ]
 
@@ -134,6 +139,15 @@ export default function Trip() {
               toggleShow={() => setShowCreateWeather(!showCreateWeather)}
             >
               <CreateWeather closeModal={() => setShowCreateWeather(false)} />
+            </BackdropModal>
+          </div>
+
+          <div style={$popUpDiv}>
+            <BackdropModal
+              isOpen={showCreatePhotodump}
+              toggleShow={() => setShowCreatePhotodump(!showCreatePhotodump)}
+            >
+              <CreatePhotodump closeModal={() => setShowCreatePhotodump(false)} />
             </BackdropModal>
           </div>
 
