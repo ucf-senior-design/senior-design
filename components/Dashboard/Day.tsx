@@ -60,8 +60,10 @@ export default function Day({
         {events.map((event, index) => {
           return (
             <>
-              <Event key={index} event={event} />
-              <Button onClick={() => setShowModifyEvent(true)}>Modify</Button>
+              <Button onClick={() => setShowModifyEvent(true)} style={{ width: "100%" }}>
+                <Event key={index} event={event} />
+              </Button>
+
               <div style={$popUpDiv}>
                 <BackdropModal
                   isOpen={showModifyEvent}

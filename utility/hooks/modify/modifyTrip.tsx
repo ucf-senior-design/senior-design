@@ -44,7 +44,7 @@ export default function useModifyTrip() {
       ...modifyTripDetails,
       duration: {
         start: new Date(startDate.setHours(0, 0, 0, 0)),
-        end: new Date(endDate.setHours(0, 0, 0, 0)),
+        end: new Date(endDate.setHours(23, 59, 59, 999)),
       },
     })
   }
