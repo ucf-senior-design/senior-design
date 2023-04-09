@@ -1,16 +1,17 @@
 import { Button, Paper, Typography } from "@mui/material"
 import { Calendar, DatePicker } from "antd"
-import type { Dayjs } from "dayjs"
+import dayjs, { Dayjs } from "dayjs"
+import useAvailabillity from "../../../utility/hooks/availabillity"
 import { useTrip } from "../../../utility/hooks/trip"
-import { Availabillity as availType } from "../../../utility/types/trip"
+import { Availabillity } from "../../../utility/types/trip"
 
-export function CalendarWidget({ availability }: { avaliability: availType }) {
+export function CalendarWidget({ availability }: { availability: Availabillity }) {
+  const { dates } = useAvailabillity(availability)
   interface calInfo {
     usernames: string[]
     date: Date
   }
 
-  const { trip } = useTrip()
   const { RangePicker } = DatePicker
 
   function stringToColor(string: string): string {
@@ -31,40 +32,10 @@ export function CalendarWidget({ availability }: { avaliability: availType }) {
     return color
   }
 
-  const getMonthData = (dayjs: Dayjs) => {}
-
-  const getListData = (dayjs: Dayjs) => {
-    const listData: calInfo[] = []
-    let data = availability
-
-    let dateMap = new Map<string, Array<string>>()
-
-    data.forEach((availability) => {
-      let user = { availability }
-      availability.forEach((duration) => {
-        for (let current = duration.start; current <= duration.end; current.add(1, "day")) {
-          let arrayOfUsers = availability.get()
-          arrayOfUsers.push(user)
-          dateMap.set("${current.getMonth()}:${current.getDay()}", arrayOfUsers)
-        }
-      })
-    })
-
-    dateMap.forEach((value: string[], key: string) => {
-      if ("${dayjs.month()}:${dayjs.date()}" == key) {
-        let dateData = {} as calInfo
-        const date = new Date()
-        date.setMonth(Number(key[0]))
-        date.setDate(Number(key[2]))
-
-        dateData.date = date
-        dateData.usernames = value
-        listData.push(dateData)
-      }
-    })
-
-    return listData || []
+  function createDateHash(month: number, day: number) {
+    return `${month}:${day}`
   }
+  const getMonthData = (dayjs: Dayjs) => {}
 
   const monthCellRender = (value: Dayjs) => {
     const num = getMonthData(value)
@@ -72,7 +43,7 @@ export function CalendarWidget({ availability }: { avaliability: availType }) {
   }
 
   const dateCellRender = (value: Dayjs) => {
-    const listData = getListData(value)
+    const listData = dates
 
     return (
       <>
