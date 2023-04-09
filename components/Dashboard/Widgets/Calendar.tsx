@@ -50,9 +50,6 @@ export function CalendarWidget({ availability }: { avaliability: availType }) {
       })
     })
 
-    // after getting map, convert value.date value.month to same string format, and then check in map
-    // if values in map, render color for username
-    // maybe only run function for username colors once and map that?
     dateMap.forEach((value: string[], key: string) => {
       if ("${dayjs.month()}:${dayjs.date()}" == key) {
         let dateData = {} as calInfo
@@ -79,12 +76,15 @@ export function CalendarWidget({ availability }: { avaliability: availType }) {
 
     return (
       <>
-        {listData.map((item) => (
-          <div
-            key={item.username}
+       {/* this is wrong but don't know how to fix and commented out so it would push */}
+        {/* {listData.forEach((item.usernames) => {
+          item.usernames.forEach((username) => {
+            <div
+            key={username}
             style={{ width: "100%", height: "5px", backgroundColor: stringToColor(item.username) }}
           ></div>
-        ))}
+          })
+          })} */}
       </>
     )
   }
