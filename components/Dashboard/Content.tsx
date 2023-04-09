@@ -18,8 +18,6 @@ export default function Content() {
           gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
           gridGap: "0px",
           gridAutoRows: "3px",
-          maxHeight: "100%",
-          overflowY: "auto",
         }}
       >
         {resizable.order.map((value, index) => (
