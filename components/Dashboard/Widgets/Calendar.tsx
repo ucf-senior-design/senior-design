@@ -76,7 +76,7 @@ export function CalendarWidget({ availability }: { avaliability: availType }) {
 
     return (
       <>
-       {/* this is wrong but don't know how to fix and commented out so it would push */}
+        {/* this is wrong but don't know how to fix and commented out so it would push */}
         {/* {listData.forEach((item.usernames) => {
           item.usernames.forEach((username) => {
             <div

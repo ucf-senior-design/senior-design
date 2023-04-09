@@ -10,7 +10,7 @@ export type usePreferenceHook = {}
 export default function useSuggestion(p: PreferencesWidget): usePreferenceHook {
   const { user } = useAuth()
   const { trip } = useTrip()
-  
+
   const { updateErrorToast } = useScreen()
   const userID = user?.uid ?? ""
 
@@ -35,11 +35,7 @@ export default function useSuggestion(p: PreferencesWidget): usePreferenceHook {
    */
   async function sendVote(selectedOption: string) {
     const options = createFetchRequestOptions(JSON.stringify({}), "PUT")
-       await fetch(
-         `${API_URL}trip/${tripID}/preferences/${selectedOption}`,
-         options,
-       )
-
+    await fetch(`${API_URL}trip/${tripID}/preferences/${selectedOption}`, options)
       .then((response) => {
         if (response.ok) {
           // If successful, store that the user likes the suggestion locally.
