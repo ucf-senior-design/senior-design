@@ -7,8 +7,20 @@ export default function test() {
   return (
     <div style={$wrapper}>
       <Grid container direction="row" justifyContent="center" alignItems="center">
-        <PreferencesWidget />
-        <CalendarWidget />
+        {/* <PreferencesWidget /> */}
+        <CalendarWidget
+          availability={{
+            owner: "user",
+            uid: "uid",
+            title: "dummy avail",
+            availabillities: new Map<string, Array<string>>([
+              ["3:1", ["username", "test", "hi"]],
+              ["3:3", ["username2", "test2", "hi2"]],
+              ["3:9", ["username3", "test3", "hi3"]],
+              ["4:20", ["username4", "test4", "hi4"]],
+            ]),
+          }}
+        />
         <Stack
           sx={{ display: { xs: "none", md: "block" } }}
           style={{

@@ -1,104 +1,64 @@
 import { Button, Paper, Typography } from "@mui/material"
-import { Calendar, DatePicker } from "antd"
-import { Dayjs } from "dayjs"
-import React, { useState } from "react"
+import { maxHeight, minWidth } from "@mui/system"
+import { Calendar } from "antd"
+import React from "react"
+import theme from "../../../styles/theme/Theme"
 import useAvailabillity from "../../../utility/hooks/availabillity"
+import { useTrip } from "../../../utility/hooks/trip"
 import { Availabillity } from "../../../utility/types/trip"
+import { BackdropModal } from "../../BackdropModal"
+import CreateBox from "../../Create/CreateBox"
+import DateRange from "../../Form/DateRange"
 
 export function CalendarWidget({ availability }: { availability: Availabillity }) {
-  const { dates } = useAvailabillity(availability)
-  const availabillityHook = useAvailabillity(availability)
-  const [selectedDates, setSelectedDates] = useState([])
-
-  const [setMonth, setDay] = React.useState<{
-    month?: number
-    day?: number
-  }>({
-    month: undefined,
-    day: undefined,
-  })
-
-  interface calInfo {
-    usernames: string[]
-    date: Date
-  }
-
-  const { RangePicker } = DatePicker
-
-  function stringToColor(string: string): string {
-    let hash = 0
-    let i
-
-    for (i = 0; i < string.length; i += 1) {
-      hash = string.charCodeAt(i) + ((hash << 5) - hash)
-    }
-
-    let color = "#"
-
-    for (i = 0; i < 3; i += 1) {
-      const value = (hash >> (i * 8)) & 0xff
-      color += `00${value.toString(16)}`.slice(-2)
-    }
-
-    return color
-  }
-
-  function createDateHash(month: number, day: number) {
-    return `${month}:${day}`
-  }
-
-  const getMonthData = (dayjs: Dayjs) => {}
-
-  const monthCellRender = (value: Dayjs) => {
-    const num = getMonthData(value)
-    return null
-  }
-
-  const dateCellRender = (value: Dayjs) => {
-    const listData1 = new Map<string, Array<string>>([
-      ["3:1", ["username", "test", "hi"]],
-      ["3:3", ["username2", "test2", "hi2"]],
-      ["3:9", ["username3", "test3", "hi3"]],
-      ["4:20", ["username4", "test4", "hi4"]],
-    ])
-
-    if (listData1 === undefined) return <></>
-
-    const listData = listData1.get(createDateHash(value.month(), value.date())) ?? []
-    return (
-      <>
-        {listData.map((username) => {
-          return (
-            <div
-              key={username}
-              style={{ width: "100%", height: "5px", backgroundColor: stringToColor(username) }}
-            ></div>
-          )
-        })}
-      </>
-    )
-  }
+  const { dateCellRender, updateDuration, updateAvailabillity } = useAvailabillity(availability)
+  const [showAddAvail, setShowAvail] = React.useState(false)
+  const { trip } = useTrip()
 
   return (
     <>
-      <Paper sx={{ padding: "20px", width: "100vw", maxWidth: "500px", lineHeight: "2.5em" }}>
-        <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center", padding: "1" }}>
-          Trip Date Selection
+      <Paper sx={{ padding: "20px", width: "100%", minWidth: "300px" ,maxHeight:"500px", overflowY:"auto", height: "100%" }}>
+        <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center", fontSize: "20px" }}>
+          {availability.title}
         </Typography>
-        Current group availability:
-        <Calendar dateCellRender={dateCellRender} monthCellRender={monthCellRender} />
-        Input an availability window:
-        <RangePicker
-          onChange={(e) => {
-            console.log(e)
-          }}
-        />
-        <p>
-          <Button variant="outlined">
-            submit
-          </Button>
-        </p>
+        <Calendar dateCellRender={dateCellRender} />
+        <Button onClick={() => setShowAvail(true)}> Add Availabillity</Button>
+        <div style={$popUpDiv}>
+          <BackdropModal isOpen={showAddAvail} toggleShow={() => setShowAvail(!showAddAvail)}>
+            <CreateBox>
+              <Typography variant="h6" style={{ ...$headerStyle, textAlign: "center" }}>
+                {" "}
+                add a new availability for : {availability.title}
+              </Typography>
+              <DateRange
+                startDate={trip.duration.start}
+                endDate={trip.duration.end}
+                updateDates={(startDate, endDate) => {
+                  updateDuration(startDate, endDate)
+                }}
+              />
+              <Button
+                sx={{ width: "100%" }}
+                variant="contained"
+                onClick={() => updateAvailabillity()}
+              >
+                add availability
+              </Button>
+            </CreateBox>
+          </BackdropModal>
+        </div>
+        <p></p>
       </Paper>
     </>
   )
+}
+const $popUpDiv: React.CSSProperties = {
+  position: "absolute",
+  zIndex: 2,
+}
+
+const $headerStyle: React.CSSProperties = {
+  fontWeight: 500,
+  color: theme.palette.secondary.main,
+  padding: 5,
 }
