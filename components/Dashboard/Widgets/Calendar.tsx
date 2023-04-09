@@ -2,15 +2,16 @@ import { Button, Paper, Typography } from "@mui/material"
 import { Calendar, DatePicker } from "antd"
 import type { Dayjs } from "dayjs"
 import { useTrip } from "../../../utility/hooks/trip"
+import { Availabillity as availType } from "../../../utility/types/trip"
 
-export function CalendarWidget() {
-  const { trip } = useTrip()
-  const { RangePicker } = DatePicker
-
+export function CalendarWidget({ availability }: { avaliability: availType }) {
   interface calInfo {
-    username: string
+    usernames: string[]
     date: Date
   }
+
+  const { trip } = useTrip()
+  const { RangePicker } = DatePicker
 
   function stringToColor(string: string): string {
     let hash = 0
@@ -30,53 +31,38 @@ export function CalendarWidget() {
     return color
   }
 
-  const getMonthData = (value: Dayjs) => {}
+  const getMonthData = (dayjs: Dayjs) => {}
 
-  const getListData = (value: Dayjs) => {
+  const getListData = (dayjs: Dayjs) => {
     const listData: calInfo[] = []
-    const availability_1 = [
-      [2, 1],
-      [2, 3],
-      [3, 1],
-      [3, 2],
-      [3, 4],
-      [3, 5],
-      [3, 10],
-    ]
-    const availability_2 = [
-      [2, 10],
-      [2, 13],
-      [3, 11],
-      [3, 2],
-      [3, 3],
-      [3, 5],
-      [3, 11],
-    ]
+    let data = availability
 
-    for (let i = 0; i < availability_1.length; i++) {
-      if (value.date() === availability_1[i][1] && value.month() === availability_1[i][0]) {
+    let dateMap = new Map<string, Array<string>>()
+
+    data.forEach((availability) => {
+      let user = { availability }
+      availability.forEach((duration) => {
+        for (let current = duration.start; current <= duration.end; current.add(1, "day")) {
+          let arrayOfUsers = availability.get()
+          arrayOfUsers.push(user)
+          dateMap.set("${current.getMonth()}:${current.getDay()}", arrayOfUsers)
+        }
+      })
+    })
+
+    dateMap.forEach((value: string[], key: string) => {
+      if ("${dayjs.month()}:${dayjs.date()}" == key) {
         let dateData = {} as calInfo
         const date = new Date()
-        date.setMonth(availability_1[i][0])
-        date.setDate(availability_1[i][1])
+        date.setMonth(Number(key[0]))
+        date.setDate(Number(key[2]))
 
         dateData.date = date
-        dateData.username = "username"
+        dateData.usernames = value
         listData.push(dateData)
       }
-    }
-    for (let i = 0; i < availability_2.length; i++) {
-      if (value.date() === availability_2[i][1] && value.month() === availability_2[i][0]) {
-        let dateData = {} as calInfo
-        const date = new Date()
-        date.setMonth(availability_2[i][0])
-        date.setDate(availability_2[i][1])
+    })
 
-        dateData.date = date
-        dateData.username = "test"
-        listData.push(dateData)
-      }
-    }
     return listData || []
   }
 
@@ -90,12 +76,15 @@ export function CalendarWidget() {
 
     return (
       <>
-        {listData.map((item) => (
-          <div
-            key={item.username}
+        {/* this is wrong but don't know how to fix and commented out so it would push */}
+        {/* {listData.forEach((item.usernames) => {
+          item.usernames.forEach((username) => {
+            <div
+            key={username}
             style={{ width: "100%", height: "5px", backgroundColor: stringToColor(item.username) }}
           ></div>
-        ))}
+          })
+          })} */}
       </>
     )
   }

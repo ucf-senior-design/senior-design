@@ -1,6 +1,8 @@
-import { Typography, Box } from "@mui/material"
-import { join } from "path"
+import { Box, Button, Typography } from "@mui/material"
+import React from "react"
 import { Event as EventType } from "../../utility/types/trip"
+import { BackdropModal } from "../BackdropModal"
+import ModifyEvent from "../Form/ModifyEvent"
 import Event from "./Event"
 import JoinableEvent from "./JoinableEvent"
 
@@ -8,15 +10,13 @@ export default function Day({
   day,
   events,
   joinableEvents,
-  weatherIcon,
-  temperature,
 }: {
   day: Date
   events: Array<EventType>
   joinableEvents: Array<EventType>
-  weatherIcon: React.ReactNode
-  temperature: number
 }) {
+  const [showModifyEvent, setShowModifyEvent] = React.useState(false)
+
   return (
     <Box sx={{ padding: "10px" }}>
       {/* Day header that includes date, weather icon, and temperature*/}
@@ -32,8 +32,6 @@ export default function Day({
         <Typography sx={{ fontWeight: 900, fontSize: "40px" }}>
           {day.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
         </Typography>
-        {weatherIcon}
-        <Typography sx={{ fontWeight: 700, fontSize: "24px" }}>{temperature}</Typography>
       </Box>
 
       {/* List of events this user has joined in chronological order */}
@@ -60,7 +58,24 @@ export default function Day({
           </Box>
         )}
         {events.map((event, index) => {
-          return <Event key={index} event={event} />
+          return (
+            <>
+              <Event key={index} event={event} />
+              <Button onClick={() => setShowModifyEvent(true)}>Modify</Button>
+              <div style={$popUpDiv}>
+                <BackdropModal
+                  isOpen={showModifyEvent}
+                  toggleShow={() => setShowModifyEvent(!showModifyEvent)}
+                >
+                  <ModifyEvent
+                    key={index}
+                    event={event}
+                    closeModal={() => setShowModifyEvent(false)}
+                  />
+                </BackdropModal>
+              </div>
+            </>
+          )
         })}
       </Box>
 
@@ -83,4 +98,9 @@ export default function Day({
       </Box>
     </Box>
   )
+}
+
+const $popUpDiv: React.CSSProperties = {
+  position: "absolute",
+  zIndex: 2,
 }

@@ -56,10 +56,9 @@ const navItem4 = {
   iconLabel: "register icon",
 }
 
-// TODO: add correct pages once they have been created
 const authItem1 = {
   id: 0,
-  link: "/",
+  link: "/settings/account",
   name: "my account",
   buttonLabel: "user account button",
   icon: AccountCircleIcon,
@@ -68,7 +67,7 @@ const authItem1 = {
 
 const authItem2 = {
   id: 1,
-  link: "/dashboard/overview",
+  link: "/dashboard",
   name: "dashboard",
   buttonLabel: "dashboard button",
   icon: DashboardIcon,
@@ -76,11 +75,11 @@ const authItem2 = {
 }
 const authItem3 = {
   id: 2,
-  link: "/teams",
-  name: "teams",
-  buttonLabel: "teams button",
+  link: "/settings/friends",
+  name: "friends",
+  buttonLabel: "friends list button",
   icon: GroupsIcon,
-  iconLabel: "teams",
+  iconLabel: "friends",
 }
 
 export const LoggedOutDrawer = ({
@@ -102,7 +101,7 @@ export const LoggedOutDrawer = ({
       </Grid>
       <Divider />
       <List>
-        {user ? (
+        {user?.didFinishRegister ? (
           <>
             {authNavItems.map((item) => (
               <Link href={item.link} key={item.id} passHref>

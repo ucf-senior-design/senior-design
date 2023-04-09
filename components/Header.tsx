@@ -1,17 +1,29 @@
-import { Luggage, LuggageRounded } from "@mui/icons-material"
-import { Grid, Typography } from "@mui/material"
+import { Luggage, LuggageRounded, ArrowBack } from "@mui/icons-material"
+import { Box, Button, Grid, Typography } from "@mui/material"
+import { useRouter } from "next/router"
 import TripCard from "./Dashboard/TripCard"
 
 export default function Header({ icon, title }: { icon: React.ReactNode; title: string }) {
+  const router = useRouter()
+
   return (
     <>
-      <Grid
-        container
-        style={{
+      <Box
+        sx={{
           backgroundColor: "#4A485F",
           padding: "20px",
+          display: "flex",
+          alignItems: "start",
+          justifyContent: "center",
+          flexDirection: "column",
         }}
       >
+        <Button
+          onClick={() => router.back()}
+          sx={{ display: "flex", alignItems: "start", justifyContent: "start" }}
+        >
+          <ArrowBack sx={{ color: "white" }} />
+        </Button>
         <Grid
           item
           xs={4}
@@ -28,7 +40,7 @@ export default function Header({ icon, title }: { icon: React.ReactNode; title: 
             {title}
           </Typography>
         </Grid>
-      </Grid>
+      </Box>
     </>
   )
 }

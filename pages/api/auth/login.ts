@@ -52,6 +52,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           res.status(ERROR).send("Try again later.")
           return
       }
-      res.status(400).send(error.code)
     })
 }
