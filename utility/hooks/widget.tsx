@@ -5,11 +5,63 @@ import Poll from "../../components/Dashboard/Widgets/Poll/Poll"
 import { Suggestions } from "../../components/Dashboard/Widgets/Suggestions"
 import WeatherWidget from "../../components/Dashboard/Widgets/WeatherWidget"
 import { SuggestionWidget, Widget, WidgetType } from "../types/trip"
+import { useScreen } from "./screen"
 import { useTrip } from "./trip"
 export default function useWidget(w: Widget) {
   const [popup, setPopup] = React.useState(false)
-  const { trip } = useTrip()
+  const {
+    trip,
+    deleteActivityWidget,
+    deleteAvailabillityWidget,
+    deletePoll,
+    deleteSuggestion,
+    deleteWeather,
+  } = useTrip()
+  const { updateErrorToast } = useScreen()
 
+  function handleDeleteStatus(isSuccess: boolean) {
+    if (!isSuccess) {
+      updateErrorToast("error deleting widget.")
+    }
+  }
+  async function deleteWidget(uid: string, type: WidgetType) {
+    if (type === "availabillity") {
+      await deleteAvailabillityWidget(uid, (isSuccess) => {
+        handleDeleteStatus(isSuccess)
+      })
+      return
+    }
+
+    if (type === "preference") {
+      await deleteActivityWidget(uid, (isSuccess) => {
+        handleDeleteStatus(isSuccess)
+      })
+      return
+    }
+
+    if (type === "poll") {
+      await deletePoll(uid, (isSuccess) => {
+        handleDeleteStatus(isSuccess)
+      })
+      return
+    }
+
+    if (type === "suggestion") {
+      await deleteSuggestion(uid, (isSuccess) => {
+        handleDeleteStatus(isSuccess)
+      })
+      return
+    }
+
+    if (type === "weather") {
+      await deleteWeather(uid, (isSuccess) => {
+        handleDeleteStatus(isSuccess)
+      })
+      return
+    }
+
+    updateErrorToast("Cannot delete at this time.")
+  }
   function getWidgetUI(): React.ReactNode {
     let splitKey = w.key.split(":")
     let widgetType: WidgetType = splitKey[0] as any
@@ -49,5 +101,6 @@ export default function useWidget(w: Widget) {
     getWidgetUI,
     popup,
     setPopup,
+    deleteWidget,
   }
 }

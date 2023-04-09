@@ -75,7 +75,7 @@ interface TripContext {
 
   // handle weather widgetcreateP
   createWeather: (callback: (response: Response) => void) => void
-  deleteWeather: (uid: string) => Promise<void>
+  deleteWeather: (uid: string, callback: (isSuccess: boolean) => void) => Promise<void>
 
   // handle events
   createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
@@ -83,7 +83,7 @@ interface TripContext {
   modifyEvent: (event: ModifiedEvent, callback: (isSuccess: boolean) => void) => Promise<void>
 
   // handle preferences widget
-  deleteActivityWidget: (uid: string, callback: (isSuccess: boolean) => void) => void
+  deleteActivityWidget: (uid: string, callback: (isSuccess: boolean) => void) => Promise<void>
   createActivityWidget: (
     preferences: ActivityPref,
     callback: (isSuccess: boolean) => void,
@@ -111,7 +111,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   const [id, setId] = React.useState<string>()
   const WEBSOCKET_TIMER_SECONDS = 30
   const [resetTime, setResetTime] = React.useState(false)
-  const { readLayout, createKey, addItem, resizable, getStorableLayout, moving } = useResizable()
+  const { readLayout, createKey, addItem, resizable, getStorableLayout, moving, removeFromLayout } =
+    useResizable()
   const { updateErrorToast } = useScreen()
   const [trip, setTrip] = React.useState<TripUseState>({
     // Trip Values
@@ -238,7 +239,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     let suggestionWidgets = await getSuggestionWidgetData()
     let eventData = await getEventData()
     let pollWidgets = await getPollWidgetData()
-    let availabillityWidgets = await getAvailabillityWidgetData()
+    let availabillityWidgets = new Map()
     let prefWidgets = await getPreferenceWidgetData()
 
     if (suggestionWidgets === null || trip === null || eventData == null) {
@@ -561,33 +562,12 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  function removeFromLayout(uid: string) {
-    let newLayout: Array<StoredLocation> = []
-
-    trip.layout.forEach((item) => {
-      let splitKey = item.key.split(":")
-      if (splitKey.length !== 2 && splitKey[1] !== uid) newLayout.push(item)
-    })
-
-    return newLayout
-  }
-
   async function deleteSuggestion(uid: string, callback: (isSuccess: boolean) => void) {
     const response = await fetch(`${API_URL}/trip/${trip.uid}/suggestion/${uid}`, {
       method: "DELETE",
     })
-
-    if (response.ok) {
-      let map = new Map(trip.suggestions)
-      let layout = removeFromLayout(uid)
-
-      map.delete(uid)
-      setTrip({
-        ...trip,
-        suggestions: map,
-        layout: layout,
-      })
-    }
+    removeFromLayout(createKey("suggestion", uid))
+    storeLayout()
     callback(response.ok)
   }
 
@@ -639,15 +619,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     })
 
     if (response.ok) {
-      let map = new Map(trip.polls)
-      let layout = removeFromLayout(uid)
-
-      map.delete(uid)
-      setTrip({
-        ...trip,
-        polls: map,
-        layout: layout,
-      })
+      removeFromLayout(createKey("poll", uid))
+      storeLayout()
     }
 
     callback(response.ok)
@@ -662,12 +635,11 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     callback({ isSuccess: true })
   }
 
-  async function deleteWeather(uid: string) {
+  async function deleteWeather(uid: string, callback: (isSuccess: boolean) => void) {
     let layout = removeFromLayout(uid)
-    setTrip({
-      ...trip,
-      layout: layout,
-    })
+    removeFromLayout(createKey("weather", uid))
+    storeLayout()
+    callback(true)
   }
 
   async function deleteActivityWidget(uid: string, callback: (isSuccess: boolean) => void) {
@@ -676,15 +648,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     })
 
     if (response.ok) {
-      let map = new Map(trip.activityPreferences)
-      let layout = removeFromLayout(uid)
-
-      map.delete(uid)
-      setTrip({
-        ...trip,
-        activityPreferences: map,
-        layout: layout,
-      })
+      removeFromLayout(createKey("preference", uid))
+      storeLayout()
     }
 
     callback(response.ok)
@@ -747,15 +712,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     const response = await fetch(`${API_URL}/trip/${trip.uid}/availabillity`, { method: "DELETE" })
 
     if (response.ok) {
-      let map = new Map(trip.availabillity)
-      let layout = removeFromLayout(uid)
-
-      map.delete(uid)
-      setTrip({
-        ...trip,
-        layout: layout,
-        availabillity: map,
-      })
+      removeFromLayout(createKey("availabillity", uid))
+      storeLayout()
     }
 
     callback(response.ok)
