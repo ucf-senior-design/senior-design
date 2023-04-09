@@ -55,10 +55,13 @@ export function CalendarWidget({ availability }: { availability: Availabillity }
     const listData = listData1.get(createDateHash(value.month(), value.date())) ?? []
     return (
       <>
-        {listData.map((username) => {<div
+        {listData.map((username) => {
+          return (
+            <div
               key={username}
               style={{ width: "100%", height: "5px", backgroundColor: stringToColor(username) }}
             ></div>
+          )
         })}
       </>
     )
