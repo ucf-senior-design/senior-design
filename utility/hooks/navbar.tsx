@@ -11,7 +11,12 @@ export default function useNavBar() {
 
   const prevOpen = React.useRef(open)
   React.useEffect(() => {
-    if (prevOpen.current === true && open === false) {
+    if (
+      prevOpen.current === true &&
+      open === false &&
+      anchorRef !== null &&
+      anchorRef.current !== null
+    ) {
       anchorRef.current!.focus()
     }
     prevOpen.current = open
