@@ -1,11 +1,10 @@
-import { Availabillity, Duration } from "../types/trip"
 import React from "react"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
-import suggestion from "./suggestion"
-import { useTrip } from "./trip"
-import { useScreen } from "./screen"
+import { Availabillity, Duration } from "../types/trip"
 import { useAuth } from "./authentication"
+import { useScreen } from "./screen"
+import { useTrip } from "./trip"
 
 export default function Availabillity(a: Availabillity) {
   const { trip } = useTrip()
