@@ -11,7 +11,14 @@ export type StoredLocation = {
   size: number
 }
 
-export type WidgetType = "suggestion" | "day" | "poll" | "weather" | "preference" | "availabillity"
+export type WidgetType =
+  | "suggestion"
+  | "day"
+  | "poll"
+  | "weather"
+  | "preference"
+  | "availabillity"
+  | "photo"
 
 export interface Widget {
   key: string

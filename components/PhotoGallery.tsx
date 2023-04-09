@@ -12,13 +12,13 @@ export default function PhotoGallery({ url }: { url: string }) {
 
   async function formatImageArray(albumUrl: string) {
     let formatted: Image[] = []
-    console.log(albumUrl)
+
     const options = createFetchRequestOptions(JSON.stringify({ url: albumUrl }), "POST")
     let response = await fetch(`${API_URL}/images`, options)
-    console.log(response, response.ok, response.status)
+
     if (response.ok) {
       let { data } = await response.json()
-      console.log("DATA", data)
+
       let unformatted = data
       if (unformatted === null || unformatted === undefined) return [] // make this an error
 
@@ -47,8 +47,8 @@ export default function PhotoGallery({ url }: { url: string }) {
     <Box
       sx={{
         width: "100%",
-        height: "100%",
-        maxHeight: "500pxx",
+        height: "300px",
+
         maxWidth: "100%",
         overflow: "auto",
         padding: "10px",

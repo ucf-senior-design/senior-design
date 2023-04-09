@@ -1,9 +1,6 @@
-import { Cable } from "@mui/icons-material"
 import { Backdrop, CircularProgress } from "@mui/material"
-import Layout from "antd/es/layout/layout"
 import dayjs from "dayjs"
 import React from "react"
-import { domainToASCII } from "url"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
 import { Response } from "../types/helper"
@@ -94,6 +91,9 @@ interface TripContext {
     callback: (isSuccess: boolean) => void,
   ) => Promise<void>
   deleteAvailabillityWidget: (uid: string, callback: (isSuccess: boolean) => void) => Promise<void>
+
+  deletePhotoDump: (url: string, callback: (isSuccess: boolean) => void) => void
+  createPhotoDump: (url: string, callback: (response: Response) => void) => void
 }
 
 const TripContext = React.createContext<TripContext>({} as TripContext)
@@ -626,6 +626,20 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     callback(response.ok)
   }
 
+  function createPhotoDump(url: string, callback: (response: Response) => void) {
+    if (user === undefined) {
+      callback({ isSuccess: false, errorMessage: "login and try again later." })
+      return
+    }
+    addNewWidget("photo", url)
+    callback({ isSuccess: true })
+  }
+
+  function deletePhotoDump(url: string, callback: (isSuccess: boolean) => void) {
+    removeFromLayout(createKey("photo", url))
+    storeLayout()
+    callback(true)
+  }
   function createWeather(callback: (response: Response) => void) {
     if (user === undefined) {
       callback({ isSuccess: false, errorMessage: "login and try again later." })
@@ -636,7 +650,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function deleteWeather(uid: string, callback: (isSuccess: boolean) => void) {
-    let layout = removeFromLayout(uid)
     removeFromLayout(createKey("weather", uid))
     storeLayout()
     callback(true)
@@ -800,6 +813,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         deleteActivityWidget,
         createAvailabillityWidget,
         deleteAvailabillityWidget,
+        createPhotoDump,
+        deletePhotoDump,
       }}
     >
       {(id === undefined || resizable.order.length === 0) && (

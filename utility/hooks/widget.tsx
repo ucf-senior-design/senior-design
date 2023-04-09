@@ -4,6 +4,7 @@ import Day from "../../components/Dashboard/Day"
 import Poll from "../../components/Dashboard/Widgets/Poll/Poll"
 import { Suggestions } from "../../components/Dashboard/Widgets/Suggestions"
 import WeatherWidget from "../../components/Dashboard/Widgets/WeatherWidget"
+import PhotoGallery from "../../components/PhotoGallery"
 import { SuggestionWidget, Widget, WidgetType } from "../types/trip"
 import { useScreen } from "./screen"
 import { useTrip } from "./trip"
@@ -16,6 +17,7 @@ export default function useWidget(w: Widget) {
     deletePoll,
     deleteSuggestion,
     deleteWeather,
+    deletePhotoDump,
   } = useTrip()
   const { updateErrorToast } = useScreen()
 
@@ -60,11 +62,18 @@ export default function useWidget(w: Widget) {
       return
     }
 
+    if (type === "photo") {
+      await deletePhotoDump(uid, (isSuccess) => {
+        handleDeleteStatus(isSuccess)
+      })
+    }
+
     updateErrorToast("Cannot delete at this time.")
   }
   function getWidgetUI(): React.ReactNode {
     let splitKey = w.key.split(":")
     let widgetType: WidgetType = splitKey[0] as any
+    let uid = splitKey[1]
     if (splitKey[0] === "suggestion") {
       return (
         <Suggestions
@@ -92,6 +101,10 @@ export default function useWidget(w: Widget) {
 
     if (widgetType === "availabillity") {
       return <div> availabillity widget</div>
+    }
+
+    if (widgetType === "photo") {
+      return <PhotoGallery url={splitKey[1] + ":" + splitKey[2]} />
     }
 
     return <></>

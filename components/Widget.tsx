@@ -30,7 +30,7 @@ export default function Widget({ widget }: { widget: TWidget }) {
     let splitKey = widget.key.split(":")
     setWidgetInfo({
       type: splitKey[0] as WidgetType,
-      uid: splitKey[1],
+      uid: splitKey[0] !== "photo" ? splitKey[1] : splitKey[1] + ":" + splitKey[2],
     })
   }, [])
 
