@@ -34,7 +34,6 @@ function RouteGuard({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
-  console.log(user?.didFinishRegister, user?.loggedIn, authStatus)
   function authCheck(url: string) {
     const publicPaths = ["/auth/login", "/", "/auth/register", "/auth/details"]
     const path = url.split("?")[0]
