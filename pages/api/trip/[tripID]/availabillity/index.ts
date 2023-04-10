@@ -40,7 +40,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             .catch((e) => res.status(400).send(e))
         })
         .catch((e) => {
-          console.log("ERROR", e)
           res.status(400).send(e)
         })
       break

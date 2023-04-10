@@ -14,13 +14,15 @@ export function CreateItem({ index, value }: { index: number; value: string }) {
 
   useEffect(() => {
     if (ref.current !== null)
-      setSize({
-        // @ts-ignore
-        height: ref.current.clientHeight,
-        // @ts-ignore
-        width: ref.current.clientWidth,
-      })
-  }, [])
+      // @ts-ignore
+      console.log(value, ref.current.clientHeight, ref.current.clientHeight)
+    setSize({
+      // @ts-ignore
+      height: ref.current.clientHeight,
+      // @ts-ignore
+      width: ref.current.clientWidth,
+    })
+  }, [ref, getWidget(value)])
 
   const SortableItem = SortableElement(({ value }: { value: string }) => (
     <Box

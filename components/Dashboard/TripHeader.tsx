@@ -1,16 +1,19 @@
-import { ArrowBack, MoreHoriz } from "@mui/icons-material"
-import { Button } from "@mui/material"
+import { ArrowBack, Edit, MoreHoriz } from "@mui/icons-material"
+import { Box, Button } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import { useRouter } from "next/router"
 import React from "react"
 import Avatar from "../../components/Avatar"
 import { useScreen } from "../../utility/hooks/screen"
 import { useTrip } from "../../utility/hooks/trip"
+import { BackdropModal } from "../BackdropModal"
+import ModifyTrip from "../Modify/ModifyTrip"
 
-export function TripHeader() {
+export function TripHeader({ showModify }: { showModify: () => void }) {
   const router = useRouter()
   const { trip } = useTrip()
   const { updateNav } = useScreen()
+
   React.useEffect(() => {
     updateNav(
       {
@@ -37,9 +40,14 @@ export function TripHeader() {
             bottom: 0,
           }}
         >
-          <Typography sx={{ fontSize: "40px", fontWeight: "bold", color: "white" }}>
-            {trip.destination}
-          </Typography>
+          <Box display={"flex"} flexDirection={"row"} gap={"3px"}>
+            <Typography sx={{ fontSize: "40px", fontWeight: "bold", color: "white" }}>
+              {trip.destination}
+            </Typography>
+            <Button variant="text" onClick={() => showModify()}>
+              <Edit sx={{ color: "white", fontSize: "20px" }} />
+            </Button>
+          </Box>
           <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
             {Array.from(trip.attendees).map((attendee, index) => {
               if (index <= 4)
@@ -70,4 +78,8 @@ export function TripHeader() {
   }, [trip])
 
   return <></>
+}
+const $popUpDiv: React.CSSProperties = {
+  position: "absolute",
+  zIndex: 5,
 }

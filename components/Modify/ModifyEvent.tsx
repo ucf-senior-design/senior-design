@@ -3,8 +3,8 @@ import React from "react"
 import theme from "../../styles/theme/Theme"
 import useModifyEvent from "../../utility/hooks/modify/modifyEvent"
 import { Event as EventType } from "../../utility/types/trip"
-import DateRange from "./DateRange"
-import PlacesSearch from "./PlacesSearch"
+import DateRange from "../Form/DateRange"
+import PlacesSearch from "../Form/PlacesSearch"
 
 export default function ModifyEvent({
   closeModal,

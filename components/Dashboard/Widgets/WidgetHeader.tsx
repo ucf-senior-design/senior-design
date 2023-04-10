@@ -38,7 +38,7 @@ export default function WidgetHeader({
       >
         {/** TODO: Get actual owners name */}
         <Avatar name={"owner"} size={30} />
-        <Typography sx={{ fontWeight: 600 }}>by {getOwnerString()} </Typography>
+        <Typography sx={{ fontWeight: 600, overflow: "hidden" }}>by {getOwnerString()} </Typography>
       </Grid>
       <Grid
         item
