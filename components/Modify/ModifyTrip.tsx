@@ -4,8 +4,8 @@ import theme from "../../styles/theme/Theme"
 import useModifyTrip from "../../utility/hooks/modify/modifyTrip"
 import { useTrip } from "../../utility/hooks/trip"
 import { Duration } from "../../utility/types/trip"
-import DateRange from "./DateRange"
-import PlacesSearch from "./PlacesSearch"
+import DateRange from "../Form/DateRange"
+import PlacesSearch from "../Form/PlacesSearch"
 
 export default function ModifyTrip({ closeModal }: { closeModal: () => void }) {
   const { trip } = useTrip()
@@ -30,7 +30,7 @@ export default function ModifyTrip({ closeModal }: { closeModal: () => void }) {
     >
       <Box style={{ overflowY: "auto", maxHeight: "850px", width: "100%", gap: 2 }}>
         <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
-          Modifying trip to {trip.destination}
+          modify trip
         </Typography>
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           destination

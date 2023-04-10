@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { firebaseAuth } from "../../../../../utility/firebase"
+import { firebaseAuth, unpackArrayResponse } from "../../../../../utility/firebase"
 import firebaseAdmin from "../../../../../utility/firebaseAdmin"
 import { ActivityPrefField } from "../../../../../utility/types/trip"
 
@@ -31,6 +31,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
         .catch(() => {
           res.status(400).send("Could not create widget.")
+        })
+      break
+    }
+
+    case "GET": {
+      await firebaseAdmin
+        .firestore()
+        .collection(`Trips/${tripID}/activityPref`)
+        .get()
+        .then((values) => {
+          let widgets = unpackArrayResponse(values.docs)
+          res.status(200).send({ data: widgets })
+        })
+        .catch(() => {
+          res.status(400).send("Could not get widgets.")
         })
       break
     }

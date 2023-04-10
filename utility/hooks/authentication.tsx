@@ -1,8 +1,8 @@
 import {
   FacebookAuthProvider,
+  User as FirebaseUser,
   GoogleAuthProvider,
   signInWithPopup,
-  User as FirebaseUser,
 } from "firebase/auth"
 import Router from "next/router"
 import React from "react"
@@ -183,7 +183,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       if (response.status === 202) {
         await storePartialCredentialResult(await response.json())
-        Router.push("auth/details")
+        Router.push("/auth/details")
       }
     } else {
       updateErrorToast(await response.text())

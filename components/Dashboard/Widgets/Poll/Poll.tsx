@@ -8,7 +8,7 @@ import PollVote from "./PollVote"
 export default function Poll({ poll, showResults }: { poll: PollType; showResults: boolean }) {
   const pollHook = usePoll(poll)
   return (
-    <Paper sx={{ padding: "20px", width: "100%", height: "100%" }}>
+    <Paper sx={{ margin: "5px", padding: "20px" }}>
       <WidgetHeader owner={poll.owner} />
       <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center" }}>
         {poll.title}
