@@ -32,67 +32,65 @@ export default function PersonalInfo() {
   }
 
   return (
-    <Paper>
-      <Stack
-        direction="column"
-        justifyContent="space-evenly"
-        padding={3}
-        sx={{
-          maxWidth: "400px",
-          width: "80vw",
-        }}
+    <Stack
+      direction="column"
+      justifyContent="center"
+      padding={3}
+      sx={{
+        maxWidth: "400px",
+        width: "80vw",
+      }}
+    >
+      <Typography sx={{ fontSize: "15px" }}>personal information</Typography>
+      <Divider />
+      <TextField
+        id="nameInput"
+        value={info.name}
+        label="display name"
+        placeholder="ex. jane doe"
+        onChange={(e: { target: { value: string } }) =>
+          setInfo((info) => ({
+            ...info,
+            name: e.target.value,
+          }))
+        }
+        sx={{ marginBottom: 2, marginTop: 1 }}
+      />
+      <Typography>allergies</Typography>
+      <Divider sx={{ marginBottom: 1 }} />
+      <MuiChipsInput
+        value={info.allergies}
+        onChange={(value) =>
+          setInfo((info) => ({
+            ...info,
+            allergies: value,
+          }))
+        }
       >
-        <Typography sx={{ fontSize: "15px" }}>personal information</Typography>
-        <Divider />
-        <TextField
-          id="nameInput"
-          value={info.name}
-          label="display name"
-          placeholder="ex. jane doe"
-          onChange={(e: { target: { value: string } }) =>
-            setInfo((info) => ({
-              ...info,
-              name: e.target.value,
-            }))
-          }
-          sx={{ marginBottom: 2, marginTop: 1 }}
-        />
-        <Typography>allergies</Typography>
-        <Divider sx={{ marginBottom: 1 }} />
-        <MuiChipsInput
-          value={info.allergies}
-          onChange={(value) =>
-            setInfo((info) => ({
-              ...info,
-              allergies: value,
-            }))
-          }
-        >
-          {info.allergies}
-        </MuiChipsInput>
-        <Typography sx={{ marginTop: 2 }}>medical information</Typography>
-        <Divider sx={{ marginBottom: 1 }} />
-        <MuiChipsInput
-          value={info.medicalInfo}
-          onChange={(value) =>
-            setInfo((info) => ({
-              ...info,
-              medicalInfo: value,
-            }))
-          }
-        >
-          {info.medicalInfo}
-        </MuiChipsInput>
-        <Button
-          disabled={loading}
-          variant="contained"
-          aria-label="update changes"
-          sx={{ marginBottom: 2, marginTop: 2 }}
-          onClick={async () => await handleUpdate()}
-        >
-          update changes
-        </Button>
-      </Stack>
-    </Paper>
+        {info.allergies}
+      </MuiChipsInput>
+      <Typography sx={{ marginTop: 2 }}>medical information</Typography>
+      <Divider sx={{ marginBottom: 1 }} />
+      <MuiChipsInput
+        value={info.medicalInfo}
+        onChange={(value) =>
+          setInfo((info) => ({
+            ...info,
+            medicalInfo: value,
+          }))
+        }
+      >
+        {info.medicalInfo}
+      </MuiChipsInput>
+      <Button
+        disabled={loading}
+        variant="contained"
+        aria-label="update changes"
+        sx={{ marginBottom: 2, marginTop: 2 }}
+        onClick={async () => await handleUpdate()}
+      >
+        update changes
+      </Button>
+    </Stack>
   )
 }

@@ -8,6 +8,7 @@ import { Availabillity, Duration } from "../types/trip"
 import { useAuth } from "./authentication"
 import { useScreen } from "./screen"
 import { useTrip } from "./trip"
+import type { CellRenderInfo } from "rc-picker/lib/interface"
 
 export default function useAvailabillity(availabillity: Availabillity) {
   const { trip } = useTrip()
@@ -37,34 +38,43 @@ export default function useAvailabillity(availabillity: Availabillity) {
   }
   function storeDates() {
     let dateMap = new Map<string, Array<string>>()
-
+    console.log("AVAIL", availabillity.availabillities)
     availabillity.availabillities.forEach((a, user) => {
       a.dates.forEach((duration) => {
         let current = dayjs(duration.start)
         let end = dayjs(duration.end)
 
         while (current <= end) {
-          current = current.add(1, "day")
-          let arrayOfUsers = dateMap.get(createDateHash(current.month(), current.day())) ?? []
+          let arrayOfUsers = dateMap.get(createDateHash(current.month(), current.date())) ?? []
           arrayOfUsers.push(user)
-          dateMap.set(createDateHash(current.month(), current.day()), arrayOfUsers)
+          dateMap.set(
+            createDateHash(current.month(), current.date()),
+            Array.from(new Set(Array.from(arrayOfUsers))),
+          )
+          current = current.add(1, "day")
         }
       })
     })
 
+    console.log(dateMap)
     return dateMap
   }
 
-  const dateCellRender = (value: Dayjs) => {
+  function dateCellRender(value: Dayjs) {
     if (dates === undefined) return <></>
-    const users = dates.get(createDateHash(value.month(), value.day())) ?? []
+    console.log("HERE")
+    const users = dates.get(createDateHash(value.month(), value.date())) ?? []
+    if (users.length === 0) {
+      return <></>
+    }
+    console.log(createDateHash(value.month(), value.date()), users)
 
     return (
       <Box sx={{ gap: "3px", margin: 0, padding: 0 }}>
         {users.map((username) => {
           return (
             <div
-              key={username}
+              key={`${value.toDate()}:${username}`}
               style={{
                 width: "100%",
                 height: "5px",

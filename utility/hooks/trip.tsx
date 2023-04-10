@@ -18,6 +18,7 @@ import {
   SuggestionOption,
   SuggestionWidget,
   Trip,
+  UserAvailabillity,
   WidgetType,
 } from "../types/trip"
 import { User } from "../types/user"
@@ -239,7 +240,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     let suggestionWidgets = await getSuggestionWidgetData()
     let eventData = await getEventData()
     let pollWidgets = await getPollWidgetData()
-    let availabillityWidgets = new Map()
+    let availabillityWidgets = await getAvailabillityWidgetData()
     let prefWidgets = await getPreferenceWidgetData()
 
     if (suggestionWidgets === null || trip === null || eventData == null) {
@@ -345,7 +346,15 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       const { data } = await response.json()
 
       data.forEach((widget: any) => {
-        availabillityWidgets.set(widget.uid, widget)
+        let availMap = new Map<string, UserAvailabillity>(
+          widget.availabillities.map((avail: UserAvailabillity) => {
+            return [avail.uid, avail]
+          }),
+        )
+        availabillityWidgets.set(widget.uid, {
+          ...widget,
+          availabillities: availMap,
+        })
       })
     }
 
@@ -708,8 +717,18 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
     if (response.ok) {
       const widget = await response.json()
+      console.log(widget)
       let map = new Map(trip.availabillity)
-      map.set(widget.uid, widget)
+      let availMap = new Map<string, UserAvailabillity>()
+      availMap.set(user?.uid, {
+        uid: user?.uid,
+        dates: data.dates,
+      })
+
+      map.set(widget.uid, {
+        ...widget,
+        availabillities: availMap,
+      })
 
       setTrip({
         ...trip,

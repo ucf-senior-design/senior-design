@@ -12,7 +12,7 @@ export function PreferencesWidget({ p }: { p: usePreferenceHook }) {
   const [showAdd, setShowAdd] = React.useState(false)
   return (
     <>
-      <Paper sx={{ padding: "20px", width: "100%" }}>
+      <Paper sx={{ padding: "20px", width: "100%", margin: "10px" }}>
         <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center", padding: "1" }}>
           {p.title}
         </Typography>

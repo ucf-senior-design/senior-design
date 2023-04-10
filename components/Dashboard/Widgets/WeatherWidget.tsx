@@ -78,21 +78,17 @@ const WeatherWidget: React.FC = () => {
     fetchWeather()
   }, [city, metric])
 
-  if (weatherWidget.current === undefined || weatherWidget.forecast === undefined) {
-    return <CircularProgress color="inherit" />
-  }
-
   return (
-    <div>
-      {weatherWidget && (
+    <div style={{ width: "100%", height: "300px", padding: "10px" }}>
+      {weatherWidget && weatherWidget.current && weatherWidget.forecast && (
         <div>
           <Paper
             square={false}
             style={{
               display: "inline-block",
               borderRadius: 5,
-              backgroundColor: "#E1E2DE",
               width: "100%",
+              backgroundColor: "#white",
             }}
           >
             <Grid container direction="row" justifyContent="flex-end">

@@ -25,12 +25,13 @@ export function CalendarWidget({ availability }: { availability: Availabillity }
           maxHeight: "500px",
           overflowY: "auto",
           height: "100%",
+          margin: "10px",
         }}
       >
         <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center", fontSize: "20px" }}>
           {availability.title}
         </Typography>
-        <Calendar dateCellRender={dateCellRender} />
+        <Calendar dateCellRender={(date) => dateCellRender(date)} />
         <Button onClick={() => setShowAvail(true)}> Add Availabillity</Button>
         <div style={$popUpDiv}>
           <BackdropModal isOpen={showAddAvail} toggleShow={() => setShowAvail(!showAddAvail)}>

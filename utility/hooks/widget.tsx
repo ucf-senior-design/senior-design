@@ -1,7 +1,9 @@
 import { WbSunny } from "@mui/icons-material"
 import React from "react"
 import Day from "../../components/Dashboard/Day"
+import { CalendarWidget } from "../../components/Dashboard/Widgets/Calendar"
 import Poll from "../../components/Dashboard/Widgets/Poll/Poll"
+import { PreferencesWidget } from "../../components/Dashboard/Widgets/Preferences"
 import { Suggestions } from "../../components/Dashboard/Widgets/Suggestions"
 import WeatherWidget from "../../components/Dashboard/Widgets/WeatherWidget"
 import PhotoGallery from "../../components/PhotoGallery"
@@ -63,8 +65,8 @@ export default function useWidget(w: Widget) {
     }
 
     if (type === "photo") {
-      await deletePhotoDump(uid, (isSuccess) => {
-        handleDeleteStatus(isSuccess)
+      deletePhotoDump(uid, (isSuccess) => {
+        handleDeleteStatus(true)
       })
     }
 
@@ -96,11 +98,11 @@ export default function useWidget(w: Widget) {
     }
 
     if (widgetType === "preference") {
-      return <div> preference widget </div>
+      return <PreferencesWidget p={trip.activityPreferences.get(splitKey[1]) as any} />
     }
 
     if (widgetType === "availabillity") {
-      return <div> availabillity widget</div>
+      return <CalendarWidget availability={trip.availabillity.get(splitKey[1]) as any} />
     }
 
     if (widgetType === "photo") {
