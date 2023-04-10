@@ -1,69 +1,133 @@
 import React from "react"
+import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
+import { ActivityPref, ActivityPrefField } from "../types/trip"
 import { useAuth } from "./authentication"
 import { useScreen } from "./screen"
 import { useTrip } from "./trip"
 
 // All of the values and functions returned from this use state
-export type usePreferenceHook = {}
+export interface usePreferenceHook extends ActivityPref {
+  uid: string
+}
 
-export default function useSuggestion(p: PreferencesWidget): usePreferenceHook {
+export default function usePreferences(p: usePreferenceHook) {
   const { user } = useAuth()
   const { trip } = useTrip()
-
   const { updateErrorToast } = useScreen()
-  const userID = user?.uid ?? ""
 
-  const tripID = trip.uid
+  const [preference, setPreference] = React.useState<usePreferenceHook>(p)
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL
-  const [preference, setPreference] = React.useState<PreferenceUseState>({})
-
-  /**
-   * Checks if a user voted on a preference - see results if so.
-   * @param option uid for the suggestion.
-   * @returns true if the user has liked the suggestion and false otherwise.
-   */
-  function didUserVote(option: string) {
-    const voted = preference.preferences.get(option)?.has(userID)
-    return voted !== undefined ? voted : false
+  async function sendVote(votes: Array<ActivityPrefField>) {
+    if (user === undefined) {
+      return
+    }
+    const options = createFetchRequestOptions(
+      JSON.stringify({
+        activityPrefID: preference.uid,
+        votes: votes,
+      }),
+      "PUT",
+    )
+    await fetch(`${API_URL}trip/${trip.uid}/activityPref/`, options).then(async (response) => {
+      if (response.ok) {
+        let voteSet = new Set(votes)
+        setPreference({
+          ...preference,
+          sports: voteSet.has("SPORTS")
+            ? new Array(preference.sports.push(user.uid))
+            : preference.sports,
+          nature: voteSet.has("NATURE")
+            ? new Array(preference.nature.push(user.uid))
+            : preference.nature,
+          sightseeing: voteSet.has("SIGHTSEEING")
+            ? new Array(preference.sightseeing.push(user.uid))
+            : preference.sightseeing,
+          lowPrice: voteSet.has("LOWPRICE")
+            ? new Array(preference.lowPrice.push(user.uid))
+            : preference.lowPrice,
+          medPrice: voteSet.has("MEDPRICE")
+            ? new Array(preference.medPrice.push(user.uid))
+            : preference.medPrice,
+          highPrice: voteSet.has("HIGHPRICE")
+            ? new Array(preference.highPrice.push(user.uid))
+            : preference.highPrice,
+          veryHighPrice: voteSet.has("VERYHIGHPRICE")
+            ? new Array(preference.veryHighPrice.push(user.uid))
+            : preference.veryHighPrice,
+        })
+      } else {
+        console.log(await response.text())
+        updateErrorToast("Try again later")
+      }
+    })
   }
 
-  /**
-   * Allows a user to vote on a preference
-   * @param selectedOption the uid of the suggestion the user is trying to like.
-   */
-  async function sendVote(selectedOption: string) {
-    const options = createFetchRequestOptions(JSON.stringify({}), "PUT")
-    await fetch(`${API_URL}trip/${tripID}/preferences/${selectedOption}`, options)
-      .then((response) => {
-        if (response.ok) {
-          // If successful, store that the user likes the suggestion locally.
-          const suggestionVotes = p.get(selectedOption)
+  function hasUserVote(vote: ActivityPrefField) {
+    if (vote === "SPORTS") {
+      return new Set(preference.sports).has(user?.uid ?? "")
+    }
 
-          setPreference(() => {
-            if (selectedOption) {
-              selectedOption.add(userID)
-            }
-            return {
-              ...preference,
-            }
-          })
-        } else {
-          updateErrorToast("Try again later")
-        }
-      })
-      .catch(() => {})
+    if (vote === "NATURE") {
+      return new Set(preference.nature).has(user?.uid ?? "")
+    }
+
+    if (vote === "SIGHTSEEING") {
+      return new Set(preference.sightseeing).has(user?.uid ?? "")
+    }
+
+    if (vote === "LOWPRICE") {
+      return new Set(preference.lowPrice).has(user?.uid ?? "")
+    }
+
+    if (vote === "MEDPRICE") {
+      return new Set(preference.medPrice).has(user?.uid ?? "")
+    }
+
+    if (vote === "HIGHPRICE") {
+      return new Set(preference.highPrice).has(user?.uid ?? "")
+    }
+
+    if (vote === "VERYHIGHPRICE") {
+      return new Set(preference.veryHighPrice).has(user?.uid ?? "")
+    }
+
+    return false
   }
+  function getVoteCount(vote: ActivityPrefField) {
+    if (vote === "SPORTS") {
+      return preference.sports.length
+    }
 
-  async function calculateResults(selectedOption: string) {}
+    if (vote === "NATURE") {
+      return preference.nature.length
+    }
 
+    if (vote === "SIGHTSEEING") {
+      return preference.sightseeing.length
+    }
+
+    if (vote === "LOWPRICE") {
+      return preference.lowPrice.length
+    }
+
+    if (vote === "MEDPRICE") {
+      return preference.medPrice.length
+    }
+
+    if (vote === "HIGHPRICE") {
+      return preference.highPrice.length
+    }
+
+    if (vote === "VERYHIGHPRICE") {
+      return preference.veryHighPrice.length
+    }
+
+    return 0
+  }
   return {
-    // addSuggestion,
-    // didUserLike,
-    // like,
-    // unLike,
-    // storeNewSuggestion,
-    // doesUserOwn,
+    sendVote,
+    getVoteCount,
+    hasUserVote,
   }
 }

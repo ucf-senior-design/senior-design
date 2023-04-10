@@ -3,129 +3,188 @@ import ParkIcon from "@mui/icons-material/Park"
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera"
 import SportsTennisIcon from "@mui/icons-material/SportsTennis"
 import { Box, Button, Chip, Paper, Typography } from "@mui/material"
+import React from "react"
+import theme from "../../../styles/theme/Theme"
+import usePreferences, { usePreferenceHook } from "../../../utility/hooks/preferences"
 
-export function PreferencesWidget({
-  // preferenceWidget,
-  tripID,
-}: {
-  tripID: string
-  // preferenceWidget: PreferencesWidget
-}) {
-  // const {
-  //   uid = "AwV5uEuEFRz8Um0B80Kj",
-  //   sightseeing = ["user"],
-  //   sports = [],
-  //   lowPrice = [],
-  //   nature = ["user"],
-  //   highPrice = [],
-  //   medPrice = [],
-  //   veryHighPrice = [],
-  //   title = "Trip event preferences",
-  // } = usePreference(PreferencesWidget)
+export function PreferencesWidget({ p }: { p: usePreferenceHook }) {
+  const { sendVote, getVoteCount, hasUserVote } = usePreferences(p)
+  const [showAdd, setShowAdd] = React.useState(false)
+  return (
+    <>
+      <Paper sx={{ padding: "20px", width: "100%" }}>
+        <Typography sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center", padding: "1" }}>
+          {p.title}
+        </Typography>
 
-  const votes_cost = [2, 5, 1, 2]
-  const votes_act = [4, 5, 1]
-
-  const sum_cost = votes_cost.reduce((a, b) => a + b)
-  const sum_act = votes_act.reduce((a, b) => a + b)
-
-  function Preferences() {
-    return (
-      <>
-        <Paper sx={{ padding: "20px", width: "80vw", maxWidth: "300px" }}>
-          <Typography
-            sx={{ fontSize: "20px", fontWeight: "600", textAlign: "center", padding: "1" }}
-          >
-            preferences Selection
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            flexDirection: "column",
+          }}
+        >
+          <Typography variant={"h6"} sx={{ $headerStyle }}>
+            {" "}
+            cost preferences
           </Typography>
-          <p>Select all acceptable cost preferences from the below list:</p>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Chip
-              variant="outlined"
-              icon={<AttachMoneyIcon />}
-              label={
-                <Typography padding={1} fontSize={14}>
-                  very high - {(votes_cost[0] / sum_cost) * 100}%
-                </Typography>
-              }
-              size="medium"
-              sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
-            />
-            <Chip
-              variant="outlined"
-              icon={<AttachMoneyIcon />}
-              label={
-                <Typography padding={1} fontSize={14}>
-                  high - {(votes_cost[1] / sum_cost) * 100}%
-                </Typography>
-              }
-              size="medium"
-              sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
-            />
-            <Chip
-              variant="outlined"
-              icon={<AttachMoneyIcon />}
-              label={
-                <Typography padding={1} fontSize={14}>
-                  medium - {(votes_cost[2] / sum_cost) * 100}%
-                </Typography>
-              }
-              size="medium"
-              sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
-            />
-            <Chip
-              variant="outlined"
-              icon={<AttachMoneyIcon />}
-              label={
-                <Typography padding={1} fontSize={14}>
-                  low - {(votes_cost[3] / sum_cost) * 100}%
-                </Typography>
-              }
-              size="medium"
-              sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
-            />
+          <Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              <Button
+                onDoubleClick={() => sendVote(["VERYHIGHPRICE"])}
+                disabled={hasUserVote("VERYHIGHPRICE")}
+              >
+                <Chip
+                  variant={hasUserVote("VERYHIGHPRICE") ? "filled" : "outlined"}
+                  icon={<AttachMoneyIcon />}
+                  label={
+                    <Typography padding={1} fontSize={14}>
+                      very high - {getVoteCount("VERYHIGHPRICE")}
+                    </Typography>
+                  }
+                  size="medium"
+                  sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+                />
+              </Button>
+              <Button
+                onDoubleClick={() => sendVote(["HIGHPRICE"])}
+                disabled={hasUserVote("HIGHPRICE")}
+              >
+                <Chip
+                  variant={hasUserVote("HIGHPRICE") ? "filled" : "outlined"}
+                  icon={<AttachMoneyIcon />}
+                  label={
+                    <Typography padding={1} fontSize={14}>
+                      high - {getVoteCount("HIGHPRICE")}
+                    </Typography>
+                  }
+                  size="medium"
+                  sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+                />
+              </Button>
+              <Button
+                onDoubleClick={() => sendVote(["MEDPRICE"])}
+                disabled={hasUserVote("MEDPRICE")}
+              >
+                <Chip
+                  variant={hasUserVote("MEDPRICE") ? "filled" : "outlined"}
+                  icon={<AttachMoneyIcon />}
+                  label={
+                    <Typography padding={1} fontSize={14}>
+                      medium - {getVoteCount("MEDPRICE")}
+                    </Typography>
+                  }
+                  size="medium"
+                  sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+                />
+              </Button>
+              <Button
+                onDoubleClick={() => sendVote(["LOWPRICE"])}
+                disabled={hasUserVote("LOWPRICE")}
+              >
+                <Chip
+                  variant={hasUserVote("LOWPRICE") ? "filled" : "outlined"}
+                  icon={<AttachMoneyIcon />}
+                  label={
+                    <Typography padding={1} fontSize={14}>
+                      low - {getVoteCount("LOWPRICE")}
+                    </Typography>
+                  }
+                  size="medium"
+                  sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+                />
+              </Button>
+            </Box>
           </Box>
-
-          <p>Select all acceptable outdoors activities preferences from the below list:</p>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Chip
-              variant="outlined"
-              icon={<SportsTennisIcon />}
-              label={
-                <Typography padding={1} fontSize={14}>
-                  nature - {(votes_act[0] / sum_act) * 100}%
-                </Typography>
-              }
-              size="medium"
-              sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
-            />
-            <Chip
-              variant="outlined"
-              icon={<ParkIcon />}
-              label={
-                <Typography padding={1} fontSize={14}>
-                  sports - {(votes_act[1] / sum_act) * 100}%
-                </Typography>
-              }
-              size="medium"
-              sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
-            />
-            <Chip
-              variant="outlined"
-              icon={<PhotoCameraIcon />}
-              label={
-                <Typography padding={1} fontSize={14}>
-                  sightseeing - {(votes_act[2] / sum_act) * 100}%
-                </Typography>
-              }
-              size="medium"
-              sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
-            />
-
-            <Button variant="outlined">add preference</Button>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+            }}
+          >
+            <Typography variant={"h6"} sx={{ $headerStyle }}>
+              activitiy preferences
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 2,
+                alignItems: "center",
+                justifyContent: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              <Button
+                onDoubleClick={async () => await sendVote(["NATURE"])}
+                disabled={hasUserVote("NATURE")}
+              >
+                <Chip
+                  variant={hasUserVote("NATURE") ? "filled" : "outlined"}
+                  icon={<SportsTennisIcon />}
+                  label={
+                    <Typography padding={1} fontSize={14}>
+                      nature - {getVoteCount("NATURE")}
+                    </Typography>
+                  }
+                  size="medium"
+                  sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+                />
+              </Button>
+              <Button
+                onDoubleClick={async () => await sendVote(["SPORTS"])}
+                disabled={hasUserVote("SPORTS")}
+              >
+                <Chip
+                  variant={hasUserVote("SPORTS") ? "filled" : "outlined"}
+                  icon={<ParkIcon />}
+                  label={
+                    <Typography padding={1} fontSize={14}>
+                      sports - {getVoteCount("SPORTS")}
+                    </Typography>
+                  }
+                  size="medium"
+                  sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+                />
+              </Button>
+              <Button
+                onDoubleClick={async () => await sendVote(["SIGHTSEEING"])}
+                disabled={hasUserVote("SIGHTSEEING")}
+              >
+                <Chip
+                  variant={hasUserVote("SIGHTSEEING") ? "filled" : "outlined"}
+                  icon={<PhotoCameraIcon />}
+                  label={
+                    <Typography padding={1} fontSize={14}>
+                      sightseeing - {getVoteCount("SIGHTSEEING")}
+                    </Typography>
+                  }
+                  size="medium"
+                  sx={{ paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 0.5, paddingRight: 0.5 }}
+                />
+              </Button>
+            </Box>
           </Box>
-        </Paper>
-      </>
-    )
-  }
+        </Box>
+      </Paper>
+    </>
+  )
+}
+
+const $headerStyle: React.CSSProperties = {
+  fontWeight: 500,
+  color: theme.palette.secondary.main,
+  padding: 5,
 }
