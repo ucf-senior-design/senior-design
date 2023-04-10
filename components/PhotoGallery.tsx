@@ -27,6 +27,7 @@ export default function PhotoGallery({ url }: { url: string }) {
         let formattedImage: Image = { src: currUnformattedImage.url, width: 320, height: 212 } // fill this in
         formatted.push(formattedImage)
       }
+
       return formatted
     }
 

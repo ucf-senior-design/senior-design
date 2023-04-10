@@ -171,6 +171,7 @@ const $addButton: React.CSSProperties = {
   position: "fixed",
   bottom: "20px",
   left: "20px",
+  zIndex: 10,
   display: "flex",
   justifyContent: "center",
   alignItems: "center",

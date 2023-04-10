@@ -108,7 +108,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .then(async (value) => {
           res.status(200).send("Updated preferences")
         })
-        .catch(() => {
+        .catch((e) => {
           res.status(400).send("Could not create widget.")
         })
       break

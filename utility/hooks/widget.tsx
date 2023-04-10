@@ -1,7 +1,9 @@
 import { WbSunny } from "@mui/icons-material"
 import React from "react"
 import Day from "../../components/Dashboard/Day"
+import { CalendarWidget } from "../../components/Dashboard/Widgets/Calendar"
 import Poll from "../../components/Dashboard/Widgets/Poll/Poll"
+import { PreferencesWidget } from "../../components/Dashboard/Widgets/Preferences"
 import { Suggestions } from "../../components/Dashboard/Widgets/Suggestions"
 import WeatherWidget from "../../components/Dashboard/Widgets/WeatherWidget"
 import PhotoGallery from "../../components/PhotoGallery"
@@ -10,6 +12,8 @@ import { useScreen } from "./screen"
 import { useTrip } from "./trip"
 export default function useWidget(w: Widget) {
   const [popup, setPopup] = React.useState(false)
+  const [widgetUI, setWidgetUI] = React.useState<React.ReactNode>(<></>)
+
   const {
     trip,
     deleteActivityWidget,
@@ -19,6 +23,10 @@ export default function useWidget(w: Widget) {
     deleteWeather,
     deletePhotoDump,
   } = useTrip()
+
+  React.useEffect(() => {
+    setWidgetUI(getWidgetUI())
+  }, [trip])
   const { updateErrorToast } = useScreen()
 
   function handleDeleteStatus(isSuccess: boolean) {
@@ -63,8 +71,8 @@ export default function useWidget(w: Widget) {
     }
 
     if (type === "photo") {
-      await deletePhotoDump(uid, (isSuccess) => {
-        handleDeleteStatus(isSuccess)
+      deletePhotoDump(uid, (isSuccess) => {
+        handleDeleteStatus(true)
       })
     }
 
@@ -73,7 +81,7 @@ export default function useWidget(w: Widget) {
   function getWidgetUI(): React.ReactNode {
     let splitKey = w.key.split(":")
     let widgetType: WidgetType = splitKey[0] as any
-    let uid = splitKey[1]
+
     if (splitKey[0] === "suggestion") {
       return (
         <Suggestions
@@ -96,11 +104,11 @@ export default function useWidget(w: Widget) {
     }
 
     if (widgetType === "preference") {
-      return <div> preference widget </div>
+      return <PreferencesWidget p={trip.activityPreferences.get(splitKey[1]) as any} />
     }
 
     if (widgetType === "availabillity") {
-      return <div> availabillity widget</div>
+      return <CalendarWidget availability={trip.availabillity.get(splitKey[1]) as any} />
     }
 
     if (widgetType === "photo") {
@@ -115,5 +123,6 @@ export default function useWidget(w: Widget) {
     popup,
     setPopup,
     deleteWidget,
+    widgetUI,
   }
 }

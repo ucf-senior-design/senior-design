@@ -15,7 +15,7 @@ export default function Day({
   events: Array<EventType>
   joinableEvents: Array<EventType>
 }) {
-  const [showModifyEvent, setShowModifyEvent] = React.useState(false)
+  const [showModifyEvent, setShowModifyEvent] = React.useState<EventType | undefined>(undefined)
 
   return (
     <Box sx={{ padding: "10px" }}>
@@ -57,25 +57,23 @@ export default function Day({
             No Events{" "}
           </Box>
         )}
+
+        <BackdropModal
+          isOpen={showModifyEvent !== undefined}
+          toggleShow={() => setShowModifyEvent(undefined)}
+        >
+          {showModifyEvent !== undefined && (
+            <ModifyEvent event={showModifyEvent} closeModal={() => setShowModifyEvent(undefined)} />
+          )}
+        </BackdropModal>
         {events.map((event, index) => {
           return (
             <>
-              <Button onClick={() => setShowModifyEvent(true)} style={{ width: "100%" }}>
+              <Button onClick={() => setShowModifyEvent(event)} style={{ width: "100%" }}>
                 <Event key={index} event={event} />
               </Button>
 
-              <div style={$popUpDiv}>
-                <BackdropModal
-                  isOpen={showModifyEvent}
-                  toggleShow={() => setShowModifyEvent(!showModifyEvent)}
-                >
-                  <ModifyEvent
-                    key={index}
-                    event={event}
-                    closeModal={() => setShowModifyEvent(false)}
-                  />
-                </BackdropModal>
-              </div>
+              <div style={$popUpDiv}></div>
             </>
           )
         })}
