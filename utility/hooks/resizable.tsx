@@ -23,6 +23,7 @@ interface Resizable {
   addItem: (key: string) => void
   getStorableLayout: (order: Array<string>) => void
   moving: boolean
+  removeFromLayout: (key: string) => void
 }
 
 const ResizableContext = React.createContext<Resizable | null>(null)
@@ -45,6 +46,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     order: [],
     widgets: new Map<string, React.ReactNode>(),
   })
+  console.log(resizable.order)
   const [moving, setMoving] = React.useState(false)
 
   const DEFAULT_SIZE_INDEX = 1
@@ -99,6 +101,22 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     return `${type}:${uid}`
   }
 
+  function removeFromLayout(key: string) {
+    let size = new Map(resizable.size)
+    size.delete(key)
+
+    let order = new Set(resizable.order)
+    order.delete(key)
+
+    let widgets = new Map(resizable.widgets)
+    widgets.delete(key)
+
+    setResizable({
+      size: size,
+      order: Array.from(order),
+      widgets: widgets,
+    })
+  }
   /**
    * Handles reading the layout from the database.
    */
@@ -254,6 +272,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
         canDecreaseSize,
         canIncreaseSize,
         getStorableLayout,
+        removeFromLayout,
         moving,
       }}
     >

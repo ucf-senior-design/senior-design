@@ -27,7 +27,7 @@ export function Suggestions({
 
   function Suggestion({ suggestion }: { suggestion: SuggestionOption }) {
     return (
-      <Grid key={suggestion.uid} container>
+      <Grid sx={{ margin: "5px" }} key={suggestion.uid} container>
         <Grid item xs={10} sx={{ display: "flex", flexDirection: "row", gap: 2, width: "100%" }}>
           <Typography> {suggestion.option}</Typography>
         </Grid>

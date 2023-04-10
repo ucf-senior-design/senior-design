@@ -2,7 +2,7 @@ import { Box, Button, Typography } from "@mui/material"
 import React from "react"
 import { Event as EventType } from "../../utility/types/trip"
 import { BackdropModal } from "../BackdropModal"
-import ModifyEvent from "../Form/ModifyEvent"
+import ModifyEvent from "../Modify/ModifyEvent"
 import Event from "./Event"
 import JoinableEvent from "./JoinableEvent"
 
@@ -60,8 +60,10 @@ export default function Day({
         {events.map((event, index) => {
           return (
             <>
-              <Event key={index} event={event} />
-              <Button onClick={() => setShowModifyEvent(true)}>Modify</Button>
+              <Button onClick={() => setShowModifyEvent(true)} style={{ width: "100%" }}>
+                <Event key={index} event={event} />
+              </Button>
+
               <div style={$popUpDiv}>
                 <BackdropModal
                   isOpen={showModifyEvent}
