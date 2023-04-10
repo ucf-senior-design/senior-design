@@ -44,7 +44,6 @@ export default function PhotoGallery({ url }: { url: string }) {
     getImages()
   }, [])
 
-  console.log(images)
   return (
     <Box
       sx={{
