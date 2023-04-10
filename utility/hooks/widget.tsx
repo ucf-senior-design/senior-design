@@ -12,6 +12,8 @@ import { useScreen } from "./screen"
 import { useTrip } from "./trip"
 export default function useWidget(w: Widget) {
   const [popup, setPopup] = React.useState(false)
+  const [widgetUI, setWidgetUI] = React.useState<React.ReactNode>(<></>)
+
   const {
     trip,
     deleteActivityWidget,
@@ -21,6 +23,10 @@ export default function useWidget(w: Widget) {
     deleteWeather,
     deletePhotoDump,
   } = useTrip()
+
+  React.useEffect(() => {
+    setWidgetUI(getWidgetUI())
+  }, [trip])
   const { updateErrorToast } = useScreen()
 
   function handleDeleteStatus(isSuccess: boolean) {
@@ -75,7 +81,7 @@ export default function useWidget(w: Widget) {
   function getWidgetUI(): React.ReactNode {
     let splitKey = w.key.split(":")
     let widgetType: WidgetType = splitKey[0] as any
-    let uid = splitKey[1]
+
     if (splitKey[0] === "suggestion") {
       return (
         <Suggestions
@@ -117,5 +123,6 @@ export default function useWidget(w: Widget) {
     popup,
     setPopup,
     deleteWidget,
+    widgetUI,
   }
 }

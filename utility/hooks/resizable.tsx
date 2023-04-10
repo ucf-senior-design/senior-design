@@ -46,7 +46,7 @@ export function ResizableProvider({ children }: { children: React.ReactNode }) {
     order: [],
     widgets: new Map<string, React.ReactNode>(),
   })
-  console.log(resizable.order)
+
   const [moving, setMoving] = React.useState(false)
 
   const DEFAULT_SIZE_INDEX = 1
