@@ -110,8 +110,7 @@ export function useTrip(): TripContext {
 
 export function TripProvider({ children }: { children: React.ReactNode }) {
   const [id, setId] = React.useState<string>()
-  const WEBSOCKET_TIMER_SECONDS = 30
-  const [resetTime, setResetTime] = React.useState(false)
+
   const { readLayout, createKey, addItem, resizable, getStorableLayout, moving, removeFromLayout } =
     useResizable()
   const { updateErrorToast } = useScreen()
@@ -182,20 +181,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       setTrip({ ...trip, didReadLayout: true })
     }
   }, [trip])
-
-  // React.useEffect(() => {
-  //   setTimeout(() => {
-  //     setResetTime(!resetTime)
-  //   }, WEBSOCKET_TIMER_SECONDS * 1000)
-  //   if (!moving) {
-  //     initilizeTrip()
-  //     console.log(window.scrollX, window.scrollY)
-  //     setScroll({
-  //       x: window.scrollX,
-  //       y: window.scrollY,
-  //     })
-  //   }
-  // }, [resetTime])
 
   function addNewWidget(type: WidgetType, uid: string) {
     const key = createKey(type, uid)
@@ -406,6 +391,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
             end: new Date(t?.duration.end),
           },
         }
+    } else {
+      console.log("error loading trip", await response.text())
     }
     return null
   }

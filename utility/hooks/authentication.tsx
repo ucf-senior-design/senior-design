@@ -1,8 +1,8 @@
 import {
   FacebookAuthProvider,
-  User as FirebaseUser,
   GoogleAuthProvider,
   signInWithPopup,
+  User as FirebaseUser,
 } from "firebase/auth"
 import Router from "next/router"
 import React from "react"
