@@ -77,7 +77,11 @@ interface TripContext {
   // handle events
   createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
   modifyTrip: (details: TripDetails, callback: () => void) => Promise<void>
-  modifyEvent: (event: ModifiedEvent, callback: (isSuccess: boolean) => void) => Promise<void>
+  modifyEvent: (
+    event: ModifiedEvent,
+    attendees: Array<string>,
+    callback: (isSuccess: boolean) => void,
+  ) => Promise<void>
 
   // handle preferences widget
   deleteActivityWidget: (uid: string, callback: (isSuccess: boolean) => void) => Promise<void>
