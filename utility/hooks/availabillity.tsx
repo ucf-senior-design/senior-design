@@ -8,7 +8,6 @@ import { Availabillity, Duration } from "../types/trip"
 import { useAuth } from "./authentication"
 import { useScreen } from "./screen"
 import { useTrip } from "./trip"
-import type { CellRenderInfo } from "rc-picker/lib/interface"
 
 export default function useAvailabillity(availabillity: Availabillity) {
   const { trip } = useTrip()
