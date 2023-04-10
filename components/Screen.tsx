@@ -19,13 +19,10 @@ export default function Screen({ children, path }: { path: string; children: Rea
     nav,
     loading,
     updateNav,
+    authStatus,
   } = useScreen()
   const { user } = useAuth()
   const router = useRouter()
-  const [filledRequiredAuth, setFilledRequiredAuth] = React.useState({
-    loggedIn: false,
-    hasRequiredAuth: false,
-  })
 
   const backgroundImage = path === "/about" ? "url('/Mountains.svg') 80% 80% " : undefined
   const msgToastOptions: ToastOptions = {
@@ -41,29 +38,6 @@ export default function Screen({ children, path }: { path: string; children: Rea
 
   // Resets View Trip Header UI on non view trip pages
   React.useEffect(() => {
-    if (
-      (router.pathname.startsWith("/dashboard") || router.pathname.startsWith("/settings")) &&
-      user !== undefined
-    ) {
-      if (user.uid.length === 0) {
-        updateErrorToast("please login before using the application!")
-        router.push("/auth/login")
-      }
-      if (!user.didFinishRegister) {
-        updateErrorToast("please finish adding details before using the application!")
-        router.push("auth/details")
-      } else {
-        setFilledRequiredAuth({
-          loggedIn: true,
-          hasRequiredAuth: true,
-        })
-      }
-    } else {
-      setFilledRequiredAuth({
-        loggedIn: user !== undefined && user.uid.length >= 0,
-        hasRequiredAuth: true,
-      })
-    }
     if (!router.pathname.startsWith("/dashboard/trip/[[...params]]"))
       updateNav(undefined, undefined, <></>)
   }, [router])
@@ -88,36 +62,37 @@ export default function Screen({ children, path }: { path: string; children: Rea
     updateLoading(false)
   }, [path])
 
+  console.log(authStatus)
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      <div style={nav.style}>
-        <NavBar path={path} loggedIn={filledRequiredAuth.loggedIn} />
-        {nav.children}
+    <>
+      <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+        {authStatus.authorized && (
+          <div style={nav.style}>
+            <NavBar path={path} loggedIn={authStatus.loggedIn} />
+            {nav.children}
+          </div>
+        )}
+
+        <div
+          style={{
+            height: "100vh",
+            width: "100vw",
+            padding: autoPadding ? 10 : 0,
+            backgroundColor: theme.palette.background.default,
+            background: backgroundImage,
+          }}
+        >
+          <ToastContainer />
+
+          <>{children}</>
+        </div>
       </div>
 
-      <div
-        style={{
-          height: "100vh",
-          width: "100vw",
-          padding: autoPadding ? 10 : 0,
-          backgroundColor: theme.palette.background.default,
-          background: backgroundImage,
-        }}
-      >
-        <ToastContainer />
-
-        <>
-          {!filledRequiredAuth.hasRequiredAuth && (
-            <Backdrop
-              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-              open={true}
-            >
-              <CircularProgress color="inherit" />
-            </Backdrop>
-          )}
-          {filledRequiredAuth.hasRequiredAuth && <>{children}</>}
-        </>
-      </div>
-    </div>
+      {!authStatus.authorized && (
+        <Backdrop sx={{ color: "#fff", zIndex: 25, width: "100vw", height: "100vh" }} open={true}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
+    </>
   )
 }
