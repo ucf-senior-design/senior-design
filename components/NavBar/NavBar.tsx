@@ -1,5 +1,6 @@
 import AirportShuttleIcon from "@mui/icons-material/AirportShuttle"
 import MenuIcon from "@mui/icons-material/Menu"
+import { Dropdown, MenuProps, Button as AButton } from "antd"
 import {
   AppBar,
   Box,
@@ -49,6 +50,17 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
       <LoggedOutDrawer user={user} />
     </Box>
   )
+
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: <a onClick={() => handleSettings()}> my account </a>,
+    },
+    {
+      key: "2",
+      label: <a onClick={() => handleLogout()}> logout </a>,
+    },
+  ]
 
   return (
     <>
@@ -123,50 +135,17 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
                   <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
                     {anchorRef !== null && anchorRef !== undefined && (
                       <>
-                        <Button
-                          ref={anchorRef}
-                          color="secondary"
-                          variant="text"
-                          aria-label={"user"}
-                          aria-controls={open ? "composition-menu" : undefined}
-                          aria-expanded={open ? "true" : undefined}
-                          area-haspopup="true"
-                        >
-                          <Avatar name={user?.name ?? ""} />
-                        </Button>
-                        <Popper
-                          open={open}
-                          anchorEl={anchorRef.current}
-                          role={undefined}
-                          placement="bottom-start"
-                          transition
-                          disablePortal
-                        >
-                          {({ TransitionProps, placement }) => (
-                            <Grow
-                              {...TransitionProps}
-                              style={{
-                                transformOrigin:
-                                  placement === "bottom-start" ? "left top" : "left bottom",
-                              }}
-                            >
-                              <Paper>
-                                <ClickAwayListener onClickAway={() => setOpen(false)}>
-                                  <MenuList
-                                    autoFocusItem={open}
-                                    id="composition-menu"
-                                    aria-labelledby="composition-button"
-                                    onKeyDown={handleListKeyDown}
-                                  >
-                                    {/* TODO: Add logic for settings page*/}
-                                    <MenuItem onClick={handleSettings}>my account</MenuItem>
-                                    <MenuItem onClick={(e) => handleLogout()}>logout</MenuItem>
-                                  </MenuList>
-                                </ClickAwayListener>
-                              </Paper>
-                            </Grow>
-                          )}
-                        </Popper>
+                        <Dropdown menu={{ items }} placement="bottom">
+                          <AButton
+                            style={{
+                              backgroundColor: "transparent",
+                              height: "60px",
+                              border: "none",
+                            }}
+                          >
+                            <Avatar name={user?.name ?? ""} />
+                          </AButton>
+                        </Dropdown>
                       </>
                     )}
                   </div>

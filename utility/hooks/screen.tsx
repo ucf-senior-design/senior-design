@@ -11,7 +11,17 @@ interface ScreenContext {
   autoPadding: boolean
   successToast: string | undefined
   nav: UpdateNav
+  authStatus: {
+    loggedIn: boolean
+    authorized: boolean
+  }
 
+  setAuthStatus: React.Dispatch<
+    React.SetStateAction<{
+      loggedIn: boolean
+      authorized: boolean
+    }>
+  >
   updateLoading: (status: boolean) => void
   updateErrorToast: (status: string | undefined) => void
   updateAutoPadding: (status: boolean) => void
@@ -35,6 +45,11 @@ export function useScreen(): ScreenContext {
 
 export function ScreenProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = React.useState<boolean>(false)
+  const [authStatus, setAuthStatus] = React.useState({
+    loggedIn: false,
+    authorized: false,
+  })
+
   const [errorToast, setErrorToast] = React.useState<string | undefined>()
   const [autoPadding, setAutoPadding] = React.useState(true)
   const [successToast, setSuccessToast] = React.useState<string | undefined>()
@@ -88,6 +103,8 @@ export function ScreenProvider({ children }: { children: React.ReactNode }) {
         autoPadding,
         successToast,
         updateSuccessToast,
+        authStatus,
+        setAuthStatus,
       }}
     >
       {children}
