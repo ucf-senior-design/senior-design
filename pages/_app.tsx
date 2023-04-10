@@ -19,6 +19,7 @@ import "../styles/globals.css"
 
 import "react-date-range/dist/styles.css" // main style file
 import "react-date-range/dist/theme/default.css" // theme css file
+import { RouteGuard } from "../components/RouterGaurd"
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache
@@ -38,7 +39,9 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
           <AuthProvider>
             <Screen path={props.router.asPath}>
               <CssBaseline />
-              <Component {...pageProps} />
+              <RouteGuard>
+                <Component {...pageProps} />
+              </RouteGuard>
             </Screen>
           </AuthProvider>
         </ScreenProvider>

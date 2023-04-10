@@ -24,7 +24,7 @@ interface AuthenticationResponse {
 }
 
 interface AuthContext {
-  user?: User & { didFinishRegister: boolean }
+  user?: User & { didFinishRegister: boolean; loggedIn: boolean }
   saveRegisterdUser: (user: User) => Promise<void>
   doFacebookLogin: () => Promise<void>
   doGoogleLogin: () => Promise<void>
@@ -60,11 +60,11 @@ export function useAuth(): AuthContext {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = React.useState<User & { didFinishRegister: boolean }>()
+  const [user, setUser] = React.useState<User & { didFinishRegister: boolean; loggedIn: boolean }>()
   const { updateErrorToast } = useScreen()
 
   const [localUser, saveLocalUser, removeLocalUser] = useLocalStorage<
-    undefined | (User & { didFinishRegister: boolean })
+    undefined | (User & { didFinishRegister: boolean; loggedIn: boolean })
   >("user", undefined)
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -98,6 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await fetch(`${API_URL}auth/user`, { method: "GET" }).then(async (response) => {
       if (response.ok) {
         let currentUser: FirebaseUser = await response.json()
+
         setUser({
           username: localUser?.username ?? "",
           medicalInfo: localUser?.medicalInfo ?? [],
@@ -107,9 +108,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email: currentUser.email ?? "",
           name: localUser?.name ?? "",
           profilePic: currentUser.photoURL ?? "",
+          loggedIn: true,
         })
       } else {
         removeLocalUser()
+
         setUser({
           username: localUser?.username ?? "",
           medicalInfo: localUser?.medicalInfo ?? [],
@@ -119,6 +122,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email: "",
           name: "",
           profilePic: "",
+          loggedIn: false,
         })
       }
     })
@@ -139,9 +143,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function doLogout() {
-    removeLocalUser()
-    setUser(undefined)
-    Router.push("/")
+    const response = await fetch(`${API_URL}auth/logout`, { method: "POST" })
+    if (response.ok) {
+      removeLocalUser()
+      setUser(undefined)
+      Router.push("/")
+    } else {
+      updateErrorToast("unable to logout at this time.")
+    }
   }
 
   async function storePartialCredentialResult(u: any) {
@@ -154,6 +163,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       name: u.name ?? "",
       profilePic: u.photo ?? "",
       didFinishRegister: false,
+      loggedIn: true,
     }
     saveLocalUser(user)
     setUser(user)
@@ -221,8 +231,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     saveLocalUser({
       ...user,
       didFinishRegister: true,
+      loggedIn: true,
     })
-    setUser({ ...user, didFinishRegister: true })
+    setUser({ ...user, didFinishRegister: true, loggedIn: true })
   }
 
   async function addDetails(user: User, callback: (response: AuthenticationResponse) => void) {
@@ -233,7 +244,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (response.ok) {
       if (response.status === EMAIL_VERIFIED) {
         saveRegisterdUser(user)
-        // TODO: redirect to dashboard
+
         Router.push("/dashboard/")
         return
       } else {
