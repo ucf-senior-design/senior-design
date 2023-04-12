@@ -10,29 +10,28 @@ export default function Account() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        width: "100%",
         height: "100%",
+        width: "100%",
+        backgroundColor: "transparent",
       }}
     >
-      <CreateBox>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-          }}
-        >
-          <UserHeader />
-          <Box style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <PersonalInfo />
-          </Box>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
+        <UserHeader />
+        <Box style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <PersonalInfo />
+        </Box>
 
-          <Stack direction={"row"}>
-            {/* <Image src="/settings.svg" alt="settings" width={500} height={500} /> */}
-          </Stack>
-        </div>
-      </CreateBox>
+        <Stack direction={"row"}>
+          {/* <Image src="/settings.svg" alt="settings" width={500} height={500} /> */}
+        </Stack>
+      </div>
     </Box>
   )
 }

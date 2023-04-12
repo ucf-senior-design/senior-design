@@ -1,16 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { firebaseAuth, unpackArrayResponse } from "../../../../../utility/firebase"
 import firebaseAdmin from "../../../../../utility/firebaseAdmin"
-import { UserAvailabillity } from "../../../../../utility/types/trip"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const tripID = req.query.tripID as string
-  const user = firebaseAuth.currentUser
 
-  if (user === null) {
-    res.status(400).send("Please login before using this endpoint.")
-    return
-  }
   /**
    * Creates an availabillity widget
    * @param {string} req.body.title purpose of availabillity widget
@@ -18,29 +12,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    */
   switch (req.method) {
     case "POST": {
+      // TODO: add uid to body
+      const uid = req.body.uid
       await firebaseAdmin
         .firestore()
         .collection(`Trips/${tripID}/availabillity`)
         .add({
-          owner: user.uid,
+          owner: uid,
           title: req.body.title,
         })
         .then(async (value) => {
           const id = (await value.get()).id
           await value
             .collection("users")
-            .doc(user.uid)
+            .doc(uid)
             .set({
               dates: req.body.dates,
             })
             .then(() => {
-              res.status(200).send({ uid: id, ...req.body })
+              res.status(200).send({ uid: id, ...{ title: req.body.title, dates: req.body.dates } })
               return
             })
             .catch((e) => res.status(400).send(e))
         })
         .catch((e) => {
-          console.log("ERROR", e)
           res.status(400).send(e)
         })
       break

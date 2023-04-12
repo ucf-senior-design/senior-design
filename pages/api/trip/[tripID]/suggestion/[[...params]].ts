@@ -14,13 +14,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .then(async (value) => {
           const widgetID = value.id
 
-          const user = firebaseAuth.currentUser?.uid ?? ""
-
           const suggestions = req.body.suggestions.map(
             async (suggestion: string, index: number) => {
               const suggestionObj = {
-                owner: user,
-                likes: [user],
+                owner: req.body.details.owner,
+                likes: [req.body.details.owner],
                 option: suggestion,
               }
 
@@ -54,10 +52,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     case "PUT": {
-      const userID = firebaseAuth.currentUser?.uid
+      // TODO: update body
+      const userID = req.body.uid
 
       if (
-        // firebaseAuth.currentUser === null ||
         params === undefined ||
         params.length == 0 ||
         (!params[0] && params[0] !== "like" && params[0] !== "unLike" && params[0] !== "add") ||

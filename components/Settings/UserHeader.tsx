@@ -16,7 +16,11 @@ export default function UserHeader() {
         gap: "10px",
       }}
     >
-      <Avatar name={user?.name ?? ""} size={60} />
+      <Avatar
+        name={user?.name ?? ""}
+        image={user?.profilePic.length !== 0 ? user?.profilePic : undefined}
+        size={60}
+      />
       <Stack direction="column">
         <Typography noWrap sx={{ fontWeight: "500", fontSize: "25px" }}>
           {user?.name ?? ""} ({user?.username ?? ""})

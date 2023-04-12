@@ -10,8 +10,25 @@ export type StoredLocation = {
   key: string
   size: number
 }
+export type getTripInfo =
+  | "trip"
+  | "suggestion"
+  | "day"
+  | "poll"
+  | "weather"
+  | "preference"
+  | "availabillity"
+  | "photo"
+  | "event"
 
-export type WidgetType = "suggestion" | "day" | "poll" | "weather"
+export type WidgetType =
+  | "suggestion"
+  | "day"
+  | "poll"
+  | "weather"
+  | "preference"
+  | "availabillity"
+  | "photo"
 
 export interface Widget {
   key: string
@@ -46,6 +63,22 @@ export type ActivityPref = {
   medPrice: Array<string> // $500 - $1000
   highPrice: Array<string> // $1000 - $2500
   veryHighPrice: Array<string> // > $2500
+}
+
+export interface AvailabillityWidget {
+  title: string
+  uid: string
+  dates: Array<Duration>
+}
+export interface ActivityPrefWidget {
+  title: string
+  sports: Set<string>
+  nature: Set<string>
+  sightseeing: Set<string>
+  lowPrice: Set<string> // < $500
+  medPrice: Set<string> // $500 - $1000
+  highPrice: Set<string> // $1000 - $2500
+  veryHighPrice: Set<string> // > $2500
 }
 export type Duration = {
   start: Date

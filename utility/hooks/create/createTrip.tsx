@@ -95,7 +95,7 @@ export default function useCreateTrip() {
 
   function updateDuration(startDate: Date, endDate: Date) {
     startDate.setHours(0, 0, 0, 0)
-    endDate.setHours(0, 0, 0, 0)
+    endDate.setHours(23, 59, 59, 999)
 
     setCreateTrip({
       ...createTrip,

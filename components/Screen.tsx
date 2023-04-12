@@ -1,8 +1,10 @@
+import { Backdrop, CircularProgress } from "@mui/material"
 import { useRouter } from "next/router"
 import * as React from "react"
 import { toast, ToastContainer, ToastOptions } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import theme from "../styles/theme/Theme"
+import { useAuth } from "../utility/hooks/authentication"
 import { useScreen } from "../utility/hooks/screen"
 import NavBar from "./NavBar/NavBar"
 
@@ -17,8 +19,11 @@ export default function Screen({ children, path }: { path: string; children: Rea
     nav,
     loading,
     updateNav,
+    authStatus,
   } = useScreen()
+  const { user } = useAuth()
   const router = useRouter()
+
   const backgroundImage = path === "/about" ? "url('/Mountains.svg') 80% 80% " : undefined
   const msgToastOptions: ToastOptions = {
     position: "top-center",
@@ -58,24 +63,35 @@ export default function Screen({ children, path }: { path: string; children: Rea
   }, [path])
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      <div style={nav.style}>
-        <NavBar path={path} />
-        {nav.children}
+    <>
+      <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+        {authStatus.authorized && (
+          <div style={nav.style}>
+            <NavBar path={path} loggedIn={authStatus.loggedIn} />
+            {nav.children}
+          </div>
+        )}
+
+        <div
+          style={{
+            height: "100vh",
+            width: "100vw",
+            padding: autoPadding ? 10 : 0,
+            backgroundColor: theme.palette.background.default,
+            background: backgroundImage,
+          }}
+        >
+          <ToastContainer />
+
+          <>{children}</>
+        </div>
       </div>
 
-      <div
-        style={{
-          height: "100vh",
-          width: "100vw",
-          padding: autoPadding ? 10 : 0,
-          backgroundColor: theme.palette.background.default,
-          background: backgroundImage,
-        }}
-      >
-        <ToastContainer />
-        {children}
-      </div>
-    </div>
+      {!authStatus.authorized && (
+        <Backdrop sx={{ color: "#fff", zIndex: 25, width: "100vw", height: "100vh" }} open={true}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
+    </>
   )
 }

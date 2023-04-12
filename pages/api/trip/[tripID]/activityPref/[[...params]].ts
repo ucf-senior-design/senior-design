@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { firebaseAuth } from "../../../../../utility/firebase"
+import { firebaseAuth, unpackArrayResponse } from "../../../../../utility/firebase"
 import firebaseAdmin from "../../../../../utility/firebaseAdmin"
 import { ActivityPrefField } from "../../../../../utility/types/trip"
 
@@ -35,22 +35,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       break
     }
 
+    case "GET": {
+      await firebaseAdmin
+        .firestore()
+        .collection(`Trips/${tripID}/activityPref`)
+        .get()
+        .then((values) => {
+          let widgets = unpackArrayResponse(values.docs)
+          res.status(200).send({ data: widgets })
+        })
+        .catch(() => {
+          res.status(400).send("Could not get widgets.")
+        })
+      break
+    }
+
     /**
      * PUT /trip/[tripID]/activityPref - Add user's activity prefrence
      * body: { votes: Array<ActivityPrefField>; activityPrefID: string }
      */
     case "PUT": {
-      const { votes, activityPrefID }: { votes: Array<ActivityPrefField>; activityPrefID: string } =
-        req.body
+      // TODO: add uid to body
+      const {
+        votes,
+        activityPrefID,
+        uid,
+      }: { votes: Array<ActivityPrefField>; activityPrefID: string; uid: string } = req.body
 
-      if (firebaseAuth.currentUser?.uid === null) {
+      if (uid === null) {
         res.status(400).send("User not signed in.")
         return
       }
       const updateObj = {}
-      const addUserToList = firebaseAdmin.firestore.FieldValue.arrayUnion(
-        firebaseAuth.currentUser?.uid,
-      )
+      const addUserToList = firebaseAdmin.firestore.FieldValue.arrayUnion(uid)
 
       votes.forEach((vote) => {
         switch (vote) {
@@ -93,7 +110,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .then(async (value) => {
           res.status(200).send("Updated preferences")
         })
-        .catch(() => {
+        .catch((e) => {
           res.status(400).send("Could not create widget.")
         })
       break

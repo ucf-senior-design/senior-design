@@ -2,7 +2,7 @@ import { Box, Button, Typography } from "@mui/material"
 import React from "react"
 import { Event as EventType } from "../../utility/types/trip"
 import { BackdropModal } from "../BackdropModal"
-import ModifyEvent from "../Form/ModifyEvent"
+import ModifyEvent from "../Modify/ModifyEvent"
 import Event from "./Event"
 import JoinableEvent from "./JoinableEvent"
 
@@ -15,7 +15,7 @@ export default function Day({
   events: Array<EventType>
   joinableEvents: Array<EventType>
 }) {
-  const [showModifyEvent, setShowModifyEvent] = React.useState(false)
+  const [showModifyEvent, setShowModifyEvent] = React.useState<EventType | undefined>(undefined)
 
   return (
     <Box sx={{ padding: "10px" }}>
@@ -57,23 +57,23 @@ export default function Day({
             No Events{" "}
           </Box>
         )}
+
+        <BackdropModal
+          isOpen={showModifyEvent !== undefined}
+          toggleShow={() => setShowModifyEvent(undefined)}
+        >
+          {showModifyEvent !== undefined && (
+            <ModifyEvent event={showModifyEvent} closeModal={() => setShowModifyEvent(undefined)} />
+          )}
+        </BackdropModal>
         {events.map((event, index) => {
           return (
             <>
-              <Event key={index} event={event} />
-              <Button onClick={() => setShowModifyEvent(true)}>Modify</Button>
-              <div style={$popUpDiv}>
-                <BackdropModal
-                  isOpen={showModifyEvent}
-                  toggleShow={() => setShowModifyEvent(!showModifyEvent)}
-                >
-                  <ModifyEvent
-                    key={index}
-                    event={event}
-                    closeModal={() => setShowModifyEvent(false)}
-                  />
-                </BackdropModal>
-              </div>
+              <Button onClick={() => setShowModifyEvent(event)} style={{ width: "100%" }}>
+                <Event key={index} event={event} />
+              </Button>
+
+              <div style={$popUpDiv}></div>
             </>
           )
         })}

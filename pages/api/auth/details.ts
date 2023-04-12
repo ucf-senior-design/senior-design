@@ -32,11 +32,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     // Stores the users details in the "Users" collection. The document will be set by the useres uid.
     await firebaseAdmin.firestore().collection("Users").doc(user.uid).set(user)
 
-    // Check to see if the user's email is already verified.
-    if (firebaseAuth.currentUser?.emailVerified) {
-      res.status(EMAIL_VERIFIED).send(user)
-      return
-    }
+    await firebaseAdmin
+      .auth()
+      .getUserByEmail(req.body.email)
+      .then((u) => {
+        if (u.emailVerified) {
+          res.status(EMAIL_VERIFIED).send(user)
+          return
+        }
+      })
+
     res.status(SUCCESS).send(user)
   } catch (error) {
     let authError = error as auth.AuthError

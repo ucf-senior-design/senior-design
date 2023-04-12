@@ -52,20 +52,22 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   async function getTrips() {
     const options = createFetchRequestOptions(null, "GET")
     const tTrips = new Map<string, Trip>()
-    await fetch(`${API_URL}trip`, options).then(async (response) => {
-      if (response.ok) {
-        await response.json().then((uTrips) => {
-          uTrips.forEach((trip: Trip) => {
-            trip.duration.start = new Date(trip.duration.start)
-            trip.duration.end = new Date(trip.duration.end)
-            trip.attendees = new Set(trip.attendees)
-            tTrips.set(trip.uid, trip)
+    await fetch(`${API_URL}trip/none/${user?.uid ?? "uid"}/trip`, options).then(
+      async (response) => {
+        if (response.ok) {
+          await response.json().then((uTrips) => {
+            uTrips.forEach((trip: Trip) => {
+              trip.duration.start = new Date(trip.duration.start)
+              trip.duration.end = new Date(trip.duration.end)
+              trip.attendees = new Set(trip.attendees)
+              tTrips.set(trip.uid, trip)
+            })
           })
-        })
 
-        setTrips(tTrips)
-      }
-    })
+          setTrips(tTrips)
+        }
+      },
+    )
   }
 
   async function createTrip(trip: Trip, callback: (response: Response) => void) {
