@@ -354,7 +354,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         Router.push("/auth/details")
       })
       .catch((error: AuthError) => {
-        callback({ isSuccess: false, errorMessage: getMessage(error) })
+        updateErrorToast(error.name)
       })
   }
 
@@ -363,7 +363,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     callback: (response: AuthenticationResponse) => void,
   ) {
     await signInWithEmailAndPassword(firebaseAuth, login.email, login.password).then(async (u) => {
-      const options = createFetchRequestOptions(JSON.stringify({ u }), "POST")
+      const options = createFetchRequestOptions(JSON.stringify(u.user), "POST")
       const response = await fetch(`${API_URL}auth/login`, options)
 
       if (response.ok) {
