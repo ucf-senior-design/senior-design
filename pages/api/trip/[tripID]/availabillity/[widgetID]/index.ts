@@ -6,14 +6,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const tripID = req.query.tripID as string
   const widgetID = req.query.widgetID as string
 
-  const user = firebaseAuth.currentUser
   switch (req.method) {
     case "DELETE": {
-      if (user === null) {
-        res.status(400).send("Please log in before using this endpoint.")
-        return
-      }
-
       await firebaseAdmin
         .firestore()
         .collection(`Trips/${tripID}/availabillity`)

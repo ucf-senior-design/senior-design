@@ -62,7 +62,6 @@ export default function Screen({ children, path }: { path: string; children: Rea
     updateLoading(false)
   }, [path])
 
-  console.log(authStatus)
   return (
     <>
       <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>

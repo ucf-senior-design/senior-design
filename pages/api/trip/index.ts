@@ -18,26 +18,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       break
     }
-    case "GET": {
-      if (firebaseAuth.currentUser == null) {
-        res.status(400).send("User is not logged in.")
-        break
-      }
-
-      await firebaseAdmin
-        .firestore()
-        .collection(`Trips`)
-        .where("attendees", "array-contains", firebaseAuth.currentUser.uid)
-        .orderBy("duration.start")
-        .get()
-        .then((value) => {
-          const trips = unpackArrayResponse(value.docs)
-          res.status(200).send(trips)
-        })
-        .catch((e) => {
-          res.status(400).send("Error when loading trips")
-        })
-      break
-    }
   }
 }

@@ -196,6 +196,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     let days: Array<Day> = []
 
     let day = dayjs(start)
+
     while (!dayjs(end).add(1, "day").isSame(day, "day")) {
       days.push({
         date: day.toDate(),
@@ -332,8 +333,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
       data.forEach((widget: any) => {
         let availMap = new Map<string, UserAvailabillity>(
-          widget.availabillities.map((avail: UserAvailabillity) => {
-            return [avail.uid, avail]
+          widget.availabillities.map((avail: any) => {
+            return [avail.uid, { dates: avail.availabillities, uid: avail.uid }]
           }),
         )
         availabillityWidgets.set(widget.uid, {
@@ -445,16 +446,18 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     return list
   }
 
+  // TODO: Delete Later
+  console.log(trip)
   async function getEventData(days: number, duration: Duration) {
     let joinableEvents: Array<Array<Event>> = []
     let userEvents: Array<Array<Event>> = []
 
-    for (let i = 0; i < days; i++) {
+    for (let i = 0; i <= days; i++) {
       joinableEvents.push([])
       userEvents.push([])
     }
 
-    const response = await fetch(`${API_URL}trip/${id}/event`, {
+    const response = await fetch(`${API_URL}trip/${id}/${user?.uid ?? "uid"}/event`, {
       method: "GET",
     })
 
@@ -480,6 +483,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       })
     }
 
+    console.log(response.ok)
     if (response.ok) {
       return { userEvents, joinableEvents }
     }
@@ -674,7 +678,10 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     data: { title: string; dates: Array<Duration> },
     callback: (isSuccess: boolean) => void,
   ) {
-    const options = createFetchRequestOptions(JSON.stringify(data), "POST")
+    const options = createFetchRequestOptions(
+      JSON.stringify({ ...data, uid: user?.uid ?? "uid" }),
+      "POST",
+    )
     const response = await fetch(`${API_URL}/trip/${trip.uid}/availabillity`, options)
 
     if (response.ok) {
@@ -719,6 +726,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
     if (response.ok) {
       let createdEvent: Event = await response.json()
+      console.log(createdEvent)
 
       let itinerary = Array.from(addEventToList(trip.itinerary, createdEvent, trip.duration))
 
@@ -737,7 +745,10 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     callback(response.ok)
   }
   async function modifyEvent(event: ModifiedEvent, callback: (isSuccess: boolean) => void) {
-    const options = createFetchRequestOptions(JSON.stringify(event), "PUT")
+    const options = createFetchRequestOptions(
+      JSON.stringify({ ...event, user: user?.uid ?? "" }),
+      "PUT",
+    )
     const response = await fetch(`${API_URL}/trip/${trip.uid}/event/info/${event.uid}`, options)
     if (response.ok) {
       let modifiedEvent: Event = await response.json()
@@ -752,13 +763,15 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function storeLayout() {
-    console.log("storing layout...")
-    const options = createFetchRequestOptions(
-      JSON.stringify({ layout: getStorableLayout(resizable.order) }),
-      "PUT",
-    )
+    if (id !== undefined) {
+      console.log("storing layout...")
+      const options = createFetchRequestOptions(
+        JSON.stringify({ layout: getStorableLayout(resizable.order) }),
+        "PUT",
+      )
 
-    const response = await fetch(`${API_URL}/trip/${id}/layout`, options)
+      const response = await fetch(`${API_URL}/trip/${id}/layout`, options)
+    }
   }
 
   async function modifyTrip(details: TripDetails, callback: () => void) {
@@ -767,19 +780,13 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     const responseLayout = await fetch(`${API_URL}/trip/${trip.uid}/layout`, options)
 
     if (response.ok && responseLayout.ok) {
-      readLayout(details.layout)
-      setTrip({
-        ...trip,
-        destination: details.destination,
-        duration: details.duration,
-        photoURL: details.photoURL,
-        layout: details.layout,
-      })
+      initilizeTrip()
 
       callback()
     }
   }
 
+  console.warn("user", user?.loggedIn)
   React.useEffect(() => {
     console.log("getting data for trip:", id)
     if (id !== undefined) initilizeTrip()

@@ -76,11 +76,11 @@ export default function useModifyTrip() {
     let newTripStart = dayjs(modifyTripDetails.duration.start)
     let newTripEnd = dayjs(modifyTripDetails.duration.end)
 
-    for (let i = 0; i < oldTripEnd.diff(oldTripStart, "day"); i++) {
+    for (let i = 0; i <= oldTripEnd.diff(oldTripStart, "day"); i++) {
       oldIndexToDay.set(i, oldTripStart.add(i, "day").toDate().toDateString())
     }
 
-    for (let i = 0; i < newTripEnd.diff(newTripStart, "day"); i++) {
+    for (let i = 0; i <= newTripEnd.diff(newTripStart, "day"); i++) {
       newDayToIndex.set(newTripStart.add(i, "day").toDate().toDateString(), i)
     }
 

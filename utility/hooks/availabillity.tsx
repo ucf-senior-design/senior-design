@@ -37,7 +37,7 @@ export default function useAvailabillity(availabillity: Availabillity) {
   }
   function storeDates() {
     let dateMap = new Map<string, Array<string>>()
-    console.log("AVAIL", availabillity.availabillities)
+
     availabillity.availabillities.forEach((a, user) => {
       a.dates.forEach((duration) => {
         let current = dayjs(duration.start)
@@ -55,18 +55,16 @@ export default function useAvailabillity(availabillity: Availabillity) {
       })
     })
 
-    console.log(dateMap)
     return dateMap
   }
 
   function dateCellRender(value: Dayjs) {
     if (dates === undefined) return <></>
-    console.log("HERE")
+
     const users = dates.get(createDateHash(value.month(), value.date())) ?? []
     if (users.length === 0) {
       return <></>
     }
-    console.log(createDateHash(value.month(), value.date()), users)
 
     return (
       <Box sx={{ gap: "3px", margin: 0, padding: 0 }}>
@@ -87,7 +85,7 @@ export default function useAvailabillity(availabillity: Availabillity) {
     )
   }
 
-  async function updateAvailabillity() {
+  async function updateAvailabillity(callback: (isSuccess: boolean) => void) {
     if (user === undefined || availabillity.availabillities.get(user.uid) === undefined) {
       updateErrorToast(BASE_ERROR)
       return
@@ -96,7 +94,10 @@ export default function useAvailabillity(availabillity: Availabillity) {
     let newDates = availabillity.availabillities.get(user.uid)?.dates ?? []
     newDates.push(duration)
 
-    const options = createFetchRequestOptions(JSON.stringify({ dates: newDates }), "PUT")
+    const options = createFetchRequestOptions(
+      JSON.stringify({ dates: newDates, uid: user?.uid ?? "" }),
+      "PUT",
+    )
     await fetch(`${API_URL}trip/${trip.uid}/availabillity/${availabillity.uid}/add`, options).then(
       async (response) => {
         if (response.ok) {
@@ -105,6 +106,7 @@ export default function useAvailabillity(availabillity: Availabillity) {
             uid: user.uid,
             dates: newDates,
           })
+          callback(true)
         } else {
           updateErrorToast(await response.text())
         }

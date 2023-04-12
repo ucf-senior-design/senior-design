@@ -1,29 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { firebaseAuth } from "../../../../utility/firebase"
-import firebaseAdmin from "../../../../utility/firebaseAdmin"
-import { createFriendPairing } from "../../../../utility/helper"
+import { firebaseAuth } from "../../../../../utility/firebase"
+import firebaseAdmin from "../../../../../utility/firebaseAdmin"
+import { createFriendPairing } from "../../../../../utility/helper"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   let friendID = req.query.friendID as string
-  let user = firebaseAuth.currentUser
+  let user = req.query.uid as string
+
   if (req.method !== "POST") {
     res.status(400).send("This endpoint does not exist")
-  } else if (user === null) {
-    res.status(400).send("User does not exist")
   } else {
-    if (await hasConnection(user.uid, friendID)) {
+    if (await hasConnection(user, friendID)) {
       res.status(400).send("Connection already exists.")
     }
 
     let pairingData = {
-      pairing: [user.uid, friendID],
+      pairing: [user, friendID],
       status: {
         state: "pending",
-        modifier: user.uid,
+        modifier: user,
       },
     }
 
-    let uid = createFriendPairing(friendID, user.uid)
+    let uid = createFriendPairing(friendID, user)
     await firebaseAdmin
       .firestore()
       .collection("Friends/")

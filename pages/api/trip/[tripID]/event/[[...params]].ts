@@ -34,61 +34,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       break
     }
-    /**
-     * GET /api/trip/{tripID}
-     * Gets all events in a user's itinerary and any events they are able to join as well.
-     */
-    case "GET": {
-      if (params !== undefined) {
-        res.status(500).send("Endpoint does not exist :(")
-        return
-      }
-
-      if (firebaseAuth.currentUser === null) {
-        res.status(400).send("User is not logged in")
-        return
-      }
-
-      const userID = firebaseAuth.currentUser.uid
-      let joinableEvents: Array<any> = []
-      let itineraryEvents: Array<any> = []
-
-      await firebaseAdmin
-        .firestore()
-        .collection(`Trips/${tripID}/events`)
-        .where("attendees", "array-contains", userID)
-        .orderBy("duration.start")
-        .get()
-        .then(async (value) => {
-          itineraryEvents = unpackArrayResponse(value.docs)
-
-          await firebaseAdmin
-            .firestore()
-            .collection(`Trips/${tripID}/events`)
-            .orderBy("attendees")
-            .where("attendees", "not-in", [[userID]])
-            .orderBy("duration.start")
-            .get()
-            .then(async (value) => {
-              joinableEvents = unpackArrayResponse(value.docs)
-
-              res.status(200).send({
-                joinable: joinableEvents ?? [],
-                itinerary: itineraryEvents ?? [],
-              })
-            })
-            .catch((e) => {
-              res.status(400).send("Could not find joinable events user is in.")
-              return
-            })
-        })
-        .catch((e) => {
-          res.status(400).send("Could not find events user is in.")
-          return
-        })
-
-      break
-    }
 
     /**
      * Handles multiple update functions for the trip such as: letting a user JOIN an event, LEAVE an event, or update other INFO about an event.
@@ -103,7 +48,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case "PUT": {
       // Check to make sure the API follows the required structures and the user is logged in.
       if (
-        firebaseAuth.currentUser === null ||
         params === undefined ||
         params.length !== 2 ||
         (!params[0] &&
@@ -133,17 +77,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             // Sets request to add the user to the array of attendees in firebase.
             case "join": {
               return {
-                attendees: firebaseAdmin.firestore.FieldValue.arrayUnion(
-                  firebaseAuth.currentUser?.uid,
-                ),
+                attendees: firebaseAdmin.firestore.FieldValue.arrayUnion(req.body.uid),
               }
             }
             // Sets the request to remove the user from the array of attendees in firebase.
             case "leave": {
               return {
-                attendees: firebaseAdmin.firestore.FieldValue.arrayRemove(
-                  firebaseAuth.currentUser?.uid,
-                ),
+                attendees: firebaseAdmin.firestore.FieldValue.arrayRemove(req.body.uid),
               }
             }
             // Given the new start and end date in the request body
@@ -207,11 +147,6 @@ async function doEventReschedule(
 ) {
   const { duration, attendees }: { duration: Duration; attendees: Array<string> } = req.body
   try {
-    if (firebaseAuth.currentUser === null) {
-      console.log("User is not logged in")
-      return
-    }
-
     let findAttendeeEvents = await firebaseAdmin
       .firestore()
       .collection(`Trips/${tripID}/events/`)

@@ -26,6 +26,7 @@ export default function usePreferences(p: usePreferenceHook) {
       JSON.stringify({
         activityPrefID: preference.uid,
         votes: votes,
+        user: user?.uid ?? "uid",
       }),
       "PUT",
     )
@@ -57,7 +58,6 @@ export default function usePreferences(p: usePreferenceHook) {
             : preference.veryHighPrice,
         })
       } else {
-        console.log(await response.text())
         updateErrorToast("Try again later")
       }
     })

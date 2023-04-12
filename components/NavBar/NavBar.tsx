@@ -32,8 +32,7 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
   const { user, doLogout } = useAuth()
   const { loading } = useScreen()
 
-  const { handleListKeyDown, handleDrawerToggle, setOpen, anchorRef, open, mobileOpen } =
-    useNavBar()
+  const { handleDrawerToggle, setOpen, anchorRef, mobileOpen } = useNavBar()
 
   const { nav } = useScreen()
 
@@ -143,7 +142,10 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
                               border: "none",
                             }}
                           >
-                            <Avatar name={user?.name ?? ""} />
+                            <Avatar
+                              name={user?.name ?? ""}
+                              image={user?.profilePic.length !== 0 ? user?.profilePic : undefined}
+                            />
                           </AButton>
                         </Dropdown>
                       </>

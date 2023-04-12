@@ -50,7 +50,13 @@ export function CalendarWidget({ availability }: { availability: Availabillity }
               <Button
                 sx={{ width: "100%" }}
                 variant="contained"
-                onClick={() => updateAvailabillity()}
+                onClick={() =>
+                  updateAvailabillity((success) => {
+                    if (success) {
+                      setShowAvail(false)
+                    }
+                  })
+                }
               >
                 add availability
               </Button>

@@ -81,18 +81,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .collection(`Trips/${tripID}/polls`)
         .doc(pollID)
         .get()
-        .then((doc) => {
+        .then(async (doc) => {
           let docData = doc.data() as Poll
-          let user = firebaseAuth.currentUser
-          if (user === null) {
-            res.status(400).send("Not Authenticated")
+
+          docData.options[index].voters.push(req.body.uid)
+
+          await doc.ref.update(docData).then(() => {
+            res.status(200).send({})
             return
-          }
-          docData.options[index].voters.push(user.uid)
-          doc.ref.update(docData)
+          })
         })
-        .then(() => res.status(200).send({}))
-        .catch((e) => res.status(400).send(e))
+        .catch((e) => {
+          console.log("error 2", e)
+          res.status(400).send(e)
+        })
 
       break
     }
