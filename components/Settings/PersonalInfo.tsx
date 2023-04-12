@@ -10,10 +10,12 @@ export default function PersonalInfo() {
   const { loading, updateLoading, updateErrorToast, updateSuccessToast } = useScreen()
 
   const [info, setInfo] = React.useState<{
+    uid: string
     medicalInfo: Array<string>
     allergies: Array<string>
     name: string
   }>({
+    uid: user?.uid ?? "",
     medicalInfo: user?.medicalInfo ?? [],
     allergies: user?.allergies ?? [],
     name: user?.name ?? "",

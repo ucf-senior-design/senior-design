@@ -6,18 +6,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const tripID = req.query.tripID as string
   const widgetID = req.query.widgetID as string
 
-  const user = firebaseAuth.currentUser
+  const uid = req.body.uid
   switch (req.method) {
     case "PUT": {
-      if (user === null) {
-        res.status(400).send("Please log in before using this endpoint.")
-        return
-      }
-
       await firebaseAdmin
         .firestore()
         .collection(`Trips/${tripID}/availabillity/${widgetID}/users`)
-        .doc(user.uid)
+        .doc(uid)
         .update({
           availabillities: req.body.dates,
         })

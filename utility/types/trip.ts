@@ -10,6 +10,16 @@ export type StoredLocation = {
   key: string
   size: number
 }
+export type getTripInfo =
+  | "trip"
+  | "suggestion"
+  | "day"
+  | "poll"
+  | "weather"
+  | "preference"
+  | "availabillity"
+  | "photo"
+  | "event"
 
 export type WidgetType =
   | "suggestion"

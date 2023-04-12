@@ -42,7 +42,7 @@ export const LoginForm = () => {
       if (response.isSuccess) {
         Router.push("/")
       } else {
-        setError("Incorrect username or password")
+        updateErrorToast(response.errorMessage)
       }
     })
   }

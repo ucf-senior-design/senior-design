@@ -41,35 +41,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     case "PUT": {
-      if (
-        params === undefined ||
-        firebaseAuth.currentUser === null ||
-        (params[0] !== "join" &&
-          params[0] !== "leave" &&
-          params[0] !== "modify" &&
-          params[0] !== "layout")
-      ) {
+      if (params === undefined || (params[0] !== "modify" && params[0] !== "layout")) {
         res.status(400).send("Invalid purpose")
         return
       } else {
         const purpose = params[0]
-        const userID = firebaseAuth.currentUser?.uid
 
         try {
           const docRef = doc(firebaseDatbase, "Trips", tripID)
           switch (purpose) {
-            case "join": {
-              await updateDoc(docRef, {
-                attendees: arrayUnion(userID),
-              })
-              break
-            }
-            case "leave": {
-              await updateDoc(docRef, {
-                attendees: arrayRemove(userID),
-              })
-              break
-            }
             case "modify": {
               if (req.body !== null && req.body !== undefined) {
                 await updateDoc(docRef, {
@@ -81,7 +61,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               break
             }
             case "layout": {
-              if (req.body.layout !== null && req.body.layout !== undefined) {
+              if (
+                req.body.layout !== null &&
+                req.body.layout !== undefined &&
+                req.body.layout.length > 0
+              ) {
                 await updateDoc(docRef, {
                   layout: req.body.layout,
                 })
@@ -94,7 +78,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
           res.status(200).send("Success.")
         } catch (e: any) {
-          console.log(e)
           res.status(400).send("Error when updating trip.")
         }
         break

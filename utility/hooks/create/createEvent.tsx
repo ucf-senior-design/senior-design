@@ -16,18 +16,18 @@ export default function useCreateEvent() {
     attendees: Array<AttendeeOption>
     attendeeOptions: Array<AttendeeOption>
   }
+
+  const { friendList, addFriendOptions } = useFriend()
+  const { trip } = useTrip()
   const EMPTY_EVENT: TCreateEvent = {
     title: "",
     attendees: [],
-    duration: { start: new Date(), end: new Date() },
+    duration: { start: trip.duration.start, end: trip.duration.start },
     location: "",
     description: "",
     attendeeOptions: [],
   }
-
   const [event, setEvent] = React.useState<TCreateEvent>(EMPTY_EVENT)
-  const { friendList, addFriendOptions } = useFriend()
-
   React.useEffect(() => {
     let friends = addFriendOptions()
     let updatedOptions = Array.from(event.attendeeOptions)

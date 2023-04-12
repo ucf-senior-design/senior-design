@@ -47,23 +47,28 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     </FriendContext.Provider>
   )
 
-  async function sendFriendRequest(user: User) {
-    await fetch(`${API_URL}friends/${user.uid}/request`, { method: "POST" }).then(
-      async (result) => {
-        if (result.ok) {
-          const request = await result.json()
-          const tfriendList = new Map<string, Friendship>(friendList)
-          tfriendList.set(request.uid, request)
-          setFriendList(tfriendList)
-        } else {
-          updateErrorToast("could not add friend.")
-        }
-      },
-    )
+  async function sendFriendRequest(friend: User) {
+    await fetch(`${API_URL}friends/${friend.uid}/${user?.uid ?? "uid"}/request`, {
+      method: "POST",
+    }).then(async (result) => {
+      if (result.ok) {
+        const request = await result.json()
+        const tfriendList = new Map<string, Friendship>(friendList)
+        tfriendList.set(request.uid, request)
+        setFriendList(tfriendList)
+      } else {
+        updateErrorToast("could not add friend.")
+      }
+    })
   }
 
   async function acceptFriendRequest(uid: string) {
-    await fetch(`${API_URL}friends/${uid}/accept`, { method: "PUT" }).then(async (result) => {
+    await fetch(`${API_URL}friends/${uid}/${user?.uid ?? "uid"}/accept`, {
+      method: "PUT",
+      body: JSON.stringify({
+        uid: user?.uid ?? "uid",
+      }),
+    }).then(async (result) => {
       if (result.ok && user !== undefined) {
         const status = await result.json()
         const tfriendList = new Map<string, Friendship>(friendList)
@@ -80,15 +85,17 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function removeFriendRequest(uid: string) {
-    await fetch(`${API_URL}friends/${uid}`, { method: "DELETE" }).then((result) => {
-      if (result.ok && user !== undefined) {
-        const tfriendList = new Map<string, Friendship>(friendList)
-        tfriendList.delete(createFriendPairing(uid, user.uid))
-        setFriendList(tfriendList)
-      } else {
-        updateErrorToast("could not delete request.")
-      }
-    })
+    await fetch(`${API_URL}friends/${uid}/${user?.uid ?? "uid"}`, { method: "DELETE" }).then(
+      (result) => {
+        if (result.ok && user !== undefined) {
+          const tfriendList = new Map<string, Friendship>(friendList)
+          tfriendList.delete(createFriendPairing(uid, user.uid))
+          setFriendList(tfriendList)
+        } else {
+          updateErrorToast("could not delete request.")
+        }
+      },
+    )
   }
 
   function getFriendUID(pairing: Array<string>) {
@@ -121,17 +128,19 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
 
   async function getFriends() {
     let tfriendList = new Map<string, Friendship>()
-    await fetch(`${API_URL}friends`, { method: "GET" }).then(async (result) => {
-      if (result.ok) {
-        const { friends } = await result.json()
-        friends.forEach((friend: Friendship) => {
-          tfriendList.set(friend.uid, friend)
-        })
-      } else {
-        updateErrorToast("could not get friends.")
-      }
+    await fetch(`${API_URL}friends/user/${user?.uid ?? "uid"}`, { method: "GET" }).then(
+      async (result) => {
+        if (result.ok) {
+          const { friends } = await result.json()
+          friends.forEach((friend: Friendship) => {
+            tfriendList.set(friend.uid, friend)
+          })
+        } else {
+          updateErrorToast("could not get friends.")
+        }
 
-      setFriendList(tfriendList)
-    })
+        setFriendList(tfriendList)
+      },
+    )
   }
 }

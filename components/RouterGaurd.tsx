@@ -11,8 +11,17 @@ function RouteGuard({ children }: { children: React.ReactNode }) {
   const { authStatus, setAuthStatus, updateErrorToast } = useScreen()
 
   useEffect(() => {
-    // on initial load - run auth check
-    if (user !== undefined) authCheck(router.asPath)
+    if (user !== undefined) {
+      authCheck(router.asPath)
+    } else if (
+      user === undefined &&
+      (router.asPath === "/" || router.asPath === "/about" || router.asPath.startsWith("/auth"))
+    ) {
+      setAuthStatus({
+        authorized: true,
+        loggedIn: false,
+      })
+    }
 
     // on route change start - hide page content by setting authorized to false
     const hideContent = () =>
@@ -34,9 +43,16 @@ function RouteGuard({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
-  console.log(user?.didFinishRegister, user?.loggedIn, authStatus)
   function authCheck(url: string) {
-    const publicPaths = ["/auth/login", "/", "/auth/register", "/auth/details"]
+    const publicPaths = [
+      "/auth/login",
+      "/",
+      "/auth/register",
+      "/auth/details",
+      "/about",
+      "/auth/registerEmail",
+    ]
+
     const path = url.split("?")[0]
 
     if (user !== undefined && !user.loggedIn && !publicPaths.includes(path)) {

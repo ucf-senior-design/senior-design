@@ -78,7 +78,7 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
   async function addSuggestion() {
     // Creates the fetch request.
     const options = createFetchRequestOptions(
-      JSON.stringify({ suggestion: suggestion.newSuggestion }),
+      JSON.stringify({ suggestion: suggestion.newSuggestion, uid: user?.uid ?? "uid" }),
       "PUT",
     )
 
@@ -114,7 +114,7 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
    * @param selectedOption the uid of the suggestion the user is trying to like.
    */
   async function like(selectedOption: string) {
-    const options = createFetchRequestOptions(JSON.stringify({}), "PUT")
+    const options = createFetchRequestOptions(JSON.stringify({ uid: user?.uid ?? "uid" }), "PUT")
     await fetch(
       `${API_URL}trip/${tripID}/suggestion/like/${suggestion.uid}/${selectedOption}`,
       options,
@@ -147,7 +147,7 @@ export default function useSuggestion(s: SuggestionWidget): useSuggestionHook {
    * @param selectedOption the uid of the suggestion the user is trying to like.
    */
   async function unLike(selectedOption: string) {
-    const options = createFetchRequestOptions(JSON.stringify({}), "PUT")
+    const options = createFetchRequestOptions(JSON.stringify({ uid: user?.uid ?? "uid" }), "PUT")
     await fetch(
       `${API_URL}trip/${tripID}/suggestion/unLike/${suggestion.uid}/${selectedOption}`,
       options,

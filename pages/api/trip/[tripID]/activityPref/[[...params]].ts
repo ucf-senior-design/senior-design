@@ -55,17 +55,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * body: { votes: Array<ActivityPrefField>; activityPrefID: string }
      */
     case "PUT": {
-      const { votes, activityPrefID }: { votes: Array<ActivityPrefField>; activityPrefID: string } =
-        req.body
+      // TODO: add uid to body
+      const {
+        votes,
+        activityPrefID,
+        uid,
+      }: { votes: Array<ActivityPrefField>; activityPrefID: string; uid: string } = req.body
 
-      if (firebaseAuth.currentUser?.uid === null) {
+      if (uid === null) {
         res.status(400).send("User not signed in.")
         return
       }
       const updateObj = {}
-      const addUserToList = firebaseAdmin.firestore.FieldValue.arrayUnion(
-        firebaseAuth.currentUser?.uid,
-      )
+      const addUserToList = firebaseAdmin.firestore.FieldValue.arrayUnion(uid)
 
       votes.forEach((vote) => {
         switch (vote) {

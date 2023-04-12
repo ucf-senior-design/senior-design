@@ -5,6 +5,7 @@ update emergency contact info
 */
 import { createFetchRequestOptions } from "../fetch"
 import { Response } from "../types/helper"
+import { useAuth } from "./authentication"
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export default async function updateUser(
@@ -12,6 +13,7 @@ export default async function updateUser(
     medicalInfo: Array<string>
     name: string
     allergies: Array<string>
+    uid: string
   },
   callback: (response: Response) => void,
 ) {
