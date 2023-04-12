@@ -1,6 +1,6 @@
 import { Backdrop, CircularProgress } from "@mui/material"
 import dayjs from "dayjs"
-import React, { useLayoutEffect } from "react"
+import React from "react"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
 import { Response } from "../types/helper"
@@ -330,11 +330,10 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
     if (response.ok) {
       const { data } = await response.json()
-
       data.forEach((widget: any) => {
         let availMap = new Map<string, UserAvailabillity>(
           widget.availabillities.map((avail: any) => {
-            return [avail.uid, { dates: avail.availabillities, uid: avail.uid }]
+            return [avail.uid, { dates: avail.dates, uid: avail.uid }]
           }),
         )
         availabillityWidgets.set(widget.uid, {
