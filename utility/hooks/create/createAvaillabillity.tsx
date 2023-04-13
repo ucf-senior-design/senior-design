@@ -1,5 +1,4 @@
 import React from "react"
-import { callbackify } from "util"
 import { Duration } from "../../types/trip"
 import { useAuth } from "../authentication"
 import { useScreen } from "../screen"
@@ -55,7 +54,7 @@ export function useCreateAvailabilityWidget() {
     await createAvailabillityWidget(
       {
         title: title,
-        dates: durations,
+        availabillities: durations,
       },
       (isSuccess) => {
         callback(isSuccess)

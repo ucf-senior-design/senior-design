@@ -88,7 +88,7 @@ interface TripContext {
   ) => Promise<void>
 
   createAvailabillityWidget: (
-    data: { title: string; dates: Array<Duration> },
+    data: { title: string; availabillities: Array<Duration> },
     callback: (isSuccess: boolean) => void,
   ) => Promise<void>
   deleteAvailabillityWidget: (uid: string, callback: (isSuccess: boolean) => void) => Promise<void>
@@ -333,7 +333,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       data.forEach((widget: any) => {
         let availMap = new Map<string, UserAvailabillity>(
           widget.availabillities.map((avail: any) => {
-            return [avail.uid, { dates: avail.dates, uid: avail.uid }]
+            return [avail.uid, { dates: avail.availabillities, uid: avail.uid }]
           }),
         )
         availabillityWidgets.set(widget.uid, {
@@ -674,7 +674,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function createAvailabillityWidget(
-    data: { title: string; dates: Array<Duration> },
+    data: { title: string; availabillities: Array<Duration> },
     callback: (isSuccess: boolean) => void,
   ) {
     const options = createFetchRequestOptions(
@@ -690,7 +690,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       let availMap = new Map<string, UserAvailabillity>()
       availMap.set(user?.uid ?? "", {
         uid: user?.uid ?? "",
-        dates: data.dates,
+        dates: data.availabillities,
       })
 
       map.set(widget.uid, {
