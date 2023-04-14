@@ -1,23 +1,16 @@
 import AirportShuttleIcon from "@mui/icons-material/AirportShuttle"
 import MenuIcon from "@mui/icons-material/Menu"
-import { Dropdown, MenuProps, Button as AButton } from "antd"
 import {
   AppBar,
   Box,
-  Button,
-  ClickAwayListener,
   Drawer,
-  Grow,
   IconButton,
   LinearProgress,
-  MenuItem,
-  MenuList,
-  Paper,
-  Popper,
   Stack,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material"
+import { Button as AButton, Dropdown, MenuProps } from "antd"
 import Router from "next/router"
 import theme from "../../styles/theme/Theme"
 import { useAuth } from "../../utility/hooks/authentication"
@@ -127,7 +120,7 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
                 textAlign: "right",
               }}
             >
-              {loggedIn ? (
+              {user?.didFinishRegister && loggedIn ? (
                 <>
                   <NavBarButton path="/dashboard" text="dashboard" variant="text" />
                   <NavBarButton path="/settings/friends" text="friends" variant="text" />
