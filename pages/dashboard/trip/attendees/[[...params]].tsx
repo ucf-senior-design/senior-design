@@ -1,5 +1,5 @@
-import { ArrowBack, People } from "@mui/icons-material"
-import { Backdrop, Box, Button, CircularProgress, Paper, Stack, Typography } from "@mui/material"
+import { People } from "@mui/icons-material"
+import { Backdrop, Box, CircularProgress, Paper, Typography } from "@mui/material"
 import React from "react"
 import Avatar from "../../../../components/Avatar"
 import Header from "../../../../components/Header"
@@ -111,18 +111,18 @@ export default function Attendees() {
                       <Typography sx={{ fontWeight: "bold", fontSize: "18px" }}>
                         allergies
                       </Typography>
-                      {attendee.medicalInfo.length > 0
-                        ? attendee.medicalInfo.join(", ")
-                        : "no known allergies"}
+                      {attendee.allergies.length > 0
+                        ? attendee.allergies.join(", ")
+                        : "no entered allergies"}
                     </Box>
                     <Box sx={{ marginTop: "10px" }}>
                       <Typography sx={{ fontWeight: "bold", fontSize: "18px" }}>
                         {" "}
-                        Restrictions{" "}
+                        Medical Information & Restrictions{" "}
                       </Typography>{" "}
                       {attendee.medicalInfo.length > 0
                         ? attendee.medicalInfo.join(", ")
-                        : "no restrictions"}
+                        : "no entered medical information or restrictions"}
                     </Box>
                   </Box>
                 </Paper>
