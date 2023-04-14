@@ -115,7 +115,7 @@ export function PreferencesWidget({ p }: { p: usePreferenceHook }) {
             }}
           >
             <Typography variant={"h6"} sx={{ $headerStyle }}>
-              activitiy preferences
+              activity preferences
             </Typography>
             <Box
               sx={{
@@ -133,7 +133,7 @@ export function PreferencesWidget({ p }: { p: usePreferenceHook }) {
               >
                 <Chip
                   variant={hasUserVote("NATURE") ? "filled" : "outlined"}
-                  icon={<SportsTennisIcon />}
+                  icon={<ParkIcon />}
                   label={
                     <Typography padding={1} fontSize={14}>
                       nature - {getVoteCount("NATURE")}
@@ -149,7 +149,7 @@ export function PreferencesWidget({ p }: { p: usePreferenceHook }) {
               >
                 <Chip
                   variant={hasUserVote("SPORTS") ? "filled" : "outlined"}
-                  icon={<ParkIcon />}
+                  icon={<SportsTennisIcon />}
                   label={
                     <Typography padding={1} fontSize={14}>
                       sports - {getVoteCount("SPORTS")}

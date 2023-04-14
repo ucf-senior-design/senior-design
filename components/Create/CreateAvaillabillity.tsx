@@ -28,7 +28,7 @@ export default function CreateAvailabillity({ closeModal }: { closeModal: () => 
         }}
       >
         <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
-          Create Availabillity Widget
+          Create Availability Widget
         </Typography>
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           Title
@@ -42,7 +42,7 @@ export default function CreateAvailabillity({ closeModal }: { closeModal: () => 
           }}
         />
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-          Add A New Availabillity
+          Add Your Availability
         </Typography>
         <DateRange
           startDate={localDuration.start}
@@ -60,7 +60,7 @@ export default function CreateAvailabillity({ closeModal }: { closeModal: () => 
         </Button>
 
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-          Currently Selected Availabillities
+          Currently Selected Availabilities
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px" }}>
           {durations.map((duration, index) => {

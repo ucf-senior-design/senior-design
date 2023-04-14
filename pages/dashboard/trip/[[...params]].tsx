@@ -45,15 +45,15 @@ export default function Trip() {
 
     {
       key: "4",
-      label: <a onClick={() => setShowCreateWeather(true)}> Show Weather </a>,
+      label: <a onClick={() => setShowCreateWeather(true)}> Create Weather Widget </a>,
     },
     {
       key: "5",
-      label: <a onClick={() => setShowCreatePreference(true)}> Create Prefrence Widget</a>,
+      label: <a onClick={() => setShowCreatePreference(true)}> Create Preference Widget</a>,
     },
     {
       key: "6",
-      label: <a onClick={() => setShowCreateAvailabillity(true)}> Create Availabillity Widget</a>,
+      label: <a onClick={() => setShowCreateAvailabillity(true)}> Create Availability Widget </a>,
     },
     {
       key: "7",
