@@ -8,10 +8,10 @@ import {
   LinearProgress,
   Stack,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material"
 import { Button as AButton, Dropdown, MenuProps } from "antd"
-import Router from "next/router"
+import { useRouter } from "next/router"
 import theme from "../../styles/theme/Theme"
 import { useAuth } from "../../utility/hooks/authentication"
 import useNavBar from "../../utility/hooks/navbar"
@@ -24,6 +24,7 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
   const landingBackgroundColor = path === "/" ? "#5F9DF7" : "#3F3D56"
   const { user, doLogout } = useAuth()
   const { loading } = useScreen()
+  const router = useRouter()
 
   const { handleDrawerToggle, setOpen, anchorRef, mobileOpen } = useNavBar()
 
@@ -34,7 +35,7 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
   }
 
   const handleSettings = (): void => {
-    Router.push("/settings/account")
+    router.push("/settings/account")
   }
 
   const drawer = (
