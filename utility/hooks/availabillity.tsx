@@ -4,7 +4,7 @@ import React from "react"
 import { API_URL } from "../constants"
 import { createFetchRequestOptions } from "../fetch"
 import { stringToColor } from "../helper"
-import { Availabillity } from "../types/trip"
+import { Availabillity, Duration } from "../types/trip"
 import { useAuth } from "./authentication"
 import { useScreen } from "./screen"
 import { useTrip } from "./trip"
@@ -37,6 +37,7 @@ export default function useAvailabillity(availabillity: Availabillity) {
   }
   function storeDates() {
     let dateMap = new Map<string, Array<string>>()
+
     availabillity.availabillities.forEach((a, user) => {
       a.dates.forEach((duration) => {
         let current = dayjs(duration.start)
