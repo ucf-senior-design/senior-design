@@ -1,4 +1,3 @@
-import { WbSunny } from "@mui/icons-material"
 import React from "react"
 import Day from "../../components/Dashboard/Day"
 import { CalendarWidget } from "../../components/Dashboard/Widgets/Calendar"
@@ -92,7 +91,8 @@ export default function useWidget(w: Widget) {
     }
     if (widgetType === "day") {
       let day = trip.days[parseInt(splitKey[1])]
-      return <Day day={new Date(day.date)} events={day.itinerary} joinableEvents={day.joinable} />
+      if (day !== undefined)
+        return <Day day={new Date(day.date)} events={day.itinerary} joinableEvents={day.joinable} />
     }
 
     if (widgetType === "poll") {
