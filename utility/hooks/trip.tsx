@@ -477,7 +477,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       })
 
       joinable.forEach((event: Event) => {
-        joinableEvents = addEventToList(joinableEvents, event, duration)
+        if (!event.attendees.includes(user?.uid ?? ""))
+          joinableEvents = addEventToList(joinableEvents, event, duration)
       })
     }
 
