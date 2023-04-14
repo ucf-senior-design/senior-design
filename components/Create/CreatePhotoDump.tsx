@@ -29,8 +29,8 @@ export default function CreatePhotoDump({ closeModal }: { closeModal: () => void
         />
 
         <Button
-        sx={{ width: "100%", marginTop: "5px" }}
-        variant="contained"
+          sx={{ width: "100%", marginTop: "5px" }}
+          variant="contained"
           onClick={() =>
             create((isSuccess) => {
               if (isSuccess) {
