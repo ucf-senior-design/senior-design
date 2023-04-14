@@ -445,8 +445,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     return list
   }
 
-  // TODO: Delete Later
-  console.log(trip)
   async function getEventData(days: number, duration: Duration) {
     let joinableEvents: Array<Array<Event>> = []
     let userEvents: Array<Array<Event>> = []
