@@ -363,8 +363,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     callback: (response: AuthenticationResponse) => void,
   ) {
     await signInWithEmailAndPassword(firebaseAuth, login.email, login.password).then(async (u) => {
+      console.log(u.user)
       const options = createFetchRequestOptions(JSON.stringify(u.user), "POST")
-      const response = await fetch(`${API_URL}auth/login`, options)
+      // const response = await fetch(`${API_URL}auth/handleWebLogin`, options)
+      const response = await fetch(`${API_URL}auth/handleWebLogin`, options)
 
       if (response.ok) {
         if (response.status !== MUST_VERIFY_EMAIL && response.status !== MUST_ADD_DETAILS) {
