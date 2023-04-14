@@ -19,7 +19,7 @@ export default function CreatePhotoDump({ closeModal }: { closeModal: () => void
           create photo widget
         </Typography>
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-          url to google photos albumn
+          enter url to google photos album
         </Typography>
         <TextField
           color={"secondary"}
@@ -29,6 +29,8 @@ export default function CreatePhotoDump({ closeModal }: { closeModal: () => void
         />
 
         <Button
+        sx={{ width: "100%", marginTop: "5px" }}
+        variant="contained"
           onClick={() =>
             create((isSuccess) => {
               if (isSuccess) {

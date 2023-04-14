@@ -114,7 +114,7 @@ export default function CreateEvent({ closeModal }: { closeModal: () => void }) 
           }
         >
           {" "}
-          create
+          Create Event
         </Button>
       </Box>
     </Box>
