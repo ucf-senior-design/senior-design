@@ -1,7 +1,6 @@
 import auth, { AuthErrorCodes, signInWithEmailAndPassword } from "firebase/auth"
 import type { NextApiRequest, NextApiResponse } from "next"
 import { ERROR, MUST_ADD_DETAILS, MUST_VERIFY_EMAIL, SUCCESS } from "../../../utility/constants"
-import { firebaseAuth } from "../../../utility/firebase"
 import firebaseAdmin from "../../../utility/firebaseAdmin"
 import { User } from "../../../utility/types/user"
 
@@ -19,19 +18,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         email: user.email,
         photo: user.photoURL,
       })
-      console.log("login success")
       return
     }
 
     if ((await firebaseAdmin.auth().getUser(user.uid)).emailVerified === false) {
       res.status(MUST_VERIFY_EMAIL).send(maybeUser.data() as any as User)
-      console.log("login success")
     }
 
     res.status(SUCCESS).send(maybeUser.data() as any as User)
-    console.log("login success")
   } catch (error) {
-    console.warn("auth/login", error)
     let authError = error as auth.AuthError
     res.status(ERROR).send(authError.message)
   }
