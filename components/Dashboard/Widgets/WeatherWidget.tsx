@@ -61,7 +61,9 @@ const WeatherWidget: React.FC = () => {
             forecastData === undefined ||
             currentData === undefined ||
             forecastData.cod === "404" ||
-            currentData.cod === "404"
+            currentData.cod === "404" ||
+            forecastData.cod === "401" ||
+            currentData.cod === "401"
           ) {
             setState({
               isError: true,
