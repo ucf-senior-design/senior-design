@@ -1,13 +1,16 @@
 import { Add } from "@mui/icons-material"
 import { Grid, Paper, Typography } from "@mui/material"
 import { getTime } from "../../utility/helper"
+import { useTrip } from "../../utility/hooks/trip"
 import { Event } from "../../utility/types/trip"
 
 export default function JoinableEvent({ event }: { event: Event }) {
+  const { joinEvent } = useTrip()
+
   return (
     <Paper
-      onClick={() => {
-        // TODO: Handle Clicking on Join Event
+      onClick={async () => {
+        await joinEvent(event)
       }}
       sx={{
         padding: "20px",
