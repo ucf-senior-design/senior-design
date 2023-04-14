@@ -1,7 +1,6 @@
 import auth, { AuthErrorCodes, signInWithEmailAndPassword } from "firebase/auth"
 import type { NextApiRequest, NextApiResponse } from "next"
 import { ERROR, MUST_ADD_DETAILS, MUST_VERIFY_EMAIL, SUCCESS } from "../../../utility/constants"
-import { firebaseAuth } from "../../../utility/firebase"
 import firebaseAdmin from "../../../utility/firebaseAdmin"
 import { User } from "../../../utility/types/user"
 
