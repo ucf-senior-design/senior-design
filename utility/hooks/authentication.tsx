@@ -360,11 +360,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     callback: (response: AuthenticationResponse) => void,
   ) {
     await signInWithEmailAndPassword(firebaseAuth, login.email, login.password).then(async (u) => {
+      console.log(u.user)
       const options = createFetchRequestOptions(JSON.stringify(u.user), "POST")
       const response = await fetch(`${API_URL}auth/login`, options)
 
       if (response.ok) {
-        if (response.status === 200) {
+        if (response.status !== MUST_VERIFY_EMAIL && response.status !== MUST_ADD_DETAILS) {
           await saveRegisterdUser(await response.json())
           router.push("/dashboard")
         } else if (response.status === MUST_VERIFY_EMAIL) {

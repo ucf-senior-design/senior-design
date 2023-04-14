@@ -1,5 +1,4 @@
 import React from "react"
-import { callbackify } from "util"
 import { Duration } from "../../types/trip"
 import { useAuth } from "../authentication"
 import { useScreen } from "../screen"
@@ -43,7 +42,7 @@ export function useCreateAvailabilityWidget() {
     }
 
     if (durations.length === 0) {
-      updateErrorToast("Please add some availabilities.")
+      updateErrorToast("Please add one or more availabilities.")
       return
     }
 

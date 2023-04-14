@@ -79,6 +79,7 @@ interface TripContext {
   createEvent: (event: CreatedEvent, callback: (isSucess: boolean) => void) => Promise<void>
   modifyTrip: (details: TripDetails, callback: () => void) => Promise<void>
   modifyEvent: (event: ModifiedEvent, callback: (isSuccess: boolean) => void) => Promise<void>
+  joinEvent: (event: Event) => Promise<void>
 
   // handle preferences widget
   deleteActivityWidget: (uid: string, callback: (isSuccess: boolean) => void) => Promise<void>
@@ -113,7 +114,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
   const { readLayout, createKey, addItem, resizable, getStorableLayout, moving, removeFromLayout } =
     useResizable()
-  const { updateErrorToast } = useScreen()
+  const { updateErrorToast, updateSuccessToast } = useScreen()
   const [trip, setTrip] = React.useState<TripUseState>({
     // Trip Values
     uid: "",
@@ -445,8 +446,6 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     return list
   }
 
-  // TODO: Delete Later
-  console.log(trip)
   async function getEventData(days: number, duration: Duration) {
     let joinableEvents: Array<Array<Event>> = []
     let userEvents: Array<Array<Event>> = []
@@ -478,7 +477,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       })
 
       joinable.forEach((event: Event) => {
-        joinableEvents = addEventToList(joinableEvents, event, duration)
+        if (!event.attendees.includes(user?.uid ?? ""))
+          joinableEvents = addEventToList(joinableEvents, event, duration)
       })
     }
 
@@ -761,6 +761,26 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     callback(response.ok)
   }
 
+  async function joinEvent(event: Event) {
+    if (event.attendees.includes(user?.uid ?? "")) {
+      updateErrorToast("User has already joined this event!")
+      return
+    }
+    const options = createFetchRequestOptions(
+      JSON.stringify({
+        uid: user?.uid ?? "uid",
+      }),
+      "PUT",
+    )
+    const response = await fetch(`${API_URL}trip/${trip.uid}/event/join/${event.uid}`, options)
+    if (response.ok) {
+      updateSuccessToast("Successfully joined event!")
+      initilizeTrip()
+    } else {
+      updateErrorToast("Could not join event. Please try again later.")
+    }
+  }
+
   async function storeLayout() {
     if (id !== undefined) {
       console.log("storing layout...")
@@ -805,6 +825,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         createEvent,
         modifyTrip,
         modifyEvent,
+        joinEvent,
         createActivityWidget,
         deleteActivityWidget,
         createAvailabillityWidget,

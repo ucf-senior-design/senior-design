@@ -1,5 +1,4 @@
 import { Button, Paper, Typography } from "@mui/material"
-import { maxHeight, minWidth } from "@mui/system"
 import { Calendar } from "antd"
 import React from "react"
 import theme from "../../../styles/theme/Theme"

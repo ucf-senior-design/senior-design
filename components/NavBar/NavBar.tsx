@@ -8,7 +8,7 @@ import {
   LinearProgress,
   Stack,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material"
 import { Button as AButton, Dropdown, MenuProps } from "antd"
 import { useRouter } from "next/router"
@@ -121,7 +121,7 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
                 textAlign: "right",
               }}
             >
-              {loggedIn ? (
+              {user?.didFinishRegister && loggedIn ? (
                 <>
                   <NavBarButton path="/dashboard" text="dashboard" variant="text" />
                   <NavBarButton path="/settings/friends" text="friends" variant="text" />

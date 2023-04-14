@@ -1,8 +1,8 @@
-import { Box, TextField, Typography, Button } from "@mui/material"
-import theme from "../../styles/theme/Theme"
-import CreateBox from "./CreateBox"
+import { Box, Button, TextField, Typography } from "@mui/material"
 import { MuiChipsInput } from "mui-chips-input"
+import theme from "../../styles/theme/Theme"
 import useCreateSuggestion from "../../utility/hooks/create/createSuggestion"
+import CreateBox from "./CreateBox"
 
 export default function CreateSuggestion({ closeModal }: { closeModal: () => void }) {
   const { title, updateTitle, options, updateOptions, create } = useCreateSuggestion()
@@ -17,7 +17,7 @@ export default function CreateSuggestion({ closeModal }: { closeModal: () => voi
         }}
       >
         <Typography variant="h4" style={{ ...$headerStyle, textAlign: "center" }}>
-          create suggestion
+          create suggestions widget
         </Typography>
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           title
@@ -29,7 +29,7 @@ export default function CreateSuggestion({ closeModal }: { closeModal: () => voi
           onChange={(e) => updateTitle(e.target.value)}
         />
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-          your suggestions
+          add suggestions
         </Typography>
         <MuiChipsInput
           sx={{ width: "100%" }}
@@ -48,7 +48,7 @@ export default function CreateSuggestion({ closeModal }: { closeModal: () => voi
             })
           }
         >
-          Create
+          Create Widget
         </Button>
       </Box>
     </CreateBox>

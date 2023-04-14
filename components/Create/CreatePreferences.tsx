@@ -1,4 +1,4 @@
-import { Box, MenuItem, Select, TextField, Typography, Button } from "@mui/material"
+import { Box, Button, MenuItem, Select, TextField, Typography } from "@mui/material"
 import theme from "../../styles/theme/Theme"
 import { useCreatePreferences } from "../../utility/hooks/create/createPrefrerences"
 import { ActivityPrefField } from "../../utility/types/trip"
@@ -30,7 +30,7 @@ export default function CreatePreferences({ closeModal }: { closeModal: () => vo
         </Typography>
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           {" "}
-          What are these preferences for?
+          title
         </Typography>
         <TextField
           color={"secondary"}
@@ -42,7 +42,7 @@ export default function CreatePreferences({ closeModal }: { closeModal: () => vo
         />
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           {" "}
-          What are your outdoor activity preferences?{" "}
+          Add your outdoor activity preference{" "}
         </Typography>
         <Select
           value={outdoorPref}
@@ -56,7 +56,7 @@ export default function CreatePreferences({ closeModal }: { closeModal: () => vo
         </Select>
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
           {" "}
-          What are your price preferences?{" "}
+          Add your price preference{" "}
         </Typography>
         <Select
           value={pricePref}
