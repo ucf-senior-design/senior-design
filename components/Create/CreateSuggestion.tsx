@@ -5,7 +5,8 @@ import useCreateSuggestion from "../../utility/hooks/create/createSuggestion"
 import CreateBox from "./CreateBox"
 
 export default function CreateSuggestion({ closeModal }: { closeModal: () => void }) {
-  const { title, updateTitle, options, updateOptions, create } = useCreateSuggestion()
+  const { title, updateTitle, suggestionItems, updateSuggestionItems, create } =
+    useCreateSuggestion()
   return (
     <CreateBox>
       <Box
@@ -25,6 +26,7 @@ export default function CreateSuggestion({ closeModal }: { closeModal: () => voi
         <TextField
           color={"secondary"}
           sx={{ width: "100%" }}
+          placeholder='e.g "Where Should We Eat for Lunch?"'
           value={title}
           onChange={(e) => updateTitle(e.target.value)}
         />
@@ -34,8 +36,9 @@ export default function CreateSuggestion({ closeModal }: { closeModal: () => voi
         <MuiChipsInput
           sx={{ width: "100%" }}
           color="secondary"
-          value={options}
-          onChange={(value) => updateOptions(value)}
+          placeholder="Provide a list of one or more suggestions"
+          value={suggestionItems}
+          onChange={(value) => updateSuggestionItems(value)}
         />
         <Button
           sx={{ width: "100%", marginTop: "5px" }}
@@ -48,7 +51,7 @@ export default function CreateSuggestion({ closeModal }: { closeModal: () => voi
             })
           }
         >
-          Create Widget
+          Create Suggestion Widget
         </Button>
       </Box>
     </CreateBox>
