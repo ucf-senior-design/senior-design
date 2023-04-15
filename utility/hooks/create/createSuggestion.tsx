@@ -6,20 +6,20 @@ export default function useCreateSuggestion() {
   const { createSuggestion } = useTrip()
   const { updateErrorToast } = useScreen()
   const [title, updateTitle] = React.useState<string>()
-  const [options, updateOptions] = React.useState<Array<string>>([])
+  const [suggestionItems, updateSuggestionItems] = React.useState<Array<string>>([])
 
   async function create(callback: (isSuccess: boolean) => void) {
     if (title === undefined) {
-      updateErrorToast("poll must have title")
+      updateErrorToast("suggestion must have a title")
       return
     }
 
-    if (options.length === 0) {
-      updateErrorToast("poll must have options")
+    if (suggestionItems.length === 0) {
+      updateErrorToast("must have one or more items to suggest")
       return
     }
 
-    await createSuggestion(title, options, (response) => {
+    await createSuggestion(title, suggestionItems, (response) => {
       if (response.isSuccess) {
         callback(true)
       } else {
@@ -28,5 +28,5 @@ export default function useCreateSuggestion() {
     })
   }
 
-  return { create, title, updateTitle, options, updateOptions }
+  return { create, title, updateTitle, suggestionItems, updateSuggestionItems }
 }
