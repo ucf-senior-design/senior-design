@@ -4,7 +4,16 @@ import { useAuth } from "../authentication"
 import { useScreen } from "../screen"
 import { useTrip } from "../trip"
 
-export default function useModifyEvent(originalEvent: Event) {
+export type useModifyEventHook = {
+  modifiedEvent: EventType
+  modify: (callback: (isSuccess: boolean) => void) => Promise<void>
+  updateTitle: (title: string) => void
+  updateDuration: (startDate: Date, endDate: Date) => void
+  updateDescription: (description: string) => void
+  updateLocation: (location: string) => void
+}
+
+export default function useModifyEvent(originalEvent: Event): useModifyEventHook {
   const { updateErrorToast } = useScreen()
   const { user } = useAuth()
   const { modifyEvent } = useTrip()
@@ -47,18 +56,16 @@ export default function useModifyEvent(originalEvent: Event) {
       return
     }
 
-    if (modifiedEvent.title === undefined) {
+    if (modifiedEvent.title === undefined || modifiedEvent.title == "") {
       updateErrorToast("Please enter a title.")
+      return
     }
     if (modifiedEvent.duration === undefined) {
       updateErrorToast("Please select a duration.")
+      return
     }
-    if (modifiedEvent.location === undefined) {
+    if (modifiedEvent.location === undefined || modifiedEvent.location == "") {
       updateErrorToast("Please enter a location.")
-    }
-
-    if (user === undefined) {
-      updateErrorToast("Please try again later.")
       return
     }
     await modifyEvent(

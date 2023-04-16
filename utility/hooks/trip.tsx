@@ -431,18 +431,10 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       for (let j = 0; j < list[i].length; j++) {
         if (list[i][j].uid === event.uid) {
           list[i][j] = event
+          return list
         }
       }
-      return list
     }
-
-    list[list.length - 1].push({
-      ...event,
-      duration: {
-        start: new Date(event.duration.start),
-        end: new Date(event.duration.end),
-      },
-    })
     return list
   }
 
