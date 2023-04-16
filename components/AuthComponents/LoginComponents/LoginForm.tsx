@@ -3,9 +3,8 @@ import {
   CircularProgress,
   Divider,
   Grid,
-  LinearProgress,
   Paper,
-  Typography,
+  Typography
 } from "@mui/material"
 import { useState } from "react"
 import theme from "../../../styles/theme/Theme"
@@ -15,9 +14,8 @@ import LinkButton from "../LinkButton"
 import { PasswordTextField } from "../PasswordTextField"
 import ThirdPartyAuth from "../ThirdPartyAuth"
 
-import Router from "next/router"
-import { useScreen } from "../../../utility/hooks/screen"
 import React from "react"
+import { useScreen } from "../../../utility/hooks/screen"
 
 export const LoginForm = () => {
   const [loginInfo, sLoginInfo] = useState({
@@ -33,6 +31,11 @@ export const LoginForm = () => {
     updateLoading(false)
   }, [error])
 
+  function foo(path: string) {
+    if (typeof window !== 'undefined')
+      window.location.replace(path);
+  }
+
   async function handleSubmit() {
     updateLoading(true)
     await doEmailPasswordLogin(loginInfo, (response) => {
@@ -40,7 +43,7 @@ export const LoginForm = () => {
         updateErrorToast("invalid login info.")
       }
       if (response.isSuccess) {
-        Router.push("/")
+        foo("/")
       } else {
         updateErrorToast(response.errorMessage)
       }

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
+import React, { useEffect } from "react"
 import { useAuth } from "../utility/hooks/authentication"
 import { useScreen } from "../utility/hooks/screen"
 
@@ -55,15 +55,18 @@ function RouteGuard({ children }: { children: React.ReactNode }) {
 
     const path = url.split("?")[0]
 
+    function foo(path: string) {
+      if (typeof window !== 'undefined')
+        window.location.replace(path);
+    }
+
     if (user !== undefined && !user.loggedIn && !publicPaths.includes(path)) {
       setAuthStatus({
         loggedIn: user !== undefined && user.loggedIn,
         authorized: false,
       })
       updateErrorToast("Please log in before accessing the application!")
-      router.push({
-        pathname: "/auth/login",
-      })
+      foo("/auth/login")
       return
     } else if (
       user !== undefined &&
@@ -72,19 +75,13 @@ function RouteGuard({ children }: { children: React.ReactNode }) {
       !publicPaths.includes(path)
     ) {
       updateErrorToast("Please finish registering before accessing the application!")
-      router.push({
-        pathname: "/auth/details",
-      })
+      foo("/auth/details")
     } else if (["/auth/details"].includes(path)) {
       if (user?.uid.length !== 0 && user?.didFinishRegister) {
-        router.push({
-          pathname: "/dashboard",
-        })
+        foo("/dashboard")
       } else if (user !== undefined && !user?.loggedIn) {
         updateErrorToast("Please log in before accessing the application!")
-        router.push({
-          pathname: "/auth/login",
-        })
+        foo("/auth/login")
       }
       setAuthStatus({
         loggedIn: user !== undefined && user.loggedIn,

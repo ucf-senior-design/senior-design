@@ -34,8 +34,13 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
     doLogout()
   }
 
+  function foo(path: string) {
+    if (typeof window !== 'undefined')
+      window.location.replace(path);
+  }
+
   const handleSettings = (): void => {
-    router.push("/settings/account")
+    foo("/settings/account")
   }
 
   const drawer = (

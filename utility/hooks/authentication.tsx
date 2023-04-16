@@ -119,6 +119,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     </AuthContext.Provider>
   )
 
+  function foo(path: string) {
+    if (typeof window !== 'undefined')
+      window.location.replace(path);
+  }
+
   function maybeLoadPersistedUser() {
     if (firebaseUser.loaded)
       setUser({
@@ -163,7 +168,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           didFinishRegister: false,
           loggedIn: false,
         })
-        router.push("/")
+        foo("/")
       })
       .catch(() => {
         updateErrorToast("unable to logout at this time.")
@@ -222,11 +227,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (response.ok) {
           if (response.status === 200) {
             await saveRegisterdUser(await response.json())
-            router.push("/dashboard")
+            foo("/dashboard")
           }
           if (response.status === 202) {
             await storePartialCredentialResult(await response.json())
-            router.push("/auth/details")
+            foo("/auth/details")
           }
         } else {
           updateErrorToast(await response.text())
@@ -293,10 +298,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.status === EMAIL_VERIFIED) {
         saveRegisterdUser(user)
 
-        router.push("/dashboard/")
+        foo("/dashboard/")
         return
       } else {
-        router.push("/auth/registerEmail")
+        foo("/auth/registerEmail")
       }
       callback({ isSuccess: response.ok })
       return
@@ -311,11 +316,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function sendEmailVerification(callback: (response: AuthenticationResponse) => void) {
     if (firebaseAuth.currentUser === null) {
       updateErrorToast("User is not logged in")
-      router.push("/")
+      foo("/")
       return
     }
     if (firebaseAuth.currentUser.emailVerified) {
-      router.push("/dashboard")
+      foo("/dashboard")
     } else {
       await doSendEmailVerification(firebaseAuth.currentUser)
         .then(() => {
@@ -348,7 +353,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await createUserWithEmailAndPassword(firebaseAuth, register.email, register.password)
       .then(async (result) => {
         await storePartialCredentialResult(result)
-        router.push("/auth/details")
+        foo("/auth/details")
       })
       .catch((error: AuthError) => {
         updateErrorToast(error.name)
@@ -367,15 +372,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.ok) {
         if (response.status !== MUST_VERIFY_EMAIL && response.status !== MUST_ADD_DETAILS) {
           await saveRegisterdUser(await response.json())
-          router.push("/dashboard")
+          foo("/dashboard")
         } else if (response.status === MUST_VERIFY_EMAIL) {
           // Go to Email Verficications Pge
           await saveRegisterdUser(await response.json())
-          router.push("/auth/registerEmail")
+          foo("/auth/registerEmail")
         } else if (response.status === MUST_ADD_DETAILS) {
           await storePartialCredentialResult(await response.json())
           //Go to Details Page
-          router.push("/auth/details")
+          foo("/auth/details")
         }
         return
       }
