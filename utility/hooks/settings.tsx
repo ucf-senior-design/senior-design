@@ -23,6 +23,7 @@ export default async function updateUser(
   if (response.ok) {
     callback({ result: await response.text(), isSuccess: response.ok })
   } else {
-    callback({ isSuccess: response.ok, errorMessage: await response.text() })
+    let error = await response.text()
+    callback({ isSuccess: response.ok, errorMessage: error })
   }
 }

@@ -1,9 +1,8 @@
 import { useRouter } from "next/router"
-import React from "react"
-import { useState } from "react"
+import React, { useState } from "react"
 import { API_URL } from "../../constants"
 import { createFetchRequestOptions } from "../../fetch"
-import { getAttendeeOptionsArray, createAttendeesArray } from "../../helper"
+import { createAttendeesArray, getAttendeeOptionsArray } from "../../helper"
 import { StoredLocation, Trip } from "../../types/trip"
 import { useAuth } from "../authentication"
 import { useFriend } from "../friends"
@@ -94,8 +93,8 @@ export default function useCreateTrip() {
   }
 
   function updateDuration(startDate: Date, endDate: Date) {
-    startDate.setHours(0, 0, 0, 0)
-    endDate.setHours(23, 59, 59, 999)
+    startDate.setUTCHours(0, 0, 0, 0)
+    endDate.setUTCHours(23, 59, 59, 999)
 
     setCreateTrip({
       ...createTrip,

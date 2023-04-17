@@ -1,8 +1,8 @@
-import { Box, TextField, Typography, Button } from "@mui/material"
+import { Box, Button, TextField, Typography } from "@mui/material"
+import { MuiChipsInput } from "mui-chips-input"
 import theme from "../../styles/theme/Theme"
 import useCreatePoll from "../../utility/hooks/create/createPoll"
 import CreateBox from "./CreateBox"
-import { MuiChipsInput } from "mui-chips-input"
 
 export default function CreatePoll({ closeModal }: { closeModal: () => void }) {
   const { title, updateTitle, options, updateOptions, create } = useCreatePoll()
@@ -29,7 +29,7 @@ export default function CreatePoll({ closeModal }: { closeModal: () => void }) {
           onChange={(e) => updateTitle(e.target.value)}
         />
         <Typography variant="h6" style={{ ...$headerStyle, textAlign: "left" }}>
-          poll options
+          add poll options
         </Typography>
         <MuiChipsInput
           sx={{ width: "100%" }}
@@ -48,7 +48,7 @@ export default function CreatePoll({ closeModal }: { closeModal: () => void }) {
             })
           }
         >
-          Create
+          Create Poll
         </Button>
       </Box>
     </CreateBox>
