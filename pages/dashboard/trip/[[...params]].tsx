@@ -53,10 +53,6 @@ export default function Trip() {
     },
     {
       key: "6",
-      label: <a onClick={() => setShowCreateAvailabillity(true)}> Create Availabillity Widget</a>,
-    },
-    {
-      key: "7",
       label: <a onClick={() => setShowCreatePhotodump(true)}> Connect to Google Photos </a>,
     },
   ]
