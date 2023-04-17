@@ -119,9 +119,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     </AuthContext.Provider>
   )
 
-  function foo(path: string) {
-    if (typeof window !== 'undefined')
-      window.location.replace(path);
+  /**
+   * Forcibly redirect the user to this URL if the window becomes undefined.
+   *
+   * @remarks
+   * This function is being used to replace the usage of Next.js' Router.push()
+   * because that caused issues with redirects failing intermittently EX:
+   * during log out.
+   * @param path - The page path to redirect the user to
+   * @returns void
+   *
+   * @hacky
+   */
+  function forceRedirect(path: string) {
+    if (typeof window !== "undefined") window.location.replace(path)
   }
 
   function maybeLoadPersistedUser() {
@@ -168,7 +179,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           didFinishRegister: false,
           loggedIn: false,
         })
-        foo("/")
+        forceRedirect("/")
       })
       .catch(() => {
         updateErrorToast("unable to logout at this time.")
@@ -227,11 +238,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (response.ok) {
           if (response.status === 200) {
             await saveRegisterdUser(await response.json())
-            foo("/dashboard")
+            forceRedirect("/dashboard")
           }
           if (response.status === 202) {
             await storePartialCredentialResult(await response.json())
-            foo("/auth/details")
+            forceRedirect("/auth/details")
           }
         } else {
           updateErrorToast(await response.text())
@@ -298,10 +309,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.status === EMAIL_VERIFIED) {
         saveRegisterdUser(user)
 
-        foo("/dashboard/")
+        forceRedirect("/dashboard/")
         return
       } else {
-        foo("/auth/registerEmail")
+        forceRedirect("/auth/registerEmail")
       }
       callback({ isSuccess: response.ok })
       return
@@ -316,11 +327,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function sendEmailVerification(callback: (response: AuthenticationResponse) => void) {
     if (firebaseAuth.currentUser === null) {
       updateErrorToast("User is not logged in")
-      foo("/")
+      forceRedirect("/")
       return
     }
     if (firebaseAuth.currentUser.emailVerified) {
-      foo("/dashboard")
+      forceRedirect("/dashboard")
     } else {
       await doSendEmailVerification(firebaseAuth.currentUser)
         .then(() => {
@@ -353,7 +364,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await createUserWithEmailAndPassword(firebaseAuth, register.email, register.password)
       .then(async (result) => {
         await storePartialCredentialResult(result)
-        foo("/auth/details")
+        forceRedirect("/auth/details")
       })
       .catch((error: AuthError) => {
         updateErrorToast(error.name)
@@ -372,15 +383,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.ok) {
         if (response.status !== MUST_VERIFY_EMAIL && response.status !== MUST_ADD_DETAILS) {
           await saveRegisterdUser(await response.json())
-          foo("/dashboard")
+          forceRedirect("/dashboard")
         } else if (response.status === MUST_VERIFY_EMAIL) {
           // Go to Email Verficications Pge
           await saveRegisterdUser(await response.json())
-          foo("/auth/registerEmail")
+          forceRedirect("/auth/registerEmail")
         } else if (response.status === MUST_ADD_DETAILS) {
           await storePartialCredentialResult(await response.json())
           //Go to Details Page
-          foo("/auth/details")
+          forceRedirect("/auth/details")
         }
         return
       }
