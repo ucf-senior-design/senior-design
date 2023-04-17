@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
+import React, { useEffect } from "react"
 import { useAuth } from "../utility/hooks/authentication"
+import { forceRedirect } from "../utility/hooks/forceRedirect"
 import { useScreen } from "../utility/hooks/screen"
 
 export { RouteGuard }
@@ -61,9 +62,7 @@ function RouteGuard({ children }: { children: React.ReactNode }) {
         authorized: false,
       })
       updateErrorToast("Please log in before accessing the application!")
-      router.push({
-        pathname: "/auth/login",
-      })
+      forceRedirect("/auth/login")
       return
     } else if (
       user !== undefined &&
@@ -72,19 +71,13 @@ function RouteGuard({ children }: { children: React.ReactNode }) {
       !publicPaths.includes(path)
     ) {
       updateErrorToast("Please finish registering before accessing the application!")
-      router.push({
-        pathname: "/auth/details",
-      })
+      forceRedirect("/auth/details")
     } else if (["/auth/details"].includes(path)) {
       if (user?.uid.length !== 0 && user?.didFinishRegister) {
-        router.push({
-          pathname: "/dashboard",
-        })
+        forceRedirect("/dashboard")
       } else if (user !== undefined && !user?.loggedIn) {
         updateErrorToast("Please log in before accessing the application!")
-        router.push({
-          pathname: "/auth/login",
-        })
+        forceRedirect("/auth/login")
       }
       setAuthStatus({
         loggedIn: user !== undefined && user.loggedIn,

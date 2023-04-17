@@ -1,12 +1,4 @@
-import {
-  Button,
-  CircularProgress,
-  Divider,
-  Grid,
-  LinearProgress,
-  Paper,
-  Typography,
-} from "@mui/material"
+import { Button, CircularProgress, Divider, Grid, Paper, Typography } from "@mui/material"
 import { useState } from "react"
 import theme from "../../../styles/theme/Theme"
 import { useAuth } from "../../../utility/hooks/authentication"
@@ -15,9 +7,9 @@ import LinkButton from "../LinkButton"
 import { PasswordTextField } from "../PasswordTextField"
 import ThirdPartyAuth from "../ThirdPartyAuth"
 
-import Router from "next/router"
-import { useScreen } from "../../../utility/hooks/screen"
 import React from "react"
+import { forceRedirect } from "../../../utility/hooks/forceRedirect"
+import { useScreen } from "../../../utility/hooks/screen"
 
 export const LoginForm = () => {
   const [loginInfo, sLoginInfo] = useState({
@@ -40,7 +32,7 @@ export const LoginForm = () => {
         updateErrorToast("invalid login info.")
       }
       if (response.isSuccess) {
-        Router.push("/")
+        forceRedirect("/")
       } else {
         updateErrorToast(response.errorMessage)
       }
