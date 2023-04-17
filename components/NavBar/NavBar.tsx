@@ -19,6 +19,7 @@ import { useScreen } from "../../utility/hooks/screen"
 import Avatar from "../Avatar"
 import LoggedOutDrawer from "./LoggedOutDrawer"
 import { NavBarButton } from "./NavButton"
+import { forceRedirect } from "../../utility/hooks/forceRedirect"
 
 export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boolean }) {
   const landingBackgroundColor = path === "/" ? "#5F9DF7" : "#3F3D56"
@@ -34,13 +35,9 @@ export default function NavBar({ path, loggedIn }: { path: string; loggedIn: boo
     doLogout()
   }
 
-  function foo(path: string) {
-    if (typeof window !== 'undefined')
-      window.location.replace(path);
-  }
 
   const handleSettings = (): void => {
-    foo("/settings/account")
+    forceRedirect("/settings/account")
   }
 
   const drawer = (

@@ -1,11 +1,4 @@
-import {
-  Button,
-  CircularProgress,
-  Divider,
-  Grid,
-  Paper,
-  Typography
-} from "@mui/material"
+import { Button, CircularProgress, Divider, Grid, Paper, Typography } from "@mui/material"
 import { useState } from "react"
 import theme from "../../../styles/theme/Theme"
 import { useAuth } from "../../../utility/hooks/authentication"
@@ -15,6 +8,7 @@ import { PasswordTextField } from "../PasswordTextField"
 import ThirdPartyAuth from "../ThirdPartyAuth"
 
 import React from "react"
+import { forceRedirect } from "../../../utility/hooks/forceRedirect"
 import { useScreen } from "../../../utility/hooks/screen"
 
 export const LoginForm = () => {
@@ -31,11 +25,6 @@ export const LoginForm = () => {
     updateLoading(false)
   }, [error])
 
-  function foo(path: string) {
-    if (typeof window !== 'undefined')
-      window.location.replace(path);
-  }
-
   async function handleSubmit() {
     updateLoading(true)
     await doEmailPasswordLogin(loginInfo, (response) => {
@@ -43,7 +32,7 @@ export const LoginForm = () => {
         updateErrorToast("invalid login info.")
       }
       if (response.isSuccess) {
-        foo("/")
+        forceRedirect("/")
       } else {
         updateErrorToast(response.errorMessage)
       }

@@ -20,6 +20,7 @@ import { createFetchRequestOptions } from "../fetch"
 import { firebaseAuth } from "../firebase"
 import { User } from "../types/user"
 import { useScreen } from "./screen"
+import { forceRedirect } from "./forceRedirect"
 
 interface EmailPasswordLogin {
   email: string
@@ -118,22 +119,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {children}
     </AuthContext.Provider>
   )
-
-  /**
-   * Forcibly redirect the user to this URL if the window becomes undefined.
-   *
-   * @remarks
-   * This function is being used to replace the usage of Next.js' Router.push()
-   * because that caused issues with redirects failing intermittently EX:
-   * during log out.
-   * @param path - The page path to redirect the user to
-   * @returns void
-   *
-   * @hacky
-   */
-  function forceRedirect(path: string) {
-    if (typeof window !== "undefined") window.location.replace(path)
-  }
 
   function maybeLoadPersistedUser() {
     if (firebaseUser.loaded)
