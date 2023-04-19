@@ -5,7 +5,6 @@ import firebaseAdmin from "../../../utility/firebaseAdmin"
 import { User } from "../../../utility/types/user"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.warn("body", req.body)
   let user = req.body
 
   // Looks to see if user has filled out their details yet by seeing if there is a doc in the "Users" collection with the user's uid.
