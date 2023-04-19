@@ -1,4 +1,4 @@
-import { CircularProgress, Divider, Grid, Paper, Stack, TextField, Typography } from "@mui/material"
+import { Divider, Grid, Paper, Stack, TextField, Typography } from "@mui/material"
 import Image from "next/image"
 import React from "react"
 import { useTrip } from "../../../utility/hooks/trip"
@@ -24,6 +24,10 @@ const WeatherWidget: React.FC = () => {
   })
 
   async function fetchForecast(name: string, metric: string): Promise<ForecastData> {
+    let nameArray = name.split(",")
+    if (nameArray.length == 3 && !nameArray[2].includes("USA")) {
+      name = nameArray[0] + "," + nameArray[2]
+    }
     const res = await fetch(
       `https://api.openweathermap.org/data/2.5/forecast?q=${name}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}&units=${metric}`,
     )
@@ -31,6 +35,10 @@ const WeatherWidget: React.FC = () => {
   }
 
   async function fetchCurrentWeather(name: string, metric: string): Promise<CurrentData> {
+    let nameArray = name.split(",")
+    if (nameArray.length == 3 && !nameArray[2].includes("USA")) {
+      name = nameArray[0] + "," + nameArray[2]
+    }
     const res = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}&units=${metric}`,
     )
@@ -52,7 +60,10 @@ const WeatherWidget: React.FC = () => {
           if (
             forecastData === undefined ||
             currentData === undefined ||
-            forecastData.cod === "404"
+            forecastData.cod === "404" ||
+            currentData.cod === "404" ||
+            forecastData.cod === "401" ||
+            currentData.cod === "401"
           ) {
             setState({
               isError: true,
@@ -77,10 +88,12 @@ const WeatherWidget: React.FC = () => {
     }
     fetchWeather()
   }, [city, metric])
-
   return (
     <div style={{ width: "100%", height: "300px", padding: "10px" }}>
-      {weatherWidget && weatherWidget.current && weatherWidget.forecast && (
+      {state.isError && (
+        <Typography>Could not load weather information for this location</Typography>
+      )}
+      {weatherWidget && weatherWidget.current && weatherWidget.forecast && !state.isError && (
         <div>
           <Paper
             square={false}
